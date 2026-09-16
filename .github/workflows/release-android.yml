@@ -1,6 +1,9 @@
 name: Release Build (Android)
 
 on:
+  push:
+    branches:
+      - deploy
   release:
     types: [published]
   workflow_dispatch:
@@ -19,7 +22,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: release-android-${{ github.event.release.tag_name || inputs.tag }}
+  group: release-android-${{ github.event.release.tag_name || inputs.tag || github.sha }}
   cancel-in-progress: false
 
 env:
@@ -35,30 +38,6 @@ jobs:
     outputs:
       tag: ${{ steps.version.outputs.tag }}
     steps:
-      - name: Resolve tag and version name
-        id: version
-        env:
-          EVENT_TAG: ${{ github.event.release.tag_name }}
-          INPUT_TAG: ${{ inputs.tag }}
-        run: |
-          set -euo pipefail
-          TAG="${EVENT_TAG:-$INPUT_TAG}"
-          if [ -z "$TAG" ]; then
-            echo "::error::릴리스 태그를 확인할 수 없습니다."
-            exit 1
-          fi
-          # versionName 은 태그에서 뽑는다. 태그가 v1.0.0 형태면 앞의 v 를 뗀다.
-          VERSION_NAME="${TAG#v}"
-
-          # Google Play 의 현재 production versionCode 는 13이고, 새 업로드는
-          # 그보다 커야 한다. run_number 는 워크플로 실행마다 단조 증가하므로
-          # 100 을 더해 여유를 두고 앞으로도 계속 13보다 크게 유지한다.
-          VERSION_CODE=$((100 + GITHUB_RUN_NUMBER))
-
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
-          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
-
       - name: Free disk space
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
@@ -75,6 +54,36 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Resolve tag and version name
+        id: version
+        env:
+          EVENT_TAG: ${{ github.event.release.tag_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          TAG="${EVENT_TAG:-$INPUT_TAG}"
+          if [ -n "$TAG" ]; then
+            # versionName 은 태그에서 뽑는다. 태그가 v1.0.0 형태면 앞의 v 를 뗀다.
+            VERSION_NAME="${TAG#v}"
+          else
+            # deploy 브랜치 push 에는 태그가 없다. ProjectSettings 의 bundleVersion 을 쓴다.
+            VERSION_NAME=$(grep -m1 '^  bundleVersion:' ProjectSettings/ProjectSettings.asset | awk '{print $2}')
+            TAG="deploy-$GITHUB_RUN_NUMBER"
+          fi
+          if [ -z "$VERSION_NAME" ]; then
+            echo "::error::versionName 을 정하지 못했습니다."
+            exit 1
+          fi
+
+          # Google Play 의 현재 production versionCode 는 13이고, 새 업로드는
+          # 그보다 커야 한다. run_number 는 워크플로 실행마다 단조 증가하므로
+          # 100 을 더해 여유를 두고 앞으로도 계속 13보다 크게 유지한다.
+          VERSION_CODE=$((100 + GITHUB_RUN_NUMBER))
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
 
       - name: Cache Library folder
         uses: actions/cache@v4
@@ -147,6 +156,8 @@ jobs:
           SHOULD_PUBLISH=false
           if [ -n "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
             if [ "${{ github.event_name }}" = "release" ]; then
+              SHOULD_PUBLISH=true
+            elif [ "${{ github.event_name }}" = "push" ]; then
               SHOULD_PUBLISH=true
             elif [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.publish }}" = "true" ]; then
               SHOULD_PUBLISH=true
