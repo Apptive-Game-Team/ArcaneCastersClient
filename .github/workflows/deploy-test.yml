@@ -3,12 +3,12 @@ name: Build and Deploy WebGL
 on:
   push:
     branches:
-      - main
+      - dev
 
-# Serialize pushes to WordOnline_Play: two concurrent runs clone the same base
+# Serialize pushes to ArcaneCastersPlay: two concurrent runs clone the same base
 # commit and the later push is rejected as non-fast-forward.
 concurrency:
-  group: word-online-play-push
+  group: arcane-casters-play-push
   cancel-in-progress: true
 
 jobs:
@@ -58,13 +58,13 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone https://x-access-token:${{ secrets.WORD_ONLINE_PLAY_TOKEN }}@github.com/Apptive-Game-Team/WordOnline_Play.git
+          git clone https://x-access-token:${{ secrets.WORD_ONLINE_PLAY_TOKEN }}@github.com/Apptive-Game-Team/ArcaneCastersPlay.git
           ls -R build
-          cd WordOnline_Play
+          cd ArcaneCastersPlay
           rm -rf ./Build
           rm -rf ./index.html
           cp -r ../build/WebGL/WebGL/* ./
           ls -R
           git add .
-          git commit -m "Update WebGL build from main repo"
+          git commit -m "Update WebGL build from dev"
           git push origin main
