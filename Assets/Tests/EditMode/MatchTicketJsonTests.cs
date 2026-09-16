@@ -57,5 +57,16 @@ namespace WordOnline.Tests
             Assert.AreEqual(MatchTicketState.Queued, ticket.ParsedState);
             Assert.IsNull(ticket.matchInfo);
         }
+
+        [Test]
+        public void SerializesRandomDeckTicketRequestAsStringMode()
+        {
+            string json = JsonCodec.Serialize(new MatchTicketRequest
+            {
+                deckMode = LobbySceneViewModel.RandomDeckMode
+            });
+
+            StringAssert.Contains("\"deckMode\":\"RANDOM\"", json);
+        }
     }
 }
