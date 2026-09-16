@@ -25,11 +25,28 @@ namespace GameScene
         {
             _rectTransform = GetComponent<RectTransform>();
         
-            manaBarButton.onClick.AddListener(() => TryOpenBar());
+            manaBarButton.onClick.AddListener(OnManaBarButtonClicked);
             fieldButton.onClick.AddListener(() =>
             {
                 isActive = false;
             });
+        }
+
+        /// <summary>
+        /// 마법을 고른 상태에서는 마나 바 버튼이 취소로 동작한다. 터치에는 우클릭이 없어
+        /// CardInputSender 의 우클릭 취소를 쓸 수 없고, 그 상태에서는 Update 가 마나 바를
+        /// 도로 내리기 때문에 이 버튼을 눌러도 아무 일이 없었다.
+        /// </summary>
+        private void OnManaBarButtonClicked()
+        {
+            CardInputSender sender = CardInputSender.Instance;
+            if (sender != null && sender.IsFieldSelectMode())
+            {
+                sender.Cancel();
+                return;
+            }
+
+            TryOpenBar();
         }
 
         /// <summary>

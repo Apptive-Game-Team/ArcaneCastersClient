@@ -21,6 +21,14 @@ namespace TutorialScene
         
             manaBarButton.onClick.AddListener(() =>
             {
+                // 마법을 고른 상태에서는 취소로 동작한다. 터치에는 우클릭이 없어
+                // TutorialCardSender 의 우클릭 취소를 쓸 수 없다.
+                if (cardInputSender.IsFieldSelectMode())
+                {
+                    cardInputSender.Cancel();
+                    return;
+                }
+
                 isActive = true;
             });
             fieldButton.onClick.AddListener(() =>
