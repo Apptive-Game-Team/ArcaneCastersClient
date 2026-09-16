@@ -1,4 +1,5 @@
 using GameScene.Dto.Projectile;
+using GameScene.ServedObjectComponent;
 using UnityEngine;
 
 namespace GameScene.Object.Projectile
@@ -53,6 +54,28 @@ namespace GameScene.Object.Projectile
         private const int CoreSortingOrder = 12;
         private const int CapSortingOrder = 13;
 
+        /// <summary>
+        /// 시전자 쪽 끝의 높이. sprite 가운데에서 위 끝까지를 1 로 놓은 값이라, 0.6 은 sprite
+        /// 높이의 80% 다 — 플레이어 sprite 는 2.2 world 단위라 발밑에서 1.76, 눈 높이쯤이다.
+        /// 고정 숫자가 아니라 sprite 에서 읽는 값이라 시전자 sprite 가 바뀌어도 따라간다.
+        /// </summary>
+        private const float CasterHeightBias = 0.6f;
+
+        /// <summary>
+        /// 화면에서 바로 위에 있는 기준점까지의 거리, world 단위.
+        /// <see cref="ServedObject.GetEdgeWorldPositionTowards"/> 는 넘긴 점의 방향만 쓰고 거리는
+        /// 버리므로 값 자체는 0 보다 크기만 하면 된다.
+        /// </summary>
+        private const float ScreenUpProbeDistance = 1f;
+
+        /// <summary>
+        /// sprite 를 읽을 수 없는 끝을 올리는 거리, world 단위. 서버가 이 빔의 양 끝을 항상
+        /// <see cref="ReferenceProjectileTarget"/> 로 보내므로 평소에는 쓰이지 않고, 대상이
+        /// 죽어 <see cref="ObjectContainer"/> 에서 빠진 프레임에만 쓰인다. 플레이어 sprite
+        /// 높이의 절반이다.
+        /// </summary>
+        private const float PositionLift = 1.1f;
+
         private static Texture2D segmentTexture;
         private static Texture2D capTexture;
 
@@ -66,6 +89,8 @@ namespace GameScene.Object.Projectile
         private Sprite capSprite;
         private Vector3 lastStartPosition;
         private Vector3 lastEndPosition;
+        private ServedObject startObject;
+        private ServedObject endObject;
         private float beamWidth;
         private float startedAt;
 
@@ -84,8 +109,8 @@ namespace GameScene.Object.Projectile
             startTarget = projectileDto.start;
             endTarget = projectileDto.end;
             startedAt = Time.time;
-            TryUpdatePosition(startTarget, ref lastStartPosition);
-            TryUpdatePosition(endTarget, ref lastEndPosition);
+            TryUpdateTarget(startTarget, ref lastStartPosition, ref startObject);
+            TryUpdateTarget(endTarget, ref lastEndPosition, ref endObject);
 
             // 0 이하는 서버가 굵기를 정하지 않았다는 뜻이다. width 를 아직 실어 보내지 않는
             // 서버와도 같이 돌아야 하므로 그때는 기본값으로 대체한다.
@@ -136,15 +161,28 @@ namespace GameScene.Object.Projectile
 
         private void UpdateBeam()
         {
-            TryUpdatePosition(startTarget, ref lastStartPosition);
-            TryUpdatePosition(endTarget, ref lastEndPosition);
+            TryUpdateTarget(startTarget, ref lastStartPosition, ref startObject);
+            TryUpdateTarget(endTarget, ref lastEndPosition, ref endObject);
+
+            // 서버가 보내는 위치는 sprite 의 발밑이다. sprite pivot 이 아래라
+            // (PlayerCharacterBase.png.meta 의 spritePivot 은 y 0.0072) transform.position 은
+            // 땅에 닿아 있고, 두 끝을 그대로 이으면 빔이 바닥을 기어 바닥 그림과 발밑에 묻힌다.
+            // 그려질 두 점을 sprite 위로 올린 다음에 겨눈다. StretchProjectile.Aim 이 팔을
+            // 어깨에서 내보내는 방식과 같다.
+            Vector3 from = GetBeamEnd(startObject, lastStartPosition, CasterHeightBias);
+
+            // 대상 쪽은 sprite 가운데다. 고정 높이가 아니라 sprite 에서 읽으므로 같은 코드가
+            // slime 의 몸통에도 golem 의 몸통에도 맞는다.
+            Vector3 to = endObject != null
+                ? endObject.GetEdgeWorldPositionTowards(from, 0f)
+                : lastEndPosition + ProjectileUtil.GetScreenUp() * PositionLift;
 
             // 길이도 회전도 카메라 평면 기준이다. 카메라가 기울어져 있어 Vector3.Distance 는
             // 화면에 그려야 할 길이를 주지 않는다 (.agents/docs/scene-space.md).
-            float length = ProjectileUtil.GetCameraPlaneLength(lastStartPosition, lastEndPosition);
+            float length = ProjectileUtil.GetCameraPlaneLength(from, to);
 
-            transform.position = lastStartPosition;
-            transform.rotation = ProjectileUtil.GetRotation(lastStartPosition, lastEndPosition);
+            transform.position = from;
+            transform.rotation = ProjectileUtil.GetRotation(from, to);
 
             // size 는 scale 보다 먼저 적용되므로 가운데 조각은 scale 1 을 유지해야 길이가 맞는다.
             coreRenderer.size = new Vector2(length, beamWidth);
@@ -212,15 +250,54 @@ namespace GameScene.Object.Projectile
             return sprite;
         }
 
-        private static void TryUpdatePosition(ProjectileTarget target, ref Vector3 lastPosition)
+        /// <summary>
+        /// 빔의 한쪽 끝을 sprite 의 세로 중심선 위, 가운데와 위 끝 사이
+        /// <paramref name="heightBias"/> 지점으로 올린다.
+        /// <para>
+        /// <see cref="ServedObject.GetEdgeWorldPositionTowards"/> 는 넘긴 점의 방향을 화면에서
+        /// 읽고 거리는 renderer 자기 축으로 놓는다. 그래서 화면에서 바로 위에 있는 점을 넘기면
+        /// 방향이 위로 고정되고, 결과는 sprite 위의 점이 된다 — 높이를 세계 좌표에서 직접
+        /// 더하면 기울어진 카메라 때문에 sprite 를 벗어난다 (.agents/docs/scene-space.md).
+        /// 방향을 만드는 데 <see cref="ProjectileUtil.GetScreenUp"/> 을 쓰므로 카메라 기울기가
+        /// 바뀌어도 따라간다.
+        /// </para>
+        /// <para>
+        /// <paramref name="servedObject"/> 가 없으면 — 대상이 죽어 컨테이너에서 빠진 프레임이다 —
+        /// 읽을 sprite 도 없으니 마지막으로 알던 위치를 screen up 으로
+        /// <see cref="PositionLift"/> 만큼 올려 쓴다.
+        /// </para>
+        /// </summary>
+        private static Vector3 GetBeamEnd(ServedObject servedObject, Vector3 lastPosition, float heightBias)
+        {
+            Vector3 screenUp = ProjectileUtil.GetScreenUp();
+            if (servedObject == null)
+            {
+                return lastPosition + screenUp * PositionLift;
+            }
+
+            Vector3 center = servedObject.GetEdgeWorldPositionTowards(lastPosition, 0f);
+            return servedObject.GetEdgeWorldPositionTowards(center + screenUp * ScreenUpProbeDistance, heightBias);
+        }
+
+        /// <summary>
+        /// 한쪽 끝이 가리키는 <see cref="ServedObject"/> 와 그 위치를 이번 프레임 값으로 새로
+        /// 읽는다. 대상이 죽어 컨테이너에서 빠지면 <paramref name="servedObject"/> 는 null 이 되고
+        /// <paramref name="lastPosition"/> 은 마지막으로 알던 값으로 남는다 — 빔이 원점으로
+        /// 접히지 않고 그 자리에서 끝난다.
+        /// </summary>
+        private static void TryUpdateTarget(
+            ProjectileTarget target,
+            ref Vector3 lastPosition,
+            ref ServedObject servedObject)
         {
             switch (target)
             {
                 case PositionProjectileTarget position:
                     lastPosition = position.ToVector3();
+                    servedObject = null;
                     break;
                 case ReferenceProjectileTarget reference:
-                    var servedObject = ObjectContainer.Instance.FindById(reference.id);
+                    servedObject = ObjectContainer.Instance.FindById(reference.id);
                     if (servedObject != null)
                     {
                         lastPosition = servedObject.transform.position;
