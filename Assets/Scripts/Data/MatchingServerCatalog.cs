@@ -47,7 +47,7 @@ namespace Data
         /// model. The dropdown is still the way to reach the other servers, and `main` keeps
         /// pointing at dev.
         /// </summary>
-        private static readonly MatchingServerOption BuildDefault = MagicCard;
+        private static readonly MatchingServerOption BuildDefault = Deploy;
 
         public static MatchingServerOption Current { get; private set; } = BuildDefault;
 
