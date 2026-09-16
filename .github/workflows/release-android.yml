@@ -23,8 +23,11 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # ProjectSettings/ProjectVersion.txt 기준. release.yml 과 동일한 버전을 쓴다.
-  UNITY_VERSION: 2022.3.34f1
+  # Android 빌드만 프로젝트의 2022.3.34f1 보다 높은 patch 를 쓴다. 2022.3.34f1 은
+  # AndroidApiLevel34 까지만 알고 있어서 Play 가 요구하는 target API 를 맞출 수 없다.
+  # ("Target SDK of artifact is too low" 로 업로드가 거부된다.) 같은 2022.3 LTS 의
+  # 나중 patch 라 프로젝트를 올리지 않고 이 workflow 에서만 쓴다.
+  UNITY_VERSION: 2022.3.62f3
   BUILD_NAME: WordOnlineClient
   PACKAGE_NAME: com.team6515.wordonline
 
@@ -80,10 +83,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: Library
-          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-Android-${{ env.UNITY_VERSION }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-Android-
-            Library-
+            Library-Android-${{ env.UNITY_VERSION }}-
 
       # androidKeystoreName 은 game-ci 가 컨테이너 안에 secret 을 풀어 쓰는
       # 파일 이름일 뿐이라 실제 keystore 파일 이름과 맞출 필요는 없다.
@@ -100,6 +102,7 @@ jobs:
           buildName: ${{ env.BUILD_NAME }}
           buildsPath: build
           androidExportType: androidAppBundle
+          androidTargetSdkVersion: AndroidApiLevel36
           androidKeystoreName: upload.keystore
           androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
