@@ -14,6 +14,6 @@ namespace Data
         /// <c>JwksService</c> verify it with, so a token from another environment is rejected.
         /// </summary>
         public static readonly Server AccountServer =
-            new Server("magic-card", "account.magic-card.ac.theevilent.com", 443, true);
+            new Server("deploy", "account.ac.yunseong.dev", 443, true);
     }
 }
