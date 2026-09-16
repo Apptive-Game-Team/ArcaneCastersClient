@@ -117,7 +117,7 @@ jobs:
         id: aab
         run: |
           set -euo pipefail
-          AAB_PATH=$(find build/Android -maxdepth 1 -name '*.aab' | head -n 1)
+          AAB_PATH=$(find build -name '*.aab' | head -n 1)
           if [ -z "$AAB_PATH" ]; then
             echo "::error::빌드 결과에서 .aab 파일을 찾지 못했습니다."
             exit 1
@@ -135,7 +135,9 @@ jobs:
       # 반드시 실패한다. workflow_dispatch 는 publish 입력(기본 false)으로,
       # release 트리거는 secret 존재 여부로만 건너뛴다. GOOGLE_PLAY_SERVICE_ACCOUNT_JSON
       # 이 아직 이 저장소에 등록되지 않았으므로 지금은 어느 경로로 실행해도
-      # 이 단계가 건너뛰어지고 빌드와 artifact 업로드까지만 검증된다.
+      # GOOGLE_PLAY_SERVICE_ACCOUNT_JSON 은 등록되어 있으므로 release 트리거에서는
+      # 이 gate 가 열린다. 재설정 승인 전까지는 workflow_dispatch 로만 돌려서
+      # 빌드와 artifact 업로드까지만 검증하는 것이 안전하다.
       - name: Determine whether to publish to Play
         id: publish_gate
         env:
