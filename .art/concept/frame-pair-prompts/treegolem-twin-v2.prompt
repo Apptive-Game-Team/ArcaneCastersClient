@@ -1,0 +1,30 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a landscape canvas exactly twice as wide as it is tall (2:1 aspect ratio, for example 2048x1024).
+
+Game creature sprite for a 2.5D faceted low-poly papercraft game, matching the exact rendering technique of the attached reference images (MasterStyleKey.png and WorldTreeSpirit.png), redrawing the attached TreeGolem.png subject in that technique.
+
+Rendering technique, required exactly as in the references:
+- Build every shape from flat polygonal facet planes, like cut and folded paper. One flat, completely solid color per plane. Hard, sharp creases between adjacent planes.
+- No smooth 3D shading, no soft gradient across a plane, no gloss, no specular highlight, no wood-grain texture, no bark photo texture, no photographic noise, no painterly brushwork, no glow, no bloom.
+- If the result could be mistaken for a rendered 3D model, a photo, or a digital painting, it is wrong. It must look built from cut and folded matte paper facets, including the leaf clusters, which are built the same way the leaf canopy is built in WorldTreeSpirit.png: clusters of a few flat angular leaf-shaped facet planes, never a smooth painterly foliage texture.
+- One soft light source from the upper left: a broad flat highlight facet on the upper-left side of every volume, a broad flat shadow facet on the lower-right side. Nothing else.
+- No outer contour line and no ink outline anywhere. Shapes separate from each other only by flat color value.
+- Restrained saturation, mid-to-high value. Nothing muddy, nothing neon.
+- Simple oval-eye grammar: two dark oval eyes, each with one small highlight, looking to the right. No single glowing eye, no visor slit.
+- Chunky proportions, about three heads tall, thick trunk-like limbs -- this creature must read as a sturdy, healthy tree guardian, never gaunt, never thin, never withered or dried out. It is a completely different unit from a withered dead-tree demon, and must not be confusable with one at a glance.
+- Three-quarter camera, consistent between both panels, facing right.
+
+Two-frame layout, required exactly:
+- The canvas is split by an invisible vertical line exactly at its horizontal midpoint into two equal square panels: a LEFT panel (frame 1, standing guard pose) and a RIGHT panel (frame 2, forward punch attack pose). Do not draw the dividing line, a border, or any frame around either panel -- it stays implied only by empty magenta.
+- Both panels show the exact same tree-golem body built at the exact same overall scale: same head size, same torso width, same limb thickness, same overall standing height.
+- CRITICAL SIZE REQUIREMENT: in BOTH panels, the golem's body must nearly fill the panel top to bottom. The top of the head/leaf canopy sits within 5% of the panel's top edge, and the feet sit within 5% of the panel's bottom edge. The standing body must occupy at least 90% of the panel's height in both frames. Do not draw a small golem with a lot of empty magenta margin above and below it -- a small golem with big margins is a reject.
+- The ONLY thing allowed to differ between the two panels is the pose of the arms, torso lean, and stance width, described below -- never the overall body scale. Head design, leaf clusters, body block proportions, and palette must stay identical between the two panels.
+
+Subject identity, shared by both frames: a heavy, grounded golem built from stacked chunky wood-block masses -- a thick blocky torso, two thick blocky arms ending in blocky fists, two thick blocky legs, and a smaller blockish head -- with clusters of healthy green leaves and a couple of small leaf sprouts growing from the shoulders and the top of the head, similar to the leaf canopy of the attached WorldTreeSpirit.png. The wood blocks show visible seams between them, like the stacked-block construction of a rock golem but built from warm bark-brown timber instead of stone.
+
+Frame 1 (LEFT, standing guard): both feet planted at shoulder width, torso upright, both fists held at the sides at roughly waist height, a calm neutral stance.
+
+Frame 2 (RIGHT, forward punch attack): a forward lunge stance with the back leg braced, torso leaned forward, one thick arm extended forward with the fist leading the punch, the other arm pulled back behind for counterbalance. Keep the extended arm's reach modest -- the fist should extend forward by roughly the length of the golem's own forearm, not stretched out to the panel edge, so the whole pose still fits inside the same 90%-of-height footprint as frame 1 without shrinking the body. A small scatter of two loose leaf facets trails just behind the extended fist, kept small and close to the fist, to show the force of the swing.
+
+Palette lock -- do not deviate: bark wood #6B4A2F, #8A6239, #4A3220 for every wood block; leaf clusters in #B8CE59, #9DA74D, #768738, #384823. Eyes stay a flat dark near-black with a small pale highlight.
+
+Exclusions: no single glowing eye, no dried or cracked withered wood, no thin or gaunt limbs, no photographic bark grain, no moss (leaves only, not moss), no stone, no grey rock, no text, no watermark, no logo, no card frame or border, no cast shadow. Silhouette of the creature must stay clearly readable when shrunk to 64 pixels wide in both frames. Do not draw either golem small and centered with large empty margins -- fill the panel as instructed above.

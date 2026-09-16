@@ -56,7 +56,7 @@ namespace GameScene.Card
             }
 
             WDebug.Log($"CancelUseCard: {cardObj.CardName}");
-            if (_currentCardNameList.Contains(cardObj.CardName))
+            if (_currentCardList.Contains(cardObj))
             {
                 _currentCardNameList.Remove(cardObj.CardName);
                 _currentCardList.Remove(cardObj);
@@ -64,6 +64,7 @@ namespace GameScene.Card
                 {
                     SendCardSelectionInput(new CardUnselectRequestDto(cardObj.Magic.id));
                 }
+                isFieldSelectMode = CanSelectField;
             }
         }
 
@@ -76,12 +77,10 @@ namespace GameScene.Card
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                // 마나 바가 내려가 있으면 손패가 보이지 않는다. 이때의 스페이스는 확정이 아니라
-                // 마나 바를 올리는 입력으로 쓰고, 올라와 있을 때만 수정구를 누른 것으로 다룬다.
-                if (!TryOpenManaBar())
-                {
-                    Confirm();
-                }
+                // 마나 바가 내려가 있으면 손패가 보이지 않는다. 스페이스는 마나 바를 올리는
+                // 입력으로만 쓴다. 카드 한 장을 고르는 순간 이미 필드 선택 모드로 들어가므로
+                // 스페이스가 따로 확정할 것은 없다.
+                TryOpenManaBar();
             }
 
             if (CardHotkey.TryGetPressedSlotIndex(out int slotIndex))
@@ -130,28 +129,6 @@ namespace GameScene.Card
             }
         }
     
-        public void Confirm()
-        {
-            if (isWaitingInputResponse)
-            {
-                return;
-            }
-
-            if (!CanSelectField)
-            {
-                return;
-            }
-
-            // 카드 한 장이 마법 하나이므로 조합을 맞춰볼 것이 없다. 고른 카드가 곧 시전할 마법이다.
-            if (!TryGetCurrentMagicData(out _))
-            {
-                WDebug.Log("[CardInputSender] Selected card has no magic data yet. Confirm skipped; cards kept.");
-                return;
-            }
-
-            isFieldSelectMode = true;
-        }
-
         public string GetMagicName()
         {
             return _currentCardNameList.Count > 0 ? _currentCardNameList[0] : null;
@@ -180,7 +157,7 @@ namespace GameScene.Card
             }
             _currentCardList.Clear();
             _currentCardNameList.Clear();
-            PlayerFeedbackController.Instance.UseMagicFeedback();
+
             SetExpectedMagicUI();
             isFieldSelectMode = false;
         }
@@ -192,8 +169,43 @@ namespace GameScene.Card
                 return;
             }
 
-            AddCardList(cardObj);
+            // 카드 한 장이 마법 하나의 시전이므로, 이미 고른 카드가 있으면 그 선택을 버리고
+            // 새로 고른 카드로 바꾼다.
+            if (_currentCardList.Count > 0)
+            {
+                ReplaceSelection(cardObj);
+            }
+            else
+            {
+                AddCardList(cardObj);
+            }
+
             OnCardUsed?.Invoke();
+
+            // 카드 한 장이 곧 마법 하나이므로, 고르는 순간 바로 필드 선택 모드로 들어간다.
+            isFieldSelectMode = TryGetCurrentMagicData(out _);
+        }
+
+        /// <summary>이미 고른 카드가 있을 때 새 카드로 선택을 바꾼다. 이전 카드는 서버에도 선택 해제를 보낸다.</summary>
+        private void ReplaceSelection(CardUI newCard)
+        {
+            foreach (CardUI previousCard in _currentCardList)
+            {
+                if (previousCard == null || previousCard == newCard)
+                {
+                    continue;
+                }
+
+                previousCard.SetCardActive(false);
+                if (previousCard.Magic != null)
+                {
+                    SendCardSelectionInput(new CardUnselectRequestDto(previousCard.Magic.id));
+                }
+            }
+
+            _currentCardList.Clear();
+            _currentCardNameList.Clear();
+            AddCardList(newCard);
         }
 
         public void SendInput(Vector3 pos) //whenFieldSelect
@@ -382,7 +394,6 @@ namespace GameScene.Card
             }
 
             TryGetCurrentMagicData(out CombinedMagicData magic);
-            GameSceneUIController.Instance.TrySetExpectedMagicUI(magic, _currentCardList.Count);
             GameSceneUIController.Instance.SetExpectedManaCost(CardManaCost.Of(magic));
         }
     }

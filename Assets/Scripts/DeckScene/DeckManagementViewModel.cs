@@ -17,30 +17,21 @@ namespace DeckScene
         Update
     }
 
-    public enum DeckValidationError
-    {
-        None,
-        CardCount,
-        AttributeCount,
-        MagicCount
-    }
-
     public readonly struct DeckRequirementSummary
     {
-        public DeckRequirementSummary(int cardCount, int magicTypeCount, int attributeTypeCount)
+        public DeckRequirementSummary(int cardCount)
         {
             CardCount = cardCount;
-            MagicTypeCount = magicTypeCount;
-            AttributeTypeCount = attributeTypeCount;
         }
 
         public int CardCount { get; }
-        public int MagicTypeCount { get; }
-        public int AttributeTypeCount { get; }
     }
 
     public class DeckManagementViewModel
     {
+        /// <summary>덱 한 벌의 카드 수. lobby 의 DeckValidator 가 쓰는 값과 같아야 한다.</summary>
+        public const int DeckCardCount = 15;
+
         private static DeckResponseDto[] cachedUserDecks;
         private static CardDto[] cachedOwnedCards;
 
@@ -61,7 +52,7 @@ namespace DeckScene
         public DeckEditMode CurrentMode { get; private set; } = DeckEditMode.None;
         public bool HasCachedData => UserDecks.Length > 0 && OwnedCards.Length > 0;
         public bool CanDeleteCurrentDeck => CurrentMode == DeckEditMode.Update && CurrentDeck != null;
-        public bool CanSubmitCurrentDeck => ValidateCurrentDeck() == DeckValidationError.None;
+        public bool CanSubmitCurrentDeck => (CurrentDeck?.cards?.Length ?? 0) == DeckCardCount;
 
         public void SelectDeck(DeckResponseDto deck)
         {
@@ -89,9 +80,10 @@ namespace DeckScene
                 return false;
             }
 
+            // 덱은 15장이다. 같은 마법 장수와 원소 종류에는 제한이 없고, 가진 장수만 본다.
             int ownedCount = card.count;
             int inDeckCount = CurrentDeck.cards.Count(c => c.id == card.id);
-            if (CurrentDeck.cards.Length >= 15 || inDeckCount >= ownedCount)
+            if (CurrentDeck.cards.Length >= DeckCardCount || inDeckCount >= ownedCount)
             {
                 return false;
             }
@@ -121,56 +113,9 @@ namespace DeckScene
             return true;
         }
 
-        public DeckValidationError ValidateCurrentDeck()
-        {
-            if (CurrentDeck == null)
-            {
-                return DeckValidationError.CardCount;
-            }
-
-            int typeCount = CurrentDeck.cards
-                .Where(c => c.type == "Type")
-                .Select(c => c.name)
-                .Distinct()
-                .Count();
-            int magicCount = CurrentDeck.cards
-                .Where(c => c.type == "Magic")
-                .Select(c => c.name)
-                .Distinct()
-                .Count();
-
-            if (CurrentDeck.cards.Length != 15)
-            {
-                return DeckValidationError.CardCount;
-            }
-
-            if (typeCount < 2)
-            {
-                return DeckValidationError.AttributeCount;
-            }
-
-            if (magicCount < 3)
-            {
-                return DeckValidationError.MagicCount;
-            }
-
-            return DeckValidationError.None;
-        }
-
         public DeckRequirementSummary GetCurrentDeckSummary()
         {
-            if (CurrentDeck == null)
-            {
-                return new DeckRequirementSummary(0, 0, 0);
-            }
-
-            // TODO(#577): 덱 규칙이 "15장, 같은 마법 최대 3장, 서로 다른 원소 2종 이상"으로 바뀐다.
-            // 서버가 card.type 을 더 이상 보내지 않으므로 아래 두 값은 지금 0으로 나온다.
-            return new DeckRequirementSummary(
-                CurrentDeck.cards?.Length ?? 0,
-                CountDistinctCardNamesByType("Magic"),
-                CountDistinctCardNamesByType("Type")
-            );
+            return new DeckRequirementSummary(CurrentDeck?.cards?.Length ?? 0);
         }
 
         /// <summary>
@@ -339,15 +284,6 @@ namespace DeckScene
             long[] deckCardIds = deck.cards?.Select(card => card.id).OrderBy(id => id).ToArray() ?? Array.Empty<long>();
             long[] requestCardIds = cardIds?.OrderBy(id => id).ToArray() ?? Array.Empty<long>();
             return deckCardIds.SequenceEqual(requestCardIds);
-        }
-
-        private int CountDistinctCardNamesByType(string type)
-        {
-            return CurrentDeck?.cards?
-                .Where(c => c.type == type)
-                .Select(c => c.name)
-                .Distinct()
-                .Count() ?? 0;
         }
 
         private static bool TryGetMagic(CardDto card, out CombinedMagicData magic)

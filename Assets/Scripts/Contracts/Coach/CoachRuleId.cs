@@ -6,9 +6,6 @@ namespace Coach
         /// <summary>시전 위치를 고르지 않고 멈춰 있다.</summary>
         FieldSelectIdle,
 
-        /// <summary>카드를 골라 놓고 주문 버튼을 누르지 않는다.</summary>
-        CombineButtonIdle,
-
         /// <summary>마법 시전이 연속으로 실패한다.</summary>
         MagicFailing,
 

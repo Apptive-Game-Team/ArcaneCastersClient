@@ -22,9 +22,9 @@ namespace GameScene.Handler
             // 카드 추가
             if (data.cards?.added != null)
             {
-                foreach (string cardName in data.cards.added)
+                foreach (long magicId in data.cards.added)
                 {
-                    GameSceneUIController.Instance.AddCard(cardName);
+                    GameSceneUIController.Instance.AddCard(magicId);
                 }
             }
 

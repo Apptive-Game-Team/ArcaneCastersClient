@@ -18,64 +18,63 @@ MonoBehaviour:
     cardNames: []
     shouldClearCards: 0
     waitType: 0
+    magicName: 
   - localizationKey: tutorial.basic
     cardNames: []
     shouldClearCards: 0
     waitType: 0
-  - localizationKey: tutorial.shotfire
+    magicName: 
+  - localizationKey: tutorial.fireShot
     cardNames:
-    - Shoot
-    - Fire
+    - fire_shot
     shouldClearCards: 1
     waitType: 1
-  - localizationKey: tutorial.shotFireSuccess
+    magicName: fire_shot
+  - localizationKey: tutorial.fireShotSuccess
     cardNames: []
     shouldClearCards: 1
     waitType: 0
+    magicName: 
   - localizationKey: tutorial.barcontrol
     cardNames: []
     shouldClearCards: 0
     waitType: 0
+    magicName: 
   - localizationKey: tutorial.advanced
     cardNames: []
     shouldClearCards: 0
     waitType: 0
-  - localizationKey: tutorial.spawnArcher
+    magicName: 
+  - localizationKey: tutorial.aquaArcher
     cardNames:
-    - Spawn
-    - Shoot
-    - Water
+    - aqua_archer
     shouldClearCards: 1
-    waitType: 2
-  - localizationKey: tutorial.spawnArcherSuccess
+    waitType: 1
+    magicName: aqua_archer
+  - localizationKey: tutorial.aquaArcherSuccess
     cardNames: []
     shouldClearCards: 1
     waitType: 0
-  - localizationKey: tutorial.discard
+    magicName: 
+  - localizationKey: tutorial.element
     cardNames: []
     shouldClearCards: 0
     waitType: 0
-  - localizationKey: tutorial.discardAny
-    cardNames:
-    - Shoot
-    shouldClearCards: 1
-    waitType: 3
-  - localizationKey: tutorial.discardAnySuccess
-    cardNames: []
-    shouldClearCards: 1
-    waitType: 0
+    magicName: 
   - localizationKey: tutorial.finishEnemy
     cardNames:
-    - Shoot
-    - Fire
+    - fire_shot
     shouldClearCards: 1
-    waitType: 4
+    waitType: 2
+    magicName: 
   - localizationKey: tutorial.finishEnemySuccess
     cardNames: []
     shouldClearCards: 1
     waitType: 0
+    magicName: 
   - localizationKey: tutorial.final
     cardNames: []
     shouldClearCards: 0
     waitType: 0
+    magicName: 
   lobbySceneName: LobbyScene

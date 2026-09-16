@@ -1,11 +1,6 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Resources/Tutorial/tutorialData.asset.meta
 guid: b71fdf138c5e7ca458c47eea6db2b7b4
 NativeFormatImporter:
-========
-guid: 360cbef95879d4cdfa9306bcfa32dbc5
-DefaultImporter:
->>>>>>>> main:Assets/Scenes/AdminScene.unity.meta
   externalObjects: {}
   mainObjectFileID: 11400000
   userData: 

@@ -100,17 +100,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 22654931925569536
-    m_Localized: First of all, this world has Spell Cards and Element Cards.
+    m_Localized: First of all, this world runs on Magic Cards. One card is one spell!
     m_Metadata:
       m_Items: []
   - m_Id: 22655127950561280
-    m_Localized: You can cast a basic spell by combining one Spell Card with one
-      Element Card.
+    m_Localized: Pick a card and you go straight to aiming. Click the spot you want and the spell flies!
     m_Metadata:
       m_Items: []
   - m_Id: 22655217972908032
-    m_Localized: "You\u2019ve got Shot and Fire right now, so why don\u2019t you
-      try casting a spell with them?"
+    m_Localized: "You\u2019ve got Fire Shot right now, so why don\u2019t you try casting it?"
     m_Metadata:
       m_Items: []
   - m_Id: 22655475352178688
@@ -118,12 +116,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 22655588501917696
-    m_Localized: You can also combine three or more cards to cast more advanced spells.
+    m_Localized: Every spell has its own range and area. Some of them summon minions for you!
     m_Metadata:
       m_Items: []
   - m_Id: 22655689043578880
-    m_Localized: "You\u2019ve got Spawn, Shot, and Water right now, so try combining
-      them to summon a Water Archer."
+    m_Localized: This time, summon an Aqua Archer and put it on the field.
     m_Metadata:
       m_Items: []
   - m_Id: 22655833889673216
@@ -132,17 +129,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 22655909726883840
-    m_Localized: "Sometimes you won\u2019t be able to cast any spells, and you\u2019ll
-      have no choice but to discard a card."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 22656184567042048
-    m_Localized: Try using a single card once.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 22656269602361344
-    m_Localized: Nice! Remember, sometimes you have to let something go so you can
-      use even bigger magic later.
+    m_Localized: Every card carries an element, and elements counter each other. Check the chart in the magic book!
     m_Metadata:
       m_Items: []
   - m_Id: 22656315026673664

@@ -34,22 +34,22 @@ namespace GameScene.Card
         }
 
         private bool isActive = false;
-    
-        public string CardName;
 
-        /// <summary>이 카드가 곧 이 마법이다. 목록이 아직 안 왔으면 null 일 수 있다.</summary>
+        public string CardName { get; private set; }
+
+        /// <summary>이 카드가 곧 이 마법이다. 호출자가 이미 id 로 찾아서 넘기므로 null 이 아니어야 한다.</summary>
         public CombinedMagicData Magic { get; private set; }
 
         public string DisplayName => cardNameText.text;
         public string Mana => cardManaText.text;
 
-        public async void Init(string magicName, Sprite cardSprite)
+        public async void Init(CombinedMagicData magic, Sprite cardSprite)
         {
-            CardName = magicName;
-            Magic = LocalCombinedMagicData.GetCombinedMagicData(magicName);
-            image.sprite = cardSprite != null ? cardSprite : Magic?.GetSprite();
-            cardManaText.text = CardManaCost.Of(Magic).ToString();
-            cardNameText.text = await LocaleUtils.GetStringAsync("Magic", Magic?.localizationKey ?? magicName);
+            Magic = magic;
+            CardName = magic?.serverName;
+            image.sprite = cardSprite != null ? cardSprite : magic?.GetSprite();
+            cardManaText.text = CardManaCost.Of(magic).ToString();
+            cardNameText.text = await LocaleUtils.GetStringAsync("Magic", magic?.localizationKey ?? CardName);
         }
 
         public void SetCardActive(bool isActive)

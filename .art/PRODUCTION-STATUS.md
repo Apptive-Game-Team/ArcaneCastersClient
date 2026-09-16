@@ -150,8 +150,12 @@
 | `ElectricTower.png` | 클라이언트 이슈 #694 재작업 검수 | 200x256 RGBA, 원본 크기 유지. **진영 확인**: `.art/magic/pages/electric_tower.md`와 `.art/magic/README.md`의 진영별 표는 세계수 전기 정령이라고 적지만, 그 표는 `generate-magic-pages.py`의 `faction_for()`가 이름의 부분 문자열로 찍는 값이라 부정확하다고 이미 PR #690에서 확인됐다("electric"이 전기 정령 규칙에 걸림). `STYLE.md:144`의 Humans 절이 "Anchors: `Cannon`, `ElectricTower`"로 이 자산을 인간 진영의 정의 기준으로 못박고 있고 원본 아트도 리벳 박힌 금속+석재였으므로, 자동 생성 표 대신 STYLE.md를 따라 인간 진영 찬 회색 석재+스틸블루+청동으로 그렸다(1차 시도는 세계수 나무+황금 결정으로 잘못 그려 반려). `Cannon.png`·`Tower.png`와 같은 재질, 꼭대기의 전기 구슬과 번개 파편만 Lightning 금색 팔레트로 남겨 원소를 표시한다 |
 | `WindTotem.png` | 클라이언트 이슈 #694 재작업 검수 | 256x137 RGBA, 원본 크기 유지. 세계수 바람 정령, 박쥐막 날개를 넓은 곡선 리본으로 교체 |
 | `Towerback.png` | 클라이언트 PR (이슈 #694) | 191x256 RGBA. 꼬마돌이 `Tower` 를 등에 결속당한 컨셉으로 다시 그렸다. `MiniRockSwarm.png` 와 `Tower.png` 를 레퍼런스로 넣어 업은 쪽과 실린 쪽이 각각 알아보이게 했다 |
+| `CloudDragon.png`, `CloudDragonAttacking.png` | 클라이언트 PR (이슈 #694) | `CloudDragon.png` 256x182, `CloudDragonAttacking.png` 540x182, 둘 다 RGBA. 세계수 정령, 페인트풍 뭉게구름에서 다면체 구름 뭉치로 교체 — 뿔·박쥐막 날개·말린 꼬리·금색 등뼈 돌기는 유지. 공격 프레임은 입에서 물이 실제로 뿜어 나가는 순간이고(머금거나 준비하는 자세 아님), 물줄기는 몸 길이의 절반쯤 되는 굵기로 생성된 크기 그대로 썼다(축소하지 않음). 256x182 캔버스로는 이 굵기의 물줄기가 들어가지 않아 캔버스 폭만 540으로 늘렸다 — 몸통 크기·바닥선·세로 위치·PPU는 `CloudDragon.png`와 동일하고, 폭이 늘어난 만큼은 전부 물줄기 몫이다. `Bottom Center` 피벗은 각 캔버스 폭의 50%를 기준으로 삼으므로, 몸통은 두 캔버스에서 같은 픽셀 오프셋이 아니라 같은 world 오프셋에 오도록 배치했다(자세한 과정과 계산은 `.art/concept/frame-pairs/README.md`, `.art/ANIMATION-ASSETS.md`). `check-replacement.py origin/main`은 캔버스 크기 변경 한 줄만 표시(의도된 변경). `check-frame-pair.py`는 세로 차이 0.000으로 통과하지만 가로 차이가 +0.958 unit(한도 0.05)로 크게 나온다 — 캔버스 하단 10% 띠에 굵은 물줄기가 넓게 걸쳐 있어 "발" 위치 판정이 물 쪽으로 쏠리는 false positive이고, pivot 기준으로 겹쳐 보면 몸통은 픽셀 단위로 일치한다 |
 | `shoot/spirit_bomb_beam_segment.png` | 클라이언트 PR (이슈 #714) | 256x139 RGBA, 전부 불투명. spirit bomb 빔의 가운데에서 가로로 반복되는 띠. 새 자산이라 대조할 원본이 없다. 위아래 가장자리가 직선이고 좌우 끝의 단면이 같아 이어 붙여도 이음매가 없다 — 생성 원본에서 셰브런 주기 543px 를 재고 547px 창을 잘랐다. 반복되는 띠는 좌우로 흘러 나가므로 alpha 트림 대상이 아니고, 네 모서리 alpha 0 규칙도 적용하지 않는다. magenta 키 제거, enclosed_pixels=0, 불투명 픽셀에 magenta 잔색 0 |
 | `shoot/spirit_bomb_beam_cap.png` | 클라이언트 PR (이슈 #714) | 227x226 RGBA. spirit bomb 빔의 밑동과 끝이 배수만 달리해 함께 쓰는 여덟 갈래 별. 새 자산이라 대조할 원본이 없다. `master-v2/ArcaneImpact.png` 의 결정 배치를 그대로 따르고 색만 금색·풀색으로 바꿨다. 방향이 없어 회전해도 같게 읽힌다. magenta 키 제거, enclosed_pixels=0, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0, 투명 71.3% |
+| `RockTurret.png` | 클라이언트 PR (이슈 #694) | 169x256 RGBA, 원본 크기 유지. 인간 마법 문명, `Cannon.png`·`Tower.png`와 같은 재질 앵커(찬 회색 석재, 스틸블루 금속, 청동 이음쇠, 금색 마름모). 장전 자세, 팔은 넓은 M 자로 벌려 캔버스 폭을 채운다. 이전 시도들은 twin-panel 로 두 자세를 한 캔버스에 같이 뽑다가 공격 프레임의 날아가는 돌이 공유 crop 을 넓혀 본체가 계속 줄었다 — 이번엔 장전 자세를 먼저 단독으로 확정하고, 확정한 이미지를 레퍼런스로 넣어 공격 자세를 별도로 생성했다 |
+| `RockTurretAttacking.png` | 클라이언트 PR (이슈 #694) | 169x256 RGBA, 원본 크기 유지. 발사 직후 자세, 탑 자체는 `RockTurret.png`와 픽셀 단위로 동일한 위치·크기다 — 두 프레임을 하나의 공유 crop box(두 alpha bounding box의 합집합)와 하나의 공유 배율로 함께 내보내 지면 접점이 사후 대조가 아니라 제작 방식으로 이미 동일하다. 팔 각도만 낮추고 슬링을 비운 채 돌 하나를 캔버스 안에서 날아가는 중으로 추가했다. `check-frame-pair.py` 통과: 세로 차이 0.000 unit, 가로 차이 -0.001 unit |
+| `TreeGolem.png`, `TreeGolem2.png` | 클라이언트 PR (이슈 #694) | 240x256 / 256x215 RGBA. 공유 crop 과 배율로 몸 크기를 맞췄고, 서로 달랐던 spritePixelsToUnits 를 85 로 통일했다. **크기·튐 재작업 중** |
 
 ## 다음 교체 후보
 
@@ -164,7 +168,6 @@
 | `Crater.png` | 현재 개념을 유지하고 마스터 렌더링 기법으로 통일 |
 | `RallyingTotem.png` | 지옥불 설치물 셰이프 랭귀지 적용 |
 | `TreeGolem.png`, `TreeGolem2.png` | 공유 크롭·배율·지면 접점과 PPU를 일치시켜 프레임 재작업 |
-| 정령 계열 live sprite 1개 | `CloudDragon` 이 아직 legacy 채색 그림체다. 나머지 아홉(`WillOWisp`, `Leafair` 포함)은 이슈 #694 에서 교체했다 |
 | `drop/leaf_drop.png` | 이슈 #683. 1차 생성이 잎맥 없는 밋밋한 초록 물방울로 나와 주제를 잃었다는 이유로 반려됐다. 프롬프트를 중앙맥이 면 경계로 드러나는 잎사귀로 다시 써 두었으나(`​.art/concept/vfx-prompts/drop-leaf.txt`) 재생성 요청이 `image_gen` 사용량 한도(2026-09-15 14:15 KST 재설정)에 막혀 원본을 그대로 두었다 |
 
 ## 크기 검증
@@ -182,7 +185,6 @@
 각각 `git show <rev>:<path>`로 두 버전을 읽어 대조한다. 0장이어야 통과다.
 2026-09-15 세션에서 적용한 6장(`GiantVine`, `VineToss`, `VineColony`,
 `VineWorld`, `LightningExplosion`, `ShockOverload`)은 이 검사를 통과했다.
-
 ## 갱신 규칙
 
 1. 웹사이트에 새 이미지가 추가돼 있으면 대응하는 Unity 리소스명을 찾아 `완료`에

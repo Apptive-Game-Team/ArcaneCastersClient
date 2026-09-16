@@ -16,15 +16,13 @@ namespace TutorialScene
         private static readonly Vector3 CasterPosition = new Vector3(1f, 0f, 5f);
 
         public event Action<IReadOnlyList<CombinedMagicData>> MagicUsed;
-        public event Action SingleCardUsed;
 
-        private readonly List<string> _currentCardNameList = new List<string>();
-        private readonly List<TutorialCardUI> _currentCardList = new List<TutorialCardUI>();
+        private TutorialCardUI _currentCard;
 
         [SerializeField] GameObject shotPrefab;
         [SerializeField] GameObject mobPrefab;
-        
-        public bool CanSelectField => _currentCardList.Count >= 1;
+
+        public bool CanSelectField => _currentCard != null;
         private bool isFieldSelectMode = false;
 
         public bool IsFieldSelectMode()
@@ -34,10 +32,10 @@ namespace TutorialScene
 
         public void CancelUseCard(TutorialCardUI cardObj)
         {
-            if (_currentCardNameList.Contains(cardObj.CardName))
+            if (_currentCard == cardObj)
             {
-                _currentCardNameList.Remove(cardObj.CardName);
-                _currentCardList.Remove(cardObj);
+                _currentCard = null;
+                isFieldSelectMode = CanSelectField;
             }
         }
 
@@ -46,11 +44,6 @@ namespace TutorialScene
             if (Input.GetMouseButtonDown(1))
             {
                 Cancel();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Confirm();
             }
 
             if (CardHotkey.TryGetPressedSlotIndex(out int slotIndex))
@@ -81,68 +74,64 @@ namespace TutorialScene
             }
         }
 
-        public void Confirm()
-        {
-            if (!CanSelectField)
-                return;
-
-            // 카드 한 장이 마법 하나이므로 조합을 맞춰볼 것이 없다.
-            if (GetCurrentMagic() == null)
-            {
-                if (_currentCardList.Count == 1)
-                {
-                    SingleCardUsed?.Invoke();
-                }
-
-                WDebug.Log("Selected card has no magic data yet.");
-                TutorialSceneUIController.Instance?.PlayMagicFailEffect();
-                ClearCurrentSelection();
-                return;
-            }
-
-            isFieldSelectMode = true;
-        }
-
         public string GetMagicName()
         {
-            return _currentCardNameList.Count > 0 ? _currentCardNameList[0] : null;
+            return _currentCard != null ? _currentCard.CardName : null;
         }
 
-        /// <summary>지금 고른 카드의 마법. 한 번에 한 장만 고르므로 목록의 첫 장이다.</summary>
+        /// <summary>지금 고른 카드의 마법. 한 번에 한 장만 고른다.</summary>
         public CombinedMagicData GetCurrentMagic()
         {
-            return _currentCardList.Count > 0 ? _currentCardList[0].Magic : null;
+            return _currentCard != null ? _currentCard.Magic : null;
         }
 
         public void CancelAll()
         {
             WDebug.Log("CancelAll");
-            foreach (var card in _currentCardList)
-            {
-                card.SetCardActive(false);
-            }
-
-            _currentCardList.Clear();
-            _currentCardNameList.Clear();
-            FindObjectOfType<TutorialCardSender>().SetExpectedMagicUI();
+            _currentCard?.SetCardActive(false);
+            _currentCard = null;
+            SetExpectedMagicUI();
             isFieldSelectMode = false;
         }
 
         public void TryUseCard(TutorialCardUI cardObj)
         {
-            AddCardList(cardObj);
+            // 카드 한 장이 마법 하나의 시전이므로, 이미 고른 카드가 있으면 그 선택을 버리고
+            // 새로 고른 카드로 바꾼다.
+            if (_currentCard != null && _currentCard != cardObj)
+            {
+                _currentCard.SetCardActive(false);
+            }
+
+            _currentCard = cardObj;
+
+            // 카드 한 장이 곧 마법 하나이므로, 고르는 순간 바로 필드 선택 모드로 들어간다.
+            isFieldSelectMode = cardObj.Magic != null;
+
+            if (isFieldSelectMode)
+            {
+                return;
+            }
+
+            // 마법 목록이 아직 도착하지 않은 카드다. 고른 카드는 그대로 두고 조준만 막는다.
+            // 부르는 쪽(TutorialCardUI.OnCardClicked)이 이 호출 뒤에 카드를 선택 표시로 바꾸므로,
+            // 여기서 선택을 비우면 표시와 실제 선택이 어긋난다.
+            WDebug.LogWarning($"[TutorialCardSender] No magic data for card: {cardObj.CardName}");
+            TutorialSceneUIController.Instance?.PlayMagicFailEffect();
         }
 
         public void SendInput(Vector3 pos)
         {
-            var magics = GetCurrentMagics();
+            CombinedMagicData magic = GetCurrentMagic();
+            var magics = magic != null
+                ? new List<CombinedMagicData> { magic }
+                : new List<CombinedMagicData>();
 
             MagicUsed?.Invoke(magics);
 
-            // TODO(#579): 튜토리얼은 아직 Spawn/Shoot 카드 이름으로 연출을 고른다.
-            // 그 카드가 없어졌으므로 마법의 조준 모양으로 갈라 둔다. 튜토리얼 대본을 새 마법으로
-            // 다시 쓸 때 이 분기 전체를 다시 설계한다.
-            CombinedMagicData magic = magics.Count > 0 ? magics[0] : null;
+            // 튜토리얼은 서버 없이 도는 흉내라 실제 시전 결과를 받지 않고 연출만 두 가지로 가른다.
+            // 레인 조준 마법(투사체)은 시전자 자리에서 날아가야 하니 shotPrefab, 그 밖에는 찍은
+            // 자리에 하수인이 세워지는 mobPrefab.
             if (magic != null && GameScene.MagicIndicatorResolver.IsLaneAim(magic))
             {
                 AttachPopupBookPresenter(Instantiate(shotPrefab, CasterPosition, quaternion.identity));
@@ -151,9 +140,8 @@ namespace TutorialScene
             {
                 AttachPopupBookPresenter(Instantiate(mobPrefab, pos, quaternion.identity));
             }
-            
-            _currentCardNameList.Clear();
-            _currentCardList.Clear();
+
+            _currentCard = null;
             isFieldSelectMode = false;
 
             // 카드가 손을 떠났으니 마나 바에 남은 예상 소모량을 지운다.
@@ -175,40 +163,6 @@ namespace TutorialScene
         public void TryUseCard(CardUI cardObj)
         {
             throw new NotImplementedException();
-        }
-
-        private void AddCardList(TutorialCardUI card)
-        {
-            WDebug.Log("AddCardList: " + card.CardName);
-            _currentCardNameList.Add(card.CardName);
-            _currentCardList.Add(card);
-        }
-
-        private void ClearCurrentSelection()
-        {
-            foreach (var card in _currentCardList)
-            {
-                card.SetCardActive(false);
-            }
-
-            _currentCardNameList.Clear();
-            _currentCardList.Clear();
-            isFieldSelectMode = false;
-            SetExpectedMagicUI();
-        }
-
-        private List<CombinedMagicData> GetCurrentMagics()
-        {
-            var list = new List<CombinedMagicData>(_currentCardList.Count);
-            foreach (var c in _currentCardList)
-            {
-                if (c.Magic != null)
-                    list.Add(c.Magic);
-                else
-                    WDebug.LogWarning($"[TutorialCardSender] Unknown magic name: {c.CardName}");
-            }
-
-            return list;
         }
 
         public void SetExpectedMagicUI()

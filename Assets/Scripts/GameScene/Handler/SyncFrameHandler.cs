@@ -29,27 +29,28 @@ namespace GameScene.Handler
                     .GroupBy(x => x)
                     .ToDictionary(g => g.Key, g => g.Count());
 
-                var targetCounts = syncFrameInfo.snapshotResponseDto.myCards
+                // myCards 도 added 와 같은 마법 id 목록이다.
+                var targetCounts = (syncFrameInfo.snapshotResponseDto.myCards ?? Array.Empty<long>())
                     .GroupBy(x => x)
                     .ToDictionary(g => g.Key, g => g.Count());
 
-                // 모든 카드 종류 추출 (현재 + 목표)
-                var allCardTypes = currentCounts.Keys.Union(targetCounts.Keys);
+                // 모든 마법 id 추출 (현재 + 목표)
+                var allMagicIds = currentCounts.Keys.Union(targetCounts.Keys);
 
-                foreach (var card in allCardTypes)
+                foreach (var magicId in allMagicIds)
                 {
-                    currentCounts.TryGetValue(card, out int currentCount);
-                    targetCounts.TryGetValue(card, out int targetCount);
+                    currentCounts.TryGetValue(magicId, out int currentCount);
+                    targetCounts.TryGetValue(magicId, out int targetCount);
 
                     int diff = targetCount - currentCount;
 
                     if (diff > 0) // 추가 필요
                     {
-                        for (int i = 0; i < diff; i++) GameSceneUIController.Instance.AddCard(card);
+                        for (int i = 0; i < diff; i++) GameSceneUIController.Instance.AddCard(magicId);
                     }
                     else if (diff < 0) // 삭제 필요
                     {
-                        for (int i = 0; i < Math.Abs(diff); i++) GameSceneUIController.Instance.RemoveCard(card);
+                        for (int i = 0; i < Math.Abs(diff); i++) GameSceneUIController.Instance.RemoveCard(magicId);
                     }
                 }
             }

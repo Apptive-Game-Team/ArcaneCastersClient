@@ -18,9 +18,5 @@ namespace Data.Deck
         public bool unlocked;
         public string unlockText;
         public string progressText;
-
-        // TODO(#577): 서버가 더 이상 보내지 않는 필드다. 덱 구성 요건이 "서로 다른 원소 2종 이상"으로
-        // 옮겨가면 이 필드를 지우고 element 로 센다.
-        public string type;
     }
 }

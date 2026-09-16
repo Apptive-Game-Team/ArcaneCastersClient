@@ -18,8 +18,7 @@ namespace DeckScene
         {
             if (statusText != null)
             {
-                statusText.text =
-                    $"카드 : {summary.CardCount} / 15, 마법 {summary.MagicTypeCount} / 3, 속성 {summary.AttributeTypeCount} / 2";
+                statusText.text = $"카드 : {summary.CardCount} / {DeckManagementViewModel.DeckCardCount}";
             }
 
             if (submitButton != null)

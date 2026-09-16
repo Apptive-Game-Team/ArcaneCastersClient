@@ -1,0 +1,15 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas.
+
+Subject: a heavy tree-golem guardian — a grounded golem built from stacked chunky wood-block masses: a thick blocky torso, two thick blocky arms ending in blocky fists, two thick blocky legs, and a smaller blockish head. Clusters of healthy green leaves and a couple of small leaf sprouts grow from the shoulders and the top of the head, in the same faceted leaf-canopy language as the attached WorldTreeSpirit.png reference. The wood blocks show visible seams between them, like the stacked-block construction of a rock golem but built from warm bark-brown timber instead of stone. Standing guard pose: both feet planted at shoulder width, torso upright, both fists held at the sides at roughly waist height, a calm neutral stance. Two dark oval eyes, each with one small highlight, looking to the right.
+
+Faction and material: bark wood #6B4A2F / #8A6239 / #4A3220 for every wood block, leaf clusters in #B8CE59 / #9DA74D / #768738 / #384823. Chunky proportions about three heads tall, thick trunk-like limbs — this creature reads as a sturdy, healthy tree guardian, never gaunt, never thin, never withered or dried out (it must not be confused with a withered dead-tree demon). No moss (leaves only, not moss), no stone, no grey rock.
+
+Render in a 2.5D cut-paper faceted style: build every form from large flat polygonal facet planes, one flat solid color per plane, with hard sharp creases between planes, including the leaf clusters (built the same way as WorldTreeSpirit.png's leaf canopy: clusters of a few flat angular leaf-shaped facets, never a smooth painterly foliage texture). No smooth 3D shading, no gloss, no specular highlight streaks, no wood-grain texture, no bark photo texture, no glow, no bloom, no outer contour line, no ink outline. Forms separate by flat value contrast alone, never by an outline stroke.
+
+Single soft light source from the upper-left: every form's upper-left-facing planes are the brightest flat highlight tone, its lower-right-facing planes are the darkest flat shadow tone, with one mid-tone base plane in between. Three value bands per material, no more.
+
+Three-quarter camera, facing right. Single subject, centered, filling most of the frame — the standing body should nearly fill the square canvas top to bottom (about 90%+ of the canvas height), feet near the bottom edge, head/leaf-canopy near the top edge, with modest empty side margins left over since a standing figure is narrower than it is tall.
+
+Restrained, mid-to-high value saturation. Nothing neon, nothing muddy.
+
+No text, no letters, no frame, no card border, no watermark, no logo, no scene, no ground plane props, no ember or spark scatter, no motion blur, no single glowing eye, no visor slit.

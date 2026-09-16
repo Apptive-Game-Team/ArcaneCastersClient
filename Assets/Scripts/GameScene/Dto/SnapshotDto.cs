@@ -7,6 +7,7 @@ namespace GameScene.Dto
     {
         public int frame;
         public SnapshotObjectDto[] objects;
-        public string[] myCards;
+        // 서버 SnapshotResponseDto.myCards 는 List<Long>, 즉 마법 id 목록이다.
+        public long[] myCards;
     }
 }

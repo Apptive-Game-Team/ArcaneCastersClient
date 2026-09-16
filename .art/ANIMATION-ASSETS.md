@@ -69,7 +69,7 @@ Transform 스케일 변형은 적용하지 않는다.
 - 캔버스가 달라도 기준점에서 몸통 핵심점까지의 거리는 동일
 
 검증할 때 두 PNG를 같은 PPU로 겹쳐 발점, 골반, 머리 중심을 대조한다.
-`RockGolem`과 `RockGolem2`는 256x244, PPU 100, Bottom Center로 교정했다. 현재
+`RockGolem`과 `RockGolem2`는 256x244, PPU 100, Bottom Center로 교정했다.
 `TreeGolem`과 `TreeGolem2`는 PPU가 서로 달라 재작업 전에 교정이 필요하다.
 `TreeGolem`은 240x256에 PPU 100, `TreeGolem2`는 256x215에 PPU 80이다.
 
@@ -329,9 +329,27 @@ PPU·pivot·앵커 좌표를 같이 출력한다.
 | `CloudDragon.png` | 운룡 · 기본 자세 · 입에 물 없음 | `CloudDragon.prefab` 기본 SpriteRenderer |
 | `CloudDragonAttacking.png` | 운룡 · 물 분사 공격 자세 | `AttackSpriteSwapController.swapSprite` |
 
-두 프레임은 `220x156`, PPU 100, Bottom Center 피벗과 본체 배치를 공유한다.
-공격 이벤트가 발생하면 `CloudDragonAttacking.png`를 0.1초간 표시한 뒤 기본 자세로 복원한다.
-구형 물 아우라 `cloud.png`는 두 본체 프레임과 계속 분리해서 렌더링한다.
+두 프레임은 PPU 116.363636, Bottom Center 피벗, 몸통 배율·바닥선을 공유한다.
+`CloudDragon.png`는 `256x182`다. `CloudDragonAttacking.png`는 `540x182`로, 몸통은
+`CloudDragon.png`와 캔버스 폭이 다르지만 `AttackSpriteSwapController`가 Sprite만
+바꾸고 Transform은 건드리지 않으므로, 몸통은 두 캔버스의 가로 중심(각각 폭의
+50%, Bottom Center 피벗 기준)에서 같은 오프셋에 오도록 배치했다 — 캔버스 폭이
+다르면 중심 자체가 다른 픽셀 위치를 가리키므로, 몸통을 두 프레임에서 같은
+픽셀 오프셋에 두면 오히려 world 위치가 어긋난다. 폭이 늘어난 만큼은 전부
+물줄기 몫이고, 몸통 크기·바닥선·세로 위치는 `CloudDragon.png`와 동일하다.
+공격 이벤트가 발생하면 `CloudDragonAttacking.png`를 0.1초간 표시한 뒤 기본
+자세로 복원한다. 구형 물 아우라 `cloud.png`는 두 본체 프레임과 계속 분리해서
+렌더링한다.
+
+`check-frame-pair.py`의 가로 차이 값은 이 쌍에서 크게 나온다(약 0.96 unit,
+한도 0.05) — 이 스크립트는 캔버스 하단 10% 띠의 가로 중심을 "발" 위치로 보는데,
+그 띠 안에 굵은 물줄기가 넓게 걸쳐 있어 중심이 물 쪽으로 크게 쏠린다. 실제
+몸통 정렬은 정상이다: 두 프레임을 각자의 pivot(각 캔버스 폭의 50%) 기준으로
+겹쳐 보면 날개·뿔·꼬리·등뼈 돌기가 픽셀 단위로 일치한다(세로 차이는 0.000으로
+그대로 통과). 이 스크립트는 좁고 완전히 대칭인 프레임 쌍을 가정하고 만들어져
+있어, 캔버스 폭이 다른 프레임에서 굵은 투사체가 바닥 근처를 지나가면 이렇게
+false positive를 낸다 — 숫자만 보지 말고 pivot 기준으로 겹친 그림을 반드시
+확인한다.
 
 ## 번개 강타 프레임
 

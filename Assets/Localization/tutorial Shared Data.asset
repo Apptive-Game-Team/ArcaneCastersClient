@@ -80,11 +80,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 22655217972908032
-    m_Key: tutorial.shotfire
+    m_Key: tutorial.fireShot
     m_Metadata:
       m_Items: []
   - m_Id: 22655475352178688
-    m_Key: tutorial.shotFireSuccess
+    m_Key: tutorial.fireShotSuccess
     m_Metadata:
       m_Items: []
   - m_Id: 22655588501917696
@@ -92,23 +92,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 22655689043578880
-    m_Key: tutorial.spawnArcher
+    m_Key: tutorial.aquaArcher
     m_Metadata:
       m_Items: []
   - m_Id: 22655833889673216
-    m_Key: tutorial.spawnArcherSuccess
+    m_Key: tutorial.aquaArcherSuccess
     m_Metadata:
       m_Items: []
   - m_Id: 22655909726883840
-    m_Key: tutorial.discard
-    m_Metadata:
-      m_Items: []
-  - m_Id: 22656184567042048
-    m_Key: tutorial.discardAny
-    m_Metadata:
-      m_Items: []
-  - m_Id: 22656269602361344
-    m_Key: tutorial.discardAnySuccess
+    m_Key: tutorial.element
     m_Metadata:
       m_Items: []
   - m_Id: 22656315026673664

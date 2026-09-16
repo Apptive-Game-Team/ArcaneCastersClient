@@ -17,7 +17,7 @@ namespace WordOnline.Tests
             ""updatedMana"":5,
             ""leftPlayerHp"":100,
             ""rightPlayerHp"":100,
-            ""cards"":{""added"":[""FIRE"",""WATER""]},
+            ""cards"":{""added"":[19,20]},
             ""objects"":{
                 ""create"":[{
                     ""id"":12,
@@ -126,7 +126,7 @@ namespace WordOnline.Tests
                         ""gizmos"":[],
                         ""gauges"":[{""value"":10.0,""maxValue"":20.0,""category"":""HP""}]
                     }],
-                    ""myCards"":[""EARTH""]
+                    ""myCards"":[54]
                 },
                 ""projectileDtos"":[]}";
 

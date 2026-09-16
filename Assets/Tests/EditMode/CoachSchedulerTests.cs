@@ -112,16 +112,16 @@ namespace WordOnline.Tests
         [Test]
         public void ABreakInTheProblemRestartsTheDwellFromZero()
         {
-            CoachScheduler scheduler = WithRule(NewScheduler(), CoachRuleId.CombineButtonIdle, dwellSeconds: 8f, priority: 2);
+            CoachScheduler scheduler = WithRule(NewScheduler(), CoachRuleId.ManaBarUnopened, dwellSeconds: 8f, priority: 2);
 
             Advance(scheduler, 7f);
 
-            scheduler.SetActive(CoachRuleId.CombineButtonIdle, false);
+            scheduler.SetActive(CoachRuleId.ManaBarUnopened, false);
             Advance(scheduler, 1f);
-            scheduler.SetActive(CoachRuleId.CombineButtonIdle, true);
+            scheduler.SetActive(CoachRuleId.ManaBarUnopened, true);
 
             Assert.IsEmpty(Advance(scheduler, 7f));
-            AssertSingleShow(Advance(scheduler, 2f), CoachRuleId.CombineButtonIdle);
+            AssertSingleShow(Advance(scheduler, 2f), CoachRuleId.ManaBarUnopened);
         }
 
         [Test]
@@ -227,7 +227,7 @@ namespace WordOnline.Tests
         {
             CoachScheduler scheduler = NewScheduler();
             WithRule(scheduler, CoachRuleId.FieldSelectIdle, dwellSeconds: 6f, priority: 1);
-            WithRule(scheduler, CoachRuleId.CombineButtonIdle, dwellSeconds: 6f, priority: 2);
+            WithRule(scheduler, CoachRuleId.ManaBarUnopened, dwellSeconds: 6f, priority: 2);
 
             Assert.AreEqual(1, Advance(scheduler, 12f).Length);
         }

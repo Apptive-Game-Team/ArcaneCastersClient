@@ -350,9 +350,6 @@ MonoBehaviour:
   cardUIPrefab: {fileID: 892263666564006026, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
   lowerBar: {fileID: 0}
   cardImageMapper: {fileID: 11400000, guid: 801779e6bc17149e683648b90569ac9e, type: 2}
-  expectedMagicUI: {fileID: 0}
-  magicHelperUI: {fileID: 0}
-  expectingFailedMagicImage: {fileID: 21300000, guid: bdb8d2f3419d24d80b86c19f2f101c95, type: 3}
 --- !u!4 &983237233
 Transform:
   m_ObjectHideFlags: 0

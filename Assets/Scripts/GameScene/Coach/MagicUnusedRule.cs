@@ -11,7 +11,6 @@ namespace GameScene.Coach
     /// </summary>
     public class MagicUnusedRule : GameCoachRule, ICoachRuleLifecycle
     {
-        private MagicHelperUI helper;
         private bool cardUsedSinceLastCheck;
 
         public override CoachRuleId Id => CoachRuleId.MagicUnused;
@@ -45,40 +44,25 @@ namespace GameScene.Coach
             return true;
         }
 
+        /// <summary>
+        /// 카드 한 장이 곧 마법 하나라서 손패 카드가 그대로 시전 대상이다. 손패는 매 턴
+        /// 새로 만들어지므로 캐시하지 않고 그때그때 찾는다.
+        /// </summary>
         public override Transform[] ResolveTargets()
         {
-            MagicHelperUI resolved = ResolveHelper();
-            return resolved != null && resolved.SuggestionRoot != null
-                ? new[] { resolved.SuggestionRoot }
-                : null;
-        }
-
-        public override void OnShown()
-        {
-            MagicHelperUI resolved = ResolveHelper();
-            if (resolved != null)
+            CardUI[] cards = UnityEngine.Object.FindObjectsOfType<CardUI>();
+            if (cards.Length == 0)
             {
-                resolved.TryHighlightTopSuggestion();
-            }
-        }
-
-        public override void OnHidden()
-        {
-            MagicHelperUI resolved = ResolveHelper();
-            if (resolved != null)
-            {
-                resolved.ClearHandHighlight();
-            }
-        }
-
-        private MagicHelperUI ResolveHelper()
-        {
-            if (helper == null)
-            {
-                helper = UnityEngine.Object.FindObjectOfType<MagicHelperUI>();
+                return null;
             }
 
-            return helper;
+            var targets = new Transform[cards.Length];
+            for (int index = 0; index < cards.Length; index++)
+            {
+                targets[index] = cards[index].transform;
+            }
+
+            return targets;
         }
 
         private void OnCardUsed()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Data.Magic;
 using Global;
 using TMPro;
@@ -16,26 +17,22 @@ namespace TutorialScene
         [SerializeField] TutorialData _tutorialData;
         [SerializeField] TextMeshProUGUI _dialogueText;
         [SerializeField] ManaMocker _manaMocker;
-        
+
         private bool _advanceRequested;
-        private bool _usedShotFire;
-        private bool _usedWaterArcher;
-        private bool _usedAnyCard;
+        private readonly HashSet<string> _usedMagicNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private bool _enemyDead;
-        public event Action OnEnd; 
+        public event Action OnEnd;
 
         protected override void Awake()
-        {        
+        {
             base.Awake();
-            
+
             _cardSender.MagicUsed += OnMagicUsed;
-            _cardSender.SingleCardUsed += OnSingleCardUsed;
         }
 
         private void OnDestroy()
         {
             _cardSender.MagicUsed -= OnMagicUsed;
-            _cardSender.SingleCardUsed -= OnSingleCardUsed;
         }
 
         private void Start()
@@ -45,6 +42,11 @@ namespace TutorialScene
 
         private IEnumerator Run()
         {
+            // 전투 튜토리얼은 로비를 거치지 않고 로그인/가입 화면에서 바로 열리므로, 마법 목록과
+            // parameter 를 받아오는 GameDataRefresh.Refresh 가 아직 한 번도 호출되지 않았을 수 있다.
+            // 첫 단계를 그리기 전에 여기서 한 번 받아야 카드의 Magic, 마나, 사거리가 채워진다.
+            yield return Data.GameDataRefresh.Refresh();
+
             for (int i = 0; i < _tutorialData.steps.Length; i++)
             {
                 var step = _tutorialData.steps[i];
@@ -53,12 +55,12 @@ namespace TutorialScene
                 {
                     ClearCard();
                 }
-                
+
                 foreach (var name in step.cardNames)
                 {
                     GiveCard(name);
                 }
-                
+
                 yield return SetLocalizedDialogue(step.localizationKey);
 
                 switch (step.waitType)
@@ -66,14 +68,8 @@ namespace TutorialScene
                     case TutorialWaitType.Next:
                         yield return WaitAdvance();
                         break;
-                    case TutorialWaitType.UsedShotFire:
-                        yield return WaitUntil(() => _usedShotFire);
-                        break;
-                    case TutorialWaitType.UsedWaterArcher:
-                        yield return WaitUntil(() => _usedWaterArcher);
-                        break;
-                    case TutorialWaitType.UsedAnyCard:
-                        yield return WaitUntil(() => _usedAnyCard);
+                    case TutorialWaitType.UsedMagic:
+                        yield return WaitUntil(() => _usedMagicNames.Contains(step.magicName));
                         break;
                     case TutorialWaitType.EnemyDead:
                         yield return WaitUntil(() => _enemyDead);
@@ -127,51 +123,19 @@ namespace TutorialScene
         {
             _enemyDead = true;
         }
-        public void NotifyShotFire()
-        {
-            _usedShotFire = true;
-        }
-        
-        private void OnSingleCardUsed()
-        {
-            _usedAnyCard = true;
-        }
 
-        // TODO(#579): 튜토리얼 대본이 아직 옛 조합(Shoot+Fire, Spawn+Shoot+Water)을 가리킨다.
-        // 그 조합의 결과 마법 이름은 각각 fireShot 과 aquaArcher 였으므로 이름으로 바꿔 두었다.
-        // 튜토리얼을 새 모델로 다시 쓸 때 이 두 이름과 아래 마나 숫자를 함께 손본다.
-        private const string ShotFireMagicName = "fire_shot";
-        private const string WaterArcherMagicName = "aqua_archer";
-
-        private void OnMagicUsed(System.Collections.Generic.IReadOnlyList<CombinedMagicData> magics)
+        private void OnMagicUsed(IReadOnlyList<CombinedMagicData> magics)
         {
-            if (UsedMagic(magics, ShotFireMagicName))
+            foreach (var magic in magics)
             {
-                _usedShotFire = true;
-                _manaMocker.UseMana(25);
-            }
-
-            if (UsedMagic(magics, WaterArcherMagicName))
-            {
-                _usedWaterArcher = true;
-                _manaMocker.UseMana(45);
-            }
-        }
-
-        private static bool UsedMagic(
-            System.Collections.Generic.IReadOnlyList<CombinedMagicData> magics,
-            string serverName)
-        {
-            for (int i = 0; i < magics.Count; i++)
-            {
-                if (magics[i] != null &&
-                    string.Equals(magics[i].serverName, serverName, StringComparison.OrdinalIgnoreCase))
+                if (magic == null)
                 {
-                    return true;
+                    continue;
                 }
-            }
 
-            return false;
+                _usedMagicNames.Add(magic.serverName);
+                _manaMocker.UseMana(CardManaCost.Of(magic));
+            }
         }
 
         void GiveCard(string name)

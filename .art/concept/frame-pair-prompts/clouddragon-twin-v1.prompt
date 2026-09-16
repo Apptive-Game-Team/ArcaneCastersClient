@@ -1,0 +1,26 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a landscape canvas exactly twice as wide as it is tall (2:1 aspect ratio, for example 2048x1024).
+
+Game creature sprite for a 2.5D faceted low-poly papercraft game, matching the exact rendering technique of the attached reference images (MasterStyleKey.png and WaterSlime.png), redrawing the attached CloudDragon.png subject in that technique.
+
+Rendering technique, required exactly as in the references:
+- Build every shape from flat polygonal facet planes, like cut and folded paper. One flat, completely solid color per plane. Hard, sharp creases between adjacent planes.
+- No smooth 3D shading, no soft gradient across a plane, no gloss, no specular highlight, no fluffy fur texture, no photographic noise, no painterly brushwork, no glow, no bloom.
+- If the result could be mistaken for a rendered 3D model, a photo, or a digital painting, it is wrong. It must look built from cut and folded matte paper facets, including the cloud tufts of the body -- each tuft is a cluster of a few flat angular facet planes, never a smooth puffy 3D blob.
+- One soft light source from the upper left: a broad flat highlight facet on the upper-left side of every volume, a broad flat shadow facet on the lower-right side. Nothing else.
+- No outer contour line and no ink outline anywhere. Shapes separate from each other only by flat color value.
+- Restrained saturation, mid-to-high value. Nothing muddy, nothing neon.
+- Simple oval-eye grammar: one dark oval eye with a single small highlight dot, looking to the right. Small friendly mouth, no fangs, no aggressive expression -- this is a benign spirit creature, round and blobby, not armored.
+- Three-quarter camera, consistent between both panels, facing right.
+
+Two-frame layout, required exactly:
+- The canvas is split by an invisible vertical line exactly at its horizontal midpoint into two equal square panels: a LEFT panel (frame 1, resting) and a RIGHT panel (frame 2, water-spray attack). Do not draw the dividing line, a border, or any frame around either panel -- it stays implied only by empty magenta.
+- Both panels show the exact same small chubby cloud dragon creature at the exact same overall scale and the exact same overall body size: same head size, same body size, same wing size, same tail curl, same four stubby paws tucked beneath it as if hovering. The lowest point of the creature's body sits at the same height, roughly 78% down each panel, and the creature's overall height fills about 68% of the panel height, centered horizontally with at least 10% clearance to the panel's outer edges and to the vertical midline.
+- The ONLY things allowed to differ between the two panels: the mouth is closed in Frame 1 and open in Frame 2, and Frame 2 adds a jet of water spraying from the open mouth toward the lower right, described below. The dragon's head, body, wing, tail, and paw pose stay identical between the two panels -- do not change the body pose itself.
+
+Subject identity, shared by both frames: a small chubby flying spirit creature built from overlapping puffy white-and-pale-grey cloud-tuft facet clusters for its body, one pale blue curved horn on its forehead, one pale blue bat-like wing on its back, a pale blue curling tail, a few small gold spike tufts along its spine, a small gold nose, and dark oval eyes with a single highlight. Round, soft, weightless silhouette -- no armor, no hard edges, no visible legs beyond small tucked paws.
+
+Frame 2 (RIGHT, water-spray attack) only: the mouth is open and a jet of water sprays forward and down from it, built from the same flat faceted-planes technique -- a chunky angular stream of pale blue water shapes breaking into a few larger droplet facets near the end, matching the faceted water language of the attached WaterSlime.png reference. Keep the water jet to the lower-right of the head, not overlapping or hiding the dragon's own body silhouette.
+
+Palette lock -- do not deviate: body cloud-white and pale grey #F5F5F2, #DCE3E2, #B9C4C4; horn, wing, tail, and water spray in blue #E5EBE7, #B3CCCA, #9BB3B3, #5EA191, #2A6D64; spike tufts and nose in gold #F6DB5F, #D7A313. Eyes stay a flat dark near-black.
+
+Exclusions: no spherical aura or halo around the body (that is a separate asset, never drawn here), no glow, no bloom, no wind-swirl lines, no fur strands, no fangs, no angry expression, no text, no watermark, no logo, no card frame or border, no cast shadow. Silhouette of the creature must stay clearly readable when shrunk to 64 pixels wide in both frames.

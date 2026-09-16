@@ -16,7 +16,6 @@ namespace GameScene.Coach
             return new ICoachRule[]
             {
                 new FieldSelectIdleRule(),
-                new CombineButtonIdleRule(),
                 new MagicFailingRule(),
                 new MagicUnusedRule(),
                 new ManaBarUnopenedRule()

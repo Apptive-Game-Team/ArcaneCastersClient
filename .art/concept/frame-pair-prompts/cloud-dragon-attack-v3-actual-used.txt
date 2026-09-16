@@ -1,0 +1,9 @@
+Edit Image 1 only. Image 2 is a rendering-style reference only.
+
+Create a 1900x1050 wide landscape production-source sprite image. Fill every background pixel with fully opaque pure magenta #FF00FF (RGB 255,0,255), uniform edge to edge. No checkerboard, gradient, texture, shadow, glow, scene, or ground. Magenta must not appear on the creature or water.
+
+Preserve the exact same cute CloudDragon from Image 1: identical pose, proportions, silhouette, body arrangement, camera, right-facing direction, colors, curled tail, wings, horn, gold back spikes, cloud tufts, feet, eye, snout, and friendly expression. Place it on the left. Scale it proportionally so its unchanged body touches the top and bottom canvas edges with zero margin, as in Image 1. Never shrink, stretch, mirror, rotate, move, or redesign the body.
+
+The only edit: naturally open the mouth and show a strong fountain-like jet of clean water already spraying from the mouth toward the right and slightly downward. The main connected water ribbon is approximately half the dragon's nose-to-tail length and one third of its head height thick. Make it bold, solid, chunky, and immediately readable, with exactly two or three large angular droplets just beyond its end. It is not a drip, trickle, tiny splash, bubble cluster, or short spurt. Use the extra right-side width for this water. Keep water clear of the dragon silhouette.
+
+Match the flat faceted 2.5D cut-paper rendering in both references: large matte polygon planes, crisp hard facet boundaries, exactly three value bands per material, broad upper-left highlight facets and broad lower-right shadow facets. Restrained pale cyan and blue water. No smooth shading, gloss, specular highlights, texture, grain, glow, bloom, outline, ink, aura, wind lines, fangs, anger, text, watermark, logo, border, second creature, cast shadow, or scenery.

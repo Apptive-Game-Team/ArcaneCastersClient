@@ -13,16 +13,11 @@ namespace GameScene
     {
         [SerializeField] private TextMeshProUGUI manaText;
         [SerializeField] private Slider manaSlider;
-    
+
         [SerializeField] private CardUI cardUIPrefab;
         [SerializeField] private GameObject lowerBar;
 
-        [SerializeField] private ExpectedMagicUI expectedMagicUI;
-    
-        [SerializeField] private MagicHelperUI magicHelperUI;
-        
-        [SerializeField] private Sprite expectingFailedMagicImage;
-        
+
         private ManaCostPreview manaCostPreview;
         private int currentMana;
         private int expectedManaCost;
@@ -54,27 +49,33 @@ namespace GameScene
         }
 
         /// <summary>
-        /// 손패에 카드를 한 장 붙인다. 카드 앞면은 마법별 아트다.
-        /// TODO(#576): 서버 frame 의 cards.added 가 이름 목록에서 마법 id 목록으로 바뀌면
-        /// 이 인자를 long 으로 옮기고 id 로 마법을 찾는다.
+        /// 손패에 카드를 한 장 붙인다. 카드 앞면은 마법별 아트다. 마법 목록이 아직 도착하지 않아
+        /// magicId 를 못 찾으면 경고만 남기고 카드를 만들지 않는다.
         /// </summary>
-        public void AddCard(string cardname)
+        public void AddCard(long magicId)
         {
-            if (lowerBar == null || cardUIPrefab == null || magicHelperUI == null) return;
+            if (lowerBar == null || cardUIPrefab == null) return;
+
+            if (!LocalCombinedMagicData.TryGetById(magicId, out CombinedMagicData magic))
+            {
+                WDebug.LogWarning($"[GameSceneUIController] 마법 id {magicId} 를 찾지 못했다. " +
+                                   "마법 목록이 아직 안 왔을 수 있다. 카드를 만들지 않는다.");
+                return;
+            }
+
             CardUI cardUI = Instantiate(cardUIPrefab, lowerBar.transform);
-            cardUI.Init(cardname, DeckScene.DeckCardSpriteResolver.GetMagicSprite(cardname));
-            magicHelperUI.RefreshSuggestions();
+            cardUI.Init(magic, DeckScene.DeckCardSpriteResolver.GetMagicSprite(magic));
         }
 
-        public void RemoveCard(string cardName)
+        /// <summary>같은 마법 id 를 가진 카드를 손패에서 한 장 지운다.</summary>
+        public void RemoveCard(long magicId)
         {
             foreach (Transform child in lowerBar.transform)
             {
                 CardUI cardUI = child.GetComponent<CardUI>();
-                if (cardUI != null && cardUI.CardName == cardName)
+                if (cardUI != null && cardUI.Magic != null && cardUI.Magic.id == magicId)
                 {
                     Destroy(child.gameObject);
-                    magicHelperUI.RefreshSuggestions();
                     return;
                 }
             }
@@ -86,28 +87,20 @@ namespace GameScene
             return CardHotkey.FindCardAt<CardUI>(lowerBar.transform, index);
         }
 
-        public List<string> GetAllCards()
+        /// <summary>지금 손패에 있는 카드들의 마법 id 목록.</summary>
+        public List<long> GetAllCards()
         {
-            if (lowerBar == null) return new List<string>();
-            List<string> cardNames = new List<string>();
+            if (lowerBar == null) return new List<long>();
+            List<long> magicIds = new List<long>();
             foreach (Transform child in lowerBar.transform)
             {
-                cardNames.Add(child.GetComponent<CardUI>().CardName);
+                CardUI cardUI = child.GetComponent<CardUI>();
+                if (cardUI != null && cardUI.Magic != null)
+                {
+                    magicIds.Add(cardUI.Magic.id);
+                }
             }
-            return cardNames;
-        } 
-
-        /// <summary>고른 카드의 마법을 수정구에 그린다. 고른 것이 없으면 비운다.</summary>
-        public void TrySetExpectedMagicUI(CombinedMagicData magic, int selectedCardCount)
-        {
-            if (expectedMagicUI == null) return;
-            if (magic != null)
-            {
-                expectedMagicUI.SetImage(magic.GetSprite());
-                return;
-            }
-
-            expectedMagicUI.SetImage(selectedCardCount == 0 ? null : expectingFailedMagicImage);
+            return magicIds;
         }
     }
 }

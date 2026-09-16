@@ -48,8 +48,8 @@ namespace TutorialScene
             currentRangeObj.SetActive(true);
 
 
-            // TODO(#579): 내장 마나·사거리 표가 없어졌다. 사거리는 서버 parameters 에서 마법 이름으로 읽고,
-            // parameters 가 아직 안 왔으면 옛 표의 Shoot 사거리와 같은 기본값으로 그린다.
+            // 사거리는 서버 parameters 에서 마법 이름으로 읽는다. parameters 가 아직 안 왔으면
+            // 기본값(DefaultRange)으로 그린다.
             CombinedMagicData magic = cardInputSender.GetCurrentMagic();
             if (magic == null)
             {

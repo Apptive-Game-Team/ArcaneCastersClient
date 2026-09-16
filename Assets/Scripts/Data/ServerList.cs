@@ -8,6 +8,12 @@ namespace Data
         /// </summary>
         public static Server MatchingServer => MatchingServerCatalog.Current.Server;
 
-        public static readonly Server AccountServer = new Server("춘천", "account.ac.yunseong.dev", 443, true);
+        /// <summary>
+        /// Must sit in the same environment as <see cref="MatchingServer"/>. This server signs
+        /// the session token and publishes the JWKS that both the lobby and
+        /// <c>JwksService</c> verify it with, so a token from another environment is rejected.
+        /// </summary>
+        public static readonly Server AccountServer =
+            new Server("magic-card", "account.magic-card.ac.theevilent.com", 443, true);
     }
 }

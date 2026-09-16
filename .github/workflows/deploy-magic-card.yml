@@ -1,0 +1,117 @@
+name: Build and Deploy WebGL (magic-card)
+
+# The magic-card track's web build. Publishes to WordOnline_Play under magic-card/,
+# so the repository root - which deploy-test.yml overwrites from main and which is
+# the live web play page - is never touched.
+#
+#   https://apptive-game-team.github.io/WordOnline_Play/magic-card/
+#
+# This build points at the magic-card environment by default (MatchingServerCatalog
+# and ServerList on this branch), so it reaches lobby.magic-card.ac.theevilent.com
+# and its own account server, not dev.
+
+on:
+  push:
+    branches:
+      - magic-card
+  workflow_dispatch:
+
+# Shared with deploy-test.yml on purpose. Both workflows push to WordOnline_Play's
+# main branch and deploy-test.yml has no retry, so letting them overlap would break
+# it with a non-fast-forward. cancel-in-progress is false here because a cancelled
+# build publishes nothing; the cost is that a push to main can cancel a magic-card
+# run that is still queued, and the fix for that is to re-run this workflow.
+concurrency:
+  group: word-online-play-push
+  cancel-in-progress: false
+
+jobs:
+  buildWebGL:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Docker prune
+        run: docker system prune -af
+
+      - name: Cache Library folder
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-WebGL-magic-card-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-WebGL-magic-card-
+            Library-WebGL-
+            Library-
+
+      # ProjectSettings/ProjectVersion.txt says 2022.3.34f1. deploy-test.yml is still
+      # pinned to 2022.3.22f1 and so disagrees with the project; release.yml uses the
+      # project's own version and so does this.
+      - name: Build WebGL
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.34f1
+          targetPlatform: WebGL
+          buildName: WebGL
+          buildMethod: BuildScript.BuildDevWebGL
+          customParameters: -logFile -
+
+      - name: Publish to WordOnline_Play under magic-card/
+        env:
+          PLAY_TOKEN: ${{ secrets.WORD_ONLINE_PLAY_TOKEN }}
+        run: |
+          set -euo pipefail
+          sudo chown -R "$(id -u):$(id -g)" build
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git clone "https://x-access-token:$PLAY_TOKEN@github.com/Apptive-Game-Team/WordOnline_Play.git" play
+          cd play
+
+          # Replace the whole directory rather than copying over it, so a file that
+          # disappears from the build does not linger and get served.
+          rm -rf magic-card
+          mkdir -p magic-card
+          cp -r ../build/WebGL/WebGL/. magic-card/
+
+          git add magic-card
+          if git diff --cached --quiet; then
+            echo "build is identical to what is already published; nothing to push"
+            exit 0
+          fi
+
+          git commit -m "Update magic-card WebGL build from ${GITHUB_SHA::8}"
+
+          # The concurrency group should keep deploy-test.yml out of the way, but a
+          # release.yml run pushes here too and is in no group with this one.
+          pushed=0
+          for _ in 1 2 3 4 5; do
+            if git push origin main; then
+              pushed=1
+              break
+            fi
+            git pull --rebase origin main
+          done
+          if [ "$pushed" != 1 ]; then
+            echo "::error::WordOnline_Play 로 push 하지 못했습니다."
+            exit 1
+          fi
+
+      - name: Where it landed
+        run: echo "https://apptive-game-team.github.io/WordOnline_Play/magic-card/" >> "$GITHUB_STEP_SUMMARY"

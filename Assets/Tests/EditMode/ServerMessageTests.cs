@@ -14,7 +14,7 @@ namespace WordOnline.Tests
         public void FrameMessageResolvesToFrameInfoDto()
         {
             const string json = @"{""type"":""frame"",""remainingTime"":118,""updatedMana"":7,
-                ""leftPlayerHp"":100,""rightPlayerHp"":92,""cards"":{""added"":[""FIRE""]},
+                ""leftPlayerHp"":100,""rightPlayerHp"":92,""cards"":{""added"":[19]},
                 ""objects"":{""create"":[],""update"":[],""projectile"":[]}}";
 
             ServerMessage message = JsonCodec.Deserialize<ServerMessage>(json);
@@ -25,7 +25,7 @@ namespace WordOnline.Tests
             Assert.AreEqual(118, frame.remainingTime);
             Assert.AreEqual(7, frame.updatedMana);
             Assert.AreEqual(92, frame.rightPlayerHp);
-            Assert.AreEqual(new[] { "FIRE" }, frame.cards.added);
+            Assert.AreEqual(new long[] { 19 }, frame.cards.added);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace WordOnline.Tests
         {
             const string json = @"{""type"":""sync"",""remainingTime"":90,""updatedMana"":3,
                 ""leftPlayerHp"":80,""rightPlayerHp"":70,
-                ""snapshotResponseDto"":{""frame"":180,""objects"":[],""myCards"":[""WATER""]},
+                ""snapshotResponseDto"":{""frame"":180,""objects"":[],""myCards"":[20]},
                 ""projectileDtos"":[]}";
 
             ServerMessage message = JsonCodec.Deserialize<ServerMessage>(json);
@@ -41,7 +41,7 @@ namespace WordOnline.Tests
             Assert.IsInstanceOf<SyncFrameInfo>(message);
             SyncFrameInfo sync = (SyncFrameInfo)message;
             Assert.AreEqual(180, sync.snapshotResponseDto.frame);
-            Assert.AreEqual(new[] { "WATER" }, sync.snapshotResponseDto.myCards);
+            Assert.AreEqual(new long[] { 20 }, sync.snapshotResponseDto.myCards);
             Assert.IsEmpty(sync.projectileDtos);
         }
 

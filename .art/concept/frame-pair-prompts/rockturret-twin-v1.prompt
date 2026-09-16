@@ -1,0 +1,27 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane rendering, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a landscape canvas exactly twice as wide as it is tall (2:1 aspect ratio, for example 2048x1024).
+
+Game building sprite for a 2.5D faceted low-poly papercraft game, matching the exact rendering technique of the attached reference images (MasterStyleKey.png and HumanMagicTower.png).
+
+Rendering technique, required exactly as in the references:
+- Build every shape from flat polygonal facet planes, like cut and folded paper. One flat, completely solid color per plane. Hard, sharp creases between adjacent planes.
+- No smooth 3D shading, no soft gradient across a plane, no gloss, no specular highlight, no surface texture, no surface grain, no photographic noise, no painterly brushwork, no glow, no bloom.
+- If the result could be mistaken for a rendered 3D model, a photo, or a digital painting, it is wrong. It must look built from cut and folded matte paper facets.
+- One soft light source from the upper left: a broad flat highlight facet on the upper-left side of every volume, a broad flat shadow facet on the lower-right side. Nothing else.
+- No outer contour line and no ink outline anywhere. Shapes separate from each other only by flat color value.
+- Restrained saturation, mid-to-high value. Nothing muddy, nothing neon.
+- Three-quarter camera, consistent between both panels, facing right.
+
+Two-frame layout, required exactly:
+- The canvas is split by an invisible vertical line exactly at its horizontal midpoint into two equal square panels: a LEFT panel (frame 1, loaded/idle) and a RIGHT panel (frame 2, just fired). Do not draw the dividing line, a border, or any frame around either panel -- it stays implied only by empty magenta.
+- Both panels show the exact same stone tower base at the exact same overall scale: the tower is the same height, same width, same block layout, same gem, same door, same banner, drawn at the same size and same position in each panel. Both towers stand on the same implied ground line at roughly 82% down each panel, filling about 74% of the panel height, centered horizontally with at least 10% clearance to the panel's outer edges and to the vertical midline.
+- The ONLY thing allowed to differ between the two panels is the torsion throwing arm assembly mounted on top of the tower, described below. Never redraw the tower body itself differently between panels.
+
+Subject identity, shared by both frames: a squat siege catapult turret belonging to the human faction -- built machinery, not a creature. A square masonry tower base built from cut cool-grey stone blocks in straight lines and right angles, with steel-blue accent armor plates bolted on with bronze rivets, a single flat gold-bronze diamond insignia set into the front face, and a small arched doorway at the base. No face, no eyes, no mouth anywhere on the tower -- this is a device, not a creature. Mounted on top of the tower: two long angled wooden-and-metal throwing arms in a V shape, joined partway up by a taut leather sling pouch that normally cradles one large round grey boulder.
+
+Frame 1 (LEFT, loaded/idle): the two throwing arms are drawn back and upright, under tension, the sling pouch raised high between them with the round grey boulder resting inside it, the ropes and sling drawn taut.
+
+Frame 2 (RIGHT, just fired): the two throwing arms are snapped forward and down past the vertical, the sling pouch now empty and hanging slack and loose to one side, the ropes visibly slack. A single round grey boulder is shown just departing the tower, drawn to the upper right of the arms mid-flight, with two or three small flat motion-streak facets trailing behind it to show it was just launched.
+
+Faction palette lock, human machinery -- do not deviate: cool grey stone #C4CCC8, #A09C92, #616662 for every masonry block; steel blue #6191A3 for the accent armor plates and banner cloth; bronze / dark wood #5D4032 for the throwing-arm timber, rivets, and door frame; the diamond insignia and any small trim in a warm gold-bronze. Do not use warm tan stone, do not use moss, do not use any green -- that palette belongs to a different faction (rock golems) and must not appear here.
+
+Exclusions: no face, no eyes, no mouth, no moss, no vegetation, no warm tan stone, no wheels, no text, no watermark, no logo, no card frame or border, no cast shadow, no ground plane texture beyond an implied thin baseline. Silhouette of the tower plus arms must stay clearly readable when shrunk to 64 pixels wide in both frames.

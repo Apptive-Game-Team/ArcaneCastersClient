@@ -1,0 +1,19 @@
+The first attached image is the final, approved base pose of this creature — a small cloud dragon spirit — already cropped exactly to production size: a 256x182 pixel canvas where the dragon's body touches the very top and very bottom edge of the canvas with zero margin. The second attached image is the master rendering-technique reference for this game's whole art style.
+
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself.
+
+Use a WIDE landscape canvas, noticeably wider than the first reference image's own 256:182 (about 1.4:1) proportions — aim for roughly 1.8:1, for example 1900x1050. The extra width on the right exists specifically to give a bold water jet room to breathe; do not treat this as a tight square crop.
+
+Draw the exact same cloud dragon creature as the first attached image, positioned in the LEFT portion of this wider canvas, at the exact same overall body size relative to the canvas height, the exact same pose, camera angle, and colors: the body must touch the top and bottom of the canvas with zero margin exactly like the reference, keeping its own proportions completely unchanged. Do not shrink, stretch, or reposition the body to make room for the water — the extra canvas width is there so the water never needs to compete with the body for space. Do not change the horn, wing, tail, spike, or cloud-tuft shapes or their sizes.
+
+The only change from the reference: open the mouth and add a bold jet of water actively spraying out and already leaving the mouth — this is the moment the water is being shot forward with force, not a moment of gathering, sipping, or preparing to spit. Build the water from the same flat faceted-plane technique as the body: a solid, chunky, confident stream — this must NOT read as a thin dribble or a small drip. Make it prominent and easy to read at a glance:
+- Length: the water stream should extend roughly half the total length of the dragon's own body (measuring the dragon from nose to tail-tip) — a substantial, clearly-visible jet, not a short spurt.
+- Thickness: the main stream should be roughly one third as thick as the dragon's own head height — a solid, chunky ribbon of water, not a thin line.
+- End the stream in two or three separate angular droplet facets, each a noticeable chunky shape in its own right (not tiny specks), scattered just past the end of the main stream.
+- The water sprays generally rightward and slightly downward from the mouth, staying clear of the dragon's own wing, tail, and horn silhouette.
+
+You have plenty of canvas width for this — use it. A water jet that looks small, thin, or timid next to the dragon's body is a reject; it must read instantly as "this creature is blasting a jet of water," even at a glance.
+
+Rendering technique, required exactly as in the references: flat polygonal facet planes, one flat solid color per plane, hard sharp creases between planes, no smooth 3D shading, no gloss, no specular highlight, no texture, no glow, no bloom, no outer contour line, no ink outline. One soft light source from the upper-left: a broad highlight facet on the upper-left of each volume, a broad shadow facet on the lower-right, only three value bands per material. Restrained saturation, mid-to-high value, nothing muddy or neon.
+
+Exclusions: no spherical aura or halo around the body, no wind-swirl lines, no fangs, no angry expression, no text, no watermark, no logo, no card frame or border, no cast shadow, no second creature, no scene, no ground plane. Silhouette must stay clearly readable when shrunk to 64 pixels wide.
