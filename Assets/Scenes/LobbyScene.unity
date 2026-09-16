@@ -820,7 +820,7 @@ MonoBehaviour:
       m_TableCollectionName: GUID:3c47a636d3d4a4d6aad778789441531a
     m_TableEntryReference:
       m_KeyId: 2169947283456
-      m_Key: 
+      m_Key:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
@@ -4158,6 +4158,15 @@ MonoBehaviour:
     m_TableEntryReference:
       m_KeyId: 3914773553152
       m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  randomDeckPlay:
+    m_TableReference:
+      m_TableCollectionName: GUID:8d48c82df41cc46e1af6de4a9b33e57b
+    m_TableEntryReference:
+      m_KeyId: 8000000000000
+      m_Key:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []

@@ -9,15 +9,22 @@ using Global.Serialization;
 
 namespace LobbyScene
 {
+    [Serializable]
+    public sealed class MatchTicketRequest
+    {
+        public string deckMode;
+    }
+
     public class MatchQueueApiService : MonoBehaviour
     {
         private static ServerEndpoint MatchTickets =>
             ServerList.MatchingServer.Api.Path("api", "match", "tickets");
 
-        public IEnumerator CreateTicket(Action<MatchTicket> callback)
+        public IEnumerator CreateTicket(string deckMode, Action<MatchTicket> callback)
         {
             using var webRequest = new UnityWebRequest(MatchTickets, "POST");
-            webRequest.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{}"));
+            string json = JsonCodec.Serialize(new MatchTicketRequest { deckMode = deckMode });
+            webRequest.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             webRequest.SetRequestHeader("Content-Type", "application/json");
             yield return SendTicketRequest(webRequest, callback, "CreateTicket");
