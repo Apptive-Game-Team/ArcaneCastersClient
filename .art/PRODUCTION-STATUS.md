@@ -169,6 +169,11 @@
 | `ThunderBirdSwarm.png` | `game-assets/thunder-bird-swarm.webp` | 위와 같음 |
 | `WallGolem.png` | `game-assets/wall-golem.webp` | 위와 같음 |
 | `MiniRockSwarm.png` | `game-assets/mini-rock-swarm.webp` | 위와 같음 |
+| `Background/tree_1.png` | 클라이언트 PR (이슈 #54) | 277x242 RGBA, 원본 크기 유지. 쌍줄기 중간 크기 나무, 씬에서 가장 많이 쓰여 넷 중 가장 중립적인 실루엣이다. magenta 키 제거, 네 모서리 alpha 0, 바닥 여백 4px(옛 4px) |
+| `Background/tree_2.png` | 클라이언트 PR (이슈 #54) | 265x222 RGBA, 원본 크기 유지. 오른쪽으로 기운 한 줄기에 둥근 수관. 바닥 여백 0px(옛 0px) |
+| `Background/tree_3.png` | 클라이언트 PR (이슈 #54) | 234x218 RGBA, 원본 크기 유지. 넷 중 가장 작은 어린 나무. **내용 폭이 166px 로 옛 232px 보다 28% 좁다** — 프롬프트가 가는 줄기를 요구한 결과이고 높이와 바닥 접점은 맞으나, 나무 줄에서 옛 그림만큼 폭을 채우지 못한다. 같은 PR 에서 나무를 83 그루 더 심어 생긴 틈을 메웠다 |
+| `Background/tree_4.png` | 클라이언트 PR (이슈 #54) | 328x264 RGBA, 원본 크기 유지. 넷 중 가장 크고 넓은 나무, 나무 줄의 기준점. 바닥 여백 4px(옛 4px) |
+| `Background/rock.png` | 클라이언트 PR (이슈 #54) | 452x166 RGBA, 원본 크기 유지. 이끼 낀 바위 무더기. 찬 회색이 아니라 이끼바위 골렘과 같은 따뜻한 회색 계열을 썼다. 바닥 여백 2px(옛 2px) |
 
 ## 다음 교체 후보
 

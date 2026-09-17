@@ -1,0 +1,13 @@
+Fill the entire square canvas edge to edge with one continuous opaque grass-field ground texture. There is no background colour behind it, no magenta key, no transparency, no alpha: every pixel is grass. The texture must tile seamlessly — the left edge continues into the right edge and the top edge continues into the bottom edge with no visible seam, no border, no vignette, no frame, and no darkening toward the edges.
+
+Viewpoint: straight top-down, looking directly down at flat ground from above. This is a floor texture, not a scene and not a three-quarter view. Nothing stands up out of it, nothing casts a long shadow, there is no horizon, no sky, and no perspective — the whole surface is at one single height.
+
+Subject: a sunlit grass clearing floor in a bright forest. Build it from large overlapping matte paper shapes of grass in three value bands — a mid base green, a broad lighter band, and a broad darker band — arranged as wide soft irregular patches, like sheets of coloured paper laid over each other. Scatter a small number of flat cut-paper grass tufts and a few loose fallen leaves across the surface as sparse accents, spaced far apart, never clustered into a pattern the eye can lock onto and never forming rows.
+
+Palette: warm yellow-green grass. Base hex #7FA83F, lighter band hex #98C24E, darker band hex #5F8A32, deepest shadow patch hex #4A6E28, leaf accents hex #B7D45E. Restrained saturation, mid-to-high value. Nothing muddy, nothing neon, no blue-green, no grey.
+
+Render in the 2.5D cut-paper master style: large flat matte shapes, one flat solid colour per shape, hard clean edges between shapes, a very subtle gradient at most inside a large shape, no outer contour line and no ink outline, no smooth 3D shading, no gloss, no specular highlight, no glow. One soft light source from upper-left — patches facing upper-left take the lighter band, patches facing lower-right take the darker band. No painterly brushwork, no visible brush strokes, no canvas or paper grain, no fine detail noise, no airbrush blur.
+
+Keep the overall value range narrow and even so that game units and coloured effects drawn on top stay readable against it. Contrast lives in the units, not in the floor. Avoid any single feature large or dark enough to read as an object rather than as ground.
+
+Exclude: no text, no frame, no border, no watermark, no logo, no vignette, no characters, no creatures, no trees, no rocks, no path, no road, no river, no flowers, no buildings, no props, no cast shadows from off-screen objects, no horizon, no sky, no perspective, no depth-of-field blur, no tiling grid lines, no repeated motif.

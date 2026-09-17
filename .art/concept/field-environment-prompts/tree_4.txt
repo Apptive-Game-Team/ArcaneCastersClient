@@ -1,0 +1,15 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself.
+
+Subject: a single broadleaf forest tree, standing upright and seen straight from the front at slightly raised eye level, as a scenery prop for the edge of a battle field. One chunky trunk splitting into two or three thick chunky boughs low down, carrying one broad rounded canopy mass. The tree is stout and stocky, wider than it is tall is wrong — make it roughly as wide as it is tall, with the canopy clearly heavier than the trunk. A low skirt of chunky grass tufts wraps the base where the trunk meets the ground.
+
+Variant for this file — tree_4, canvas 328x264, the largest and broadest, used as the anchor of a tree line: three thick boughs spreading into a wide canopy that is clearly wider than tall, with the heaviest cluster mass on the upper-left.
+
+Composition: single subject, centered horizontally, filling the canvas width. The bottom of the grass skirt sits exactly on the bottom edge of the frame with no gap below it — this sprite's pivot is bottom centre and it must touch the ground in game. The canopy top reaches the top edge of the frame. Nothing else in frame.
+
+Render in the 2.5D cut-paper master style: build the canopy from a handful of large flat overlapping leaf-cluster shapes, one flat solid colour per shape, hard clean edges where shapes overlap, no smooth 3D shading, no gloss, no specular highlight, no glow, no outer contour line, no ink outline. The trunk is built the same way from a few large flat bark planes, not from drawn bark lines. Use three value bands per material and no more. One soft light source from upper-left: upper-left-facing clusters take the lightest band, lower-right-facing clusters take the darkest band.
+
+Palette: canopy base hex #4E9A34, upper-left highlight cluster hex #79BE45, lower-right shadow cluster hex #2F6B23, with hex #A8D45A used sparingly on only the two or three topmost clusters. Trunk base hex #8A5A33, upper-left highlight hex #A97446, lower-right shadow hex #5E3B21. Grass skirt reuses the canopy greens. Restrained saturation, mid-to-high value. No neon yellow-green, nothing muddy.
+
+Critically: no painterly brushwork, no soft airbrushed gradients inside the leaves, no speckled leaf-by-leaf detail, no individual drawn leaves, no fuzzy edges. The canopy reads as cut paper shapes stacked in layers, not as a painted bush. The silhouette must survive downscale to 64px as one solid readable tree.
+
+Exclude: no text, no frame, no card border, no watermark, no logo, no ground plane, no cast shadow, no scene, no sky, no horizon, no other trees, no creatures, no face, no eyes, no fruit, no flowers, no birds, no path. Single tree only, nothing else in frame.
