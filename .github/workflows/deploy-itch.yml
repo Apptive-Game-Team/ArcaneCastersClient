@@ -105,6 +105,14 @@ jobs:
         if: matrix.target == 'StandaloneOSX'
         run: chmod -R +x ${{ matrix.pushPath }}/*.app/Contents/MacOS
 
+      # Unity drops Burst debug symbols beside the standalone player in a
+      # folder it names DoNotShip, and the push path is the whole target
+      # directory, so the upload would carry them. Verified on a local macOS
+      # build: the folder sits next to the .app.
+      - name: Drop Burst debug symbols
+        if: matrix.target != 'WebGL'
+        run: rm -rf ${{ matrix.pushPath }}/*_BurstDebugInformation_DoNotShip
+
       - name: Push to Itch.io
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
