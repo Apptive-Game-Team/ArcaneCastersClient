@@ -7,8 +7,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  buildWebGL:
+  build:
     runs-on: ubuntu-latest
+
+    # One job per itch.io channel. fail-fast is off so a broken desktop build
+    # does not cancel the WebGL push, which is the one players hit first.
+    # pushPath differs because unity-builder writes WebGL into a player
+    # subdirectory (buildsPath/target/buildName) while the standalone targets
+    # put the whole player directly under buildsPath/target.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: WebGL
+            channel: webgl
+            pushPath: build/WebGL/WebGL
+          - target: StandaloneWindows64
+            channel: windows
+            pushPath: build/StandaloneWindows64
+          - target: StandaloneOSX
+            channel: osx
+            pushPath: build/StandaloneOSX
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,11 +47,11 @@ jobs:
           "$RUNNER_TEMP/butler-bin/butler" -V
 
       # Verify the push target before the Unity build so credential and target
-      # errors surface in a minute instead of after a full WebGL build.
+      # errors surface in a minute instead of after a full build.
       - name: Verify Itch.io credentials
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
-        run: butler status ${{ secrets.ITCH_USER }}/${{ secrets.ITCH_GAME }}:webgl
+        run: butler status ${{ secrets.ITCH_USER }}/${{ secrets.ITCH_GAME }}:${{ matrix.channel }}
 
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v1.3.1
@@ -51,9 +71,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: Library
-          key: Library-WebGL-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-${{ matrix.target }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-WebGL-
+            Library-${{ matrix.target }}-
             Library-
 
       - name: Set build defines based on branch
@@ -66,7 +86,7 @@ jobs:
             echo "CUSTOM_PARAMS=-logFile - -customDefines DEV_BUILD" >> $GITHUB_OUTPUT
           fi
 
-      - name: Build WebGL
+      - name: Build ${{ matrix.target }}
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -74,10 +94,18 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 2022.3.22f1
-          targetPlatform: WebGL
+          targetPlatform: ${{ matrix.target }}
           customParameters: ${{ steps.build_defines.outputs.CUSTOM_PARAMS }}
+
+      # A macOS player built on Linux comes out without the executable bit on
+      # the binary inside the .app, and butler preserves what it is given, so
+      # the upload would refuse to launch. The build is also unsigned and not
+      # notarized; Gatekeeper has to be bypassed manually on first launch.
+      - name: Restore macOS executable bit
+        if: matrix.target == 'StandaloneOSX'
+        run: chmod -R +x ${{ matrix.pushPath }}/*.app/Contents/MacOS
+
       - name: Push to Itch.io
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_CREDENTIALS }}
-        run: |
-          butler push build/WebGL/WebGL ${{ secrets.ITCH_USER }}/${{ secrets.ITCH_GAME }}:webgl
+        run: butler push ${{ matrix.pushPath }} ${{ secrets.ITCH_USER }}/${{ secrets.ITCH_GAME }}:${{ matrix.channel }}

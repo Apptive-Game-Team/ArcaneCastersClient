@@ -66,6 +66,24 @@ butler로 배포하기 전에 itch.io에 게임 페이지가 미리 생성되어
 
 ---
 
+## 배포되는 채널
+
+`deploy` 브랜치 푸시 한 번에 세 채널이 각각 빌드되어 올라갑니다.
+
+| 채널 | Unity 타겟 | 비고 |
+|---|---|---|
+| `webgl` | WebGL | 게임 페이지에서 바로 실행 |
+| `windows` | StandaloneWindows64 | 다운로드 빌드 |
+| `osx` | StandaloneOSX | 다운로드 빌드, 서명/공증 없음 |
+
+주의할 점:
+
+- 업로드 후 itch.io 대시보드의 **Edit game > Uploads** 에서 각 파일의 플랫폼 체크박스(Windows / macOS)를 켜야 itch 앱과 다운로드 목록에 노출됩니다.
+- macOS 빌드는 Linux 러너에서 만들어지므로 코드 서명과 공증이 되어 있지 않습니다. 첫 실행 시 Gatekeeper를 수동으로 통과시켜야 합니다. 서명이 필요하면 macOS 러너가 필요합니다.
+- 채널 하나가 실패해도 나머지는 계속 배포됩니다(`fail-fast: false`).
+
+---
+
 ## Unity 라이선스 활성화 방법
 
 Unity 라이선스가 없거나 갱신이 필요한 경우 아래 절차를 따릅니다.
