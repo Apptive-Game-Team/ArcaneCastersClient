@@ -1,0 +1,25 @@
+The attached image is the canonical style reference for this game. Match its rendering method exactly: chunky low-poly faceted forms built from flat straight-edged planes, one flat colour per plane, hard creases between planes, no outline strokes, a soft matte paper surface with a very fine even grain, muted earthy saturation, and one soft light from the upper-left. Do not copy any subject from it — only the way it is rendered.
+
+Fill the entire square canvas edge to edge with one continuous opaque ground texture. Every pixel is ground: no background colour behind it, no magenta key, no transparency, no border, no frame, no vignette, no darkening or lightening toward any edge.
+
+The image is tileable: the pattern at the left edge continues into the right edge and the top edge continues into the bottom edge, with no seam and no discontinuity of colour, shape or value where edges meet. Facets that touch an edge are cut there and resume on the opposite edge.
+
+Viewpoint: straight top-down, looking directly down at flat ground. No horizon, no sky, no perspective, nothing standing up, no long shadows.
+
+**Everything in this image is built from flat, straight-edged polygons.** There are no curved edges, no wavy outlines, no rounded blobs, no circles and no organic silhouettes anywhere, at any scale. Each polygon is one flat solid colour with no gradient and no pattern inside it. Polygons separate by value alone, never by a drawn line or wireframe stroke.
+
+Build the ground in three layers, so the surface is richly described rather than plain:
+
+1. **Base tessellation.** The whole canvas is an irregular mesh of triangles and quadrilaterals in grass greens, roughly seventy facets across the width, mixed sizes, neighbouring facets close in value so the field reads even. This is the substrate; on its own it should look like a calm faceted lawn.
+
+2. **Angular grass detail.** Over the base, scatter many small clusters of sharp, narrow triangular slivers — angular grass blades, three to seven slivers per clump, each sliver a thin straight-sided triangle about one eightieth of the canvas long, fanning out at different angles. Place roughly forty to sixty such clumps across the canvas, unevenly, never in rows. They are drawn a step lighter or a step darker than the facet they sit on, so they read as texture catching the light rather than as objects. This is the layer that makes the ground look described instead of flat.
+
+3. **Worn earth and grit.** Scattered sparsely, let bare earth show through in warm dry soil tones — eight to twelve small clusters, each roughly one fifteenth of the canvas wide and no larger, their outlines angular and following the facet edges. Inside and around each earth patch, add a few tiny faceted pebbles: little three- or four-sided chips a step darker than the soil, five to ten per patch. A handful of the same chips may also sit alone on the grass, as if kicked out of a patch.
+
+Scale discipline: nothing in the image may be large enough to read as an object, a landmark, a path or a clearing. The eye should see an evenly described ground surface, not a scene.
+
+Palette, muted and earthy to match the reference, nothing neon and nothing acid: grass facets from hex #8AA34F, #7C9645, #96AE5C, #6E8A3E and #A2B769; grass slivers from #A8BE70 and #647F38; bare earth from #B49A6E, #A68A5E, #C0A87E and #8E7550; pebbles from #8E7550 and #6F5C40. Keep neighbouring shapes close in value — never a dark shape directly against a bright one, which would read as a hole. Keep the whole image in a narrow value range so that game units and coloured effects drawn on top stay clearly readable, and so menu text sits on it comfortably.
+
+Light comes softly from the upper-left, expressed only as a very slight bias in which value a facet takes, never as an overall gradient across the image, which would break tiling.
+
+Exclude: no text, no frame, no border, no watermark, no logo, no vignette, no characters, no creatures, no trees, no flowers, no mushrooms, no fallen leaves, no path, no road, no river, no buildings, no props, no cast shadows, no horizon, no sky, no perspective, no depth-of-field blur, no wireframe lines, no visible tiling grid, no repeated identical motif, no camouflage blobs, no dense blade carpet covering the whole surface, no curved or wavy shapes of any kind.
