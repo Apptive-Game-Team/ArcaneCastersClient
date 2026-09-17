@@ -156,18 +156,31 @@
 | `RockTurret.png` | 클라이언트 PR (이슈 #694) | 169x256 RGBA, 원본 크기 유지. 인간 마법 문명, `Cannon.png`·`Tower.png`와 같은 재질 앵커(찬 회색 석재, 스틸블루 금속, 청동 이음쇠, 금색 마름모). 장전 자세, 팔은 넓은 M 자로 벌려 캔버스 폭을 채운다. 이전 시도들은 twin-panel 로 두 자세를 한 캔버스에 같이 뽑다가 공격 프레임의 날아가는 돌이 공유 crop 을 넓혀 본체가 계속 줄었다 — 이번엔 장전 자세를 먼저 단독으로 확정하고, 확정한 이미지를 레퍼런스로 넣어 공격 자세를 별도로 생성했다 |
 | `RockTurretAttacking.png` | 클라이언트 PR (이슈 #694) | 169x256 RGBA, 원본 크기 유지. 발사 직후 자세, 탑 자체는 `RockTurret.png`와 픽셀 단위로 동일한 위치·크기다 — 두 프레임을 하나의 공유 crop box(두 alpha bounding box의 합집합)와 하나의 공유 배율로 함께 내보내 지면 접점이 사후 대조가 아니라 제작 방식으로 이미 동일하다. 팔 각도만 낮추고 슬링을 비운 채 돌 하나를 캔버스 안에서 날아가는 중으로 추가했다. `check-frame-pair.py` 통과: 세로 차이 0.000 unit, 가로 차이 -0.001 unit |
 | `TreeGolem.png`, `TreeGolem2.png` | 클라이언트 PR (이슈 #694) | 240x256 / 256x215 RGBA. 공유 crop 과 배율로 몸 크기를 맞췄고, 서로 달랐던 spritePixelsToUnits 를 85 로 통일했다. **크기·튐 재작업 중** |
+| `DragonTower.png` | `game-assets/dragon-tower.webp` | 웹사이트 동기화 PR #41/#44 로 올라간 뒤 등재를 뒤늦게 기록했다 |
+| `FireworkTower.png` | `game-assets/firework-tower.webp` | 위와 같음 |
+| `FireworkShell.png` | `game-assets/firework-shell.webp` | 위와 같음 |
+| `FireworkExplosion.png` | `game-assets/firework-explosion.webp` | 위와 같음 |
+| `FrenzyTotem.png` | `game-assets/frenzy-totem.webp` | 위와 같음 |
+| `GrassGenerator.png` | `game-assets/grass-generator.webp` | 위와 같음 |
+| `RepairTotem.png` | `game-assets/repair-totem.webp` | 위와 같음 |
+| `RockMage.png` | `game-assets/rock-mage.webp` | 위와 같음 |
+| `ShockTrap.png` | `game-assets/shock-trap.webp` | 위와 같음 |
+| `StormStag.png` | `game-assets/storm-stag.webp` | 위와 같음 |
+| `ThunderBirdSwarm.png` | `game-assets/thunder-bird-swarm.webp` | 위와 같음 |
+| `WallGolem.png` | `game-assets/wall-golem.webp` | 위와 같음 |
+| `MiniRockSwarm.png` | `game-assets/mini-rock-swarm.webp` | 위와 같음 |
 
 ## 다음 교체 후보
 
-아래는 완료 목록에 없는 항목 중 아트 문서에 명시된 우선 후보들이다. 순서는
-실제 작업 시 세계관·프리팹 연결·현재 이미지를 다시 확인한 뒤 정한다.
+아래는 아직 남은 항목이다. 순서는 실제 작업 시 세계관·프리팹 연결·현재 이미지를
+다시 확인한 뒤 정한다. `MagmaExplosion.png`, `Crater.png`, `RallyingTotem.png` 은
+완료 표에 행이 있으므로 여기서 뺐다.
 
 | 리소스 | 필요한 작업 |
 |---|---|
-| `MagmaExplosion.png` | 지옥불 갑각 파편과 내부 용암광 중심으로 재설계 |
-| `Crater.png` | 현재 개념을 유지하고 마스터 렌더링 기법으로 통일 |
-| `RallyingTotem.png` | 지옥불 설치물 셰이프 랭귀지 적용 |
-| `TreeGolem.png`, `TreeGolem2.png` | 공유 크롭·배율·지면 접점과 PPU를 일치시켜 프레임 재작업 |
+| `TreeGolem.png`, `TreeGolem2.png` | 완료 표에 행이 있으나 **크기·튐 재작업 중**이다. 두 프레임의 지면 접점과 체감 크기를 다시 맞춘다 |
+| `Background/grass_1.png`, `Background/grass_2.png` | 필드 환경 세트에서 두 장만 레거시 페인터리 기법으로 남아 있다 |
+| `SeaSerpentHead.png`, `SeaSerpentSegment.png`, `SeaSerpentTail.png`, `SeaSerpentHydroPump.png` | 이 표에도 완료 표에도 행이 없다. `SeaSerpent.png`(책 아이콘)만 등재돼 있고 필드 개체를 이루는 네 장은 교체 여부를 대조하지 못했다 |
 | `drop/leaf_drop.png` | 이슈 #683. 1차 생성이 잎맥 없는 밋밋한 초록 물방울로 나와 주제를 잃었다는 이유로 반려됐다. 프롬프트를 중앙맥이 면 경계로 드러나는 잎사귀로 다시 써 두었으나(`​.art/concept/vfx-prompts/drop-leaf.txt`) 재생성 요청이 `image_gen` 사용량 한도(2026-09-15 14:15 KST 재설정)에 막혀 원본을 그대로 두었다 |
 
 ## 크기 검증
