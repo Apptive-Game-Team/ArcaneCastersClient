@@ -174,6 +174,12 @@
 | `Background/tree_3.png` | 클라이언트 PR (이슈 #54) | 234x218 RGBA, 원본 크기 유지. 넷 중 가장 작은 어린 나무. **내용 폭이 166px 로 옛 232px 보다 28% 좁다** — 프롬프트가 가는 줄기를 요구한 결과이고 높이와 바닥 접점은 맞으나, 나무 줄에서 옛 그림만큼 폭을 채우지 못한다. 같은 PR 에서 나무를 83 그루 더 심어 생긴 틈을 메웠다 |
 | `Background/tree_4.png` | 클라이언트 PR (이슈 #54) | 328x264 RGBA, 원본 크기 유지. 넷 중 가장 크고 넓은 나무, 나무 줄의 기준점. 바닥 여백 4px(옛 4px) |
 | `Background/rock.png` | 클라이언트 PR (이슈 #54) | 452x166 RGBA, 원본 크기 유지. 이끼 낀 바위 무더기. 찬 회색이 아니라 이끼바위 골렘과 같은 따뜻한 회색 계열을 썼다. 바닥 여백 2px(옛 2px) |
+| `Background/background.png` | 클라이언트 PR (이슈 #60) | 1254x1254 RGB 불투명, 타일 가능. `PopupBookGround` 의 `ground.mat` `_MainTex` 이자 9개 씬의 UI 배경. 옛 아트는 1800x1000 비정방형이라 정방형 Plane 에 1.8:1 로 눌렸다. low-poly 테셀레이션에 성긴 흙을 섞어 다시 뽑았고, 색은 `match-colour-to.py` 로 옛 아트의 H/S/V 에 맞춰 스타일만 바뀌고 색감은 유지되게 했다. `ground.mat` 에서 2x 타일링하고 V 를 뒤집어 쓴다 |
+| `Background/tree_1.png` | 클라이언트 PR (이슈 #60) | 277x242 RGBA, 원본 크기 유지. faceted low-poly 수관, `MasterStyleKey.png` 를 레퍼런스로 넣어 렌더링 기법을 마스터 스타일에 맞췄다. 색은 옛 아트 기준. 바닥 여백 4px(옛 4px) |
+| `Background/tree_2.png` | 클라이언트 PR (이슈 #60) | 265x222 RGBA, 원본 크기 유지. 위와 같음. 바닥 여백 0px(옛 0px) |
+| `Background/tree_3.png` | 클라이언트 PR (이슈 #60) | 234x218 RGBA, 원본 크기 유지. 위와 같음. 바닥 여백 4px(옛 4px) |
+| `Background/tree_4.png` | 클라이언트 PR (이슈 #60) | 328x264 RGBA, 원본 크기 유지. 위와 같음. 바닥 여백 4px(옛 4px) |
+| `Background/rock.png` | 클라이언트 PR (이슈 #60) | 452x166 RGBA, 원본 크기 유지. faceted low-poly 바위 무더기, 이끼가 facet 경계를 따라 각지게 들어간다. 바닥 여백 2px(옛 2px) |
 
 ## 다음 교체 후보
 
