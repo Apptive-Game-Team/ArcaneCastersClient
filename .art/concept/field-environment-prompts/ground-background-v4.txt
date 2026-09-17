@@ -1,0 +1,19 @@
+Fill the entire square canvas edge to edge with one continuous opaque grass ground texture. Every pixel is grass: no background colour behind it, no magenta key, no transparency, no border, no frame, no vignette, no darkening or lightening toward any edge.
+
+The image is tileable: the pattern at the left edge continues into the right edge and the top edge continues into the bottom edge, with no seam and no discontinuity of colour, shape or value where edges meet.
+
+Viewpoint: straight top-down, looking directly down at flat ground. No horizon, no sky, no perspective, nothing standing up, no long shadows.
+
+Subject: a calm, sunlit grass clearing floor seen from directly above, drawn as cut paper. It is built in two layers and the balance between them is the whole point.
+
+Base layer — broad, soft, irregular regions of slightly different green, like sunlight and shade drifting across a lawn. The regions are large and their boundaries are **soft and gradual**, fading into each other over a distance of several blade-lengths. They are not cut shapes: no hard outline, no crisp cut edge, no jigsaw of solid colour patches. If the base layer alone would read as military camouflage, it is wrong. Keep the difference between the lightest and darkest region small — this is a lawn breathing, not a pattern.
+
+Detail layer — small flat cut-paper grass tufts scattered sparsely on top, each about one fiftieth of the canvas height, three to five blades per tuft, pointing in varied directions. Space them apart so that most of the surface between them is open base-layer green: roughly one tuft per twelfth of the canvas width, irregularly placed, never in rows, never evenly spaced. **The tufts are accents on an open field, not a carpet.** If the surface reads as a dense lawn of packed blades, or as hay, or as a hedge seen from above, it is wrong.
+
+Palette: fresh warm yellow-green. Base regions around hex #86B043, #94C24C and #6E9738, tufts drawn a little darker or a little lighter than the region they sit on, from hex #5D8730 and #A9D15C. Restrained saturation, mid-to-high value. Nothing muddy, nothing grey, nothing blue-green, nothing neon, nothing olive-drab.
+
+Render in the 2.5D cut-paper master style: the tufts are flat shapes of one solid colour with clean cut edges, no outer contour line, no ink outline, no smooth 3D shading, no gloss, no specular highlight, no glow, no painterly brushwork, no photographic turf, no noise filter, no grain. Light comes softly from the upper-left, expressed only as a very slight bias in which green a region takes — never as an overall gradient across the image, which would break tiling.
+
+Keep the overall value range narrow so that game units and coloured effects drawn on top stay clearly readable, and so menu text sits on it comfortably. No single feature may be large enough, dark enough or bright enough to read as an object, a path, a clearing or a landmark.
+
+Exclude: no text, no frame, no border, no watermark, no logo, no vignette, no characters, no creatures, no trees, no rocks, no fallen leaves, no flowers, no mushrooms, no path, no road, no river, no dirt, no buildings, no props, no cast shadows, no horizon, no sky, no perspective, no depth-of-field blur, no visible tiling grid lines, no repeated identical motif, no camouflage blobs, no dense blade carpet.
