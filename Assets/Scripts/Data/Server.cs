@@ -3,6 +3,7 @@ using System.Collections;
 using System.Diagnostics;
 using Data.Net;
 using Global;
+using Global.Auth;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Networking;
 
@@ -57,7 +58,19 @@ namespace Data
         {
             webRequest.SetRequestHeader("Authorization", "Bearer " + SceneContext.JwtToken);
         }
-        
+
+        /// <summary>
+        /// 계정 서버가 refresh token 을 body 로 받을지 cookie 로 받을지 판가름하는 header.
+        /// <see cref="AuthSession"/> 이 없을 수 있는 시점(가장 이른 부팅 단계)에는 body 로
+        /// fallback 한다 — WebGL 이 아닌 모든 플랫폼의 실제 전달 방식과 같다.
+        /// </summary>
+        public static void SetTokenDelivery(UnityWebRequest webRequest)
+        {
+            bool isCookie = AuthSession.Instance != null &&
+                            AuthSession.Instance.TokenDelivery == RefreshTokenDelivery.Cookie;
+            webRequest.SetRequestHeader("X-Token-Delivery", isCookie ? "cookie" : "body");
+        }
+
         public IEnumerator GetPing(Action<int> callback)
         {
             Stopwatch stopwatch = new Stopwatch();
