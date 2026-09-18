@@ -1,0 +1,9 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a wide landscape canvas, about four and a half times as wide as it is tall.
+
+Draw a low, wide patch of grass running the full width of the canvas, seen from the side at eye level. It is the same grass as the tuft in background-grass-1.txt but spread out and much shorter: four or five small clumps strung along the bottom edge with short gaps of bare ground between them, none of them rising more than a third of the canvas height. Build every blade as one flat polygonal facet plane — a narrow triangle, widest at the ground and pointed at the tip, with one hard crease along it splitting it into a lighter and a darker half. The clumps vary in width and height so the run does not look repeated.
+
+Palette: base #B8CE59 on blades catching the light, mid #9DA74D across the clump bodies, deep #768738 on blades reading as further back, darkest #384823 only where blades meet the ground.
+
+Render everything using flat polygonal facet planes: one flat solid color per plane, hard sharp creases between planes, no smooth 3D shading, no gloss, no specular highlight, no texture, no painterly brushwork, no soft brush edges, no glow, no bloom, no outer contour line, no ink outline. Light comes from a single soft source at upper-left. Keep saturation restrained and values mid-to-high; nothing neon.
+
+This is a game environment asset, not a character: no face, no eyes, no flowers, no insects. No text, no frame, no card border, no watermark, no logo.
