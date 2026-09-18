@@ -95,7 +95,12 @@ namespace Global.Auth
         /// </summary>
         private static bool TryChmod0600(string path)
         {
-            int result = chmod(path, Mode0600);
+            // 경로에는 사용자 계정 이름이 들어가고 그 안에 ASCII 밖의 글자가 있을 수 있다.
+            // 기본 ANSI marshalling 은 locale 에 따라 다른 byte 를 내보내므로 UTF-8 로 직접
+            // 옮기고 NUL 을 붙여 넘긴다.
+            byte[] pathBytes = Encoding.UTF8.GetBytes(path + "\0");
+
+            if (!TryCallChmod(pathBytes, out int result)) return false;
             if (result == 0) return true;
 
             int error = Marshal.GetLastWin32Error();
@@ -103,9 +108,43 @@ namespace Global.Auth
             return false;
         }
 
+        /// <summary>
+        /// glibc 에서 `libc.so` 는 공유 라이브러리가 아니라 링커 스크립트라서 dlopen 이
+        /// 거부한다. 실제로 열리는 이름은 `libc.so.6` 다. 짧은 이름 `libc` 는 runtime 의
+        /// dllmap 이 옮겨 줄 때만 열리고 Unity player 가 그 설정을 싣는다는 보장이 없어서,
+        /// soname 을 먼저 시도하고 열리지 않을 때만 짧은 이름으로 물러선다.
+        /// </summary>
+        private static bool TryCallChmod(byte[] pathBytes, out int result)
+        {
+            try
+            {
+                result = ChmodInLibcSo6(pathBytes, Mode0600);
+                return true;
+            }
+            catch (Exception exception) when (exception is DllNotFoundException || exception is EntryPointNotFoundException)
+            {
+                // soname 이 없는 libc 구현으로 넘어간다.
+            }
+
+            try
+            {
+                result = ChmodInLibc(pathBytes, Mode0600);
+                return true;
+            }
+            catch (Exception exception) when (exception is DllNotFoundException || exception is EntryPointNotFoundException)
+            {
+                WDebug.LogError($"[RefreshToken] libc 의 chmod 를 부르지 못해 파일 권한을 걸 수 없다: {exception.Message}");
+                result = -1;
+                return false;
+            }
+        }
+
         // int chmod(const char *pathname, mode_t mode);
-        [DllImport("libc", SetLastError = true)]
-        private static extern int chmod(string pathname, int mode);
+        [DllImport("libc.so.6", EntryPoint = "chmod", SetLastError = true)]
+        private static extern int ChmodInLibcSo6(byte[] pathname, int mode);
+
+        [DllImport("libc", EntryPoint = "chmod", SetLastError = true)]
+        private static extern int ChmodInLibc(byte[] pathname, int mode);
     }
 }
 #endif
