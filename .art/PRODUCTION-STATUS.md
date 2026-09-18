@@ -190,16 +190,19 @@
 ### 옛 스타일로 남은 게임 플레이 자산
 
 2026-09-18 에 `origin/dev`(`94f6628a`)의 PNG 를 아트 pipeline 직전 commit
-`8deaad14^`(2026-07-28)과 blob 단위로 대조해 찾았다. 아래 일곱 장은 그때까지
+`8deaad14^`(2026-07-28)과 blob 단위로 대조해 찾았다. 아래 여섯 장은 그때까지
 이 문서 어느 표에도 행이 없었다.
 
 | 리소스 | 사용처 | 필요한 작업 |
 |---|---|---|
 | `explode/electric_explode_frame_0.png`, `explode/electric_explode_frame_1.png` | database `V001_20260916__baseline.sql` 의 game object `electric_explode`, 참조 4건 | 어두운 파랑 painterly 돔이다. 같은 번개 계열 `LightningExplosion.png`·`ShockOverload.png` 는 금색 Lightning 팔레트로 옮겨갔는데 이 두 장만 옛 색이라 한 화면에서 어긋난다 |
 | `explode/razor_gale_frame_0.png`, `explode/razor_gale_frame_1.png` | 같은 migration 의 game object `razor_gale`, 참조 4건 | 남색 붓질 소용돌이다. 같은 마법의 책 아이콘 `RazorGale.png` 는 민트색 다면체 리본으로 교체돼서, 아이콘과 실제 필드 이펙트가 서로 다른 그림이다. 남은 것 중 플레이어 눈에 가장 먼저 걸린다 |
-| `explode/lightning_explode.png` | 참조 0건 — migration 과 `Assets` 양쪽에서 찾지 못했다 | 죽은 자산으로 보인다. 교체가 아니라 삭제 여부를 먼저 판단한다 |
 | `Resources/Projectiles/wind.png` | `WindTotem.prefab` 의 `Wind` object, alpha 0.396 | 파란 painterly 줄기다. 본체 `WindTotem.png` 는 민트색 다면체로 교체됐다 |
 | `Resources/Game/cloud.png` | `CloudDragon.prefab` 뿌리 object, alpha 0.086 | 광택 있는 파란 구체다. alpha 가 낮아 흐릿한 배경광으로 보이므로 우선순위는 낮다 |
+
+`explode/lightning_explode.png` 도 이 표에 있었으나 이슈 #69 에서 지웠다. guid 로
+`Assets` 를 grep 해도, 이름으로 client·database·game server 를 grep 해도 참조가
+0건이라 교체가 아니라 삭제가 맞았다.
 
 ### 이미 등재됐으나 작업이 남은 항목
 
