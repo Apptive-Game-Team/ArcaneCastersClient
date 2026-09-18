@@ -6,7 +6,9 @@ namespace Global.Auth
     /// 가 null 이 되는 것보다는 낫다. 부르는 쪽이 null 검사를 하지 않아도 되고, 실행 중인 session
     /// 안에서는 rotation 이 정상으로 돈다.
     ///
-    /// 지금 여기로 오는 경우는 Linux Editor 와 Linux standalone 두 가지다.
+    /// 지금 여기로 오는 경우는 Linux Editor, Linux standalone, 그리고 cookie 를 저장할 수 없는
+    /// page 에서 도는 WebGL 빌드다. 마지막 경우는
+    /// <see cref="BrowserCookieRefreshTokenStore.SelectForCurrentPage"/> 를 보라.
     /// </summary>
     public sealed class InMemoryRefreshTokenStore : IRefreshTokenStore
     {

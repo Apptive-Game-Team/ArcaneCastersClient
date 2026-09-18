@@ -33,6 +33,8 @@ Follow [localization.md](.agents/docs/localization.md) before adding or editing 
 
 Follow [json-payloads.md](.agents/docs/json-payloads.md) before adding a field to a server DTO, writing a `JsonConverter`, or typing a DTO field as an enum. `JsonCodec` registers `StringEnumConverter` for the whole client, so one unknown enum name from the server throws and the caller discards the entire response; Json.NET also serializes getter-only properties, so a cached property lands in the `PlayerPrefs` cache unless it is `[JsonIgnore]`.
 
+Follow [webgl-auth-hosting.md](.agents/docs/webgl-auth-hosting.md) before changing anything about WebGL login, refresh tokens, or where a WebGL build is published. The same build authenticates differently depending on the page it runs in: the refresh cookie is only stored when the page shares the account server's domain, so it works on `arcanecasters.theevilent.com` and is dropped on the `itch.io` and `github.io` addresses, and an origin outside the account server's CORS list fails at the preflight before any login happens.
+
 Follow [hand-edited-assets.md](.agents/docs/hand-edited-assets.md) before changing a serialized type, renaming a serialized field, or deleting a `MonoBehaviour`. The Editor cannot run here, so `.asset`, `.prefab`, `.unity` and `.meta` files are edited as YAML by hand. A serialized enum stores its integer, so reordering one silently remaps every stored row, and deleting a script takes three edits across the script, its prefab and every scene that instances it.
 
 ## Testing Guidelines

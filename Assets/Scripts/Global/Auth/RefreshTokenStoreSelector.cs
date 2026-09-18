@@ -1,3 +1,5 @@
+using Data;
+
 namespace Global.Auth
 {
     /// <summary>
@@ -30,7 +32,9 @@ namespace Global.Auth
             // session 안에서만 유지되는 InMemoryRefreshTokenStore 로 안전하게 빠진다.
             return new InMemoryRefreshTokenStore();
 #elif UNITY_WEBGL
-            return new BrowserCookieRefreshTokenStore();
+            // 브라우저마다가 아니라 page 마다 갈린다. page 의 domain 이 account server 와 다르면
+            // cookie 가 저장되지 않으므로 그 page 에서는 메모리 저장소로 떨어진다.
+            return BrowserCookieRefreshTokenStore.SelectForCurrentPage(ServerList.AccountServer.host);
 #elif UNITY_ANDROID
             return new AndroidKeyStoreRefreshTokenStore();
 #elif UNITY_STANDALONE_WIN
