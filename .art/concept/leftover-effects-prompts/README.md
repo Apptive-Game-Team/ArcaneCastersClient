@@ -73,3 +73,33 @@ twin-panel(한 캔버스에 두 프레임을 나란히 그리고 반으로 자�
 
 한 자산에 세 번까지만 생성한다. 세 번에 안 되면 뒤로 미루고 방식을 바꾼다.
 막힌 자산에 창을 다 쓰면 나머지가 전부 다음 창으로 밀린다.
+
+## 결과 (이슈 #76, 2026-09-18)
+
+여덟 장 중 일곱 장을 적용했다. 생성물은 전부 `out/` 에 있다 — `-raw` 는
+`image_gen` 이 돌려준 그대로이고, `-cut` 은 거기에
+`key-out-background.py --key magenta` 만 돌린 것이다. 반려한 것도 남겨 뒀다.
+`image_gen` 한도 때문에 다시 뽑는 것이 프롬프트를 다시 쓰는 것보다 훨씬 비싸다.
+
+| 자산 | 통과한 시도 | 총 시도 | 비고 |
+|---|---|---|---|
+| `razor_gale_frame_0` | v1 | 1 | |
+| `razor_gale_frame_1` | v1 | 1 | 확정한 frame 0 을 `-i` 로 붙였다 |
+| `electric_explode_frame_0` | v1 | 1 | `image_gen` 이 magenta 대신 alpha 를 돌려줬다 |
+| `electric_explode_frame_1` | v1 | 1 | frame 0 을 magenta 위에 올려 레퍼런스로 줬다 |
+| `wind` | 없음 | 3 | 전부 기하 반려, 옛 그림 유지. `PRODUCTION-STATUS.md` 참조 |
+| `cloud` | v2 | 2 | v1 은 가로로 퍼져서 반려 |
+| `grass_1` | v3 | 3 | v1·v2 는 폭이 모자라 반려 |
+| `grass_2` | v1 | 1 | 확정한 `grass_1` 을 `-i` 로 붙였다 |
+
+`-v2.txt`, `-v3.txt` 는 실제로 통과한 프롬프트다. 원본 `.txt` 는 처음 쓴 그대로
+두고 고치지 않았다. 둘의 차이가 이 batch 가 배운 것이다 — 그림이 캔버스 네 변에
+닿아야 한다고 적고, 가로세로 비를 말이 아니라 숫자와 예시 픽셀 크기로 적는다.
+
+프레임 쌍 둘은 `RockTurret` 방법대로 frame 0 을 먼저 확정하고, 두 장의 alpha
+bounding box 합집합을 공유 crop box 로 삼아 배율 하나를 둘에 똑같이 적용해
+내보냈다. 재기 전에 alpha 8 미만을 0 으로 내려야 한다 —
+`.art/ANIMATION-ASSETS.md` 의 `폭발 이펙트 프레임 쌍` 절에 이유를 적었다.
+같은 절에 `alignment: 7` 함정도 있다. 네 장 다 `spritePivot` 은 `(0.5, 0.5)` 로
+적혀 있지만 런타임 피벗은 Bottom Center 라, 남는 세로 여백을 가운데로 나누면
+이펙트가 그만큼 뜬다.

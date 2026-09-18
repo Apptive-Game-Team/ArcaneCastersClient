@@ -49,7 +49,7 @@
 | `WaterSlimeAttackSpit.png` | `game-assets/water-slime-attack.webp` | 물 뱉기 공격 프레임 |
 | `TidalWarhead.png` | 클라이언트 이슈 #597 재작업 검수 | 공중 표적용, 어두운 눈, 256x256 RGBA |
 | `GroundTidalWarhead.png` | 클라이언트 이슈 #597 재작업 검수 | 지상 표적용, 밝은 눈, 본체와 동일 실루엣 |
-| `cloud.png` | `game-assets/cloud-dragon-water-aura.webp` | 운룡 전용 구형 물 아우라 |
+| `cloud.png` | `game-assets/cloud-dragon-water-aura.webp`, 클라이언트 PR (이슈 #76) | 운룡 전용 구형 물 아우라. 웹사이트 근거로 완료였으나 이슈 #65 대조에서 런타임 PNG 는 광택 있는 파란 구체로 남아 있는 것이 드러나 이슈 #76 에서 다시 그렸다. 510x512 RGBA, 원본 캔버스 유지, 내용 508x497. v1 반려 — 가로세로 비 1.53 의 옆으로 퍼진 구름이라 원본 구체(1.00)에 비율을 지켜 넣으면 세로가 35% 줄었다. v2 에서 "정사각 캔버스를 네 변까지 채운다"를 프롬프트에 넣어 1.025 로 통과 |
 | `fire_aura.png` | `game-assets/fire-aura.webp` | 지옥불 공용 오라 |
 | `LightningCloud.png` | 웹사이트 PR #29 `game-assets/lightning-cloud-idle.webp` | 번개 구름 대기 프레임 |
 | `LightningCloudStrike0.png` | 웹사이트 PR #29 `game-assets/lightning-cloud-strike-0.webp` | 강타 1 프레임 |
@@ -178,6 +178,12 @@
 | `SeaSerpentSegment.png` | 이슈 #65 대조 | 위와 같음 |
 | `SeaSerpentTail.png` | 이슈 #65 대조 | 위와 같음 |
 | `SeaSerpentHydroPump.png` | 이슈 #65 대조 | 위와 같음 |
+| `explode/razor_gale_frame_0.png` | 클라이언트 PR (이슈 #76) | 192x155 RGBA, 원본 캔버스 유지. v1 한 번에 통과 — 민트 다면체 리본 넷이 열린 중심을 돌고 바깥 끝은 떨어진 날끝이다. 내용 192x141 로 캔버스 세로의 91.0%: 생성물 비가 1.36 이고 원본이 1.24 라 비율을 지켜 넣으면 세로가 9% 짧다. 늘이지 않고 그대로 뒀다. 바닥 여백 0px(옛 0px) |
+| `explode/razor_gale_frame_1.png` | 클라이언트 PR (이슈 #76) | 192x155 RGBA. v1 한 번에 통과. 확정한 frame 0 을 `-i` 로 붙여 뽑았고 두 장의 bbox 가 x 31~1229 대 53~1224, y 203~1081 대 200~1080 으로 겹쳐 등록이 맞았다. 공유 crop box `(31, 200, 1229, 1081)` 와 배율 0.16027 하나로 두 장을 함께 내보냈다. `check-frame-pair.py` 세로 +0.000, 가로 +0.001 unit |
+| `explode/electric_explode_frame_0.png` | 클라이언트 PR (이슈 #76) | 192x116 RGBA, 원본 캔버스 유지. v1 한 번에 통과 — 금색 다면체 번개 돔. 이 한 장만 `image_gen` 이 magenta 대신 실제 alpha 를 돌려줘서 key 제거 없이 그대로 썼다. 내용 192x108 로 세로 93.1%. 바닥 여백 0px(옛 0px) |
+| `explode/electric_explode_frame_1.png` | 클라이언트 PR (이슈 #76) | 192x116 RGBA. v1 한 번에 통과, magenta 배경이라 key 를 제거했다. 공유 crop box `(19, 334, 1235, 1016)` 와 배율 0.15789. `check-frame-pair.py` 세로 +0.000, 가로 -0.002 unit |
+| `Background/grass_1.png` | 클라이언트 PR (이슈 #76) | 238x117 RGBA, 원본 캔버스 유지, 내용 236x107 로 옛 내용과 정확히 같다. v1 반려(비 1.56, 폭이 옛 것의 76%), v2 반려(비 2.02, 폭 91.5% — 8% 한계를 넘었다), v3 통과. **비를 말이 아니라 숫자로 적어야 맞는다** — "twice as wide" 는 2.02 를 돌려줬고 "exactly 2.2 times as wide — 1760 x 800 pixels" 는 2.199 를 돌려줬다. 바닥 여백 5px(옛 5px) |
+| `Background/grass_2.png` | 클라이언트 PR (이슈 #76) | 466x99 RGBA, 원본 캔버스 유지, 내용 462x82. v1 한 번에 통과 — 확정한 `grass_1` 을 `-i` 로 붙여 같은 잎 모양과 팔레트를 받았다. 폭은 옛 462 와 같고 세로가 옛 90 보다 8.9% 짧다(생성물 비 5.58 대 원본 5.13). 어느 씬에서도 참조가 없는 자산이라 재생성으로 창을 더 쓰지 않았다. 바닥 여백 7px(옛 7px) |
 
 ## 다음 교체 후보
 
@@ -190,15 +196,33 @@
 ### 옛 스타일로 남은 게임 플레이 자산
 
 2026-09-18 에 `origin/dev`(`94f6628a`)의 PNG 를 아트 pipeline 직전 commit
-`8deaad14^`(2026-07-28)과 blob 단위로 대조해 찾았다. 아래 여섯 장은 그때까지
-이 문서 어느 표에도 행이 없었다.
+`8deaad14^`(2026-07-28)과 blob 단위로 대조해 찾았다. 여섯 장이 그때까지 이 문서
+어느 표에도 행이 없었고, 이슈 #76 에서 다섯 장을 교체해 `완료` 로 옮겼다.
+아래 한 장이 남았다.
 
 | 리소스 | 사용처 | 필요한 작업 |
 |---|---|---|
-| `explode/electric_explode_frame_0.png`, `explode/electric_explode_frame_1.png` | database `V001_20260916__baseline.sql` 의 game object `electric_explode`, 참조 4건 | 어두운 파랑 painterly 돔이다. 같은 번개 계열 `LightningExplosion.png`·`ShockOverload.png` 는 금색 Lightning 팔레트로 옮겨갔는데 이 두 장만 옛 색이라 한 화면에서 어긋난다 |
-| `explode/razor_gale_frame_0.png`, `explode/razor_gale_frame_1.png` | 같은 migration 의 game object `razor_gale`, 참조 4건 | 남색 붓질 소용돌이다. 같은 마법의 책 아이콘 `RazorGale.png` 는 민트색 다면체 리본으로 교체돼서, 아이콘과 실제 필드 이펙트가 서로 다른 그림이다. 남은 것 중 플레이어 눈에 가장 먼저 걸린다 |
-| `Resources/Projectiles/wind.png` | `WindTotem.prefab` 의 `Wind` object, alpha 0.396 | 파란 painterly 줄기다. 본체 `WindTotem.png` 는 민트색 다면체로 교체됐다 |
-| `Resources/Game/cloud.png` | `CloudDragon.prefab` 뿌리 object, alpha 0.086 | 광택 있는 파란 구체다. alpha 가 낮아 흐릿한 배경광으로 보이므로 우선순위는 낮다 |
+| `Resources/Projectiles/wind.png` | `WindTotem.prefab` 의 `Wind` object, alpha 0.396 | 파란 painterly 줄기다. 본체 `WindTotem.png` 는 민트색 다면체로 교체됐다. **이슈 #76 에서 세 번 생성하고 전부 반려해 옛 그림을 그대로 뒀다** — 아래 참조 |
+
+#### `wind.png` 을 세 번 만에 미룬 이유
+
+생성물 셋 다 스타일은 맞았고 전부 기하에서 반려했다. 원본은 511x91, 가로세로 비
+5.615 로 캔버스를 꽉 채운다.
+
+| 시도 | 캔버스 | 내용 비 | 반려 이유 |
+|---|---|---|---|
+| v1 | 2009x365 (5.5:1) | 11.06 | 날이 너무 얇다. 폭 512 에 맞춰 넣으면 두께가 46px 로 옛 91px 의 절반이다 |
+| v2 | 2079x756 (2.75:1) | 2.85 | 두껍고 짧다. 게다가 `image_gen` 이 magenta 대신 alpha 를 돌려주면서 날 주변에 흰 얼룩이 남았다 — 불투명 픽셀의 13.0% |
+| v3 | 2080x756 (2.75:1) | 2.81 | magenta 는 깨끗했지만 비가 v2 와 같다. 프롬프트에 "2002 x 364 pixels" 라고 숫자로 적었는데도 무시했다 |
+
+`.art/concept/leftover-effects-prompts/out/projectile-wind-v*.png` 에 셋 다 있다.
+v1 은 alpha 덩어리가 정확히 날 넷으로 갈라지므로(281x31, 450x68, 626x105,
+671x164, 왼쪽에서 오른쪽으로 커진다) 다시 배치해 붙이는 방법이 남아 있다. 다만
+날을 한 줄에 놓으면 가장 큰 날 하나가 671x164 = 4.09:1 이라 전체 5.615 를 만들려면
+날들이 서로 깊게 겹친다. 세로로 엇갈려 놓아 띠를 두껍게 하는 쪽이 남은 길이다.
+
+자산당 3회 상한에 걸려 여기서 멈췄다. 폭 512 에 두께 46px 로 넣는 것은 옛 그림
+대비 49% 축소라 `check-replacement.py` 의 8% 한계를 크게 벗어나서 택하지 않았다.
 
 `explode/lightning_explode.png` 도 이 표에 있었으나 이슈 #69 에서 지웠다. guid 로
 `Assets` 를 grep 해도, 이름으로 client·database·game server 를 grep 해도 참조가
@@ -209,7 +233,6 @@
 | 리소스 | 필요한 작업 |
 |---|---|
 | `TreeGolem.png`, `TreeGolem2.png` | 완료 표에 행이 있으나 **크기·튐 재작업 중**이다. 두 프레임의 지면 접점과 체감 크기를 다시 맞춘다 |
-| `Background/grass_1.png`, `Background/grass_2.png` | 필드 환경 세트에서 두 장만 레거시 페인터리 기법으로 남아 있다. `grass_1.png` 은 `GameScene`·`InteractiveTutorialScene`·`SpectatingScene` 에서 쓰지만 `grass_2.png` 은 어느 씬에서도 참조가 없다 — 교체 전에 살아 있는 자산인지 먼저 확인한다. 열려 있는 PR #61 은 `background.png`·`tree_1~4`·`rock.png` 만 건드리고 grass 두 장은 손대지 않는다 |
 
 ### 기법이 갈린 항목
 
@@ -243,7 +266,9 @@
 게임 아트가 아니므로 뺀다.
 
 해시가 다르다고 새 스타일인 것은 아니다. 리사이즈나 다른 작업으로 바뀌었을 수
-있으므로 눈으로 한 번 더 본다. `Resources/Game/cloud.png` 가 그런 경우다.
+있으므로 눈으로 한 번 더 본다. `Resources/Game/cloud.png` 가 그런 경우다 —
+웹사이트에 새 그림이 올라와 완료 행이 있었지만 런타임 PNG 는 옛 구체 그대로였다.
+웹사이트 근거만으로 완료를 적을 때는 런타임 PNG 를 한 번 열어 본다.
 
 살아 있는 자산인지는 두 곳에서 확인한다. `Assets` 안에서 쓰는 것은 `.meta` 의
 guid 로 prefab·scene 을 grep 하고, `Resources` 아래에서 이름으로 불러 쓰는 것은
