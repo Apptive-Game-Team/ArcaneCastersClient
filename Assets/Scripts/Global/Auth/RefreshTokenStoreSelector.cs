@@ -20,8 +20,14 @@ namespace Global.Auth
             return new WindowsDpapiRefreshTokenStore();
 #elif UNITY_EDITOR_OSX
             return new MacKeychainRefreshTokenStore();
+#elif UNITY_EDITOR_LINUX
+            // UNITY_EDITOR_LINUX 가 bare UNITY_EDITOR 보다 먼저 와야 한다. 순서가 바뀌면
+            // 아래 UNITY_EDITOR 분기가 Linux Editor 를 먼저 삼킨다.
+            return new LinuxFileRefreshTokenStore();
 #elif UNITY_EDITOR
-            // Linux Editor. DPAPI 도 Keychain 도 없어서 session 안에서만 유지한다.
+            // UNITY_EDITOR_WIN / UNITY_EDITOR_OSX / UNITY_EDITOR_LINUX 가 모든 Editor 운영체제를
+            // 가르므로 이 분기는 원래 오지 않는다. 그래도 새 Editor 플랫폼이 생겨 여기로 떨어지면
+            // session 안에서만 유지되는 InMemoryRefreshTokenStore 로 안전하게 빠진다.
             return new InMemoryRefreshTokenStore();
 #elif UNITY_WEBGL
             return new BrowserCookieRefreshTokenStore();
@@ -31,6 +37,8 @@ namespace Global.Auth
             return new WindowsDpapiRefreshTokenStore();
 #elif UNITY_STANDALONE_OSX
             return new MacKeychainRefreshTokenStore();
+#elif UNITY_STANDALONE_LINUX
+            return new LinuxFileRefreshTokenStore();
 #else
             return new InMemoryRefreshTokenStore();
 #endif
