@@ -1,8 +1,8 @@
 using System.Collections;
-using Data;
 using Global;
 using Global.Auth;
 using Global.Button;
+using Global.Util;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
@@ -18,6 +18,10 @@ namespace LobbyScene.SettingPage
     /// 다시 들어올 수 없다. 그래서 guest 일 때만 첫 번째 누름이 경고를 띄우고 아무것도 하지 않으며,
     /// <see cref="guestConfirmWindowSeconds"/> 안에 한 번 더 눌러야 실제로 로그아웃한다. 로비 scene 에는
     /// <see cref="ConfirmationDialogController"/> 가 배치돼 있지 않아 버튼 자체에서 확인을 받는다.
+    ///
+    /// guest 여부는 access token 의 `guest` claim 에서 읽는다(<see cref="JwtHelper.IsGuest"/>).
+    /// <see cref="Data.GuestContext.IsGuest"/> 는 <c>GuestLoginButton</c> 을 실제로 거친 세션에서만
+    /// 채워지고, refresh token 으로 복원된 세션에서는 비어 있어 이 경고가 뜨지 않았다(#74).
     /// </summary>
     public class LogoutButton : AsyncButtonBase
     {
@@ -32,7 +36,7 @@ namespace LobbyScene.SettingPage
 
         protected override void OnClickButton()
         {
-            if (GuestContext.IsGuest && Time.realtimeSinceStartup > guestConfirmDeadline)
+            if (JwtHelper.IsGuest(SceneContext.JwtToken) && Time.realtimeSinceStartup > guestConfirmDeadline)
             {
                 WarnGuest();
                 return;

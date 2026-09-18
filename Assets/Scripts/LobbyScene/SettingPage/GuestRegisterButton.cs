@@ -58,8 +58,14 @@ namespace LobbyScene.SettingPage
 
         protected override void OnClickButton()
         {
+            // lastPassword 는 정식 회원이 자기 password 를 바꿀 때 옛 값을 대조하려고 두는 필드다.
+            // guest 의 password 는 joinGuest 가 난수로 만들어 준 값이라 사용자가 정한 적도, 본 적도
+            // 없다. 서버는 이제 guest 전환에서 이 대조를 건너뛰고 access token 의 memberId 로만
+            // 판단하므로(#74), 여기서는 값을 보내지 않는다. NullValueHandling.Ignore(JsonCodec) 라
+            // null 은 필드 자체가 요청 본문에서 빠진다. GuestContext.GuestPassword 는 복원된 세션에서는
+            // 비어 있어 어차피 못 쓴다 — 이 버튼은 GuestContext.GuestPassword 유무에 기대지 않는다.
             StartCoroutine(RegisterCoroutine(
-                new MemberPutRequest(nameInputField.text, emailInputField.text, passwordInputField.text, GuestContext.GuestPassword)
+                new MemberPutRequest(nameInputField.text, emailInputField.text, passwordInputField.text, null)
             ));
         }
     }
