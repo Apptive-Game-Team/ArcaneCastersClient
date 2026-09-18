@@ -121,12 +121,20 @@ jobs:
           fi
           if [ "$TARGET" = "StandaloneLinux64" ]; then
             # Unity 2022 Linux standalone 은 buildName 그대로이거나 .x86_64 가
-            # 붙은 실행 파일을 낸다. 둘 다 없으면 건드리지 않고 넘어간다.
+            # 붙은 실행 파일을 낸다. 둘 중 어느 이름이 나오는지 확인하지 못해
+            # 둘 다 본다. 하나도 없으면 실행 권한 없는 zip 이 릴리스에 올라가므로
+            # 조용히 넘어가지 않고 경고를 남긴다.
+            CHMODDED=0
             for CANDIDATE in "$BUILD_NAME" "$BUILD_NAME.x86_64"; do
               if [ -f "build/$TARGET/$CANDIDATE" ]; then
-                chmod +x "build/$TARGET/$CANDIDATE" || true
+                chmod +x "build/$TARGET/$CANDIDATE"
+                CHMODDED=1
               fi
             done
+            if [ "$CHMODDED" != 1 ]; then
+              echo "::warning::build/$TARGET 에서 실행 파일을 찾지 못했다. 받은 사람이 chmod +x 를 직접 걸어야 한다."
+              ls -la "build/$TARGET"
+            fi
           fi
           ARCHIVE="$BUILD_NAME-$TAG-$LABEL.zip"
           (cd "build/$TARGET" && zip -r -y -q "$GITHUB_WORKSPACE/$ARCHIVE" .)
