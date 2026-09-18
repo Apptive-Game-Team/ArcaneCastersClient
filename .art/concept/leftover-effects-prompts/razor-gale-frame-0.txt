@@ -1,0 +1,9 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas.
+
+Draw a single wind vortex seen from a raised three-quarter angle, so it reads as a spinning disc of air lying over the ground rather than a tall funnel standing up. Build it from three or four broad curved ribbons that wind around one shared centre, each ribbon its own flat polygonal facet plane with hard sharp creases where it folds. The ribbons overlap and pass behind one another, and their outer ends taper to open points that do not join up — the outer edge is a set of separated blade tips, not a closed ring. Leave the centre open so the ground would show through. The whole shape is wider than it is tall, filling the canvas horizontally.
+
+Palette: highlight #E5EBE7, light #B3CCCA, mid #9BB3B3, deep #5EA191, darkest #2A6D64. The ribbons facing upper-left take the highlight and light values; the undersides and the ribbons passing behind take the deep and darkest values. Keep it cool mint-green; no navy, no steel blue, no grey-blue.
+
+Render everything using flat polygonal facet planes: one flat solid color per plane, hard sharp creases between planes, no smooth 3D shading, no gloss, no specular highlight, no texture, no painterly brushwork, no motion blur, no glow, no bloom, no outer contour line, no ink outline. Light comes from a single soft source at upper-left. Keep saturation restrained and values mid-to-high; nothing neon.
+
+This is a game visual-effect asset, not a character: no face, no eyes, no mouth, no character proportions, no facing-direction character grammar. No text, no frame, no card border, no watermark, no logo.

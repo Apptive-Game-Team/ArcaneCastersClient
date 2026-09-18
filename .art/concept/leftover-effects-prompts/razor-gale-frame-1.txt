@@ -1,0 +1,11 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas.
+
+Draw the same wind vortex as the attached reference image, at the same size, in the same place on the canvas, from the same raised three-quarter angle, in the same mint-green palette and the same faceted technique. This is the second frame of a two-frame loop, so it must read as the same vortex a moment later, not as a different effect: keep the overall silhouette, width, height and centre position as close to the reference as you can.
+
+Change only the rotation of the ribbons. Advance every ribbon about a third of a turn around the shared centre, so the blade tips point in new directions and the overlaps swap over — a ribbon that passed in front in the reference now passes behind. Keep the same number of ribbons, the same ribbon width, and the same open centre.
+
+Palette: highlight #E5EBE7, light #B3CCCA, mid #9BB3B3, deep #5EA191, darkest #2A6D64. Light still comes from the upper-left, so the values stay attached to the light direction and not to the individual ribbons — a ribbon that rotated into the upper-left now takes the highlight even though it was dark in the reference.
+
+Render everything using flat polygonal facet planes: one flat solid color per plane, hard sharp creases between planes, no smooth 3D shading, no gloss, no specular highlight, no texture, no painterly brushwork, no motion blur, no glow, no bloom, no outer contour line, no ink outline. Keep saturation restrained and values mid-to-high; nothing neon.
+
+This is a game visual-effect asset, not a character: no face, no eyes, no mouth, no character proportions. No text, no frame, no card border, no watermark, no logo.

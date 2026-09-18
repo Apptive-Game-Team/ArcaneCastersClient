@@ -1,0 +1,11 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas.
+
+Draw the same lightning dome as the attached reference image, at the same size, in the same place on the canvas, in the same gold palette and the same faceted technique. This is the second frame of a two-frame loop, so it must read as the same discharge a moment later, not as a different effect: keep the overall dome silhouette, its width, its height, its bottom-centre origin point and the position of its left and right feet as close to the reference as you can.
+
+Change only the bolt paths. Redraw each fork with its creases bent to different angles, so every segment kicks a different way while the fork still starts at the same origin and lands at roughly the same foot. Move one or two forks to new gaps between their neighbours. Keep the same number of bolts and the same overall bolt thickness.
+
+Palette: brightest core #FCFBD5 at the bottom-centre origin, #F6DB5F for the main bolt bodies, #D7A313 for bolts reading as further back, #996B07 for the deepest crease planes and the bolt feet. No blue, no navy, no cyan.
+
+Render everything using flat polygonal facet planes: one flat solid color per plane, hard sharp creases between planes, no smooth 3D shading, no gloss, no specular highlight, no texture, no painterly brushwork, no glow, no bloom, no outer contour line, no ink outline. Keep saturation restrained and values mid-to-high; nothing neon.
+
+This is a game visual-effect asset, not a character: no face, no eyes, no mouth, no character proportions. No text, no frame, no card border, no watermark, no logo.
