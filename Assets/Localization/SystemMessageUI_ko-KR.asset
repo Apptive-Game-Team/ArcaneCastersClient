@@ -161,6 +161,13 @@ MonoBehaviour:
       \uB2E4\uC2DC \uB85C\uADF8\uC778\uD574 \uC8FC\uC138\uC694."
     m_Metadata:
       m_Items: []
+  - m_Id: 8000000000000
+    m_Localized: "guest \uACC4\uC815\uC740 \uB2E4\uC2DC \uB85C\uADF8\uC778\uD560
+      \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uC774 \uACC4\uC815\uC744 \uC9C0\uD0A4\uB824\uBA74
+      \uBA3C\uC800 \uD68C\uC6D0 \uAC00\uC785\uC744 \uD574 \uC8FC\uC138\uC694. \uADF8\uB798\uB3C4
+      \uB85C\uADF8\uC544\uC6C3\uD558\uB824\uBA74 \uD55C \uBC88 \uB354 \uB204\uB974\uC138\uC694."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

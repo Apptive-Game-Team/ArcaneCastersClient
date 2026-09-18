@@ -1,6 +1,7 @@
 using System.Collections;
 using Data;
 using Global;
+using Global.Auth;
 using Global.Button;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -43,8 +44,12 @@ namespace LobbyScene.SettingPage
             }
                 
             WDebug.Log("Response: " + webRequest.downloadHandler.text);
-            
-            SceneContext.ClearContext();
+
+            // 옛 SceneContext.ClearContext() 는 메모리만 비웠다. 그러면 guest 이던 시절의 refresh token
+            // family 가 서버에서 60일 동안 살아 있고 값도 기기에 남는다. Logout 이 취소 endpoint 를
+            // 부르고 저장소와 SceneContext(GuestContext 포함) 를 비운 다음 갱신 loop 를 멈춘다.
+            yield return AuthSession.Instance.StartCoroutine(AuthSession.Instance.Logout());
+
             SystemMessageUI.Instance.ShowMessage(registrationSuccessMessage, () =>
             {
                 SceneManager.LoadScene("LoginScene");
