@@ -144,6 +144,10 @@ MonoBehaviour:
     m_Localized: "Off"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000011
+    m_Localized: "Log Out"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

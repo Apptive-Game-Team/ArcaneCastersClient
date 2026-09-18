@@ -19,6 +19,12 @@ Use C# with 4-space indentation and K&R braces, matching the existing codebase. 
 
 For visual styling, layout, colors, shapes, and typography guidelines, follow the [DESIGN.md](.agents/docs/DESIGN.md) design system spec.
 
+`Global.Button.AsyncButtonBase.ButtonEvent` calls `OnClickButton` first and
+locks the button afterwards, so a `ResetButton()` inside `OnClickButton` is
+overwritten in the same frame and the button stays grey. A button that has to
+stay pressable after a click — one that asks the user to press again to
+confirm, for example — must wait a frame before calling `ResetButton()`.
+
 Follow [scene-space.md](.agents/docs/scene-space.md) before writing gameplay code that positions anything in the world or animates a `ServedObject`. The camera is tilted and sprites are billboarded to it, so `Vector3.up` and `Vector3.Distance` are the wrong tools for offsets and lengths measured off a sprite. That file also records that this project has no `Animator`.
 
 Follow [json-payloads.md](.agents/docs/json-payloads.md) before adding a field to a server DTO, writing a `JsonConverter`, or typing a DTO field as an enum. `JsonCodec` registers `StringEnumConverter` for the whole client, so one unknown enum name from the server throws and the caller discards the entire response; Json.NET also serializes getter-only properties, so a cached property lands in the `PlayerPrefs` cache unless it is `[JsonIgnore]`.

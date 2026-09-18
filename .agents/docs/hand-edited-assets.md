@@ -59,3 +59,31 @@ The guid must be new — grep it across `Assets/`, `Packages/` and
 `ProjectSettings/` before committing. Never reuse the guid of the file you are
 replacing: scenes and prefabs resolve components by guid, so a reused guid makes
 every old reference silently bind to the new type.
+
+## Adding a UI button to a prefab is twelve documents, not one
+
+`LogoutButton` was added to `Assets/Prefabs/UI/Lobby/Panal.prefab` by copying the
+`DeleteAccountButton` GameObject. That copy is twelve YAML documents: the button
+GameObject with its RectTransform, CanvasRenderer, `Image`, `Button`, the
+`MonoBehaviour`, and `Shadow`, plus a `Text (TMP)` child GameObject with its
+RectTransform, CanvasRenderer, `TextMeshProUGUI` and `LocalizeStringEvent`. A
+thirteenth edit is easy to forget: the parent transform's `m_Children` list. The
+GameObject exists without it, and it never renders.
+
+Give every copied document a new `fileID`, then rewrite the references between
+them in one pass — `m_GameObject`, `m_Component`, `m_Father`, `m_Children`,
+`m_TargetGraphic`, and the `m_Target` of every `m_PersistentCalls` entry. Copying
+the block and changing only the anchors leaves the new `Button` driving the old
+button's component.
+
+The check that catches all of it: every `{fileID: N}` in the file where `N` is
+not `0` and the mapping has no `guid:` must resolve to a `--- !u!T &N` anchor in
+that same file. Run it over the file before and after, and compare — the count of
+unresolved references must stay zero and no anchor may be lost or duplicated.
+Also confirm each component's `m_GameObject` points back at the GameObject that
+lists it, and each child's `m_Father` points back at the transform that lists it.
+
+Serialized fields are written in declaration order, and only `public` fields and
+`[SerializeField]` ones appear. `protected` and `private` fields without the
+attribute are absent, so the block for a `MonoBehaviour` deriving from
+`DisableableButtonBase` holds that script's own fields and nothing from the base.
