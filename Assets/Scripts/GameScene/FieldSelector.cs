@@ -37,6 +37,13 @@ namespace GameScene
         /// </summary>
         private const int LowestSkillIndicatorSortingOrder = 6;
 
+        /// <summary>
+        /// circle layer 가 문서에 <c>edgeWidth</c> 를 적지 않았을 때 쓰는 기본 테두리 두께.
+        /// magma_explosion 처럼 <c>edgeWidth</c> 가 없는 document 도 이 두께의 테두리를 얻어,
+        /// 사거리 원·조준 원과 같은 채움만으로는 경계가 안 보이던 문제를 없앤다.
+        /// </summary>
+        private const float DefaultSkillIndicatorLayerEdgeWidth = 0.15f;
+
         /// <summary>참조를 찾지 못했을 때 씬 전체 스캔을 매 프레임 되풀이하지 않기 위한 재시도 간격.</summary>
         private const float MissingReferenceRetryInterval = 0.5f;
 
@@ -411,15 +418,28 @@ namespace GameScene
                 int sortingOrder = GetLayerSortingOrder(i, shapes.Count);
                 if (shape.kind == ResolvedIndicatorShape.Kind.Circle)
                 {
-                    // edgeWidth 가 0 보다 크면 그 두께의 테두리만 남기고 속은 비운다.
+                    // document 가 edgeWidth 를 적지 않았으면(magma_explosion 이 여기) 기본 두께
+                    // DefaultSkillIndicatorLayerEdgeWidth 로 테두리를 그리고 안도 채운다 — 안 그러면
+                    // 사거리 원·조준 원과 같은 주황 채움 한 겹으로만 보여 경계가 안 보인다.
+                    //
+                    // document 가 edgeWidth 를 적었으면 그 두께로 테두리만 그리고 안은 비운다.
+                    // tower, cannon, rock_turret 처럼 건물/설치물 39종이 dev 기준 여기 해당하고,
+                    // 속이 빈 얇은 링은 이 39종에서 의도적으로 고른 모습이라 여기서 바꾸지 않는다.
+                    // 채움을 더할지는 Editor 에서 실제로 보고 따로 결정할 문제다.
+                    // 두 갈래 모두 SkillIndicatorShapeRenderer.LayerFillColor(청록)를 써서, 채움이 없는
+                    // 39종도 테두리 색이 갈려 사거리 원(주황, DefaultFillColor)과는 구분된다.
+                    bool hasDocumentEdgeWidth = shape.edgeWidth > 0f;
+                    float edgeWidth = hasDocumentEdgeWidth ? shape.edgeWidth : DefaultSkillIndicatorLayerEdgeWidth;
                     layerRenderer.SetCircle(
-                        shape.origin, shape.radius, shape.edgeWidth <= 0f, sortingOrder, shape.edgeWidth);
+                        shape.origin, shape.radius, !hasDocumentEdgeWidth, sortingOrder, edgeWidth,
+                        SkillIndicatorShapeRenderer.LayerFillColor);
                 }
                 else
                 {
                     // SetLine 의 width 는 전체 폭이라 다시 반으로 나눈다.
                     layerRenderer.SetLine(
-                        shape.origin, shape.target, shape.length, sortingOrder, shape.halfWidth * 2f);
+                        shape.origin, shape.target, shape.length, sortingOrder, shape.halfWidth * 2f,
+                        SkillIndicatorShapeRenderer.LayerFillColor);
                 }
             }
 
