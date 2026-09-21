@@ -97,6 +97,15 @@ jobs:
           targetPlatform: ${{ matrix.target }}
           customParameters: ${{ steps.build_defines.outputs.CUSTOM_PARAMS }}
 
+      # unity-builder runs Unity inside a Docker container as root, so the whole
+      # build directory comes out root-owned while every later step runs as the
+      # runner user. That is what failed the windows and osx channels on every
+      # run up to 2026-09-21: chmod reported "Operation not permitted" and rm
+      # reported "Permission denied", both before the push. release.yml takes
+      # ownership back the same way in its Package build step.
+      - name: Take ownership of the build output
+        run: sudo chown -R "$(id -u):$(id -g)" build
+
       # A macOS player built on Linux comes out without the executable bit on
       # the binary inside the .app, and butler preserves what it is given, so
       # the upload would refuse to launch. The build is also unsigned and not
