@@ -144,6 +144,10 @@ MonoBehaviour:
     m_Localized: "끔"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000011
+    m_Localized: "\uB85C\uADF8\uC544\uC6C3"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

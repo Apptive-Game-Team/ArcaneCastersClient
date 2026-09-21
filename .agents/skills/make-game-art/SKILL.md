@@ -303,6 +303,40 @@ crescent is subject, not background. Check instead that no pixel of the key
 colour survived — red and blue both high with green far below — among the opaque
 pixels.
 
+### Ask for the proportion in numbers, and say the drawing must touch the edges
+
+A replacement inherits the old file's aspect ratio, and the generator will not
+guess it. Two failures show up every time and both are prompt problems:
+
+- **It leaves a margin.** Asked for a subject on a canvas, it draws the subject
+  in the middle with clear space all round, so fitting the cutout into the old
+  content's box shrinks it. On 2026-09-18 the first pass came back with the wind
+  gust at 45% of its canvas height, the cloud at 61% and the grass tuft at 74% of
+  its canvas width. Write that lobes, blades or tips must **touch the top, bottom,
+  left and right edges**, and that no more than a few pixels of empty margin may
+  remain on any side.
+- **Words for ratios are not precise enough.** "About twice as wide as it is
+  tall" returned 2.02 when the old file was 2.206 — 8.5% narrow, over the limit.
+  The same prompt with `exactly 2.2 times as wide as it is tall — 1760 pixels
+  wide by 800 pixels tall` returned 2.199 and fit at scale 0.99. Give the number
+  and an example pixel size.
+
+Neither fixes an extreme ratio. Asked three times for 5.5:1 it delivered it once
+and returned 2.75:1 twice, including when the prompt named `2002 x 364 pixels`.
+Past about 3:1, budget for the ratio being ignored and decide in advance whether
+a composed assembly or leaving the old art is the fallback.
+
+### `image_gen` sometimes returns real alpha anyway
+
+The magenta-key method above is still right, but the generator does not always
+follow it: of eight calls on 2026-09-18, two came back RGBA with a genuine cut-out
+and no magenta at all. So read the mode before keying rather than keying blind —
+`key-out-background.py` converts to RGB, so running it on a file that already has
+alpha throws the alpha away and hands back a fully opaque image. When the canvas
+is wide and it improvises transparency, expect matte litter: the wind gust came
+back with white speckle across 13% of its opaque pixels. That is a reject, not
+something to clean up.
+
 ## Boundaries
 
 - Do not edit `.art/anchors/master-v2/` in place. Propose a new versioned

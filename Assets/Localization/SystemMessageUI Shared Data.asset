@@ -143,6 +143,14 @@ MonoBehaviour:
     m_Key: sessionReconnecting
     m_Metadata:
       m_Items: []
+  - m_Id: 9900000000000
+    m_Key: authSessionExpired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8000000000000
+    m_Key: guestLogoutWarning
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
