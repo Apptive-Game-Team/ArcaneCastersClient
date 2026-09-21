@@ -37,6 +37,13 @@ namespace GameScene
         /// </summary>
         private const int LowestSkillIndicatorSortingOrder = 6;
 
+        /// <summary>
+        /// circle layer 가 문서에 <c>edgeWidth</c> 를 적지 않았을 때 쓰는 기본 테두리 두께.
+        /// magma_explosion 처럼 <c>edgeWidth</c> 가 없는 document 도 이 두께의 테두리를 얻어,
+        /// 사거리 원·조준 원과 같은 채움만으로는 경계가 안 보이던 문제를 없앤다.
+        /// </summary>
+        private const float DefaultSkillIndicatorLayerEdgeWidth = 0.15f;
+
         /// <summary>참조를 찾지 못했을 때 씬 전체 스캔을 매 프레임 되풀이하지 않기 위한 재시도 간격.</summary>
         private const float MissingReferenceRetryInterval = 0.5f;
 
@@ -411,15 +418,21 @@ namespace GameScene
                 int sortingOrder = GetLayerSortingOrder(i, shapes.Count);
                 if (shape.kind == ResolvedIndicatorShape.Kind.Circle)
                 {
-                    // edgeWidth 가 0 보다 크면 그 두께의 테두리만 남기고 속은 비운다.
+                    // document 가 edgeWidth 를 적었으면 그 두께, 안 적었으면 기본 두께로 테두리를 그린다.
+                    // 안은 두 경우 모두 채운다 — 테두리만 남기면 지면 위에서 범위가 흐릿하게만 보인다.
+                    // 채움은 SkillIndicatorShapeRenderer.LayerFillColor 를 써서 사거리 원·조준 원의
+                    // 주황(DefaultFillColor)과 색으로 구분된다.
+                    float edgeWidth = shape.edgeWidth > 0f ? shape.edgeWidth : DefaultSkillIndicatorLayerEdgeWidth;
                     layerRenderer.SetCircle(
-                        shape.origin, shape.radius, shape.edgeWidth <= 0f, sortingOrder, shape.edgeWidth);
+                        shape.origin, shape.radius, true, sortingOrder, edgeWidth,
+                        SkillIndicatorShapeRenderer.LayerFillColor);
                 }
                 else
                 {
                     // SetLine 의 width 는 전체 폭이라 다시 반으로 나눈다.
                     layerRenderer.SetLine(
-                        shape.origin, shape.target, shape.length, sortingOrder, shape.halfWidth * 2f);
+                        shape.origin, shape.target, shape.length, sortingOrder, shape.halfWidth * 2f,
+                        SkillIndicatorShapeRenderer.LayerFillColor);
                 }
             }
 
