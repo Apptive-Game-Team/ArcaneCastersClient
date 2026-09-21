@@ -108,9 +108,9 @@ namespace ProfileScene
 
                 string opponentUsername = null;
 
-                yield return GetOpponentUsername(game.OpponentId, username => opponentUsername = username);
+                yield return ResolveOpponentUsername(game, username => opponentUsername = username);
 
-                builder.Append(game.IsWin ? "Win" : "Loss")
+                builder.Append(ResultLabel(game))
                     .Append(" vs ")
                     .Append(opponentUsername)
                     .AppendLine();
@@ -127,8 +127,32 @@ namespace ProfileScene
             }
 
             string opponentUsername = null;
-            yield return GetOpponentUsername(gameHistory?.OpponentId ?? 0, username => opponentUsername = username);
+            yield return ResolveOpponentUsername(gameHistory, username => opponentUsername = username);
             item.Render(gameHistory, opponentUsername);
+        }
+
+        private static string ResultLabel(UserGameHistoryDto gameHistory)
+        {
+            if (gameHistory.IsDraw)
+            {
+                return "Draw";
+            }
+
+            return gameHistory.IsWin ? "Win" : "Loss";
+        }
+
+        // Prefers the server-supplied opponentName (ArcaneCastersLobby#27) so a bot opponent,
+        // whose negative user id has no account-server member, never triggers the 404 lookup below.
+        private static IEnumerator ResolveOpponentUsername(UserGameHistoryDto gameHistory, Action<string> callback)
+        {
+            string opponentName = gameHistory?.opponentName;
+            if (!string.IsNullOrEmpty(opponentName))
+            {
+                callback?.Invoke(opponentName);
+                yield break;
+            }
+
+            yield return GetOpponentUsername(gameHistory?.OpponentId ?? 0, callback);
         }
 
         private static IEnumerator GetOpponentUsername(long opponentId, Action<string> callback)

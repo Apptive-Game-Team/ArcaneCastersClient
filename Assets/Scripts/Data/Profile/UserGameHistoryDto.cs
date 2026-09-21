@@ -6,34 +6,16 @@ namespace Data.Profile
     public class UserGameHistoryDto
     {
         public long opponentId;
-        public long opponent_id;
-        public long opponentUserId;
-        public long opponent_user_id;
+        public string opponentName;
         public string result;
 
-        public long OpponentId
-        {
-            get
-            {
-                if (opponentId != 0)
-                {
-                    return opponentId;
-                }
+        public long OpponentId => opponentId;
 
-                if (opponent_id != 0)
-                {
-                    return opponent_id;
-                }
-
-                if (opponentUserId != 0)
-                {
-                    return opponentUserId;
-                }
-
-                return opponent_user_id;
-            }
-        }
-
+        // result is one of "win", "lose", "draw" (contract fixed in ArcaneCastersLobby#27).
+        // Kept as a plain string instead of an enum: StringEnumConverter throws on an
+        // unrecognized value and JsonCodec.TryDeserialize discards the whole response.
         public bool IsWin => string.Equals(result, "win", StringComparison.OrdinalIgnoreCase);
+        public bool IsDraw => string.Equals(result, "draw", StringComparison.OrdinalIgnoreCase);
+        public bool IsLose => string.Equals(result, "lose", StringComparison.OrdinalIgnoreCase);
     }
 }
