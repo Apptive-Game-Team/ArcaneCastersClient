@@ -18,14 +18,16 @@ namespace MagicBookScene
         private const string BackToListKey = "detail.backToList";
         private const string BackToListFallback = "목록으로";
 
-        private const float BackButtonFontSize = 30f;
+        private const float BackButtonFontSize = 24f;
         private const float BackButtonCornerScale = 6f;
 
         private static readonly Vector2 CenterAnchor = new(0.5f, 0.5f);
+        private static readonly Vector2 TopLeftAnchor = new(0f, 1f);
         private static readonly Vector2 MagicImageSize = new(380f, 380f);
-        private static readonly Vector2 MagicImagePosition = new(0f, 60f);
-        private static readonly Vector2 BackButtonSize = new(220f, 72f);
-        private static readonly Vector2 BackButtonPosition = new(0f, -215f);
+        // 돌아가기 버튼이 페이지 위쪽을 차지하므로 그림은 그 아래로 내려 앉힌다.
+        private static readonly Vector2 MagicImagePosition = new(0f, -40f);
+        private static readonly Vector2 BackButtonSize = new(190f, 60f);
+        private static readonly Vector2 BackButtonPosition = new(16f, -16f);
 
         private static readonly Color BackButtonColor = new(0.973f, 0.925f, 0.839f);
         private static readonly Color BackButtonTextColor = new(0.478f, 0.384f, 0.282f);
@@ -155,7 +157,13 @@ namespace MagicBookScene
         private Button CreateBackButton(RectTransform parent)
         {
             var buttonObject = new GameObject("BackToListButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
-            PlaceCentered((RectTransform)buttonObject.transform, parent, BackButtonSize, BackButtonPosition);
+            var buttonRect = (RectTransform)buttonObject.transform;
+            buttonRect.SetParent(parent, false);
+            buttonRect.anchorMin = TopLeftAnchor;
+            buttonRect.anchorMax = TopLeftAnchor;
+            buttonRect.pivot = TopLeftAnchor;
+            buttonRect.sizeDelta = BackButtonSize;
+            buttonRect.anchoredPosition = BackButtonPosition;
 
             var background = buttonObject.GetComponent<Image>();
             // sprite 가 없는 Image 는 흰 사각형을 그린다. element chart 의 칸과 같은 배경을 쓴다.
@@ -193,6 +201,8 @@ namespace MagicBookScene
             label.fontSize = BackButtonFontSize;
             label.color = BackButtonTextColor;
             label.alignment = TextAlignmentOptions.Center;
+            // 버튼 폭에 못 담아도 두 줄로 접지 않는다.
+            label.enableWordWrapping = false;
             label.raycastTarget = false;
             return label;
         }
