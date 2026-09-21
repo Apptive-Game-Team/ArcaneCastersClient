@@ -327,6 +327,10 @@ MonoBehaviour:
     m_Key: seed_nest
     m_Metadata:
       m_Items: []
+  - m_Id: 1000063
+    m_Key: detail.backToList
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

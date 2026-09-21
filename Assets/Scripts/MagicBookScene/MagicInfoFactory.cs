@@ -25,6 +25,7 @@ namespace MagicBookScene
         [SerializeField] private Transform magicInfoParent;
         [SerializeField] private GameObject magicInfoPrefab;
         [SerializeField] private MagicInfo magicInfo;
+        [SerializeField] private SelectedMagicView selectedMagicView;
         
         [SerializeField] private UserMagicApiClient userMagicApiClient;
 
@@ -78,6 +79,7 @@ namespace MagicBookScene
         private void OnClickMagicButton(CombinedMagicData data)
         {
             magicInfo.Init(data);
+            selectedMagicView?.Show(data);
             MagicSelected?.Invoke();
         }
 
