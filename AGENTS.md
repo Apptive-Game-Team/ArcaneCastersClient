@@ -57,6 +57,7 @@ When work starts from a new request, follow this order unless the user explicitl
 This repository keeps its own skills under `.agents/skills/`. Read the one that covers the task before starting. An agent that only auto-loads skills from its own home directory does not see these, so open the file by path.
 
 - `.agents/skills/create-game-audio/SKILL.md` — converts natural-language game audio requests into ElevenLabs Sound Effects prompts and parameters, generates review batches, and integrates approved clips into Unity; use for UI, card, impact, weapon, footstep, magic, or ambience sound-effect work.
+- `.agents/skills/pr-media/SKILL.md` — puts screenshots, renders, or diagrams into a pull request by committing them under `docs/pr-media/<issue-num>/` and linking them by commit SHA; use for any PR that a picture would make easier to review.
 - `.agents/skills/magick/SKILL.md` — ImageMagick CLI reference for inspecting, converting, resizing, cropping, compositing, and batch-processing images with the `magick` command.
 - `.agents/skills/make-game-art/SKILL.md` — creates, edits, reviews, or standardizes WordOnline visual assets under one project-wide art style; use for character, creature, faction, building, environment, VFX, icon, sprite, or art-direction work.
 - `.agents/skills/make-magic/SKILL.md` — adds or scaffolds a new magic's client-side localization text and generated icon/sprite art for server-derived magic data; use `make-prefab` separately for prefab wiring.

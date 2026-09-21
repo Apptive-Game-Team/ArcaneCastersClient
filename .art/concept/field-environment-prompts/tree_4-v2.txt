@@ -1,0 +1,17 @@
+The attached image is the canonical style reference for this game. Match its rendering method exactly: chunky low-poly faceted forms built from flat straight-edged planes, one flat colour per plane, hard creases between planes, no outline strokes, a soft matte paper surface with a very fine even grain, muted earthy saturation, and one soft light from the upper-left. Do not copy any subject from it — only the way it is rendered.
+
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself.
+
+Subject: a single broadleaf forest tree, standing upright and seen straight from the front at slightly raised eye level, as a scenery prop for the edge of a battle field. One chunky trunk splitting into thick chunky boughs low down, carrying one broad canopy mass. The tree is stout and stocky — roughly as wide as it is tall, with the canopy clearly heavier than the trunk. A low skirt of chunky grass wraps the base where the trunk meets the ground.
+
+**Build everything from flat straight-edged facets.** The canopy is a cluster of chunky faceted leaf masses — each mass a solid low-poly volume whose surface is a handful of flat triangular and quadrilateral planes, creased against each other. The leaf masses are angular and blocky, not round and not scalloped: no wavy cloud outlines, no rounded lobes, no drawn individual leaves, no soft scalloped edges. The trunk is the same: a few large flat bark planes meeting at hard creases, not a smooth tapering tube and not drawn bark lines. The grass skirt is a ring of short angular blades.
+
+Shade each facet by which way it faces the single upper-left light: the plane facing up and to the left takes the lightest value of that material, the plane facing down and to the right takes the darkest. Use three values per material and no more. No gradient inside a facet, no smooth 3D shading, no gloss, no specular highlight, no glow, no outer contour line, no ink outline. Carry the reference's fine matte paper grain evenly across the whole subject.
+
+Palette, muted and earthy to match the reference, nothing neon and nothing acid: canopy facets from hex #6E8F3C, #83A64B, #5A7730 and #97B85C, with #A8C468 used sparingly on only the two or three topmost facets. Trunk facets from #8A6B45, #A3835A and #5F482D. Grass skirt reuses the canopy greens.
+
+Variant for this file — tree_4, canvas 328x264, the largest and broadest, used as the anchor of a tree line: three thick boughs spreading into a wide canopy clearly wider than tall, with the heaviest faceted mass on the upper-left.
+
+Composition: single subject, centered horizontally, filling the canvas width. The bottom of the grass skirt sits exactly on the bottom edge of the frame with no gap below it — this sprite's pivot is bottom centre and it must touch the ground in game. The canopy top reaches the top edge of the frame. Nothing else in frame. The silhouette must survive downscale to 64px as one solid readable tree.
+
+Exclude: no text, no frame, no card border, no watermark, no logo, no ground plane, no cast shadow, no scene, no sky, no horizon, no other trees, no creatures, no face, no eyes, no fruit, no flowers, no birds, no path, no curved or scalloped canopy outlines. Single tree only, nothing else in frame.
