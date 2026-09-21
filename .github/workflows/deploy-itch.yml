@@ -28,6 +28,9 @@ jobs:
           - target: StandaloneOSX
             channel: osx
             pushPath: build/StandaloneOSX
+          - target: StandaloneLinux64
+            channel: linux
+            pushPath: build/StandaloneLinux64
 
     steps:
       - name: Checkout repository
@@ -97,6 +100,15 @@ jobs:
           targetPlatform: ${{ matrix.target }}
           customParameters: ${{ steps.build_defines.outputs.CUSTOM_PARAMS }}
 
+      # unity-builder runs Unity inside a Docker container as root, so the whole
+      # build directory comes out root-owned while every later step runs as the
+      # runner user. That is what failed the windows and osx channels on every
+      # run up to 2026-09-21: chmod reported "Operation not permitted" and rm
+      # reported "Permission denied", both before the push. release.yml takes
+      # ownership back the same way in its Package build step.
+      - name: Take ownership of the build output
+        run: sudo chown -R "$(id -u):$(id -g)" build
+
       # A macOS player built on Linux comes out without the executable bit on
       # the binary inside the .app, and butler preserves what it is given, so
       # the upload would refuse to launch. The build is also unsigned and not
@@ -104,6 +116,28 @@ jobs:
       - name: Restore macOS executable bit
         if: matrix.target == 'StandaloneOSX'
         run: chmod -R +x ${{ matrix.pushPath }}/*.app/Contents/MacOS
+
+      # unity-builder names the Linux player after buildName, which defaults to
+      # the target name, and Unity appends .x86_64 on some versions. Check both
+      # spellings instead of guessing. A player that ships without the bit still
+      # uploads and still runs after a manual chmod, so warn rather than fail
+      # the push, and list the directory so the real name lands in the log.
+      - name: Restore Linux executable bit
+        if: matrix.target == 'StandaloneLinux64'
+        run: |
+          set -euo pipefail
+          chmodded=0
+          for candidate in "${{ matrix.pushPath }}/${{ matrix.target }}" \
+                           "${{ matrix.pushPath }}/${{ matrix.target }}.x86_64"; do
+            if [ -f "$candidate" ]; then
+              chmod +x "$candidate"
+              chmodded=1
+            fi
+          done
+          if [ "$chmodded" != 1 ]; then
+            echo "::warning::no Linux player found under ${{ matrix.pushPath }}; whoever downloads it has to chmod +x by hand"
+            ls -la "${{ matrix.pushPath }}"
+          fi
 
       # Unity drops Burst debug symbols beside the standalone player in a
       # folder it names DoNotShip, and the push path is the whole target
