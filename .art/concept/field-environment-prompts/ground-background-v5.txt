@@ -1,0 +1,19 @@
+Fill the entire square canvas edge to edge with one continuous opaque grass ground texture. Every pixel is grass: no background colour behind it, no magenta key, no transparency, no border, no frame, no vignette, no darkening or lightening toward any edge.
+
+The image is tileable: the pattern at the left edge continues into the right edge and the top edge continues into the bottom edge, with no seam and no discontinuity of colour, shape or value where edges meet. Polygons that touch an edge are cut there and resume on the opposite edge.
+
+Viewpoint: straight top-down, looking directly down at flat ground. No horizon, no sky, no perspective, nothing standing up, no long shadows.
+
+Subject: a low-poly grass field seen from directly above. The entire surface is a **tessellation of flat, straight-edged polygons** — irregular triangles and quadrilaterals of varying size — fitted together edge to edge with no gaps and no overlaps, like a faceted paper mosaic or a low-poly 3D surface flattened. Every boundary between two polygons is a **straight line**. There are no curved edges, no wavy outlines, no rounded blobs, no organic silhouettes anywhere in the image.
+
+Each polygon is filled with one flat solid colour and nothing else — no gradient inside a polygon, no texture inside a polygon, no blades drawn on it, no noise. The greens are assigned so that neighbouring polygons differ only slightly, and the variation drifts slowly across the surface: small clusters of polygons read a little lighter, others a little darker, but the difference between any two adjacent polygons stays small. Never let a dark polygon sit directly against a bright one — that would read as a hole or an object.
+
+Scale: polygons of mixed size, roughly twenty to forty across the width of the canvas, so the facets are clearly visible as facets but none of them is large enough to read as a shape, a landmark or a clearing.
+
+Palette: fresh warm yellow-green. Draw the polygon fills from hex #8FBC48, #86B043, #98C650, #7AA23C, #A3CC57 and #6E9738, weighted toward the middle values so the field stays even. Restrained saturation, mid-to-high value. Nothing muddy, nothing grey, nothing blue-green, nothing neon, nothing olive-drab.
+
+Render in the 2.5D cut-paper master style: flat faceted planes, one flat solid colour per plane, hard sharp creases between planes, no outer contour line, no ink outline, no visible seam lines or wireframe strokes drawn between polygons — the facets separate by value alone. No smooth 3D shading, no gloss, no specular highlight, no glow, no painterly brushwork, no photographic turf, no noise filter, no grain. Light comes softly from the upper-left, expressed only as a very slight bias in which green a facet takes, never as an overall gradient across the image, which would break tiling.
+
+Keep the overall value range narrow so that game units and coloured effects drawn on top stay clearly readable, and so menu text sits on it comfortably.
+
+Exclude: no text, no frame, no border, no watermark, no logo, no vignette, no characters, no creatures, no trees, no rocks, no leaves, no flowers, no mushrooms, no path, no road, no river, no dirt, no buildings, no props, no cast shadows, no horizon, no sky, no perspective, no depth-of-field blur, no wireframe lines, no visible tiling grid, no repeated identical motif, no camouflage blobs, no dense blade carpet, no curved or wavy shapes of any kind.

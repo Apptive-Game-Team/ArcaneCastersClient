@@ -14,6 +14,16 @@ namespace Global.Util
     /// has not been fetched yet, the signature cannot be checked, so IsAdmin() returns
     /// false rather than trusting an unverified scope claim. All privileged operations
     /// must still be enforced server-side.
+    ///
+    /// IsGuest() does not verify the signature. It only decides whether to show a UI
+    /// affordance (the guest-to-member conversion button, the guest logout warning); the
+    /// server decides guest status for real from its own `is_guest` column and its own
+    /// verified copy of the token, so a forged `guest` claim cannot grant anything through
+    /// this read. Requiring verification here would also bring back the bug that this claim
+    /// was added to fix: guest login does not pre-fetch JWKS (see
+    /// <see cref="Global.AdminOnly"/>'s remarks on which flows do), so a signature-gated read
+    /// would hide the conversion button from a genuine guest right after that flow, whenever
+    /// JWKS has not finished loading yet.
     /// </summary>
     public static class JwtHelper
     {
@@ -21,6 +31,7 @@ namespace Global.Util
         private class JwtPayload
         {
             public string scope;
+            public bool guest;
         }
 
         [Serializable]
@@ -251,6 +262,30 @@ namespace Global.Util
                     string.Equals(role, "SUPER_ADMIN", StringComparison.OrdinalIgnoreCase))
                     return true;
             }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true when the JWT payload's "guest" claim is present and true. Absent,
+        /// false, or a malformed payload all read as a real member — see the class remarks
+        /// for why this is not signature-verified.
+        /// </summary>
+        public static bool IsGuest(string jwtToken)
+        {
+            string payloadJson = DecodePayload(jwtToken);
+            if (string.IsNullOrEmpty(payloadJson))
+                return false;
+
+            try
+            {
+                JwtPayload payload = JsonCodec.Deserialize<JwtPayload>(payloadJson);
+                return payload != null && payload.guest;
+            }
+            catch (Exception)
+            {
+                // A token that cannot be parsed must not read as a guest.
+            }
+
             return false;
         }
     }

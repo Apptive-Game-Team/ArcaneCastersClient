@@ -1,0 +1,9 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas.
+
+Draw one rounded cloud mass, a single puff. Its overall silhouette is as tall as it is wide, the lobes packed around a circle rather than strung out in a horizontal row, and it fills the square canvas edge to edge: lobes touch the top edge, the bottom edge, the left edge and the right edge, leaving no more than a few pixels of empty margin on any side. Build it from a cluster of flat polygonal facet planes with hard sharp creases, the way CloudDragon's body and RainCloud are built — the outer edge is made of six to eight rounded lobes, each lobe a small group of facets, so the silhouette bumps in and out rather than being a smooth circle. It is a cloud, not a sphere and not a bubble.
+
+Palette: highlight #E5EBE7 on the upper-left lobes, light #B3CCCA across the middle, mid #9BB3B3 on the lower-right lobes, deep #5EA191 only in the deepest crease planes underneath. No blue, no cyan, no glossy white.
+
+Render everything using flat polygonal facet planes: one flat solid color per plane, hard sharp creases between planes, no smooth 3D shading, no gloss, no specular highlight, no rim light, no reflection, no transparency, no soap-bubble sheen, no texture, no painterly brushwork, no glow, no bloom, no outer contour line, no ink outline. Light comes from a single soft source at upper-left. Keep saturation restrained and values mid-to-high; nothing neon.
+
+This is a game visual-effect asset, not a character: no face, no eyes, no mouth, no rain, no lightning, no character proportions. No text, no frame, no card border, no watermark, no logo.

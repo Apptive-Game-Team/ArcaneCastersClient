@@ -7,8 +7,8 @@
     "theme_color": "{{{  SPLASH_SCREEN_STYLE.toLowerCase() === 'light' ? '#fff' : '#000' }}}",
     "description": {{{ JSON.stringify(PRODUCT_DESCRIPTION) }}},
     "icons": [{
-      "src": "TemplateData/wordventure-logo-flat.png",
-      "sizes": "144x144",
+      "src": "TemplateData/arcanecasters-logo.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }]

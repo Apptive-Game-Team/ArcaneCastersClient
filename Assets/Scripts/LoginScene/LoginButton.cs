@@ -1,6 +1,7 @@
 using System.Collections;
 using Data;
 using Global;
+using Global.Auth;
 using Global.Button;
 using Global.Util;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace LoginScene
                 webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
+                Server.SetTokenDelivery(webRequest);
                 webRequest.timeout = 10;
             
                 yield return webRequest.SendWebRequest();
@@ -47,7 +49,7 @@ namespace LoginScene
                 try
                 {
                     AuthResponseDto authResponseDto = JsonCodec.Deserialize<AuthResponseDto>(webRequest.downloadHandler.text);
-                    SceneContext.JwtToken = authResponseDto.jwt;
+                    AuthSession.Instance.BeginSession(authResponseDto.jwt, authResponseDto.refreshToken, authResponseDto.expiresIn);
                 } catch (System.Exception e)
                 {
                     WDebug.LogError("Parsing Error: " + e.Message);

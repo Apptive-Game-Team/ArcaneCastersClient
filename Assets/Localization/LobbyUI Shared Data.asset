@@ -143,6 +143,10 @@ MonoBehaviour:
     m_Key: CoachHintOff
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000011
+    m_Key: Logout
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

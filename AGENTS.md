@@ -19,6 +19,12 @@ Use C# with 4-space indentation and K&R braces, matching the existing codebase. 
 
 For visual styling, layout, colors, shapes, and typography guidelines, follow the [DESIGN.md](.agents/docs/DESIGN.md) design system spec.
 
+`Global.Button.AsyncButtonBase.ButtonEvent` calls `OnClickButton` first and
+locks the button afterwards, so a `ResetButton()` inside `OnClickButton` is
+overwritten in the same frame and the button stays grey. A button that has to
+stay pressable after a click — one that asks the user to press again to
+confirm, for example — must wait a frame before calling `ResetButton()`.
+
 Follow [scene-space.md](.agents/docs/scene-space.md) before writing gameplay code that positions anything in the world or animates a `ServedObject`. The camera is tilted and sprites are billboarded to it, so `Vector3.up` and `Vector3.Distance` are the wrong tools for offsets and lengths measured off a sprite. That file also records that this project has no `Animator`.
 
 Follow [json-payloads.md](.agents/docs/json-payloads.md) before adding a field to a server DTO, writing a `JsonConverter`, or typing a DTO field as an enum. `JsonCodec` registers `StringEnumConverter` for the whole client, so one unknown enum name from the server throws and the caller discards the entire response; Json.NET also serializes getter-only properties, so a cached property lands in the `PlayerPrefs` cache unless it is `[JsonIgnore]`.
@@ -26,6 +32,8 @@ Follow [json-payloads.md](.agents/docs/json-payloads.md) before adding a field t
 Follow [localization.md](.agents/docs/localization.md) before adding or editing anything under `Assets/Localization`. The same magic is keyed by three different spellings of its server name, so adding one of them and stopping leaves another screen showing a raw key. The string tables are hand-edited YAML here because the Editor cannot run in this environment.
 
 Follow [json-payloads.md](.agents/docs/json-payloads.md) before adding a field to a server DTO, writing a `JsonConverter`, or typing a DTO field as an enum. `JsonCodec` registers `StringEnumConverter` for the whole client, so one unknown enum name from the server throws and the caller discards the entire response; Json.NET also serializes getter-only properties, so a cached property lands in the `PlayerPrefs` cache unless it is `[JsonIgnore]`.
+
+Follow [webgl-auth-hosting.md](.agents/docs/webgl-auth-hosting.md) before changing anything about WebGL login, refresh tokens, or where a WebGL build is published. The same build authenticates differently depending on the page it runs in: the refresh cookie is only stored when the page shares the account server's domain, so it works on `arcanecasters.theevilent.com` and is dropped on the `itch.io` and `github.io` addresses, and an origin outside the account server's CORS list fails at the preflight before any login happens.
 
 Follow [hand-edited-assets.md](.agents/docs/hand-edited-assets.md) before changing a serialized type, renaming a serialized field, or deleting a `MonoBehaviour`. The Editor cannot run here, so `.asset`, `.prefab`, `.unity` and `.meta` files are edited as YAML by hand. A serialized enum stores its integer, so reordering one silently remaps every stored row, and deleting a script takes three edits across the script, its prefab and every scene that instances it.
 
@@ -49,6 +57,7 @@ When work starts from a new request, follow this order unless the user explicitl
 This repository keeps its own skills under `.agents/skills/`. Read the one that covers the task before starting. An agent that only auto-loads skills from its own home directory does not see these, so open the file by path.
 
 - `.agents/skills/create-game-audio/SKILL.md` — converts natural-language game audio requests into ElevenLabs Sound Effects prompts and parameters, generates review batches, and integrates approved clips into Unity; use for UI, card, impact, weapon, footstep, magic, or ambience sound-effect work.
+- `.agents/skills/pr-media/SKILL.md` — puts screenshots, renders, or diagrams into a pull request by committing them under `docs/pr-media/<issue-num>/` and linking them by commit SHA; use for any PR that a picture would make easier to review.
 - `.agents/skills/magick/SKILL.md` — ImageMagick CLI reference for inspecting, converting, resizing, cropping, compositing, and batch-processing images with the `magick` command.
 - `.agents/skills/make-game-art/SKILL.md` — creates, edits, reviews, or standardizes WordOnline visual assets under one project-wide art style; use for character, creature, faction, building, environment, VFX, icon, sprite, or art-direction work.
 - `.agents/skills/make-magic/SKILL.md` — adds or scaffolds a new magic's client-side localization text and generated icon/sprite art for server-derived magic data; use `make-prefab` separately for prefab wiring.

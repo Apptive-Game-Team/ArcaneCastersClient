@@ -403,3 +403,37 @@ false positive를 낸다 — 숫자만 보지 말고 pivot 기준으로 겹친 �
   --idle-out Assets/Resources/Game/sprites/LightningCloud.png \
   --frame-out 'Assets/Resources/Game/sprites/LightningCloudStrike{index}.png'
 ```
+
+## 폭발 이펙트 프레임 쌍 (`razor_gale`, `electric_explode`)
+
+`Assets/Resources/Game/explode/` 의 `razor_gale_frame_0/1` (192x155) 과
+`electric_explode_frame_0/1` (192x116) 은 각각 `SpriteFrameAnimator` 가 0.12초
+간격에 `loop: 1` 로 돌리는 두 프레임이다. 두 장의 캔버스 크기가 같아야 하고,
+`spritePixelsToUnits` 는 둘 다 100 이다.
+
+### `.meta` 의 `spritePivot` 을 믿지 마라. `alignment` 가 이긴다
+
+네 파일 모두 `spritePivot: {x: 0.5, y: 0.5}` 로 적혀 있지만 `alignment: 7` 이다.
+Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런타임 피벗은
+중앙이 아니라 **Bottom Center** 다. `Cloud Dragon 프레임` 절이 같은 함정을 이미
+적어 뒀다.
+
+차이가 그대로 드러난다. 생성물의 가로세로 비가 원본과 달라 비율을 지켜 넣으면
+캔버스에 세로 여백이 남는데, 그것을 위아래로 나눠 가운데 정렬하면 이펙트가
+아래 여백만큼 공중에 뜬다. 2026-09-18 작업에서 `razor_gale` 이 7px,
+`electric_explode` 가 4px 떴고, `check-replacement.py` 가 네 장 모두
+`바닥 여백이 0px 에서 Npx 로 늘었다` 로 잡았다. 남는 여백은 전부 위로 보내고
+그림은 캔버스 바닥에 붙인다.
+
+`check-frame-pair.py` 는 `spritePivot` 을 읽으므로 이 문제를 못 잡는다. 두
+프레임을 똑같이 가운데 정렬하면 서로는 어긋나지 않아서 `통과` 가 나온다.
+두 스크립트를 같이 돌려야 한다.
+
+### 합집합 crop box 를 재기 전에 alpha 바닥을 깔아라
+
+`key-out-background.py` 를 거친 파일에도, `image_gen` 이 alpha 를 직접 돌려준
+파일에도 alpha 가 1~7 인 픽셀이 캔버스 구석에 남는다. `Image.getchannel("A")
+.getbbox()` 는 0 이 아닌 값을 전부 내용으로 읽으므로, 두 프레임의 bounding box
+합집합이 캔버스 전체가 된다. 2026-09-18 에 `electric_explode` 가 이렇게 배율
+0.094 로 계산돼 캔버스의 59% 만 채운 채 한 번 나갔다. 재기 전에 8 미만을 0 으로
+내리고, 내보낼 때 같은 바닥을 한 번 더 깐다.

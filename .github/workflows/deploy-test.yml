@@ -66,5 +66,9 @@ jobs:
           cp -r ../build/WebGL/WebGL/* ./
           ls -R
           git add .
+          if git diff --cached --quiet; then
+            echo "build output identical to ArcaneCastersPlay main - nothing to push"
+            exit 0
+          fi
           git commit -m "Update WebGL build from dev"
           git push origin main

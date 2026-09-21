@@ -1,6 +1,7 @@
 using System.Collections;
 using Data;
 using Global;
+using Global.Auth;
 using Global.Button;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -21,6 +22,7 @@ namespace LoginScene
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.timeout = 10;
                 webRequest.SetRequestHeader("Content-Type", "application/json");
+                Server.SetTokenDelivery(webRequest);
             
                 yield return webRequest.SendWebRequest();
 
@@ -43,7 +45,7 @@ namespace LoginScene
                     yield break;
                 }
 
-                SceneContext.JwtToken = authResponseDto.jwt;
+                AuthSession.Instance.BeginSession(authResponseDto.jwt, authResponseDto.refreshToken, authResponseDto.expiresIn);
                 GuestContext.GuestPassword = authResponseDto.password;
             
                 SceneManager.LoadScene("TutorialScene");

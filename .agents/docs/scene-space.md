@@ -48,6 +48,30 @@ Use the existing helpers rather than reaching for `Vector3.up`:
 server-sent height or a physics jump. The rule is about distances read off a
 billboarded sprite.
 
+### A served object's position is its feet, not its body
+
+Sprite pivots in this project sit at the bottom edge — `PlayerCharacterBase.png`
+carries `spritePivot: {x: 0.3751, y: 0.0072}` — and `PositionUpdater` assigns the
+server position straight to `transform.position`. So a `ServedObject`'s
+`transform.position` is the point where it stands, and its 2.2-unit-tall sprite
+rises from there. `ObjectContainer.FindById(...).transform.position`, which is
+what `ProjectileUtil.GetPosition` returns for a `ReferenceProjectileTarget`, is
+that same ground point.
+
+Anything drawn between two objects has to lift both ends before it aims, or it
+is drawn along the floor and buried under the ground art and the units' feet.
+`SpiritBombBeamProjectile` shipped without that step and the beam was hard to
+see at all; `StretchProjectile.Aim` does it and says so in a comment.
+
+Read the height off the sprite rather than hard-coding one, so the same code hits
+a slime and a golem in the body:
+
+- `ServedObject.GetEdgeWorldPositionTowards(from, 0f)` — the sprite's centre.
+- The same call with a point one unit along `ProjectileUtil.GetScreenUp()` above
+  that centre, and a bias between 0 and 1, walks from the centre to the top edge.
+  The method reads the direction in screen space and lays the distance along the
+  renderer's own axes, which is why the result lands on the sprite.
+
 ### Distance between two points uses the camera plane, not the world
 
 Anything drawn as a sprite spanning two world points — a beam, a stretching arm,
