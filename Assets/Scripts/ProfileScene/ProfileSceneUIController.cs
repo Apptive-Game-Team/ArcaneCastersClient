@@ -93,6 +93,7 @@ namespace ProfileScene
         {
             if (overview == null)
             {
+                profilePanel.SetOverviewUnavailable();
                 return;
             }
 
@@ -160,7 +161,7 @@ namespace ProfileScene
                 yield return gameHistoryItemFactory.CreateRange(games);
             }
 
-            hasMoreGameHistory = gameHistoryScrollRect != null && HasMoreGameHistory(response, games);
+            hasMoreGameHistory = gameHistoryScrollRect != null && HasMoreGameHistory(response);
             if (hasMoreGameHistory)
             {
                 nextGameHistoryPage++;
@@ -170,19 +171,9 @@ namespace ProfileScene
             gameHistoryRenderCoroutine = null;
         }
 
-        private bool HasMoreGameHistory(UserGameHistoryResponseDto response, UserGameHistoryDto[] games)
+        private static bool HasMoreGameHistory(UserGameHistoryResponseDto response)
         {
-            if (response == null)
-            {
-                return false;
-            }
-
-            if (response.HasExplicitLast)
-            {
-                return !response.IsLastPage;
-            }
-
-            return games != null && games.Length >= gameHistoryPageSize;
+            return response != null && !response.IsLastPage;
         }
     }
 }
