@@ -130,13 +130,13 @@ namespace LobbyScene
             if (savedDeckIndex >= 0)
             {
                 dropdownIndex = savedDeckIndex + 1;
-                LobbySceneViewModel.Instance.DeckMode = LobbySceneViewModel.SelectedDeckMode;
+                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Selected;
                 DeckSceneContext.CurrentDeck = userDecks[savedDeckIndex];
             }
             else
             {
                 dropdownIndex = 0;
-                LobbySceneViewModel.Instance.DeckMode = LobbySceneViewModel.RandomDeckMode;
+                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Random;
                 DeckSceneContext.CurrentDeck = null;
             }
 
@@ -153,7 +153,7 @@ namespace LobbyScene
         {
             if (newIndex == 0)
             {
-                LobbySceneViewModel.Instance.DeckMode = LobbySceneViewModel.RandomDeckMode;
+                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Random;
                 DeckSceneContext.CurrentDeck = null;
                 UpdateCaption(randomDeckPlay.GetLocalizedString());
                 WDebug.Log("랜덤 덱 플레이 선택");
@@ -161,7 +161,7 @@ namespace LobbyScene
             }
 
             var selected = userDecks[newIndex - 1];
-            LobbySceneViewModel.Instance.DeckMode = LobbySceneViewModel.SelectedDeckMode;
+            LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Selected;
             DeckSceneContext.CurrentDeck = selected;     // 컨텍스트 갱신
             WDebug.Log($"index: {newIndex} 선택된 덱: {selected.name} (ID: {selected.id})");
             UpdateCaption(selected.name);                // 상단 텍스트 갱신

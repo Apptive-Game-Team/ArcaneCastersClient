@@ -9,12 +9,6 @@ using Global.Serialization;
 
 namespace LobbyScene
 {
-    [Serializable]
-    public sealed class MatchTicketRequest
-    {
-        public string deckMode;
-    }
-
     public class MatchQueueApiService : MonoBehaviour
     {
         private static ServerEndpoint MatchTickets =>

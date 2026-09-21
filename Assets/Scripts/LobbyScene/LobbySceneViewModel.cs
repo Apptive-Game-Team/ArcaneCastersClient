@@ -9,13 +9,10 @@ namespace LobbyScene
 {
     public class LobbySceneViewModel : LocalSingletonObject<LobbySceneViewModel>
     {
-        public const string SelectedDeckMode = "SELECTED";
-        public const string RandomDeckMode = "RANDOM";
-
         [SerializeField] private MatchQueueApiService _matchQueueApi;
         private MatchmakingCoordinator coordinator;
         private bool enteringGameScene;
-        public string DeckMode { get; set; } = SelectedDeckMode;
+        public string DeckMode { get; set; } = MatchDeckMode.Selected;
 
         public enum LobbyState
         {

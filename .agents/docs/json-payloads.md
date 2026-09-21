@@ -64,8 +64,19 @@ gives back what went in, including the difference between an absent field and a
 zero.
 
 `Assets/Tests/EditMode/MagicIndicatorValueJsonConverterTests.cs` is the shape to
-copy. That assembly references `WordOnline.Serialization` and nothing else, so it
-can test converters and wire shapes but not anything in Assembly-CSharp.
+copy. That assembly references `WordOnline.Serialization`,
+`WordOnline.GameContracts`, `WordOnline.Net` and `WordOnline.Contracts`, and it
+does not list Assembly-CSharp. An asmdef assembly never picks up Assembly-CSharp
+on its own, so a test can reach nothing under `Assets/Scripts/<Scene>/`.
+
+A request or response type you want a test to name therefore has to live under
+`Assets/Scripts/Contracts/`, next to `MatchTicket.cs`. Issue #36 put
+`MatchTicketRequest` and the `SELECTED`/`RANDOM` constants in
+`Assets/Scripts/LobbyScene/`, and the new test that named them broke the whole
+EditMode assembly. Nothing here reports that: the Editor cannot run in this
+environment, so an unresolved name in a test compiles nowhere and fails
+silently. Grep the type you are about to name in a test for the directory it
+sits in before you write the test.
 
 ## A hand-written converter's fields do not ride the cache for free
 

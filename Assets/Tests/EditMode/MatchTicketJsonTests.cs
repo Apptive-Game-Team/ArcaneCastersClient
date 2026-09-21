@@ -63,7 +63,7 @@ namespace WordOnline.Tests
         {
             string json = JsonCodec.Serialize(new MatchTicketRequest
             {
-                deckMode = LobbySceneViewModel.RandomDeckMode
+                deckMode = MatchDeckMode.Random
             });
 
             StringAssert.Contains("\"deckMode\":\"RANDOM\"", json);
