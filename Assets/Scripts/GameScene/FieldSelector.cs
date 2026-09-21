@@ -418,13 +418,20 @@ namespace GameScene
                 int sortingOrder = GetLayerSortingOrder(i, shapes.Count);
                 if (shape.kind == ResolvedIndicatorShape.Kind.Circle)
                 {
-                    // document 가 edgeWidth 를 적었으면 그 두께, 안 적었으면 기본 두께로 테두리를 그린다.
-                    // 안은 두 경우 모두 채운다 — 테두리만 남기면 지면 위에서 범위가 흐릿하게만 보인다.
-                    // 채움은 SkillIndicatorShapeRenderer.LayerFillColor 를 써서 사거리 원·조준 원의
-                    // 주황(DefaultFillColor)과 색으로 구분된다.
-                    float edgeWidth = shape.edgeWidth > 0f ? shape.edgeWidth : DefaultSkillIndicatorLayerEdgeWidth;
+                    // document 가 edgeWidth 를 적지 않았으면(magma_explosion 이 여기) 기본 두께
+                    // DefaultSkillIndicatorLayerEdgeWidth 로 테두리를 그리고 안도 채운다 — 안 그러면
+                    // 사거리 원·조준 원과 같은 주황 채움 한 겹으로만 보여 경계가 안 보인다.
+                    //
+                    // document 가 edgeWidth 를 적었으면 그 두께로 테두리만 그리고 안은 비운다.
+                    // tower, cannon, rock_turret 처럼 건물/설치물 39종이 dev 기준 여기 해당하고,
+                    // 속이 빈 얇은 링은 이 39종에서 의도적으로 고른 모습이라 여기서 바꾸지 않는다.
+                    // 채움을 더할지는 Editor 에서 실제로 보고 따로 결정할 문제다.
+                    // 두 갈래 모두 SkillIndicatorShapeRenderer.LayerFillColor(청록)를 써서, 채움이 없는
+                    // 39종도 테두리 색이 갈려 사거리 원(주황, DefaultFillColor)과는 구분된다.
+                    bool hasDocumentEdgeWidth = shape.edgeWidth > 0f;
+                    float edgeWidth = hasDocumentEdgeWidth ? shape.edgeWidth : DefaultSkillIndicatorLayerEdgeWidth;
                     layerRenderer.SetCircle(
-                        shape.origin, shape.radius, true, sortingOrder, edgeWidth,
+                        shape.origin, shape.radius, !hasDocumentEdgeWidth, sortingOrder, edgeWidth,
                         SkillIndicatorShapeRenderer.LayerFillColor);
                 }
                 else
