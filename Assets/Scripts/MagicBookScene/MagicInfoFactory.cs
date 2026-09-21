@@ -31,6 +31,8 @@ namespace MagicBookScene
 
         public event Action MagicSelected;
 
+        private static readonly List<ElementType> EmptyElements = new();
+
         private readonly List<MagicBookEntry> entries = new();
         private MagicBookSortMode sortMode = MagicBookSortMode.Name;
         private ElementType? selectedAttribute;
@@ -138,18 +140,12 @@ namespace MagicBookScene
 
         /// <summary>
         /// 원소가 여럿인 마법은 <see cref="ElementType"/> 선언 순서가 가장 앞인 원소로 묶는다.
-        /// <c>magics.element</c> 는 목록에 없는 값일 수 있어 정렬 기준으로 쓰지 않는다.
+        /// 원소가 하나도 없는 마법은 맨 뒤로 보낸다.
         /// </summary>
         private static int GetPrimaryAttributeSortValue(MagicBookEntry entry)
         {
-            List<ElementType> elements = entry.Data.elements;
-            if (elements == null || elements.Count == 0)
-            {
-                return (int)entry.Data.element;
-            }
-
             int lowest = int.MaxValue;
-            foreach (ElementType element in elements)
+            foreach (ElementType element in entry.Data.elements ?? EmptyElements)
             {
                 lowest = Math.Min(lowest, (int)element);
             }

@@ -15,12 +15,6 @@ namespace Data.Magic
         public string textLocalizationKey;
         public string resourceName;
 
-        /// <summary>
-        /// <c>magics.element</c> 행 값. 덱 화면이 카드의 원소 표시로 이 필드 하나를 읽는다.
-        /// 원소 전체는 <see cref="elements"/> 에 있고, 둘은 다를 수 있다.
-        /// </summary>
-        public ElementType element;
-
         /// <summary>마법이 가진 원소 전체 목록. 항상 최소 한 항목을 담는다.</summary>
         public List<ElementType> elements;
 

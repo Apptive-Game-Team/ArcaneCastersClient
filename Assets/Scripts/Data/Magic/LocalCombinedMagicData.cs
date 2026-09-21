@@ -81,23 +81,23 @@ namespace Data.Magic
         }
 
         /// <summary>
-        /// 원소 목록을 해석한다. <paramref name="elements"/> 를 아직 안 주는 옛 서버 응답에서는
-        /// <paramref name="fallbackElement"/> 하나짜리 목록으로 대신한다.
+        /// 원소 목록을 해석한다. 서버는 마법마다 최소 한 항목을 주지만, 응답이 비어 있어도
+        /// 빈 목록으로 두고 원소 아이콘만 안 그린다.
         /// </summary>
-        private static List<ElementType> ParseElements(List<string> elements, string fallbackElement)
+        private static List<ElementType> ParseElements(List<string> elements)
         {
-            if (elements != null && elements.Count > 0)
+            if (elements == null)
             {
-                var parsed = new List<ElementType>(elements.Count);
-                foreach (string element in elements)
-                {
-                    parsed.Add(ParseElement(element));
-                }
-
-                return parsed;
+                return new List<ElementType>();
             }
 
-            return new List<ElementType> { ParseElement(fallbackElement) };
+            var parsed = new List<ElementType>(elements.Count);
+            foreach (string element in elements)
+            {
+                parsed.Add(ParseElement(element));
+            }
+
+            return parsed;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Data.Magic
                     continue;
                 }
 
-                List<ElementType> elements = ParseElements(magic.elements, magic.element);
+                List<ElementType> elements = ParseElements(magic.elements);
                 result.Add(new CombinedMagicData
                 {
                     id = magic.id,
@@ -125,7 +125,6 @@ namespace Data.Magic
                         ? StringUtils.ToSnakeCase(magic.name)
                         : magic.text,
                     resourceName = StringUtils.ToPascalCase(magic.name),
-                    element = ParseElement(magic.element),
                     elements = elements,
                     manaCost = magic.manaCost,
                     indicator = magic.indicator,
