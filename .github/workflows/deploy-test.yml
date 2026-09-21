@@ -67,8 +67,8 @@ jobs:
           ls -R
           git add .
           if git diff --cached --quiet; then
-            echo "build output identical to ArcaneCastersPlay main - nothing to push"
+            echo "build output identical to ArcaneCastersPlay dev - nothing to push"
             exit 0
           fi
           git commit -m "Update WebGL build from dev"
-          git push origin main
+          git push origin dev
