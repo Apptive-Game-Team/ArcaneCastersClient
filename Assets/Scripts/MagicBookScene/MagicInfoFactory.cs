@@ -132,12 +132,29 @@ namespace MagicBookScene
 
         private bool PassesFilters(MagicBookEntry entry)
         {
-            return !selectedAttribute.HasValue || entry.Data.element == selectedAttribute.Value;
+            return !selectedAttribute.HasValue ||
+                   (entry.Data.elements != null && entry.Data.elements.Contains(selectedAttribute.Value));
         }
 
+        /// <summary>
+        /// 원소가 여럿인 마법은 <see cref="ElementType"/> 선언 순서가 가장 앞인 원소로 묶는다.
+        /// <c>magics.element</c> 는 목록에 없는 값일 수 있어 정렬 기준으로 쓰지 않는다.
+        /// </summary>
         private static int GetPrimaryAttributeSortValue(MagicBookEntry entry)
         {
-            return (int)entry.Data.element;
+            List<ElementType> elements = entry.Data.elements;
+            if (elements == null || elements.Count == 0)
+            {
+                return (int)entry.Data.element;
+            }
+
+            int lowest = int.MaxValue;
+            foreach (ElementType element in elements)
+            {
+                lowest = Math.Min(lowest, (int)element);
+            }
+
+            return lowest;
         }
 
         private void ClearMagicInfo()

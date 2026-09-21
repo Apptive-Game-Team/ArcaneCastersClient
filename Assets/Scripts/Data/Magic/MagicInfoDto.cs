@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Data.Magic
 {
@@ -14,6 +15,12 @@ namespace Data.Magic
 
         /// <summary>Fire, Water, Lightning, Rock, Nature, Wind, None 중 하나.</summary>
         public string element;
+
+        /// <summary>
+        /// 마법이 가진 원소 전체 목록. 마법 하나는 항상 최소 한 항목을 담아 온다.
+        /// 아직 이 필드를 안 주는 옛 서버에서는 null 이고, 그때는 <see cref="element"/> 하나로 대신한다.
+        /// </summary>
+        public List<string> elements;
 
         public int manaCost;
 

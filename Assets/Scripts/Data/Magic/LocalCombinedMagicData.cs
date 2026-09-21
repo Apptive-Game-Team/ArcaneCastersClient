@@ -81,6 +81,26 @@ namespace Data.Magic
         }
 
         /// <summary>
+        /// 원소 목록을 해석한다. <paramref name="elements"/> 를 아직 안 주는 옛 서버 응답에서는
+        /// <paramref name="fallbackElement"/> 하나짜리 목록으로 대신한다.
+        /// </summary>
+        private static List<ElementType> ParseElements(List<string> elements, string fallbackElement)
+        {
+            if (elements != null && elements.Count > 0)
+            {
+                var parsed = new List<ElementType>(elements.Count);
+                foreach (string element in elements)
+                {
+                    parsed.Add(ParseElement(element));
+                }
+
+                return parsed;
+            }
+
+            return new List<ElementType> { ParseElement(fallbackElement) };
+        }
+
+        /// <summary>
         /// indicator document 는 복사하지 않고 DTO 의 것을 그대로 가리킨다. 이 메서드는 목록을 볼 때마다
         /// <see cref="CombinedMagicData"/> 를 새로 만들지만 document 는 <see cref="MagicInfoDataSource"/> 가
         /// 들고 있는 하나뿐이라, document 가 한 번만 해석되고 경고도 한 번만 남는다.
@@ -95,6 +115,7 @@ namespace Data.Magic
                     continue;
                 }
 
+                List<ElementType> elements = ParseElements(magic.elements, magic.element);
                 result.Add(new CombinedMagicData
                 {
                     id = magic.id,
@@ -105,6 +126,7 @@ namespace Data.Magic
                         : magic.text,
                     resourceName = StringUtils.ToPascalCase(magic.name),
                     element = ParseElement(magic.element),
+                    elements = elements,
                     manaCost = magic.manaCost,
                     indicator = magic.indicator,
                 });
