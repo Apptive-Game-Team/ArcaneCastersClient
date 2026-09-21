@@ -45,9 +45,36 @@ namespace GameScene.ServedObjectComponent
     /// </para>
     /// <para>
     /// 이 component 를 <c>actual</c> 이 아니라 root 에 붙이는 이유도 <c>Attach</c> 에 있다.
-    /// <c>Attach</c> 는 sprite 아래 모서리에 spawn 연출의 회전 축을 놓는데, 그 높이를 prefab
-    /// scale 로 재서 고정한다. root 를 키우면 그 축까지 같은 배율로 따라 커져서 축이 계속 sprite
-    /// 아래 모서리에 있지만, <c>actual</c> 만 키우면 축만 제자리에 남아 어긋난다.
+    /// <c>Attach</c> 는 sprite 아래 모서리에 spawn 연출의 회전 축을 놓는데, 그 높이를
+    /// <c>sprite.bounds.min.y * |originalLocalScale.y|</c> 로 재서 고정한다. root 를 키우면 그
+    /// 축까지 같은 배율로 따라 커져서 축이 계속 sprite 아래 모서리에 있지만, <c>actual</c> 만
+    /// 키우면 축만 제자리에 남아 어긋난다. 축을 따로 맞추려면 <c>Attach</c> 가 서로 반대 부호로
+    /// 넣어 둔 pivot 과 <c>actual</c> 의 localPosition 두 개를 다시 써야 하고, sprite 가 frame
+    /// 마다 바뀌므로 <c>bounds.min.y</c> 도 따라 바뀐다. root 를 키우고 아래처럼 child 하나를
+    /// 되돌리는 쪽이 싸다.
+    /// </para>
+    /// <para>
+    /// root 를 키우면 root 밑의 child 가 전부 같은 배율을 받는데, 그러면 안 되는 child 가 하나
+    /// 있다. <c>ServedObject.EnsureTeamIndicator</c> 가 만드는 <c>TeamIndicator</c> 는 어느 편의
+    /// object 인지 알려 주는 점이고, 크기는 <c>_teamIndicatorScale</c> 이 정한다
+    /// (<c>AbstractExplode.prefab</c> 에서 0.3). 폭발의 radius 와는 상관이 없으므로 radius 1.5
+    /// 에서 root 가 1.43 배가 되면 이 점도 0.43 으로 커져 다른 object 의 점과 크기가 달라진다.
+    /// 위치는 <c>UpdateTeamIndicatorPosition</c> 이 world position 을 직접 넣으므로 안 밀린다.
+    /// 그래서 <see cref="KeepTeamIndicatorSize"/> 가 그 child 의 localScale 을 같은 배율로 나눠
+    /// world 크기를 되돌린다. 남의 component 가 만든 child 를 건드리는 것이지만, 그 localScale 을
+    /// 쓰는 곳이 <c>EnsureTeamIndicator</c> 한 군데뿐이고 그게 <c>ObjectSpawner</c> 안에서
+    /// <c>SetMaster</c> 를 거쳐 <c>BindListeners</c> 보다 먼저 끝나므로 되돌린 값이 다시 덮이지
+    /// 않는다. 점이 아직 없는 생성에서는 그냥 넘어간다.
+    /// </para>
+    /// <para>
+    /// root 밑의 나머지는 같이 커지는 것이 맞다. <c>PopupBookVisualPresenter</c> 가 만든 presenter
+    /// 와 pivot 은 그림 자체를 담고, gauge bar 는 세 prefab 의 <c>gauges</c> 가 비어 있어 아예
+    /// 없으며, <c>_effectAnchor</c> 도 비어 있어 effect 는 <c>actual</c> 밑으로 간다. 예외가 하나
+    /// 더 있는데 <c>ServedObjectGizmoRenderer</c> 가 <c>actual</c> 밑에 만드는
+    /// <c>DebugGizmos</c> 다. 서버 radius 를 그대로 그리는 debug 원이라 배율을 받으면 안 되고,
+    /// 무엇보다 이 component 가 맞게 도는지 눈으로 대조할 기준이 바로 그 원이다. 같이 커지면 늘
+    /// 맞아 보여서 확인이 의미를 잃는다. <c>ServedObjectGizmoRenderer</c> 가 통째로
+    /// <c>UNITY_EDITOR</c> 안에 있으므로 되돌리는 쪽도 같은 조건 안에 둔다.
     /// </para>
     /// <para>
     /// <c>Bind</c> 는 한 번만 부르므로 배율도 한 번만 곱한다. prefab 의 원래 scale 은 Awake 에서
@@ -61,6 +88,14 @@ namespace GameScene.ServedObjectComponent
 
         /// <summary>서버 <c>GameObject.addCollider</c> 가 <c>CircleCollider</c> 마다 넣는 category 다.</summary>
         private const string ColliderCategory = "Collider";
+
+        /// <summary><c>ServedObject.EnsureTeamIndicator</c> 가 붙이는 이름 그대로다.</summary>
+        private const string TeamIndicatorName = "TeamIndicator";
+
+#if UNITY_EDITOR
+        /// <summary><c>ServedObjectGizmoRenderer.EnsureGizmoContainer</c> 가 붙이는 이름 그대로다.</summary>
+        private const string DebugGizmoContainerName = "DebugGizmos";
+#endif
 
         /// <summary>
         /// 그림이 그려진 radius, world 단위. prefab scale 1 일 때 이 그림이 덮는 땅의 반지름이다.
@@ -94,8 +129,67 @@ namespace GameScene.ServedObjectComponent
                 return;
             }
 
-            transform.localScale = prefabScale * (radius / referenceRadius);
+            float scale = radius / referenceRadius;
+            transform.localScale = prefabScale * scale;
+
+            KeepTeamIndicatorSize(scale);
+            KeepDebugGizmoSize(scale);
         }
+
+        /// <summary>
+        /// 편을 알려 주는 점의 world 크기를 root 배율에서 떼어 놓는다. 이 점은 <c>ServedObject</c>
+        /// 가 root 밑에 만들고 <c>_teamIndicatorScale</c> 만큼 키운 child 라서, 폭발이 커지면
+        /// 같이 커져 다른 object 의 점과 크기가 달라진다. 자세한 이유는 class 주석에 있다.
+        /// </summary>
+        private void KeepTeamIndicatorSize(float scale)
+        {
+            if (Mathf.Approximately(scale, 0f))
+            {
+                return;
+            }
+
+            Transform teamIndicator = transform.Find(TeamIndicatorName);
+            if (teamIndicator == null)
+            {
+                return;
+            }
+
+            teamIndicator.localScale /= scale;
+        }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// 서버 radius 를 그대로 그리는 debug 원의 world 크기를 root 배율에서 떼어 놓는다. 이
+        /// 원이 폭발 그림과 같이 커지면 늘 맞아 보여서, 그림이 radius 를 따라가는지 대조할 수가
+        /// 없다. <c>ServedObjectGizmoRenderer</c> 는 <c>UNITY_EDITOR</c> 안에만 있으므로 build
+        /// 에는 이 원도 이 보정도 들어가지 않는다.
+        /// </summary>
+        private void KeepDebugGizmoSize(float scale)
+        {
+            if (Mathf.Approximately(scale, 0f) || Owner == null)
+            {
+                return;
+            }
+
+            Transform anchor = Owner.GetActualTransform();
+            if (anchor == null)
+            {
+                return;
+            }
+
+            Transform debugGizmos = anchor.Find(DebugGizmoContainerName);
+            if (debugGizmos == null)
+            {
+                return;
+            }
+
+            debugGizmos.localScale /= scale;
+        }
+#else
+        private void KeepDebugGizmoSize(float scale)
+        {
+        }
+#endif
 
         private void CapturePrefabScale()
         {
