@@ -25,10 +25,13 @@ namespace MagicBookScene
         [SerializeField] private Transform magicInfoParent;
         [SerializeField] private GameObject magicInfoPrefab;
         [SerializeField] private MagicInfo magicInfo;
+        [SerializeField] private SelectedMagicView selectedMagicView;
         
         [SerializeField] private UserMagicApiClient userMagicApiClient;
 
         public event Action MagicSelected;
+
+        private static readonly List<ElementType> EmptyElements = new();
 
         private readonly List<MagicBookEntry> entries = new();
         private MagicBookSortMode sortMode = MagicBookSortMode.Name;
@@ -78,6 +81,7 @@ namespace MagicBookScene
         private void OnClickMagicButton(CombinedMagicData data)
         {
             magicInfo.Init(data);
+            selectedMagicView?.Show(data);
             MagicSelected?.Invoke();
         }
 
@@ -130,12 +134,23 @@ namespace MagicBookScene
 
         private bool PassesFilters(MagicBookEntry entry)
         {
-            return !selectedAttribute.HasValue || entry.Data.element == selectedAttribute.Value;
+            return !selectedAttribute.HasValue ||
+                   (entry.Data.elements != null && entry.Data.elements.Contains(selectedAttribute.Value));
         }
 
+        /// <summary>
+        /// 원소가 여럿인 마법은 <see cref="ElementType"/> 선언 순서가 가장 앞인 원소로 묶는다.
+        /// 원소가 하나도 없는 마법은 맨 뒤로 보낸다.
+        /// </summary>
         private static int GetPrimaryAttributeSortValue(MagicBookEntry entry)
         {
-            return (int)entry.Data.element;
+            int lowest = int.MaxValue;
+            foreach (ElementType element in entry.Data.elements ?? EmptyElements)
+            {
+                lowest = Math.Min(lowest, (int)element);
+            }
+
+            return lowest;
         }
 
         private void ClearMagicInfo()

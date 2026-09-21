@@ -81,6 +81,26 @@ namespace Data.Magic
         }
 
         /// <summary>
+        /// 원소 목록을 해석한다. 서버는 마법마다 최소 한 항목을 주지만, 응답이 비어 있어도
+        /// 빈 목록으로 두고 원소 아이콘만 안 그린다.
+        /// </summary>
+        private static List<ElementType> ParseElements(List<string> elements)
+        {
+            if (elements == null)
+            {
+                return new List<ElementType>();
+            }
+
+            var parsed = new List<ElementType>(elements.Count);
+            foreach (string element in elements)
+            {
+                parsed.Add(ParseElement(element));
+            }
+
+            return parsed;
+        }
+
+        /// <summary>
         /// indicator document 는 복사하지 않고 DTO 의 것을 그대로 가리킨다. 이 메서드는 목록을 볼 때마다
         /// <see cref="CombinedMagicData"/> 를 새로 만들지만 document 는 <see cref="MagicInfoDataSource"/> 가
         /// 들고 있는 하나뿐이라, document 가 한 번만 해석되고 경고도 한 번만 남는다.
@@ -95,6 +115,7 @@ namespace Data.Magic
                     continue;
                 }
 
+                List<ElementType> elements = ParseElements(magic.elements);
                 result.Add(new CombinedMagicData
                 {
                     id = magic.id,
@@ -104,7 +125,7 @@ namespace Data.Magic
                         ? StringUtils.ToSnakeCase(magic.name)
                         : magic.text,
                     resourceName = StringUtils.ToPascalCase(magic.name),
-                    element = ParseElement(magic.element),
+                    elements = elements,
                     manaCost = magic.manaCost,
                     indicator = magic.indicator,
                 });

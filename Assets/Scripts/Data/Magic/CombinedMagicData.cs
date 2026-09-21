@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Data.Magic
@@ -13,7 +14,10 @@ namespace Data.Magic
         public string localizationKey;
         public string textLocalizationKey;
         public string resourceName;
-        public ElementType element;
+
+        /// <summary>마법이 가진 원소 전체 목록. 항상 최소 한 항목을 담는다.</summary>
+        public List<ElementType> elements;
+
         public int manaCost;
 
         /// <summary>조준 표시를 적은 document. 서버가 주지 않았으면 null 이다.</summary>
