@@ -147,6 +147,22 @@ MonoBehaviour:
     m_Key: Logout
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000012
+    m_Key: Credits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000013
+    m_Key: CreditsGeneratedAssetNotice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000014
+    m_Key: CreditsThirdPartyHeading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000015
+    m_Key: Back
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

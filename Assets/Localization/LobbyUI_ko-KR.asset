@@ -148,6 +148,22 @@ MonoBehaviour:
     m_Localized: "\uB85C\uADF8\uC544\uC6C3"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000012
+    m_Localized: "크레딧"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000013
+    m_Localized: "이 게임의 일부 이미지 자산은 생성형 인공지능으로 제작되었습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000014
+    m_Localized: "오픈소스 라이선스"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000015
+    m_Localized: "뒤로"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
