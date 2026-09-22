@@ -135,6 +135,37 @@ yours.
 lines that way — `Assets/Resources/Prefabs/Player.prefab` alone holds 21 of them
 — so match the existing files rather than stripping the space.
 
+## A UI drag must be excluded from the battlefield for the whole press
+
+`FieldSelector.Update` acts on `Input.GetMouseButtonUp(0)` and decides the
+release is not its own by calling `PointerInputUtility.IsPointerOverUiOrSelectable()`,
+which raycasts at the release position. That check only looks at where the
+pointer ended. A control the player presses on and drags off — the emote picker
+is the first one here — therefore casts a magic whenever the finger leaves the
+panel before it lifts.
+
+A UI that takes a press for its whole life must say so:
+`PointerInputUtility.BeginPointerCapture()` on pointer down and
+`EndPointerCapture()` on pointer up, and every reader of a field release checks
+`PointerInputUtility.IsPointerCapturedByUi` before
+`IsPointerOverUiOrSelectable()`. Release it in `OnDisable` too, or a control
+that is switched off mid-press leaves the field dead.
+
+The capture stays true until the end of the frame it was released in, on
+purpose. `EventSystem` dispatches `OnPointerUp` from its own `Update`, and
+nothing orders that against `FieldSelector.Update`. Clearing the flag the
+instant the pointer lifts leaks the release on exactly the frames where the
+`EventSystem` happens to run first, which is the half of the time that looks
+like an intermittent bug.
+
+## Touch has no hover, so decide by raycasting the release
+
+`IPointerEnterHandler` never fires for a finger sliding across options. Read
+what is under the pointer with `PointerInputUtility.FindUnderPointer<T>(position)`,
+passing the position off the `PointerEventData` the event carries.
+`IsPointerOverUi()` and its neighbours read `Input.mousePosition` instead, which
+is the pressed pointer only by coincidence.
+
 ## The existing speech bubble lives inside a handler file
 
 `Assets/Art/Images/UI/SpeechBubble.png` and its copy at
