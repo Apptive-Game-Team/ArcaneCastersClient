@@ -164,6 +164,10 @@ MonoBehaviour:
     m_Localized: "Back"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000016
+    m_Localized: "Team"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

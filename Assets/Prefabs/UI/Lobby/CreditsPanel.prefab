@@ -1192,7 +1192,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scroll: {fileID: 7100000000000002055}
   body: {fileID: 7100000000000026167}
+  team: {fileID: 4900000, guid: 3a86f042ebf44e63b762b20bfe7dba98, type: 3}
   thirdPartyNotices: {fileID: 4900000, guid: 1c19a45d149e4ef8bfed95ab82b4b7ab, type: 3}
+  teamHeading:
+    m_TableReference:
+      m_TableCollectionName: GUID:3c47a636d3d4a4d6aad778789441531a
+    m_TableEntryReference:
+      m_KeyId: 76060000000000016
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   generatedAssetNotice:
     m_TableReference:
       m_TableCollectionName: GUID:3c47a636d3d4a4d6aad778789441531a
