@@ -54,3 +54,26 @@ in the icon brief still applies.
 Verification before accepting any candidate: downscale to 64x64 and look at
 it. If the expression cannot be told apart from the other four at that size,
 it is not done regardless of how it looks at 1024.
+
+## Results — all five landed
+
+| File | Attempts | Notes |
+|---|---|---|
+| `Laugh.png` | 2 of 3 | attempt 1 rejected (portrait, see above); attempt 2 accepted. Hair came back with far more than a dozen facets — closer to a dense low-poly-sphere look than the "two or three hair masses" brief — but every plane is still flat with hard creases and the expression reads instantly at 64px, so it was accepted rather than spending the third attempt chasing facet count. `Laugh.png` became the identity reference for the other four. |
+| `Greet.png` | 1 of 3 | accepted on the first icon-brief attempt. `key-out-background.py` reported `enclosed_pixels=122`; checked and confirmed these are the gaps between the spread waving fingers (legitimate background pockets the border flood-fill can't reach), not magenta bleeding onto the subject — no magenta-tinted opaque pixels found. |
+| `Taunt.png` | 1 of 3 | accepted on the first icon-brief attempt. `enclosed_pixels=5`, negligible. |
+| `Cry.png` | 1 of 3 | accepted on the first icon-brief attempt, generated with `Laugh.png` attached as a third reference image for identity consistency. `enclosed_pixels=0`. |
+| `Surprised.png` | 1 of 3 | accepted on the first icon-brief attempt, also generated with `Laugh.png` attached. `enclosed_pixels=1905` — checked directly for magenta-tinted opaque pixels (none found); the jagged hair silhouette traps many small background pockets between hair spikes that the border-reachability check can't see, which is what the count reflects, not palette collision. |
+
+Total `image_gen` calls this batch: 6 (1 rejected Laugh portrait + 5 accepted
+icons). `Cry` and `Surprised` were generated with the already-approved
+`Laugh.png` attached as a third reference image (in addition to
+`MasterStyleKey.png` and `player-D-longhair.png`) specifically to lock head
+shape, hair mass count, hair colour and skin colour across the set — see the
+contact sheet at `raw/contact-sheet.png` (not committed, `raw/` is gitignored)
+for the five side by side.
+
+Every accepted candidate was keyed with `.art/tools/key-out-background.py
+--key magenta` and finalized with `.art/tools/finalize-candidate.py --max-size
+256`. Final files are all RGBA, corners `(0,0,0,0)`, square source canvas
+(1024x1024) trimmed to content — none exceed 256px on either side.
