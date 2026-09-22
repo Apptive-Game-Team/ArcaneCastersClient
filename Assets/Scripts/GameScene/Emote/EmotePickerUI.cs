@@ -71,7 +71,8 @@ namespace GameScene.Emote
         private void OnDisable()
         {
             // 누른 채로 꺼지면 뗌이 오지 않는다. 잡아 둔 누름을 여기서 놓아 주지 않으면
-            // 필드 입력이 영영 막힌다.
+            // 필드 입력이 영영 막히고, pressActive 를 남겨 두면 다시 켠 뒤로 누름을 받지 않는다.
+            pressActive = false;
             ReleasePointerCapture();
             ClearHighlight();
             SetOpen(false);
