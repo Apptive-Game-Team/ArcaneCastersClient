@@ -124,6 +124,14 @@ where only one frame was redrawn, reads worse than six old runes: the
 inconsistency is what the eye catches. Hold the finished members until the set
 is complete.
 
+Driving `codex exec` with an `image_gen` instruction sometimes makes it write
+its own restated copy of the prompt as a side effect — an untracked
+`<name>-prompt.txt` or `.md` next to the output image, in whatever directory
+the output was saved to. This is codex's own note-taking, not something the
+prompt asked for, and it duplicates the `.txt` prompt file already committed
+under `.art/concept/<batch>-prompts/`. Delete it before committing rather than
+folding it in as a second source of truth for the same prompt.
+
 ## Production sprite rules
 
 - Single subject; centered; right-facing unless gameplay needs otherwise.
