@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 9113209922203907885}
   - component: {fileID: 1126847926404610461}
   - component: {fileID: 5546332115853614978}
+  - component: {fileID: 5100000000000000101}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -276,6 +277,38 @@ MonoBehaviour:
   idleLocalPosition: {x: -0.378, y: 2.01, z: 0}
   attackLocalPosition: {x: 0.957, y: 0.891, z: 0}
   attackDuration: 0.3
+--- !u!114 &5100000000000000101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600271713453120150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 205c9f0f8d7d4742b4f289b196a7a937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  servedObject: {fileID: 1328882802136935567}
+  emoteSprites:
+  - emote: 0
+    sprite: {fileID: 21300000, guid: dc412b7ef09d473ba3859ef23f526168, type: 3}
+  - emote: 1
+    sprite: {fileID: 21300000, guid: 112cdb9370064df7b2552f26e9b21878, type: 3}
+  - emote: 2
+    sprite: {fileID: 21300000, guid: 1bb14d497d514269baf6de9f22e0375c, type: 3}
+  - emote: 3
+    sprite: {fileID: 21300000, guid: 234ec56e60d14015a813b95d243f8c4c, type: 3}
+  - emote: 4
+    sprite: {fileID: 21300000, guid: 3dc94c04ea02481ba17d59e7ca9aac91, type: 3}
+  displaySeconds: 3
+  popSeconds: 0.18
+  fadeSeconds: 0.35
+  bubbleWidth: 190
+  bubbleHeight: 150
+  emoteSize: 96
+  emoteOffsetY: 18
+  screenOffsetY: 24
 --- !u!1 &3049173013423814833
 GameObject:
   m_ObjectHideFlags: 0
