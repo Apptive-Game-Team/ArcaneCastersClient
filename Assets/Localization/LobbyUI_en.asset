@@ -148,6 +148,26 @@ MonoBehaviour:
     m_Localized: "Log Out"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000012
+    m_Localized: "Credits"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000013
+    m_Localized: "Some image assets in this game were created with generative AI."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000014
+    m_Localized: "Open Source Licenses"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000015
+    m_Localized: "Back"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000016
+    m_Localized: "Team"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
