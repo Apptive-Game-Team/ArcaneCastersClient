@@ -17,6 +17,13 @@ namespace LobbyScene.SettingPage
     public sealed class CreditsPage : MonoBehaviour
     {
         private const string SectionSeparator = "\n\n";
+        private const string HeadingFormat = "<size=145%><b>{0}</b></size>";
+
+        // Licence texts ship verbatim and may contain angle brackets, which TextMeshPro
+        // would otherwise read as tags. noparse keeps them literal while the headings
+        // around them stay styled, and the smaller muted type keeps the wall of legal
+        // English from drowning out the credits above it.
+        private const string FinePrintFormat = "<size=88%><color=#555555><noparse>{0}</noparse></color></size>";
 
         [SerializeField] private ScrollRect scroll;
         [SerializeField] private TMP_Text body;
@@ -48,11 +55,11 @@ namespace LobbyScene.SettingPage
             if (body == null) return;
 
             List<string> sections = new List<string>();
-            Append(sections, Resolve(teamHeading));
+            Append(sections, Heading(Resolve(teamHeading)));
             Append(sections, Read(team));
             Append(sections, Resolve(generatedAssetNotice));
-            Append(sections, Resolve(thirdPartyNoticeHeading));
-            Append(sections, Read(thirdPartyNotices));
+            Append(sections, Heading(Resolve(thirdPartyNoticeHeading)));
+            Append(sections, FinePrint(Read(thirdPartyNotices)));
 
             body.text = string.Join(SectionSeparator, sections);
 
@@ -65,6 +72,16 @@ namespace LobbyScene.SettingPage
         private static void Append(List<string> sections, string value)
         {
             if (!string.IsNullOrEmpty(value)) sections.Add(value);
+        }
+
+        private static string Heading(string value)
+        {
+            return string.IsNullOrEmpty(value) ? string.Empty : string.Format(HeadingFormat, value);
+        }
+
+        private static string FinePrint(string value)
+        {
+            return string.IsNullOrEmpty(value) ? string.Empty : string.Format(FinePrintFormat, value);
         }
 
         private static string Read(TextAsset asset)
