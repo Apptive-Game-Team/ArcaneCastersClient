@@ -77,3 +77,46 @@ Every accepted candidate was keyed with `.art/tools/key-out-background.py
 --key magenta` and finalized with `.art/tools/finalize-candidate.py --max-size
 256`. Final files are all RGBA, corners `(0,0,0,0)`, square source canvas
 (1024x1024) trimmed to content — none exceed 256px on either side.
+
+## Speech bubble — one faceted bubble replaces the old one everywhere
+
+The old `SpeechBubble.png` (heavy black outline, white fill) reads wrong next
+to the five faceted, outline-free emoji, so it is replaced in place rather
+than adding a separate `EmoteBubble.png` beside it — one bubble now serves
+both the PVE dialogue box and the emote bubble.
+
+Prompt: `.art/concept/emote-prompts/speech-bubble.txt` (`bubble-v1`, attempt 1
+of 3, accepted). References: `MasterStyleKey.png` only — no faction anchor
+applies to a UI container.
+
+Two destinations, pixels only, GUIDs and metas untouched:
+
+- `Assets/Resources/UI/SpeechBubble.png` — guid `e7f653b1a7fb9db4aab75659b7291ea4`
+- `Assets/Art/Images/UI/SpeechBubble.png` — guid `dde534e3ecbce36488907e7d7f917bbb`
+
+The two files were already byte-identical before this change (one render
+served both paths), so the same finalized PNG was copied to both rather than
+generating twice — they remain byte-identical after.
+
+Two constraints beyond the emoji set, because this bubble also holds PVE
+dialogue text and gets stretched horizontally by line length:
+
+- Even rim curvature, no one dramatic corner, so moderate horizontal
+  stretching does not read as broken. `bubble-v1`'s tail already sits at
+  the exact bottom-center with a narrow base — built that way from the first
+  prompt, before the destination changed — so it survived without a redraw.
+  `raw/bubble-stretch2x-test.png` (not committed) is the bubble at 2x width;
+  it still reads as a speech bubble.
+- Fill has to work under both a pale emoji face and dark body text, not just
+  the emoji. `raw/bubble-text-test.png` (not committed) composites a sample
+  dark-text line at 2x stretch to confirm legibility, in addition to
+  `raw/bubble-emoji-64-test.png` (not committed) compositing `Laugh.png` at
+  real ~64px display size.
+
+`key-out-background.py --key magenta` reported `enclosed_pixels=0` —
+clean cutout, no fringe. Finalized to 256x223 RGBA with
+`finalize-candidate.py --max-size 256`.
+
+Meta note: neither destination meta had a nine-slice border set before this
+change (`spriteBorder: {x: 0, y: 0, z: 0, w: 0}` in both), so nothing needed
+changing there — the Image components still render Simple, unchanged.
