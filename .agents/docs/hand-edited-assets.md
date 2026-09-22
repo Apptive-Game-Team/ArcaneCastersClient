@@ -87,3 +87,19 @@ Serialized fields are written in declaration order, and only `public` fields and
 `[SerializeField]` ones appear. `protected` and `private` fields without the
 attribute are absent, so the block for a `MonoBehaviour` deriving from
 `DisableableButtonBase` holds that script's own fields and nothing from the base.
+
+## Two different scripts can share a serialized field name
+
+`ScrollRect` and `TMP_InputField` both serialize a field called
+`m_ScrollSensitivity` — `ScrollRect`'s controls mouse-wheel scroll speed,
+`TMP_InputField`'s controls how fast a multi-line text box scrolls its own
+content. `Assets/Scenes/AdminScene.unity` has both: three `TMP_InputField`
+documents (script guid `2da0c512f12947e489f739169773d7ca`) and one `ScrollRect`
+document (script guid `1aa08ab6e0800fa44ae55d278d1423e3`), and all four held the
+same value. A text search-and-replace on the field name alone would have
+changed the wrong component's behavior without any error.
+
+Before editing a serialized field by name across a project, grep for the field
+name first, then filter each hit to the enclosing document's `m_Script` guid.
+Only a match on both the field name and the owning script's guid is the real
+target.
