@@ -356,6 +356,36 @@ is wide and it improvises transparency, expect matte litter: the wind gust came
 back with white speckle across 13% of its opaque pixels. That is a reject, not
 something to clean up.
 
+### Tell codex to generate once, and do not name a pixel size
+
+`codex exec` treats a pixel size in the prompt as a requirement it has to meet,
+and `image_gen` ignores it: on 2026-09-23 a prompt that said `1024 x 1024` came
+back 1254 x 1254, and codex generated a second image on its own to try again,
+spending two generations for one candidate. A prompt that did not forbid
+post-processing got a Pillow resize and background repaint instead. In the same
+run it also wrote a copy of the prompt to a directory the prompt never named.
+
+- Ask for "a square canvas" without a pixel count.
+- Add: "Generate exactly one image. Do not regenerate, resize or recolour it,
+  whatever its size. Copy it to <path>. Do not write any other file."
+- Count generations from `~/.codex/generated_images/<session>/`, not from the
+  files that land in the repository: a regenerated image leaves only the last
+  one at the requested path.
+
+### 9-slice UI sprites: keep the generated ends, rebuild the middle
+
+A UI sprite that Unity stretches as a Sliced `Image` has to be uniform along every
+row of its middle and every column of its stretch band, and a generated image
+never is — the wooden plank for #118 had a faint gradient and noise along its
+length. `.art/tools/build-plank-button.py` keeps the two generated ends, replaces
+the middle with one median column profile, blends the join, and inserts a band of
+one replicated row at a height where every end facet is a vertical strip, so the
+sprite stretches vertically without bending its end facets. It prints the
+`spriteBorder` for the `.meta`. `.art/tools/preview-nine-slice.py` then draws the
+sprite at real button sizes with the label and the `Shadow`, the way Unity does;
+check that sheet before touching the prefab. Keep the texture width and height
+multiples of 4, or WebGL compression falls back to an uncompressed texture.
+
 ## Boundaries
 
 - Do not edit `.art/anchors/master-v2/` in place. Propose a new versioned
