@@ -124,7 +124,7 @@ namespace DeckScene
         {
             ClearChildren(ownedCardsContainer);
 
-            foreach (CardDto card in ownedCards.OrderBy(c => c.id))
+            foreach (CardDto card in ownedCards)
             {
                 GameObject item = UnityEngine.Object.Instantiate(cardItemPrefab, ownedCardsContainer);
                 CardItemUI ui = item.GetComponent<CardItemUI>();

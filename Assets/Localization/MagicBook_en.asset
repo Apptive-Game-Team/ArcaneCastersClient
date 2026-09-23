@@ -280,6 +280,14 @@ MonoBehaviour:
       periodically erupting a giant stone fist beneath nearby enemies.
     m_Metadata:
       m_Items: []
+  - m_Id: 1864750230507531
+    m_Localized: Search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507532
+    m_Localized: Mana
+    m_Metadata:
+      m_Items: []
   - m_Id: 1000050
     m_Localized: Summons a large, sturdy rock golem that fights only ground enemies.
     m_Metadata:

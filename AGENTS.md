@@ -40,6 +40,8 @@ Follow [hand-edited-assets.md](.agents/docs/hand-edited-assets.md) before changi
 ## Testing Guidelines
 `com.unity.test-framework` is installed, but there are no dedicated `Tests` assemblies in the current tree. For new automated tests, create Edit Mode or Play Mode test assemblies under `Assets/Tests` and name files `*Tests.cs`. At minimum, validate scene flow and WebGL-specific behavior manually in the Editor before opening a PR.
 
+Before using `dotnet build Assembly-CSharp.csproj` to validate a newly added script, confirm the generated project file contains that script. Unity does not always regenerate the project file while another Editor instance has the project open, and the build then reports misleading missing-type errors only at existing call sites. Refresh/regenerate from Unity, or temporarily add the missing `Compile` entries for the check and remove them before committing.
+
 ## Commit & Pull Request Guidelines
 Recent history favors short Conventional Commit subjects such as `feat: ...`, `refactor: ...`, and `chore: ...`. Keep the subject imperative and specific. Pull requests should include a short behavior summary, linked issue or ticket, test notes, and screenshots or short clips for UI or scene changes.
 Branch names should follow `<issue-label>/<issue-num>`, for example `feature/299`.
