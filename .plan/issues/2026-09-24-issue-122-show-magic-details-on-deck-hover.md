@@ -17,12 +17,14 @@
 ## Context / Constraints
 
 - `MagicBookScene.MagicInfo`는 전투 수치와 도감 설명을 조합하지만, `DeckScene.DeckInfoMagicPopup`은 설명만 표시한다.
+- 카드 hover에 실제로 표시되는 영역은 정보 버튼의 `DeckInfoMagicPopup`이 아니라 `HaveCardMagicPopup`이다.
 - 두 화면이 같은 상세 텍스트 생성 로직을 공유해야 이후 변경에서도 정보가 어긋나지 않는다.
 - 기존 hover 지연, 상세 창 위치, pointer exit 동작은 유지한다.
 
 ## Approach (Checklist)
 - [x] **Step 0: Recon** (`MagicInfo`, `DeckInfoMagicPopup`, hover 이벤트와 기존 상세 영역 확인)
 - [x] **Step 1: Implementation** (공유 상세 텍스트 생성기 추가, 도감과 덱 hover에서 함께 사용)
+- [x] **Step 1a: Correct hover surface** (`HaveCardMagicPopup`의 기존 그림·속성 행을 도감 상세 카드로 교체)
 - [x] **Step 2: Tests** (C# 컴파일 성공; Computer Use에 Unity 창이 없고 Unity MCP에 연결된 인스턴스가 없어 실제 hover 확인은 제한됨)
 - [x] **Step 3: Rollout / Rollback** (데이터 마이그레이션 없음, 커밋 revert로 롤백)
 
