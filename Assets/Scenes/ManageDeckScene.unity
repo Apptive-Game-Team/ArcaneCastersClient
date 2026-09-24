@@ -5554,7 +5554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9000000000001, guid: 57fc3120df244d5ea7d39069f3a7b05d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 146
+      value: 92
       objectReference: {fileID: 0}
     - target: {fileID: 9000000000001, guid: 57fc3120df244d5ea7d39069f3a7b05d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5889,7 +5889,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 10
     m_Right: 0
-    m_Top: 10
+    m_Top: 58
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
