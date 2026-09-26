@@ -204,3 +204,52 @@ Register use an 800x450 canvas; Adventure, Adventures and MagicBook put their
 `BackButton` on a 2000x1125 canvas, so the same prefab draws its ends 2.5 times
 thinner there relative to the screen. Draw every size with
 `.art/tools/preview-nine-slice.py` before changing the multiplier.
+
+## More hand-built buttons now carry the plank sprite directly (issue #125)
+
+Beyond the two `Lobby/CreditsPanel`/`Lobby/JoinPanal` buttons above, these also
+carry `WoodPlankButton.png` (guid `a838f9134d664488ba83f8a6b7a5bdb9`) directly
+on their own `Image` rather than through `Button Variant`: `Deck.prefab` and
+`CreateDeckButton.prefab` (the `ManageDeckScene` deck list, `deckPrefab` in
+`DeckManagementController.cs`), `UI/Tutorial/PrimaryButton.prefab` and
+`SecondaryButton.prefab`, `Scenes/ResultScene.unity` `GotoLobbyButton`, and
+`Scenes/SpectatingScene.unity` `Time` and `Button` ("Back"). `UI/Debug/DebugItemButton Variant.prefab`
+is an instance of `Brown-UI-Base` (not `Button Variant`), so it carries the
+same look as `m_Modifications` overrides on the inherited `Image`/`Shadow`
+(same target fileIDs `Button Variant.prefab` uses, since both instance
+`Brown-UI-Base` directly) rather than on an `Image` of its own.
+
+Secondary-style buttons that need to stay visually distinct from the plain
+plank use a tint, not a different sprite: `SecondaryButton.prefab` tints the
+same `WoodPlankButton.png` `#9A8B7C` (darker, desaturated) instead of white.
+Check label contrast against the *tinted* sprite color, not the raw wood
+color — `#3A2616` (the label color everywhere else) clears only 4.3:1 on
+`#9A8B7C`, under the 4.5:1 minimum, so that one button uses black
+(`text-dark`) instead.
+
+### The plank multiplier must scale with the canvas, not stay 3 everywhere
+
+`Button Variant.prefab`'s own override applies `m_PixelsPerUnitMultiplier: 3`
+uniformly to every instance regardless of that instance's canvas — #118 never
+special-cased this. That is only correct on an 800x450-reference canvas.
+`Scenes/SpectatingScene.unity` runs a 1920x1080 canvas, and its two hand-built
+buttons needed `1.25` (`3 * 800 / 1920`) instead, or the plank ends render
+2.4 times thinner relative to the screen than everywhere else. When
+hand-styling a button outside Login/Register/Lobby/ManageDeck/Tutorial (all
+800x450), trace the button's actual `Canvas`/`CanvasScaler` ancestor before
+picking the multiplier — do not assume 3.
+
+### Not every square or icon-glyph button is in scope
+
+A `Brown-UI-Base` (or `UI-Base`) instance with no text child at all — e.g.
+`Scenes/GameScene.unity` `AdminPanalToggleButton`, a 100x100 admin/debug
+toggle with a custom tint and no `Text (TMP)` under it — is not a "text-label
+rectangular button" even though it isn't a Button Variant instance either;
+skip it. Likewise a button whose label is a single glyph standing in for an
+icon (`CoachCloseButton`'s `"X"`, 44x44) reads as an icon button, not a text
+button — skip it even though it technically has a `TextMeshProUGUI` child.
+`Field` and `ManaBar` GameObjects that carry a `Button` component in
+`GameScene.unity`/`InteractiveTutorialScene.unity` are gameplay hit zones (an
+invisible drag-drop rect with `m_Sprite: {fileID: 0}` and `m_Color.a: 0`, and
+a full-width mana gauge bar with no text child) — the `Button` component on
+them is not a rendered button at all.
