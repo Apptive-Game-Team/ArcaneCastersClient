@@ -74,18 +74,9 @@ namespace Data.GameConfig
                 }
 
                 var lines = stats
-                    .Select(parameter => $"{ToDisplayName(parameter.paramName)}: {FormatValue(parameter.value)}")
-                    .ToList();
+                    .Select(parameter => $"{ToDisplayName(parameter.paramName)}: {FormatValue(parameter.value)}");
 
-                var rows = new List<string>((lines.Count + 1) / 2);
-                for (int i = 0; i < lines.Count; i += 2)
-                {
-                    rows.Add(i + 1 < lines.Count
-                        ? $"{lines[i]}\t{lines[i + 1]}"
-                        : lines[i]);
-                }
-
-                blocks.Add(string.Join("\n", rows));
+                blocks.Add(string.Join("\n", lines));
             }
 
             return string.Join("\n\n", blocks);

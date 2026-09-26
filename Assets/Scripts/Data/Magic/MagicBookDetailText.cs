@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data.GameConfig;
 using Data.Localization;
@@ -9,7 +11,7 @@ namespace Data.Magic
     /// </summary>
     public static class MagicBookDetailText
     {
-        public static async Task<string> BuildAsync(CombinedMagicData data)
+        public static async Task<string> BuildAsync(CombinedMagicData data, bool compactStats = false)
         {
             if (data == null)
             {
@@ -17,8 +19,38 @@ namespace Data.Magic
             }
 
             string stats = GameParameterResolver.GetMagicDisplayStats(data);
+            if (compactStats)
+            {
+                stats = CompactStats(stats);
+            }
+
             string description = await GetDescriptionAsync(data);
             return Combine(stats, description);
+        }
+
+        private static string CompactStats(string stats)
+        {
+            if (string.IsNullOrWhiteSpace(stats))
+            {
+                return string.Empty;
+            }
+
+            string[] blocks = stats.Split(new[] { "\n\n" }, StringSplitOptions.None);
+            for (int blockIndex = 0; blockIndex < blocks.Length; blockIndex++)
+            {
+                string[] lines = blocks[blockIndex].Split('\n');
+                var rows = new List<string>((lines.Length + 1) / 2);
+                for (int lineIndex = 0; lineIndex < lines.Length; lineIndex += 2)
+                {
+                    rows.Add(lineIndex + 1 < lines.Length
+                        ? $"{lines[lineIndex]}\t{lines[lineIndex + 1]}"
+                        : lines[lineIndex]);
+                }
+
+                blocks[blockIndex] = string.Join("\n", rows);
+            }
+
+            return string.Join("\n\n", blocks);
         }
 
         public static string Combine(string stats, string description)

@@ -122,7 +122,7 @@ namespace DeckScene
             bodyElement.flexibleHeight = 0f;
 
             string localizedName = await GetLocalizedNameAsync(magic);
-            string detailText = await MagicBookDetailText.BuildAsync(magic);
+            string detailText = await MagicBookDetailText.BuildAsync(magic, compactStats: true);
             if (version != renderVersion || detailObject == null)
             {
                 return;
