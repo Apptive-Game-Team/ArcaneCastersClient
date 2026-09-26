@@ -26,6 +26,7 @@
 - [x] **Step 1: Implementation** (보유 카드 검색·정렬·필터 상태와 컨트롤러 추가, 씬에 도감식 컨트롤 배치 및 직렬화 연결)
 - [x] **Step 2: Tests** (C# 컴파일, 씬·프리팹 직렬화 참조 확인, 로컬라이제이션 테이블 수 일치, `git diff --check`)
 - [x] **Step 3: Rollout / Rollback** (별도 플래그·마이그레이션 없이 클라이언트 기능으로 배포, 문제 시 단일 기능 커밋 revert)
+- [x] **Step 4: UI polish** (영문 드롭다운 캡션 자동 축소·말줄임, 검색창에 기존 갈색 9-slice UI 배경 적용)
 
 ## Validation
 
