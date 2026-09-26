@@ -1951,6 +1951,7 @@ MonoBehaviour:
   panelRoot: {fileID: 560790882}
   itemRoot: {fileID: 489897595}
   detailFont: {fileID: 11400000, guid: 9a8c64c89aee44fa2ac41fff91221f41, type: 2}
+  descriptionFont: {fileID: 11400000, guid: b15c5506cbcd44b48b4a55fb77fea659, type: 2}
 --- !u!114 &560790886
 MonoBehaviour:
   m_ObjectHideFlags: 0

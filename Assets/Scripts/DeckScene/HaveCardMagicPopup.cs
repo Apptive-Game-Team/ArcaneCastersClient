@@ -19,6 +19,7 @@ namespace DeckScene
         [SerializeField] private GameObject panelRoot;
         [SerializeField] private Transform itemRoot;
         [SerializeField] private TMP_FontAsset detailFont;
+        [SerializeField] private TMP_FontAsset descriptionFont;
 
         private HoverPopupTransition hoverTransition;
         private int renderVersion;
@@ -102,12 +103,16 @@ namespace DeckScene
             TMP_Text nameText = CreateHeader(detailObject.transform, magic);
 
             TMP_Text bodyText = CreateText(detailObject.transform, "MagicBookText", 16f, FontStyles.Normal);
+            if (descriptionFont != null)
+            {
+                bodyText.font = descriptionFont;
+            }
             bodyText.enableWordWrapping = true;
             bodyText.enableAutoSizing = true;
             bodyText.fontSizeMin = 12f;
             bodyText.fontSizeMax = 16f;
             bodyText.alignment = TextAlignmentOptions.TopLeft;
-            bodyText.overflowMode = TextOverflowModes.Ellipsis;
+            bodyText.overflowMode = TextOverflowModes.Overflow;
             var bodyElement = bodyText.gameObject.AddComponent<LayoutElement>();
             bodyElement.flexibleHeight = 1f;
             bodyElement.minHeight = 140f;

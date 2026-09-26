@@ -26,6 +26,7 @@
 - [x] **Step 1: Implementation** (공유 상세 텍스트 생성기 추가, 도감과 덱 hover에서 함께 사용)
 - [x] **Step 1a: Correct hover surface** (`HaveCardMagicPopup`의 기존 그림·속성 행을 도감 상세 카드로 교체)
 - [x] **Step 1b: Runtime layout fix** (기존 `GridLayoutGroup`과 `VerticalLayoutGroup` 중복 추가로 발생하던 hover `NullReferenceException` 제거)
+- [x] **Step 1c: Description typography** (설명 말줄임을 줄바꿈 표시로 변경하고 도감 설명과 동일한 Pretendard ExtraBold 폰트 적용)
 - [x] **Step 2: Tests** (C# 컴파일 성공; Computer Use에 Unity 창이 없고 Unity MCP에 연결된 인스턴스가 없어 실제 hover 확인은 제한됨)
 - [x] **Step 3: Rollout / Rollback** (데이터 마이그레이션 없음, 커밋 revert로 롤백)
 
