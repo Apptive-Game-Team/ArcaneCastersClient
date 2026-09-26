@@ -35,9 +35,9 @@ namespace LobbyScene
             ConnectAndRecover();
         }
 
-        public void Enqueue()
+        public void Enqueue(string deckMode)
         {
-            StartCoroutine(api.CreateTicket(ticket =>
+            StartCoroutine(api.CreateTicket(deckMode, ticket =>
             {
                 if (ticket == null)
                 {

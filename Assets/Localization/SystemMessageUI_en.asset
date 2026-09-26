@@ -154,6 +154,10 @@ MonoBehaviour:
     m_Localized: Guest accounts cannot log in again. Register first to keep this account. Press Logout once more to log out anyway.
     m_Metadata:
       m_Items: []
+  - m_Id: 8100000000000
+    m_Localized: Play with Random Deck
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
