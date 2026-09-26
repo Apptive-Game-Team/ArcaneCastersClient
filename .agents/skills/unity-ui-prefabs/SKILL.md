@@ -312,8 +312,21 @@ changes on a `TextMeshProUGUI`/`TMP_Text` block — the two fields are
 independently serialized and Unity does not derive one from the other on
 load, and a plausible-looking wrong `rgba` produces a text tint that never
 matches the flat color you actually asked for. Use `#3A2616` opaque
-(`4279641658`) and `#6B5136` opaque (`4281749867`, the placeholder brown that
-clears 4.5:1 on the `#E6CFA6` slot floor) as known-good values.
+(`4279641658`) and `#6B5136` opaque (`4281749867`) as known-good values.
+
+### Input-field placeholder color is `#6B5136` opaque
+
+Every placeholder on `WoodInputSlot.png`'s `#E6CFA6` floor — legacy `Text` or
+`TMP_Text`, in a prefab or a scene — uses `#6B5136` opaque
+(`rgba: {r: 0.41960785, g: 0.31764707, b: 0.21176471, a: 1}`,
+`m_fontColor32.rgba: 4281749867`), never the field's `#3A2616` value color at
+reduced alpha. It clears 4.85:1 against `#E6CFA6`, comfortably over the 4.5:1
+floor, while staying visibly lighter than the `#3A2616` real-text color so a
+placeholder still reads as a placeholder. This is the one color value scene
+work and prefab work must share exactly, since the same input fields are
+sometimes built directly in a scene (`LoginScene.unity`, `RegisterScene.unity`)
+and sometimes as a prefab (`JoinPanal.prefab`, `DeckOwnedCardControls.prefab`
+`SearchInput`).
 
 ### `Brown-UI-Base`'s guid also turns up on things that are not `Brown-UI-Base` instances
 
@@ -353,11 +366,27 @@ that kept a visibly wood-grained sliver on a 20-unit track/handle; treat
 "multiplier from the rect, verified with `slice_draw`" as the rule for
 anything scrollbar/handle-thin.
 
-### Sliders were left alone
+### Sound sliders
 
-`Lobby/Panal.prefab` has three `Slider` instances (`GameSoundSlider`,
-`BackgroundSoundSlider`, `UISoundSlider`, script guid
-`67db9e8f0e2ae9c40bc1e2b64352a6b4`) with their own `Background`/`Fill`/
-`Handle` images. Issue #125's brief covers panels, input fields, dropdowns,
-toggles and scrollbars — sliders are a different widget and were not
-restyled; do that as a separate pass if the wood look should extend there.
+The three `Slider`s in `Lobby/Panal.prefab` (`GameSoundSlider`,
+`BackgroundSoundSlider`, `UISoundSlider`) use the slot sprite at multiplier 15
+for the 10-unit-tall `Background`, `Card.png` tinted `#C08C56` for `Fill`, and
+the plank at multiplier 30 for the 20x20 `Handle`. Gameplay bars (HP, TTL,
+mana) are `Slider`s too and stay as they are.
+
+### A dark panel with light text stays dark
+
+Some surfaces were dark on purpose and put white text on top, often from code:
+`ManageDeckScene` `HaveCardPopup`, `DeckMagicPopup` and `DeckMagicDetail` are
+navy `#1F2633` at alpha 0.87, and `HaveCardMagicPopup.CreateText` creates every
+label with `Color.white`; `UI/Tutorial/TutorialSelectPanel.prefab` tints its
+`Brown-UI-Base` the same navy under `#F4F1E8` text. Moving these to the
+parchment panel made the text disappear, so they keep `Card.png` and their navy
+tint (`TutorialSelectPanel` overrides `m_Sprite` back to `Card.png` and
+`m_PixelsPerUnitMultiplier` back to 2, the old `UI-Base` value). Before
+converting a panel, check the colour of every text over it, including text a
+script creates, and change the text to `#3A2616` when it moves to parchment —
+`AdventureStoryOverlayUI` `DialoguePanel` now uses `#3A2616` for the dialogue,
+`#7A3A10` for the speaker name (6.6:1) and `#6B5136` for the hint.
+`GameScene` `AdminPanalToggleButton` tints `Brown-UI-Base` without overriding
+its sprite, so it also pins `Card.png` and multiplier 2 to keep its old look.

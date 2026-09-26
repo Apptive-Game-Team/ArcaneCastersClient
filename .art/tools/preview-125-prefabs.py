@@ -4,7 +4,8 @@
 Composes, at real prefab sizes on an 800x450-reference canvas (multiplier
 column from unity-ui-prefabs SKILL.md): a ConfirmPage-sized wood panel with a
 plank button, JoinPanal's input fields, the SortDropdown closed and open, a
-toggle, and a scrollbar. Run from the repository root.
+toggle, a scrollbar, Panal.prefab's KoreanButton/EnglishButton, and a sound
+slider. Run from the repository root.
 """
 import importlib.util
 
@@ -111,12 +112,41 @@ handle = slice_draw(plank_img, PLANK_BORDER, 30, (20, 40), ZOOM)
 scrollbar_tile = track.copy()
 paste(scrollbar_tile, handle, (0, round(10 * ZOOM)))
 
+# --- 6. Panal.prefab KoreanButton/EnglishButton (100x40, plank mult 3) ---
+korean_btn, _ = button(plank_img, PLANK_BORDER, 3, (100, 40), ZOOM, "한국어", DARK,
+                        ((0, -4), 0.5), margin=(18, 5, 18, 11))
+english_btn, _ = button(plank_img, PLANK_BORDER, 3, (100, 40), ZOOM, "English", DARK,
+                         ((0, -4), 0.5), margin=(18, 5, 18, 11))
+lang_gap = round(10 * ZOOM)
+lang_tile = Image.new("RGBA", (korean_btn.width + lang_gap + english_btn.width,
+                                max(korean_btn.height, english_btn.height)), (0, 0, 0, 0))
+paste(lang_tile, korean_btn, (0, 0))
+paste(lang_tile, english_btn, (korean_btn.width + lang_gap, 0))
+
+# --- 7. Sound slider (300x20: background 300x10 slot mult 15, fill wood-tone,
+#        handle 20x20 plank mult 30) ---
+FILL_COLOUR = "#C08C56"
+slider_bg = slice_draw(slot_img, SLOT_BORDER, 15, (300, 10), ZOOM)
+fill_w = round(300 * 0.6 * ZOOM)
+slider_fill_tile = Image.new("RGBA", (fill_w, round(10 * ZOOM)), FILL_COLOUR)
+slider_handle = slice_draw(plank_img, PLANK_BORDER, 30, (20, 20), ZOOM)
+
+slider_tile = Image.new("RGBA", (round(300 * ZOOM), round(20 * ZOOM)), (0, 0, 0, 0))
+paste(slider_tile, slider_bg, (0, round(5 * ZOOM)))
+paste(slider_tile, slider_fill_tile, (0, round(5 * ZOOM)))
+paste(slider_tile, slider_handle, (fill_w - round(10 * ZOOM), 0))
+
 # --- compose sheet ---
 gap = 30
 col1_w = panel_tile.width
 col2_w = max(fields_tile.width, dropdown_tile.width, toggle_tile.width, scrollbar_tile.width)
-width = gap * 3 + col1_w + col2_w
-height = gap * 2 + max(panel_tile.height, fields_tile.height + dropdown_tile.height + toggle_tile.height + scrollbar_tile.height + gap * 3)
+col3_w = max(lang_tile.width, slider_tile.width)
+width = gap * 4 + col1_w + col2_w + col3_w
+height = gap * 2 + max(
+    panel_tile.height,
+    fields_tile.height + dropdown_tile.height + toggle_tile.height + scrollbar_tile.height + gap * 3,
+    lang_tile.height + slider_tile.height + gap,
+)
 sheet = Image.new("RGBA", (round(width), round(height)), (30, 33, 36, 255))
 
 section_title(sheet, (gap, gap - 24), "ConfirmPage-sized panel + plank button")
@@ -135,6 +165,14 @@ paste(sheet, toggle_tile, (x2, y))
 y += toggle_tile.height + gap
 section_title(sheet, (x2, y - 24), "Scrollbar")
 paste(sheet, scrollbar_tile, (x2, y))
+
+x3 = gap * 3 + col1_w + col2_w
+y = gap
+section_title(sheet, (x3, y - 24), "Panal.prefab language buttons")
+paste(sheet, lang_tile, (x3, y))
+y += lang_tile.height + gap
+section_title(sheet, (x3, y - 24), "Sound slider")
+paste(sheet, slider_tile, (x3, y))
 
 sheet.convert("RGB").save(".art/concept/wood-ui-2/preview-prefabs.png")
 print("saved .art/concept/wood-ui-2/preview-prefabs.png", sheet.size)
