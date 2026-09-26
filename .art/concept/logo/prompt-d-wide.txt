@@ -1,0 +1,9 @@
+The first attached image is the approved game title logo. Redraw the same logo as a single wide line.
+
+Keep everything about it identical: the same faceted gold letters (#F6DB5F light plane, #D7A313 mid plane, #996B07 dark plane) with dark warm wood brown sides (#5D4032), the same chunky letter shapes, the same faceted wooden plank sign behind the letters (#D9A972 light, #C08C56 mid, #A2703F dark), the same light from the upper left, the same flat polygonal planes. Only the layout changes: the words sit on ONE line, reading exactly ARCANE CASTERS (A-R-C-A-N-E, space, C-A-S-T-E-R-S), on one long plank sign about five times wider than it is tall, with a very gentle upward arc.
+
+Canvas: square, 1024 x 1024. Fill the entire canvas with flat pure magenta, RGB 255 0 255, hex #FF00FF, no gradient, no checkerboard, not transparent. The wide logo sits across the middle, filling about 92 percent of the width, with magenta above and below it.
+
+No other words, no subtitle, no watermark. No texture, no grain, no gradients inside a plane, no gloss, no glow, no outline stroke. If it could be mistaken for a rendered 3D model or a font with a filter on it, it is wrong.
+
+After generating, copy the final image file to .art/concept/logo/logo-d-wide.png inside the current working directory.

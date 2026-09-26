@@ -103,3 +103,30 @@ Before editing a serialized field by name across a project, grep for the field
 name first, then filter each hit to the enclosing document's `m_Script` guid.
 Only a match on both the field name and the owning script's guid is the real
 target.
+
+## A RectTransform's box is bigger than what renders on screen
+
+Placing the Arcane Casters logo at the top of `LobbyScene.unity` (issue #114)
+looked safe from the fact sheet handed to the implementing agent: it listed
+`QueueLengthText`'s rect and the six buttons, all clear of the top edge.
+`UserNameText` — also a direct child of the Canvas — was left off that list
+because nobody had read its `RectTransform`. Its box is
+`m_AnchorMin/Max: {x: 0.5, y: 1}`, `m_SizeDelta: {x: 500, y: 120}`: anchored to
+the top edge, 120 units tall, centered across the middle 500 of the 800-wide
+reference canvas. On the 800x450 canvas that is the entire top-center band
+from y=105 to y=225 — exactly where a naive "put it at the top, centered"
+placement lands, and exactly the one rect nobody had measured.
+
+The box is that generous because of auto-sizing and word-wrap for long
+names; the actual rendered line is far smaller and sits vertically centered
+in it. But a hand-written scene edit can only check the declared rect, not
+the rendered glyph, so the safe rule is to treat the full `m_SizeDelta` as
+occupied.
+
+Before adding any new UI element by hand, list every *direct sibling*
+`RectTransform` under the same parent — not just the ones a prior note or
+issue happened to call out — and compute each one's occupied rectangle
+(`m_AnchorMin/Max`, `m_Pivot`, `m_AnchoredPosition`, `m_SizeDelta`) on the
+`CanvasScaler` reference resolution before picking a position. A list of
+siblings that omits one is worse than no list, because it reads as
+permission to skip the check.

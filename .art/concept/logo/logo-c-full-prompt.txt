@@ -1,0 +1,17 @@
+Use case: logo-brand
+Asset type: square game title logo concept
+Input images: Image 1 is the canonical master-style comparison key; Image 2 is the canonical warm tan stone and faceted moss material reference; Image 3 is the canonical World Tree leaf shape and colour reference. Use them only to match the shared faceted low-poly papercraft rendering technique, materials, lighting, and leaf treatment. Do not copy their characters or composition.
+
+Scene/backdrop: Fill the entire 1024 x 1024 canvas with one perfectly flat, opaque, pure magenta colour, RGB 255 0 255, hex #FF00FF. No gradient, texture, grain, noise, vignette, shadow, checkerboard, or transparency anywhere in the background.
+
+Subject: A centered game title logotype with exactly two lines of capital letters. Line 1 reads "ARCANE" (A - R - C - A - N - E, exactly six letters). Line 2 reads "CASTERS" (C - A - S - T - E - R - S, exactly seven letters). No other text, words, subtitle, tagline, numbers, signature, or watermark.
+
+Composition/framing: Square 1024 x 1024. Center both lines as one compact logo. Keep generous pure-magenta margin on all four sides. The logo fills about 80 percent of the canvas width. Both lines follow a subtle gentle upward arc. Thick rounded friendly letterforms with visible solid depth, viewed slightly from above. Prioritize exact spelling and immediate readability.
+
+Rendering technique: Match the references' faceted low-poly papercraft. Construct every letter as a chunky solid object from large, flat polygonal planes with hard creases and exactly one flat colour per plane. It must read as deliberately assembled cut-paper stone facets, not a font with an effect, not digital painting, and not a smooth rendered 3D model. No outer outline stroke.
+
+Lighting: One soft directional light from the upper left. Upper-left planes are light, front planes are mid value, lower-right and recessed side planes are dark. Use three discrete value bands per material. No gradients inside any plane, no gloss, no bevel highlight, no glow, no lens flare. Do not cast a logo shadow onto the magenta background.
+
+Materials and colours: Carve the letters from warm tan golem stone using only #CDC8B8 for light planes, #A3A29D for mid planes, and #8A857A for dark planes. Add restrained faceted moss on some upper letter edges using #55572D and #374725. Add a few faceted World Tree leaves sprouting only from the tops of two or three letters, using #B8CE59 light, #9DA74D mid, and #768738 dark. Keep the leaves sparse so every letter remains unobstructed and readable.
+
+Hard constraints: Exact text only: "ARCANE" over "CASTERS". Preserve the exact letter count. Flat opaque #FF00FF background reaches every canvas edge and corner. No texture, grain, noise, brush strokes, gradients, gloss, bevel highlights, glow, lens flare, outline stroke, background shadow, ground plane, characters, creatures, buildings, icons, checkerboard, transparency, extra text, or watermark.
