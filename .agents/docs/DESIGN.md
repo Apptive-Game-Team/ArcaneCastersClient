@@ -37,14 +37,14 @@ components:
     width: "200px"
     height: "50px"
   button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.text-dark}"
+    backgroundColor: "WoodPlankButton.png, white tint (plain wood)"
+    textColor: "#3A2616"
     rounded: "{rounded.border-slice}"
     width: "100px"
     height: "50px"
   button-secondary:
-    backgroundColor: "{colors.secondary}"
-    textColor: "{colors.text-light}"
+    backgroundColor: "WoodPlankButton.png, #9A8B7C tint (darker desaturated wood)"
+    textColor: "{colors.text-dark}"
     rounded: "{rounded.border-slice}"
     width: "100px"
     height: "50px"
@@ -77,8 +77,8 @@ The design system employs a curated palette consisting of warm earthy tones for 
   - **Card Base (`#E2AA7D`):** A softer peach-tan tone used for reward popups and card backings to draw focus.
   - **Panel Background (`#DBD8D8`):** A neutral light-grey container backdrop.
 - **Interactive Colors:**
-  - **Primary Interactive (`#2FB8A8`):** A vibrant turquoise/teal. Directs the user to primary navigation or confirmation paths (e.g., tutorial confirm buttons).
-  - **Secondary Interactive (`#2D3543`):** A dark charcoal/slate-blue used for neutral, secondary actions (e.g., dismissals, tutorial back-buttons).
+  - **Primary Interactive (`#2FB8A8`):** A vibrant turquoise/teal. No longer used as a button background — `PrimaryButton.prefab` now uses the wood-plank sprite with a white tint. No remaining usage under `Assets/` as of this change; kept here only as a defined token in case another interactive element still wants it.
+  - **Secondary Interactive (`#2D3543`):** A dark charcoal/slate-blue. No longer used on `SecondaryButton.prefab`, which now uses the wood-plank sprite tinted `#9A8B7C`. Still used as a background color elsewhere (`Assets/Scenes/GameScene.unity`, `Assets/Scenes/LobbyScene.unity`), so the token is not stale for those.
 - **Text & Feedback Colors:**
   - **Text Light (`#D7DEE8`):** Light blue-grey for text on dark backgrounds.
   - **Text Dark (`#000000`):** Pitch black for high contrast on light/brown panels.
@@ -112,10 +112,10 @@ Shapes feature soft, rounded contours:
 The system includes preconfigured prefab components located in [Assets/Prefabs/UI](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI):
 
 - [UI-Base.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/UI-Base.prefab): The root UI panel using the card sprite (`Card.png`) with white tinting.
-- [Brown-UI-Base.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Brown-UI-Base.prefab): Extends `UI-Base` with the default warm-brown tint `#D99F71`.
+- [Brown-UI-Base.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Brown-UI-Base.prefab): Extends `UI-Base` with the wood-frame panel sprite `WoodFramePanel.png`, white tint, `m_PixelsPerUnitMultiplier: 1` (on an 800x450-reference canvas). `Button Variant.prefab` and `UI/Debug/DebugItemButton Variant.prefab` instance it too, but each overrides `m_Sprite`, `m_Color` and `m_PixelsPerUnitMultiplier` back to the plank look on their own `Image`, so this change does not affect them.
 - [Button Variant.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Button%20Variant.prefab): Default 200x50 button incorporating a brown panel base and Pretendard-Regular text.
-- [PrimaryButton.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Tutorial/PrimaryButton.prefab): 100x50 turquoise action button.
-- [SecondaryButton.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Tutorial/SecondaryButton.prefab): 100x50 charcoal dismissal button.
+- [PrimaryButton.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Tutorial/PrimaryButton.prefab): 100x50 wood-plank action button, white tint, label `#3A2616`.
+- [SecondaryButton.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Tutorial/SecondaryButton.prefab): 100x50 wood-plank dismissal button, darker desaturated tint `#9A8B7C`, label `#000000` (6.4:1 contrast).
 
 ## Do's and Don'ts
 

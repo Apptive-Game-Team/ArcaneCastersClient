@@ -1,0 +1,19 @@
+The attached images are references. The first is the game's master rendering style. The second is the approved wooden plank button already shipped in the game. The third is the approved wooden logo sign. Copy their hand-cut faceted low-poly papercraft wood look, their colours, and their upper-left light — but build a different object: a square picture-frame-shaped wooden border around a flat parchment inner panel, for a dialog window.
+
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas.
+
+Subject: ONE single empty wooden dialog-panel frame, seen straight from the front, centered on the canvas, touching within 20 pixels of the top, bottom, left and right canvas edges (with magenta only in the four corner gaps outside the frame's own rounded silhouette, if any). The frame is a square annulus: a wooden border running all the way around a rectangular opening, with a flat light parchment panel filling that opening.
+
+Construction, which matters more than anything else:
+- The wooden border is built from the same flat wood colours as the reference plank: light wood #D9A972, mid wood #C08C56, dark wood #A2703F, and dark brown #5D4032 for the deepest recesses. The border is roughly one seventh of the canvas width thick on every side.
+- Each of the four straight border sides (top, bottom, left, right) is, along its own long middle stretch, a uniform flat band of colour with straight parallel edges running the whole length of that side with no interruption: no knots, no nails, no cracks, no notches, no grooves, no grain, no gap, no one-off facet anywhere along the straight run of any side. Each side must look the same if stretched longer in its own direction.
+- All of the character sits at the four corners of the frame, within the outer 20 percent of the frame's width and height on each side. Each corner is hand-cut and chunky: built from four or five irregular faceted planes in #C08C56, #A2703F and #5D4032, lit from the upper left, exactly like the corners of the approved logo sign's ends. The four corners are not identical copies but share the same size and weight.
+- The inner opening is filled edge to edge with one flat, perfectly uniform, light parchment colour, close to #EDE0C8, with no texture, no stain, no vignette, no gradient, no torn edge, and no border of its own — it must butt directly against the inner edge of the wooden frame on all four sides.
+- The parchment face touches the frame on all four inner edges with no magenta gap between them.
+- The overall outline is a simple square with the four corners softly chunky, not rounded and not perfectly sharp — like a hand-cut piece of wood, not a machined rectangle.
+
+Rendering technique: faceted low-poly papercraft, flat polygonal planes, one flat colour per plane, hard creases between planes, no texture, no wood grain, no noise, no gradients, no gloss, no specular highlight, no outline stroke. It must not look like a smooth rendered 3D frame or a bevel filter; it must look hand-built from cut paper like the plank button and the logo sign. Restrained saturation.
+
+Exclude: no text, no letters, no icons, no symbols, no rope, no nails, no metal hinges, no second frame, no ground, no drop shadow onto the background, no watermark, no photo or picture inside the parchment area. A single empty dialog frame only.
+
+Use a square canvas without a pixel count. Generate exactly one image. Do not regenerate, resize or recolour it, whatever its size. Copy it to .art/concept/wood-ui-2/frame-panel-c-raw.png. Do not write any other file.

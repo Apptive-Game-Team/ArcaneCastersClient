@@ -386,6 +386,58 @@ sprite at real button sizes with the label and the `Shadow`, the way Unity does;
 check that sheet before touching the prefab. Keep the texture width and height
 multiples of 4, or WebGL compression falls back to an uncompressed texture.
 
+A settle check that compares every row must ignore rows the shape hasn't
+reached yet, or it reports the wrong border. Building `WoodInputSlot.png`
+(issue #125, a recessed groove) from `settled_column`'s exact logic gave a
+left border of 275px out of a 434px sprite — most of the image — because the
+generated shape's hand-cut ends taper to alpha 0 in their outer rows before
+reaching the groove's full height, and those transparent rows carry near-black
+unpremultiplied RGB that never matches the profile, so the walk from the edge
+never finds a "settled" column until it is nearly at the middle. Excluding rows
+below an alpha floor from the comparison fixed most of it (`build-input-slot.py`),
+but one row — the top inner shadow band — still carried a genuine gradient
+stretching a couple hundred pixels in from one end, which is exactly the kind
+of noise the tool exists to erase, not real facet geometry to protect. Chasing
+a "true" settle point there is the wrong goal; capping the search at a sane
+`--max-border` and letting the centre-fill flatten the rest reads correctly
+after the join blends four pixels, and is what shipped.
+
+Pick `--center-x`/`--center-y` (or the panel tool's own pair) so the *final*
+width and height are multiples of 4 — the border and corner sizes come from
+detection, so the stretch-band width is usually the only knob left, and one
+band size rarely satisfies both axes at once.
+
+`image_gen` came back with a genuine `RGBA` alpha cutout for one of two
+`WoodInputSlot` candidates despite the prompt asking for a flat magenta key
+background, same as the dragon-tower and frame-pair batches before it: check
+`Image.open(...).mode` before running `key-out-background.py`, since keying a
+file that already has real alpha throws that alpha away.
+
+A dialog panel's border-to-content ratio is set by
+`m_PixelsPerUnitMultiplier` alone; the ratio does not drift with the canvas's
+own reference resolution, because both the sprite border and the panel's
+`RectTransform` size live in the same canvas-unit space. What breaks it is
+switching reference resolution while re-using an existing prefab's element
+sizes unchanged — the panel then covers a smaller fraction of a bigger
+reference canvas, and the fixed-unit border reads thinner on screen. Scale
+`m_PixelsPerUnitMultiplier` by the inverse of the reference-resolution ratio
+(e.g. 3 at 800x450, 1.25 at 1920x1080 — `3 * 800 / 1920`) to keep the same
+apparent thickness; `.art/tools/preview-panel.py` renders both to confirm
+before committing to a number.
+
+The art worker's preview for #125 drew `WoodFramePanel` at multiplier 3, where
+its frame is 14 canvas units on a 500x400 panel and the faceted corner blocks
+are too small to see; the user picked multiplier 1 (43 units) from a sheet of
+1, 1.5 and 2. Draw a new panel sprite at several multipliers before picking
+one, not only at the button's 3.
+
+`image_gen` drew the input groove with a dark floor (#66473A), which needs a
+light label. To keep the #3A2616 label every other control uses, the floor was
+moved to #E6CFA6 (9.4:1) with `.art/tools/recolour-slot-floor.py` instead of
+generating again. Recolouring every pixel near the floor colour speckled the
+corner facets, which share those browns; the script only moves pixels inside
+the floor rectangle.
+
 ## Boundaries
 
 - Do not edit `.art/anchors/master-v2/` in place. Propose a new versioned

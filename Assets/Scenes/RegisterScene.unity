@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0.5}
+  m_Color: {r: 0.41960785, g: 0.31764707, b: 0.21176471, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -240,7 +240,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_SizeDelta: {x: -54.33334, y: -22.0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &143417316
 GameObject:
@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.22745098, g: 0.14901961, b: 0.08627451, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -319,7 +319,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_SizeDelta: {x: -54.33334, y: -22.0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &420145093
 GameObject:
@@ -353,7 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0.5}
+  m_Color: {r: 0.41960785, g: 0.31764707, b: 0.21176471, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -439,7 +439,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_SizeDelta: {x: -54.33334, y: -22.0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &451147425
 GameObject:
@@ -612,6 +612,14 @@ PrefabInstance:
     - target: {fileID: 3507375722896574938, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
       propertyPath: m_Name
       value: EmailInputField
+      objectReference: {fileID: 0}
+    - target: {fileID: 2990971800539104397, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5b9f556d0de74118bfddfcc737412099, type: 3}
+    - target: {fileID: 2990971800539104397, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 6.0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1236,6 +1244,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: PasswordInputField
       objectReference: {fileID: 0}
+    - target: {fileID: 2990971800539104397, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5b9f556d0de74118bfddfcc737412099, type: 3}
+    - target: {fileID: 2990971800539104397, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 6.0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1374,7 +1390,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_SizeDelta: {x: -54.33334, y: -22.0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1104060141
 MonoBehaviour:
@@ -1389,7 +1405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.22745098, g: 0.14901961, b: 0.08627451, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1454,7 +1470,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_SizeDelta: {x: -54.33334, y: -22.0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1146599196
 MonoBehaviour:
@@ -1509,7 +1525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0.5}
+  m_Color: {r: 0.41960785, g: 0.31764707, b: 0.21176471, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1689,7 +1705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.22745098, g: 0.14901961, b: 0.08627451, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1735,7 +1751,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: -20}
+  m_SizeDelta: {x: -54.33334, y: -22.0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1322921478
 PrefabInstance:
@@ -1840,6 +1856,14 @@ PrefabInstance:
     - target: {fileID: 3507375722896574938, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
       propertyPath: m_Name
       value: NameInputField
+      objectReference: {fileID: 0}
+    - target: {fileID: 2990971800539104397, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5b9f556d0de74118bfddfcc737412099, type: 3}
+    - target: {fileID: 2990971800539104397, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 6.0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
