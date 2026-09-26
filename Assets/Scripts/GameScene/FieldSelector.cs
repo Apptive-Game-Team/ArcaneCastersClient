@@ -154,6 +154,11 @@ namespace GameScene
                 return;
             }
 
+            // UI 하나가 이 누름을 통째로 가져갔으면 뗀 자리가 필드 위여도 이 누름은 필드의 것이 아니다.
+            // emote 고르기 판처럼 눌러서 끌고 떼는 UI 가 여기 걸린다. 뗀 자리만 보면 판 위에서
+            // 시작한 끌기가 필드 위에서 끝났을 때 마법이 시전된다.
+            if (PointerInputUtility.IsPointerCapturedByUi) return;
+
             if (PointerInputUtility.IsPointerOverUiOrSelectable()) return;
 
             if (!CardInputSender.Instance.TrySendInput(previewPosition))

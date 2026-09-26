@@ -87,6 +87,10 @@ crashlytics-build.properties
 # Local game-audio audition candidates (golden assets are copied into Assets)
 /.sfx-work/
 
+# Local image-generation raw candidates — full-size rejects are not committed;
+# finalized, keyed sprites are copied into Assets and the prompts under .art/.
+.art/concept/*/raw/
+
 # Claude Code local (per-user) settings
 .claude/settings.local.json
 
