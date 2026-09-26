@@ -5128,6 +5128,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2990971800539104397, guid: ab89aefebd40141228aabbe813d04aab, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 0.4167
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
