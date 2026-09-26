@@ -15,6 +15,8 @@ namespace DeckScene
         private const float PanelHeight = 260f;
         private const float MagicIconSize = 64f;
         private const float ElementIconSize = 28f;
+        private const float ContentPadding = 12f;
+        private const float DetailSpacing = 8f;
 
         [SerializeField] private GameObject panelRoot;
         [SerializeField] private Transform itemRoot;
@@ -90,7 +92,7 @@ namespace DeckScene
 
             GameObject detailObject = CreateLayoutObject("MagicBookDetail", itemRoot, typeof(VerticalLayoutGroup));
             var detailLayout = detailObject.GetComponent<VerticalLayoutGroup>();
-            detailLayout.spacing = 8f;
+            detailLayout.spacing = DetailSpacing;
             detailLayout.childControlWidth = true;
             detailLayout.childControlHeight = true;
             detailLayout.childForceExpandWidth = true;
@@ -112,10 +114,12 @@ namespace DeckScene
             bodyText.fontSizeMin = 12f;
             bodyText.fontSizeMax = 16f;
             bodyText.alignment = TextAlignmentOptions.TopLeft;
-            bodyText.overflowMode = TextOverflowModes.Overflow;
+            bodyText.overflowMode = TextOverflowModes.Truncate;
             var bodyElement = bodyText.gameObject.AddComponent<LayoutElement>();
-            bodyElement.flexibleHeight = 1f;
-            bodyElement.minHeight = 140f;
+            float bodyHeight = PanelHeight - (ContentPadding * 2f) - MagicIconSize - DetailSpacing;
+            bodyElement.minHeight = bodyHeight;
+            bodyElement.preferredHeight = bodyHeight;
+            bodyElement.flexibleHeight = 0f;
 
             string localizedName = await GetLocalizedNameAsync(magic);
             string detailText = await MagicBookDetailText.BuildAsync(magic);
@@ -251,7 +255,11 @@ namespace DeckScene
                 // LayoutGroup disallows sibling layout groups, so reuse the scene's
                 // existing grid instead of trying to add a VerticalLayoutGroup.
                 grid.enabled = true;
-                grid.padding = new RectOffset(12, 12, 12, 12);
+                grid.padding = new RectOffset(
+                    (int)ContentPadding,
+                    (int)ContentPadding,
+                    (int)ContentPadding,
+                    (int)ContentPadding);
                 grid.childAlignment = TextAnchor.UpperLeft;
                 grid.cellSize = new Vector2(PanelWidth - 24f, PanelHeight - 24f);
                 grid.spacing = Vector2.zero;
