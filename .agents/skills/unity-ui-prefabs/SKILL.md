@@ -180,3 +180,27 @@ a screen space overlay `Canvas` whose `RectTransform` follows
 `Camera.main.WorldToScreenPoint`. Read
 `../../docs/scene-space.md` for why a world space sprite is the wrong answer —
 the camera is tilted 45°, so a bubble standing in the world plane is foreshortened.
+
+## Where a button's look lives
+
+`Button Variant.prefab` is a variant of `Brown-UI-Base.prefab`, which is a
+variant of `UI-Base.prefab`. The `Image` and the `Shadow` exist only in
+`UI-Base`; `Brown-UI-Base` adds the brown tint `#D99F71` as an `m_Color`
+override. `Brown-UI-Base` is also placed directly as a panel
+(`Global/ConfirmPage` `Panel`, `Lobby/MatchingPage`, `SystemMessageUI`,
+`Tutorial/TutorialSelectPanel`, `DebugItemButton Variant`,
+`Resources/UI/Adventures/AdventureStoryOverlayUI`), so change how every
+standard button looks through overrides in `Button Variant.prefab`, never in
+`Brown-UI-Base` or `UI-Base`. Since #118 those overrides set the wooden plank
+sprite `Assets/Art/Images/UI/WoodPlankButton.png`, reset the tint to white
+(otherwise the brown multiplies into the wood), set
+`m_PixelsPerUnitMultiplier` to 3 and the `Shadow` to `y: -4`. Two lobby
+buttons are hand-built with their own `Image` and carry the sprite directly:
+`Lobby/CreditsPanel` `BackButton` and `Lobby/JoinPanal` `RegisterButton`.
+
+A Sliced `Image` draws its border at `border / m_PixelsPerUnitMultiplier`
+canvas units, whatever the canvas reference resolution is. Lobby, Login and
+Register use an 800x450 canvas; Adventure, Adventures and MagicBook put their
+`BackButton` on a 2000x1125 canvas, so the same prefab draws its ends 2.5 times
+thinner there relative to the screen. Draw every size with
+`.art/tools/preview-nine-slice.py` before changing the multiplier.

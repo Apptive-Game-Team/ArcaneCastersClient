@@ -1,0 +1,17 @@
+The attached images are references. The first is the game's master rendering style. The second is the approved game title logo: copy the wooden plank sign behind its gold letters — its material, its facets, its colours and its light — and nothing else from it.
+
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas, 1024 x 1024 pixels.
+
+Subject: ONE single empty wooden plank, seen straight from the front, to be used as a game menu button. It is a long, straight, horizontal board, exactly 4 times as wide as it is tall — about 960 pixels wide by 240 pixels tall — centered across the middle of the square canvas with magenta above and below. The plank is perfectly straight and level: no arc, no bend, no tilt, no perspective.
+
+Construction, which matters more than anything else:
+- The plank has a thick dark wood-brown rim, hex #5D4032, of even thickness all the way around its outline, like the dark sides of the logo sign.
+- Along the whole length, the face of the plank is made of exactly three long horizontal bands that run unbroken from the left end to the right end with straight, parallel, horizontal boundaries: a narrow top bevel band in the lightest wood #D9A972, a wide main face band in light wood #D9A972 or a hair darker, and a narrow bottom bevel band in the darkest wood #A2703F. Under the bottom bevel, the dark rim #5D4032 is thicker, showing the thickness of the board.
+- All the character of the plank is at its two ends. Each end is cut with angled chamfers: the top and bottom corners are clipped off at a slant, and the end itself is built from two or three small faceted planes in #C08C56 and #A2703F, lit from the upper left. The two ends mirror each other in shape.
+- The long middle section between the two ends is completely plain: no knots, no nails, no cracks, no carving, no notches, no wood grain lines, no single feature that appears once. It must look the same if it is stretched sideways to any length.
+
+Rendering technique: faceted low-poly papercraft, flat polygonal planes, one flat colour per plane, hard creases between planes, no texture, no wood grain, no noise, no gradients, no gloss, no specular highlight. One soft light source from the upper left: upper and left-facing planes are lightest, lower and right-facing planes are darkest. Restrained saturation, like the stone tower in the first reference.
+
+Exclude: no text, no letters, no icons, no symbols, no rope, no nails, no metal, no frame, no second plank, no stacked planks, no ground, no drop shadow onto the background, no watermark. A single empty plank only.
+
+After generating, copy the final image file to .art/concept/wood-ui/plank-a-raw.png inside the current working directory.

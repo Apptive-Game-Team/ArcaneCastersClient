@@ -88,6 +88,20 @@ Serialized fields are written in declaration order, and only `public` fields and
 attribute are absent, so the block for a `MonoBehaviour` deriving from
 `DisableableButtonBase` holds that script's own fields and nothing from the base.
 
+## Overriding a component that lives two prefabs down
+
+A variant's `m_Modifications` entry targets the component by its fileID *in the
+prefab it instantiates*, not by the fileID in the prefab that declares it. For a
+component nested one level further, that fileID is computed:
+`fileID_in_outer = prefab_instance_fileID XOR fileID_in_inner`. `Button
+Variant.prefab` overrides the `Image` declared in `UI-Base.prefab` as
+`4587164778522837550`; `Brown-UI-Base.prefab` instantiates `UI-Base` through
+`PrefabInstance &1597356261833279139`, so the target in `Button Variant` is
+`1597356261833279139 ^ 4587164778522837550 = 2990971800539104397`, with the
+guid of `Brown-UI-Base`. Check the formula against a `stripped` document that
+already exists in the file before trusting a computed id: a wrong target fileID
+is kept silently and applies to nothing.
+
 ## Two different scripts can share a serialized field name
 
 `ScrollRect` and `TMP_InputField` both serialize a field called
