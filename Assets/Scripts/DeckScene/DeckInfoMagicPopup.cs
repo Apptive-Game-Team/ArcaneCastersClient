@@ -118,7 +118,7 @@ namespace DeckScene
         private async void ShowDetail(CombinedMagicData magic, RectTransform anchor, int requestId)
         {
             string localizedName = await GetLocalizedTextAsync("Magic", magic.localizationKey, magic.localizationKey);
-            string localizedText = await GetLocalizedTextAsync("MagicBook", magic.textLocalizationKey, string.Empty);
+            string localizedText = await MagicBookDetailText.BuildAsync(magic);
             if (requestId != detailRequestId)
             {
                 return;

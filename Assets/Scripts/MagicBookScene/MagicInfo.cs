@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using Data;
-using Data.GameConfig;
 using Data.Localization;
 using Data.Magic;
 using GameScene.Card;
@@ -49,44 +47,9 @@ namespace MagicBookScene
             nameText.text = await LocaleUtils.GetStringAsync("Magic", data.localizationKey);
             if (statsText != null)
             {
-                string stats = GameParameterResolver.GetMagicDisplayStats(data);
-                string description = await GetMagicBookDescriptionAsync(data);
-                statsText.text = AppendText(stats, description);
+                statsText.text = await MagicBookDetailText.BuildAsync(data);
                 statsText.gameObject.SetActive(!string.IsNullOrWhiteSpace(statsText.text));
             }
-        }
-
-        /// <summary>
-        /// 도감 설명. MagicBook 표는 마법의 snake_case 이름 하나로만 키를 잡는다.
-        /// 모든 마법이 설명을 갖는 것은 아니므로 없으면 빈 문자열이다.
-        /// </summary>
-        private static async Task<string> GetMagicBookDescriptionAsync(CombinedMagicData data)
-        {
-            string key = data.textLocalizationKey;
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                return string.Empty;
-            }
-
-            string description = await LocaleUtils.GetStringAsync("MagicBook", key);
-            return !string.IsNullOrWhiteSpace(description) && description != key
-                ? description
-                : string.Empty;
-        }
-
-        private static string AppendText(string currentText, string additionalText)
-        {
-            if (string.IsNullOrWhiteSpace(currentText))
-            {
-                return additionalText ?? string.Empty;
-            }
-
-            if (string.IsNullOrWhiteSpace(additionalText))
-            {
-                return currentText;
-            }
-
-            return $"{currentText}\n\n{additionalText}";
         }
     }
 }
