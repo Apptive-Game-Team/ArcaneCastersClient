@@ -243,15 +243,27 @@ namespace DeckScene
             var grid = itemRoot.GetComponent<GridLayoutGroup>();
             if (grid != null)
             {
-                grid.enabled = false;
+                // LayoutGroup disallows sibling layout groups, so reuse the scene's
+                // existing grid instead of trying to add a VerticalLayoutGroup.
+                grid.enabled = true;
+                grid.padding = new RectOffset(12, 12, 12, 12);
+                grid.childAlignment = TextAnchor.UpperLeft;
+                grid.cellSize = new Vector2(PanelWidth - 24f, PanelHeight - 24f);
+                grid.spacing = Vector2.zero;
+                grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+                grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+                grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+                grid.constraintCount = 1;
             }
-
-            var vertical = itemRoot.GetComponent<VerticalLayoutGroup>() ?? itemRoot.gameObject.AddComponent<VerticalLayoutGroup>();
-            vertical.padding = new RectOffset(12, 12, 12, 12);
-            vertical.childControlWidth = true;
-            vertical.childControlHeight = true;
-            vertical.childForceExpandWidth = true;
-            vertical.childForceExpandHeight = false;
+            else
+            {
+                var vertical = itemRoot.GetComponent<VerticalLayoutGroup>() ?? itemRoot.gameObject.AddComponent<VerticalLayoutGroup>();
+                vertical.padding = new RectOffset(12, 12, 12, 12);
+                vertical.childControlWidth = true;
+                vertical.childControlHeight = true;
+                vertical.childForceExpandWidth = true;
+                vertical.childForceExpandHeight = false;
+            }
 
             itemRect.anchorMin = Vector2.zero;
             itemRect.anchorMax = Vector2.one;
