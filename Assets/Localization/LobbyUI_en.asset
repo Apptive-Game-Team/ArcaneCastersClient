@@ -182,6 +182,18 @@ MonoBehaviour:
     m_Localized: "Profile"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000021
+    m_Localized: "Victory!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000022
+    m_Localized: "Defeat"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000023
+    m_Localized: "Draw"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

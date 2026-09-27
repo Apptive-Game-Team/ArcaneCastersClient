@@ -183,6 +183,18 @@ MonoBehaviour:
     m_Key: Profile
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000021
+    m_Key: ResultVictory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000022
+    m_Key: ResultDefeat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000023
+    m_Key: ResultDraw
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
