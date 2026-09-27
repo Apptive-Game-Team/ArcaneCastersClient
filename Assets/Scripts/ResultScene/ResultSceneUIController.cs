@@ -1,3 +1,4 @@
+using System;
 using Data;
 using GameScene.Dto;
 using Global;
@@ -12,6 +13,13 @@ namespace ResultScene
         private ResultInfo resultInfo;
 
         [SerializeField] TextMeshProUGUI resultText;
+        [SerializeField] TextMeshProUGUI mmrDeltaText;
+        [SerializeField] GameObject winTitle;
+        [SerializeField] GameObject loseTitle;
+        [SerializeField] GameObject drawTitle;
+        [SerializeField] Color mmrGainColor = new Color(0.35686f, 0.81569f, 0.29804f, 1f);
+        [SerializeField] Color mmrLossColor = new Color(0.94118f, 0.26667f, 0.22745f, 1f);
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -35,24 +43,60 @@ namespace ResultScene
             if (resultInfo == null)
             {
                 WDebug.LogError("ResultInfo is null. Cannot display result.");
+                ShowTitle(null);
                 SetResultText("No result available.");
+                SetMmrDelta(null);
                 return;
             }
-        
+
             if (SceneContext.Me == "LeftPlayer")
             {
-                SetResultText($"{resultInfo.leftPlayer}\n" +
-                              $"MMR: {resultInfo.lastLeftPlayerMmr} -> {resultInfo.newLeftPlayerMmr}");
+                ShowResult(resultInfo.leftPlayer, resultInfo.lastLeftPlayerMmr, resultInfo.newLeftPlayerMmr);
             }
             else if (SceneContext.Me == "RightPlayer")
             {
-                SetResultText($"{resultInfo.rightPlayer}\n" +
-                              $"MMR: {resultInfo.lastRightPlayerMmr} -> {resultInfo.newRightPlayerMmr}");
+                ShowResult(resultInfo.rightPlayer, resultInfo.lastRightPlayerMmr, resultInfo.newRightPlayerMmr);
             }
             else
             {
+                ShowTitle(null);
                 SetResultText("You are not part of this match.");
+                SetMmrDelta(null);
             }
+        }
+
+        // outcome 은 서버 ResultType 의 이름(Win, Lose, Draw)이다.
+        private void ShowResult(string outcome, short lastMmr, short newMmr)
+        {
+            ShowTitle(outcome);
+            SetResultText(newMmr.ToString());
+            SetMmrDelta(newMmr - lastMmr);
+        }
+
+        private void ShowTitle(string outcome)
+        {
+            SetActive(winTitle, string.Equals(outcome, "Win", StringComparison.OrdinalIgnoreCase));
+            SetActive(loseTitle, string.Equals(outcome, "Lose", StringComparison.OrdinalIgnoreCase));
+            SetActive(drawTitle, string.Equals(outcome, "Draw", StringComparison.OrdinalIgnoreCase));
+        }
+
+        private void SetMmrDelta(int? delta)
+        {
+            if (mmrDeltaText == null) return;
+
+            if (delta == null)
+            {
+                mmrDeltaText.text = string.Empty;
+                return;
+            }
+
+            mmrDeltaText.text = delta.Value >= 0 ? $"+{delta.Value}" : delta.Value.ToString();
+            mmrDeltaText.color = delta.Value >= 0 ? mmrGainColor : mmrLossColor;
+        }
+
+        private static void SetActive(GameObject target, bool active)
+        {
+            if (target != null) target.SetActive(active);
         }
 
         private void SetResultText(string text)
