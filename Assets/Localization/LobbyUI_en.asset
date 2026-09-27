@@ -27,13 +27,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2251874623488
-    m_Localized: Practice Mode
+    m_Localized: "Practice"
     m_Metadata:
       m_Items: []
   - m_Id: 2384909557760
-    m_Localized: 'Setting
-
-'
+    m_Localized: "Settings"
     m_Metadata:
       m_Items: []
   - m_Id: 2430828797952
@@ -61,7 +59,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7565302816768
-    m_Localized: Go To Tutorial
+    m_Localized: "Tutorial"
     m_Metadata:
       m_Items: []
   - m_Id: 8233347661684736
@@ -166,6 +164,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000016
     m_Localized: "Team"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000017
+    m_Localized: "Battle!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000018
+    m_Localized: "Language"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000019
+    m_Localized: "Magics"
     m_Metadata:
       m_Items: []
   references:

@@ -19,23 +19,23 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 34501287936
-    m_Localized: "\uB9E4\uCE6D \uC2DC\uC791\n"
+    m_Localized: "\uB9E4\uCE6D \uC2DC\uC791"
     m_Metadata:
       m_Items: []
   - m_Id: 2169947283456
-    m_Localized: "\uB9C8\uBC95\uC11C\n"
+    m_Localized: "\uB9C8\uBC95\uC11C"
     m_Metadata:
       m_Items: []
   - m_Id: 2251874623488
-    m_Localized: "\uC5F0\uC2B5\uBAA8\uB4DC\n"
+    m_Localized: "\uC5F0\uC2B5\uBAA8\uB4DC"
     m_Metadata:
       m_Items: []
   - m_Id: 2384909557760
-    m_Localized: "\uC124\uC815\n"
+    m_Localized: "\uC124\uC815"
     m_Metadata:
       m_Items: []
   - m_Id: 2430828797952
-    m_Localized: "\uB371 \uAD00\uB9AC\n"
+    m_Localized: "\uB371 \uAD00\uB9AC"
     m_Metadata:
       m_Items: []
   - m_Id: 2821259780096
@@ -166,6 +166,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000016
     m_Localized: "제작진"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000017
+    m_Localized: "\uB300\uC804!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000018
+    m_Localized: "\uC5B8\uC5B4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000019
+    m_Localized: "\uB9C8\uBC95"
     m_Metadata:
       m_Items: []
   references:
