@@ -21,7 +21,7 @@ namespace Global.Coach
             public Tween Pulse;
         }
 
-        [SerializeField] private Color highlightColor = new Color(1f, 0.85f, 0.3f, 1f);
+        [SerializeField] private Color highlightColor = new Color(1f, 0.8235f, 0.2471f, 1f);
         [SerializeField] private Vector2 outlineDistance = new Vector2(4f, -4f);
         [SerializeField] private float pulseDuration = 0.6f;
         [SerializeField] private float pulseMinAlpha = 0.25f;
