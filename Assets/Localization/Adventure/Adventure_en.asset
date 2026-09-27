@@ -109,6 +109,14 @@ MonoBehaviour:
       it seems I\u2019ll have to deal with you myself."
     m_Metadata:
       m_Items: []
+  - m_Id: 11952476497743873
+    m_Localized: "Play"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11952476497743874
+    m_Localized: "More stages coming soon."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
