@@ -34,12 +34,20 @@ namespace Data.Adventures.Domain
         public GameObject StagePanelPrefab { get; }
         public List<Scenario> Scenarios { get; }
 
+        /// <summary>Display name from the local scenario data, or null when none is set yet.</summary>
+        public string Name { get; }
+
+        /// <summary>Chapter map artwork shared by every stage of the same adventure, or null.</summary>
+        public Sprite BackgroundImage { get; }
+
         public Stage(long id, State state, List<Scenario> scenarios)
         {
             Id = id;
             State = state;
             scenarios.Sort((a, b) => a.Id.CompareTo(b.Id));
             Scenarios = scenarios;
+            Name = null;
+            BackgroundImage = null;
         }
 
         public Stage(StageDto stageDto, AdventureStageScriptableObject stageScriptableObject)
@@ -47,6 +55,8 @@ namespace Data.Adventures.Domain
             Id = stageDto.id;
             State = (State)Enum.Parse(typeof(State), stageDto.state.ToUpper());
             StagePanelPrefab = stageScriptableObject.StagePanelPrefab;
+            Name = stageScriptableObject.StageName;
+            BackgroundImage = stageScriptableObject.BackgroundImage;
             Scenarios = new List<Scenario>();
             foreach (var scenarioDto in stageDto.scenarios)
             {
