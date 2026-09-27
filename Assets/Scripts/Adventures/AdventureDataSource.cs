@@ -24,7 +24,12 @@ namespace Adventures
                         return;
                     }
                     
-                    var adventures = localAdventureData
+                    // A hand-edited or partially-loaded scene can leave a null entry in
+                    // localAdventureData; skip it instead of letting the key selector
+                    // below throw and drop every adventure with it.
+                    var validLocalData = localAdventureData.Where(local => local != null);
+
+                    var adventures = validLocalData
                         .Join(adventuresDto.adventures,
                             local => local.AdventureId,
                             remote => remote.id,
