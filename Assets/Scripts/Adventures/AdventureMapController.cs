@@ -30,6 +30,17 @@ namespace Adventures
         private static readonly Color PlayableColor = new Color(1f, 0.6039216f, 0.12156863f); // #FF9A1F
         private static readonly Color LockedColor = new Color(0.49411765f, 0.5294118f, 0.6f); // #7E8799
 
+        // The caption line ("Forest · Stage 1") normally sits small and grey above the
+        // bigger orange stage name. When a stage has no name yet there is nothing to
+        // put below it, so the caption itself is promoted to the name line's size,
+        // color and outline material and recentred instead of leaving an empty gap.
+        private const float CaptionFontSizeWithName = 28f;
+        private const float CaptionFontSizePromoted = 56f;
+        private const float CaptionYWithName = 39.06f;
+        private const float CaptionYPromoted = 0f;
+        private static readonly Color CaptionColorWithName = new Color(0.35686275f, 0.38431373f, 0.45882353f); // #5B6275
+        private static readonly Color CaptionColorPromoted = new Color(1f, 0.41568628f, 0.101960786f); // #FF6A1A
+
         [SerializeField] private Transform nodesContainer;
         [SerializeField] private GameObject stageNodePrefab;
         [SerializeField] private Image mapImage;
@@ -38,14 +49,18 @@ namespace Adventures
         [SerializeField] private Image stageIconImage;
         [SerializeField] private TMP_Text stageCaptionText;
         [SerializeField] private TMP_Text stageNameText;
+        [SerializeField] private Material captionOutlineMaterial;
         [SerializeField] private Button playButton;
+        [SerializeField] private RectTransform currentMarker;
 
         private Adventure currentAdventure;
         private Stage selectedStage;
+        private Material defaultCaptionMaterial;
 
         private void Awake()
         {
             playButton.onClick.AddListener(OnPlayClicked);
+            defaultCaptionMaterial = stageCaptionText.fontSharedMaterial;
         }
 
         private void Start()
@@ -70,6 +85,14 @@ namespace Adventures
 
             foreach (Transform child in nodesContainer)
             {
+                // The "you are here" marker lives under the same container so it shares
+                // the node road's coordinate space, but it is repositioned in place
+                // rather than rebuilt every time, so it must survive this sweep.
+                if (currentMarker != null && child == currentMarker)
+                {
+                    continue;
+                }
+
                 Destroy(child.gameObject);
             }
 
@@ -87,6 +110,7 @@ namespace Adventures
             mapImage.enabled = background != null;
 
             Stage stageToSelect = null;
+            int currentIndex = -1;
             for (int i = 0; i < adventure.Stages.Count; i++)
             {
                 Stage stage = adventure.Stages[i];
@@ -94,12 +118,35 @@ namespace Adventures
                 if (isPlayable && (stageToSelect == null || stage.State == State.ACTIVE))
                 {
                     stageToSelect = stage;
+                    currentIndex = i;
                 }
 
                 CreateNode(stage, i);
             }
 
+            PlaceCurrentMarker(currentIndex);
             SelectStage(stageToSelect ?? adventure.Stages[0]);
+        }
+
+        /// <summary>Puts the "you are here" head marker above the current playable stage's node.</summary>
+        private void PlaceCurrentMarker(int stageIndex)
+        {
+            if (currentMarker == null)
+            {
+                return;
+            }
+
+            if (stageIndex < 0)
+            {
+                currentMarker.gameObject.SetActive(false);
+                return;
+            }
+
+            Vector2 waypoint = GetNodeWaypoint(stageIndex);
+            Vector2 anchor = new Vector2(waypoint.x, 1f - waypoint.y);
+            currentMarker.anchorMin = anchor;
+            currentMarker.anchorMax = anchor;
+            currentMarker.gameObject.SetActive(true);
         }
 
         private void CreateNode(Stage stage, int index)
@@ -155,6 +202,25 @@ namespace Adventures
             bool hasName = !string.IsNullOrEmpty(stage.Name);
             stageNameText.gameObject.SetActive(hasName);
             stageNameText.text = hasName ? stage.Name : string.Empty;
+
+            RectTransform captionRect = stageCaptionText.rectTransform;
+            if (hasName)
+            {
+                stageCaptionText.color = CaptionColorWithName;
+                stageCaptionText.fontSize = CaptionFontSizeWithName;
+                stageCaptionText.fontSharedMaterial = defaultCaptionMaterial;
+                captionRect.anchoredPosition = new Vector2(captionRect.anchoredPosition.x, CaptionYWithName);
+            }
+            else
+            {
+                // No stage name yet: promote the caption to the name line's look
+                // (bigger, orange, ink-outlined) and centre it instead of leaving
+                // the space below it empty.
+                stageCaptionText.color = CaptionColorPromoted;
+                stageCaptionText.fontSize = CaptionFontSizePromoted;
+                stageCaptionText.fontSharedMaterial = captionOutlineMaterial;
+                captionRect.anchoredPosition = new Vector2(captionRect.anchoredPosition.x, CaptionYPromoted);
+            }
 
             RefreshPlayButton();
         }
