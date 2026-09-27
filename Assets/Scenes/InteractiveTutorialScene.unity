@@ -784,22 +784,6 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 20.95
       objectReference: {fileID: 0}
-    - target: {fileID: 2828232940413020160, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 9a8c64c89aee44fa2ac41fff91221f41, type: 2}
-    - target: {fileID: 2828232940413020160, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
-      propertyPath: m_fontStyle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2828232940413020160, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -8935207719568655604, guid: 9a8c64c89aee44fa2ac41fff91221f41, type: 2}
-    - target: {fileID: 2828232940413020160, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5526873467941897972, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -895,22 +879,6 @@ PrefabInstance:
     - target: {fileID: 6377028756291647707, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
       propertyPath: m_fontSize
       value: 36.65
-      objectReference: {fileID: 0}
-    - target: {fileID: 6377028756291647707, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 9a8c64c89aee44fa2ac41fff91221f41, type: 2}
-    - target: {fileID: 6377028756291647707, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
-      propertyPath: m_fontStyle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6377028756291647707, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -8935207719568655604, guid: 9a8c64c89aee44fa2ac41fff91221f41, type: 2}
-    - target: {fileID: 6377028756291647707, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9057491148550485796, guid: 95f1db2819f38d2488ceb29a0e1253d6, type: 3}
       propertyPath: m_Name
