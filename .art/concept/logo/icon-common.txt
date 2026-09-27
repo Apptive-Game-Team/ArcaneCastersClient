@@ -1,0 +1,9 @@
+This is an app icon for a mobile game. It must be recognisable at 32 x 32 pixels, so the subject is big, simple and centred, and fills about 75 percent of the canvas.
+
+Canvas: square, 1024 x 1024. Fill the entire background with flat grass green, RGB 152 184 82, hex #98B852, edge to edge. No border, no frame, no rounded corners, no vignette, no gradient in the background.
+
+Rendering technique, taken from the attached reference images, which are the game's master style: faceted low-poly papercraft. The subject is built from flat polygonal planes, one flat colour per plane, with hard creases between planes. Light from the upper left: upper-left planes light, lower-right planes dark, three value bands per material. Chunky, cute proportions. Eyes, where there are eyes, are simple dark ovals with one tiny highlight, exactly like the reference characters.
+
+Exclusions: no text, no letters, no numbers, no logo, no watermark. No texture, no grain, no noise, no brush strokes, no gradients inside a plane, no gloss, no glow, no outline stroke. If it could be mistaken for a rendered 3D model or a digital painting, it is wrong.
+
+After generating, copy the final image file to OUTPUT_PATH inside the current working directory.
