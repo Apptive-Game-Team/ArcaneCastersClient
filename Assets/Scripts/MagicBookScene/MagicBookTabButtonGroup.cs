@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -12,10 +13,16 @@ namespace MagicBookScene
         [SerializeField] private Vector2 selectedOffset = new(0f, -8f);
         [SerializeField] private Vector3 selectedScale = new(0.96f, 0.96f, 1f);
         [SerializeField] private Color selectedColor = new(0.78f, 0.78f, 0.78f, 1f);
+        // 탭 글자. buttons 와 같은 순서다. 고른 탭 글자는 흰색 + 외곽선 material 로 바꾼다.
+        [SerializeField] private TMP_Text[] labels;
+        [SerializeField] private Color selectedLabelColor = Color.white;
+        [SerializeField] private Material selectedLabelMaterial;
 
         private Vector2[] defaultAnchoredPositions;
         private Vector3[] defaultScales;
         private Color[] defaultColors;
+        private Color[] defaultLabelColors;
+        private Material[] defaultLabelMaterials;
         private UnityAction[] clickActions;
 
         public int SelectedIndex => selectedIndex;
@@ -89,6 +96,22 @@ namespace MagicBookScene
                 Graphic graphic = GetButtonGraphic(button);
                 defaultColors[i] = graphic != null ? graphic.color : Color.white;
             }
+
+            if (labels == null)
+            {
+                return;
+            }
+
+            defaultLabelColors = new Color[labels.Length];
+            defaultLabelMaterials = new Material[labels.Length];
+            for (int i = 0; i < labels.Length; i++)
+            {
+                if (labels[i] != null)
+                {
+                    defaultLabelColors[i] = labels[i].color;
+                    defaultLabelMaterials[i] = labels[i].fontSharedMaterial;
+                }
+            }
         }
 
         private void AddButtonListeners()
@@ -136,6 +159,26 @@ namespace MagicBookScene
                 {
                     graphic.color = isSelected ? selectedColor : defaultColors[i];
                 }
+
+                ApplyLabelSelection(i, isSelected);
+            }
+        }
+
+        private void ApplyLabelSelection(int index, bool isSelected)
+        {
+            if (labels == null || defaultLabelColors == null || index >= labels.Length || labels[index] == null)
+            {
+                return;
+            }
+
+            TMP_Text label = labels[index];
+            label.color = isSelected ? selectedLabelColor : defaultLabelColors[index];
+            Material material = isSelected && selectedLabelMaterial != null
+                ? selectedLabelMaterial
+                : defaultLabelMaterials[index];
+            if (material != null)
+            {
+                label.fontSharedMaterial = material;
             }
         }
 

@@ -29,15 +29,17 @@ namespace MagicBookScene
         private const int LineCount = ElementCount + 1;
         private const float ChartPadding = 34f;
         private const float CellSpacing = 6f;
-        private const float CellCornerScale = 6f;
+        // FlatTile 을 2000x1125 캔버스에서 목업의 3px 외곽선으로 그리는 배율 (DESIGN.md).
+        private const float CellCornerScale = 1.6f;
         private const float IconInset = 8f;
         private const float MultiplierFontSize = 30f;
         private const float AxisFontSize = 18f;
 
-        private static readonly Color CellColor = new Color(0.973f, 0.925f, 0.839f);
-        private static readonly Color NeutralTextColor = new Color(0.478f, 0.384f, 0.282f);
-        private static readonly Color StrongTextColor = new Color(0.753f, 0.337f, 0.184f);
-        private static readonly Color WeakTextColor = new Color(0.290f, 0.494f, 0.659f);
+        // DESIGN.md 의 tile-light, grey-text, red, mana 색.
+        private static readonly Color CellColor = new Color32(0xEE, 0xF3, 0xF8, 0xFF);
+        private static readonly Color NeutralTextColor = new Color32(0x5B, 0x62, 0x75, 0xFF);
+        private static readonly Color StrongTextColor = new Color32(0xF0, 0x44, 0x3A, 0xFF);
+        private static readonly Color WeakTextColor = new Color32(0x3B, 0x82, 0xF6, 0xFF);
 
         [SerializeField] private CardImageMapper cardImageMapper;
         [SerializeField] private TMP_FontAsset fontAsset;
