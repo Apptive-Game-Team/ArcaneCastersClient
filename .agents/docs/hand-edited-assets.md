@@ -155,3 +155,11 @@ in the `.meta` are the CSS corner radius plus outline plus shadow, times 2.5.
 Change a sprite by changing the CSS and rendering again; a hand-painted PNG will
 not match the rest, and a border smaller than the rounded corner stretches the
 corner.
+
+## A TMP text colour is stored twice
+
+`TextMeshProUGUI` serializes its colour as `m_fontColor` (floats) and as
+`m_fontColor32.rgba`, a packed ABGR integer, with a `serializedVersion: 2`
+line between `m_fontColor32:` and `rgba:`. Change both. A regex that expects
+`rgba` right after `m_fontColor32:` silently misses it, and the two values then
+disagree. Ink `#1C1A2B` is `rgba: 4281014812` (0xFF2B1A1C).
