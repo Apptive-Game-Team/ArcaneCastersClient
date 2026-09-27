@@ -58,6 +58,14 @@ MonoBehaviour:
     m_Localized: Confirm
     m_Metadata:
       m_Items: []
+  - m_Id: 77283521352163329
+    m_Localized: "ID"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77283521352163330
+    m_Localized: "Password"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
