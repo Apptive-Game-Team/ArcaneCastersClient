@@ -43,7 +43,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5653622939648
-    m_Localized: Submit
+    m_Localized: "Save Deck"
     m_Metadata:
       m_Items: []
   - m_Id: 5869478600704
@@ -131,7 +131,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 76060000000000008
-    m_Localized: "Hints"
+    m_Localized: "Coach Hints"
     m_Metadata:
       m_Items: []
   - m_Id: 76060000000000009
@@ -176,6 +176,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000019
     m_Localized: "Magics"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000020
+    m_Localized: "Profile"
     m_Metadata:
       m_Items: []
   references:
