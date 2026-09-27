@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -41,7 +42,15 @@ namespace LoginScene
         private void OnEnable()
         {
             LocalizationSettings.SelectedLocaleChanged += HandleLocaleChanged;
-            Apply(SafeSelectedLocale());
+
+            // LocalizationSettings resolves its startup locale asynchronously and that
+            // first resolution does not go through the SelectedLocale setter, so
+            // SelectedLocaleChanged never fires for it (it only fires on a later,
+            // genuinely different, explicit assignment). Without this, both segments
+            // stay in their default "unselected" look until the player manually
+            // switches language once. Wait for initialization ourselves instead of
+            // trusting the event to cover the first paint.
+            StartCoroutine(ApplyOnceLocaleReady());
         }
 
         private void OnDisable()
@@ -49,23 +58,15 @@ namespace LoginScene
             LocalizationSettings.SelectedLocaleChanged -= HandleLocaleChanged;
         }
 
+        private IEnumerator ApplyOnceLocaleReady()
+        {
+            yield return LocalizationSettings.InitializationOperation;
+            Apply(LocalizationSettings.SelectedLocale);
+        }
+
         private void HandleLocaleChanged(Locale locale)
         {
             Apply(locale);
-        }
-
-        private static Locale SafeSelectedLocale()
-        {
-            try
-            {
-                return LocalizationSettings.SelectedLocale;
-            }
-            catch
-            {
-                // Localization has not finished initializing yet; SelectedLocaleChanged
-                // will fire once it has and Apply will run again.
-                return null;
-            }
         }
 
         private void Apply(Locale locale)
