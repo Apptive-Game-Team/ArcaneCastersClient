@@ -11,11 +11,15 @@ namespace MagicBookScene
     public class MagicButton : MonoBehaviour
     {
         [SerializeField] private Image magicImage;
+        // 고른 마법 칸에만 켜는 금색 테두리.
+        [SerializeField] private GameObject selectedRing;
         
         private CombinedMagicData data;
         public event Action<CombinedMagicData> OnClick;
 
         private Button button;
+
+        public CombinedMagicData Data => data;
         
         private void OnButtonClick()
         {
@@ -35,6 +39,14 @@ namespace MagicBookScene
             button ??= GetComponent<Button>();
             button.interactable = active;
             magicImage.color = active ? Color.white : new Color(0, 0, 0, 0.6f);
+        }
+
+        public void SetSelected(bool selected)
+        {
+            if (selectedRing != null)
+            {
+                selectedRing.SetActive(selected);
+            }
         }
 
         public void Init(CombinedMagicData data)
