@@ -179,6 +179,10 @@ MonoBehaviour:
     m_Key: Magics
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000020
+    m_Key: Profile
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
