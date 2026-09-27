@@ -28,6 +28,19 @@ namespace LobbyScene.SettingPage
         /// </summary>
         [SerializeField] private TMP_Text stateLabel;
 
+        /// <summary>
+        /// 스위치 트랙. 켜지면 초록, 꺼지면 밝은 회색으로 칠한다. <see cref="Toggle"/> 은 체크마크의
+        /// 알파만 바꾸므로 트랙 색과 손잡이 위치는 여기서 옮긴다.
+        /// </summary>
+        [SerializeField] private Image switchTrack;
+
+        /// <summary>트랙 가운데를 기준으로 켜지면 오른쪽, 꺼지면 왼쪽으로 <see cref="knobTravel"/> 만큼 옮긴다.</summary>
+        [SerializeField] private RectTransform switchKnob;
+
+        [SerializeField] private float knobTravel = 8.75f;
+        [SerializeField] private Color onColor = new Color(0.35686275f, 0.8156863f, 0.29803923f, 1f);
+        [SerializeField] private Color offColor = new Color(0.93333334f, 0.9529412f, 0.972549f, 1f);
+
         public static event Action OnCoachDataChanged;
 
         private void Awake()
@@ -63,6 +76,22 @@ namespace LobbyScene.SettingPage
         private void RefreshStateLabel(bool enabled)
         {
             SetLocalizedText(stateLabel, enabled ? OnKey : OffKey);
+            RefreshSwitch(enabled);
+        }
+
+        private void RefreshSwitch(bool enabled)
+        {
+            if (switchTrack != null)
+            {
+                switchTrack.color = enabled ? onColor : offColor;
+            }
+
+            if (switchKnob != null)
+            {
+                Vector2 position = switchKnob.anchoredPosition;
+                position.x = enabled ? knobTravel : -knobTravel;
+                switchKnob.anchoredPosition = position;
+            }
         }
 
         private static async void SetLocalizedText(TMP_Text target, string key)
