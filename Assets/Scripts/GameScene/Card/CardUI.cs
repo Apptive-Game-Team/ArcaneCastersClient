@@ -52,10 +52,15 @@ namespace GameScene.Card
             cardNameText.text = await LocaleUtils.GetStringAsync("Magic", magic?.localizationKey ?? CardName);
         }
 
+        /// <summary>
+        /// 고른 카드는 흰 카드를 금색(#FFD23F)으로 칠한다. 회색은 새 디자인에서 비활성처럼 읽힌다.
+        /// </summary>
+        private static readonly Color SelectedCardColor = new Color32(0xFF, 0xD2, 0x3F, 0xFF);
+
         public void SetCardActive(bool isActive)
         {
             this.isActive = isActive;
-            GetComponent<Image>().color = isActive ? Color.gray : Color.white;
+            GetComponent<Image>().color = isActive ? SelectedCardColor : Color.white;
         }
         
         public void OnCardClicked()
