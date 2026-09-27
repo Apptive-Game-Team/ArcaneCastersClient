@@ -86,5 +86,31 @@ namespace Global.Util
         {
             return _cachedKeys.Values;
         }
+
+        /// <summary>
+        /// Injects test keys and sets <see cref="IsFetched"/> to true for unit testing.
+        /// </summary>
+        public static void InjectKeysForTesting(IEnumerable<JwksKey> keys)
+        {
+            _cachedKeys.Clear();
+            if (keys != null)
+            {
+                foreach (JwksKey key in keys)
+                {
+                    if (!string.IsNullOrEmpty(key.kid))
+                        _cachedKeys[key.kid] = key;
+                }
+            }
+            _isFetched = true;
+        }
+
+        /// <summary>
+        /// Clears all cached keys and resets <see cref="IsFetched"/> to false for unit testing.
+        /// </summary>
+        public static void ResetForTesting()
+        {
+            _cachedKeys.Clear();
+            _isFetched = false;
+        }
     }
 }
