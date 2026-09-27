@@ -98,7 +98,7 @@ Material:
     - _GlowOffset: 0
     - _GlowOuter: 0.05
     - _GlowPower: 0.75
-    - _GradientScale: 10
+    - _GradientScale: 7
     - _LightAngle: 3.1416
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
@@ -178,23 +178,23 @@ MonoBehaviour:
     m_FaceIndex: 0
     m_FamilyName: Jua
     m_StyleName: Regular
-    m_PointSize: 90
+    m_PointSize: 64
     m_Scale: 1
     m_UnitsPerEM: 1000
-    m_LineHeight: 112.5000
-    m_AscentLine: 72.0000
-    m_CapLine: 63.9900
-    m_MeanLine: 38.8800
+    m_LineHeight: 80.0000
+    m_AscentLine: 51.2000
+    m_CapLine: 45.5040
+    m_MeanLine: 27.6480
     m_Baseline: 0
-    m_DescentLine: -18.0000
-    m_SuperscriptOffset: 72.0000
+    m_DescentLine: -12.8000
+    m_SuperscriptOffset: 51.2000
     m_SuperscriptSize: 0.5
-    m_SubscriptOffset: -18.0000
+    m_SubscriptOffset: -12.8000
     m_SubscriptSize: 0.5
-    m_UnderlineOffset: -6.7500
-    m_UnderlineThickness: 4.5000
-    m_StrikethroughOffset: 22.5000
-    m_StrikethroughThickness: 4.5000
+    m_UnderlineOffset: -4.8000
+    m_UnderlineThickness: 3.2000
+    m_StrikethroughOffset: 16.0000
+    m_StrikethroughThickness: 3.2000
     m_TabWidth: 24
   m_GlyphTable: []
   m_CharacterTable: []
@@ -211,7 +211,7 @@ MonoBehaviour:
     m_Height: 1023
   m_fontInfo:
     Name: Jua
-    PointSize: 90
+    PointSize: 64
     Scale: 1
     CharacterCount: 250
     LineHeight: 98.90625
@@ -228,13 +228,13 @@ MonoBehaviour:
     strikethrough: 23.675
     strikethroughThickness: 0
     TabWidth: 239.0625
-    Padding: 9
+    Padding: 6
     AtlasWidth: 1024
     AtlasHeight: 1024
   atlas: {fileID: 0}
   m_AtlasWidth: 1024
   m_AtlasHeight: 1024
-  m_AtlasPadding: 9
+  m_AtlasPadding: 6
   m_AtlasRenderMode: 4169
   m_glyphInfoList: []
   m_KerningTable:
@@ -247,8 +247,8 @@ MonoBehaviour:
     sourceFontFileName: 
     sourceFontFileGUID: 617645e8efde462b87add3630a23d8e2
     pointSizeSamplingMode: 0
-    pointSize: 90
-    padding: 9
+    pointSize: 64
+    padding: 6
     packingMode: 4
     atlasWidth: 1024
     atlasHeight: 1024

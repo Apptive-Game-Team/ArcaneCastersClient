@@ -115,7 +115,10 @@ namespace Data.Magic
                     continue;
                 }
 
-                List<ElementType> elements = ParseElements(magic.elements);
+                List<ElementType> elements = ParseElements(
+                    magic.elements != null && magic.elements.Count > 0 || string.IsNullOrWhiteSpace(magic.element)
+                        ? magic.elements
+                        : new List<string> { magic.element });
                 result.Add(new CombinedMagicData
                 {
                     id = magic.id,
