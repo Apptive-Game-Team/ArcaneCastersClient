@@ -139,13 +139,20 @@ build renders them. `hashCode` is
 32-bit int. Point `m_SourceFontFile` at the TTF, whose importer must keep
 `includeFontData: 1`, or the build ships a font asset with nothing to rasterise.
 
-Size the atlas for the text, and turn on `m_IsMultiAtlasTexturesEnabled`. The
+Size the atlas for the text, and keep `m_IsMultiAtlasTexturesEnabled` off. The
 first version sampled at 90 pt with padding 9 on one 512x512 atlas, which holds
 about 30 glyphs. Once it was full, TMP took every later glyph from the Jua
 fallback, so one stat row showed "300" in Lilita One and "0.5" in Jua. The
-assets now sample at 64 pt with padding 6 on 1024x1024 atlases with multi-atlas
-on. When you change the sampling size, scale every `m_FaceInfo` metric by the
-same ratio and set the materials' `_GradientScale` to padding + 1.
+assets now sample at 64 pt with padding 6: Lilita One (Latin only) on one
+1024x1024 atlas, and Jua (every Hangul in the ko-KR tables, about 470) on one
+2048x2048 atlas. When you change the sampling size, scale every `m_FaceInfo`
+metric by the same ratio and set the materials' `_GradientScale` to padding + 1.
+
+Multi-atlas broke the Editor. TMP 3.0.7 adds each new atlas page as an unsaved
+sub-asset and then reimports the font asset, which drops the page. Text still
+pointing at it throws `MissingReferenceException: The variable m_AtlasTextures
+of TMP_FontAsset doesn't exist anymore` from `TMP_MaterialManager.GetFallbackMaterial`.
+Grow the single atlas instead of turning multi-atlas back on.
 
 ## UI sprites are rendered from CSS, not painted
 

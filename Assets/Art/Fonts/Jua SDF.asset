@@ -201,14 +201,14 @@ MonoBehaviour:
   m_AtlasTextures:
   - {fileID: 28268798066460806}
   m_AtlasTextureIndex: 0
-  m_IsMultiAtlasTexturesEnabled: 1
+  m_IsMultiAtlasTexturesEnabled: 0
   m_ClearDynamicDataOnBuild: 1
   m_UsedGlyphRects: []
   m_FreeGlyphRects:
   - m_X: 0
     m_Y: 0
-    m_Width: 1023
-    m_Height: 1023
+    m_Width: 2047
+    m_Height: 2047
   m_fontInfo:
     Name: Jua
     PointSize: 64
@@ -229,11 +229,11 @@ MonoBehaviour:
     strikethroughThickness: 0
     TabWidth: 239.0625
     Padding: 6
-    AtlasWidth: 1024
-    AtlasHeight: 1024
+    AtlasWidth: 2048
+    AtlasHeight: 2048
   atlas: {fileID: 0}
-  m_AtlasWidth: 1024
-  m_AtlasHeight: 1024
+  m_AtlasWidth: 2048
+  m_AtlasHeight: 2048
   m_AtlasPadding: 6
   m_AtlasRenderMode: 4169
   m_glyphInfoList: []
