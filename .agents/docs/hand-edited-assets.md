@@ -163,3 +163,13 @@ corner.
 line between `m_fontColor32:` and `rgba:`. Change both. A regex that expects
 `rgba` right after `m_fontColor32:` silently misses it, and the two values then
 disagree. Ink `#1C1A2B` is `rgba: 4281014812` (0xFF2B1A1C).
+
+## A legacy Text that does not fit its rect draws nothing
+
+`UnityEngine.UI.Text` with `m_VerticalOverflow: 0` (Truncate) drops every line
+that does not fit the rect's height, so a single line taller than the rect
+leaves the text completely empty, not clipped. The login inputs had a 34-unit
+field with the text rect inset 10 top and bottom (14 left) and size 13 (a line
+of about 16): typed text and the placeholder were both invisible while the
+field still took focus. Give input text rects at least 1.3x the font size in
+height, or set `m_VerticalOverflow: 1`.
