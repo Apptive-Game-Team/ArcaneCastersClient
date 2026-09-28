@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ea63fd07c684a78805d43a78ec5f9e1, type: 3}
-  m_Name: Stage2
+  m_Name: Stage3
   m_EditorClassIdentifier:
-  stageId: 2
+  stageId: 3
   backgroundImage: {fileID: 21300000, guid: 2d4e57a2719ef429aa4d24882eca8f28, type: 3}
   stagePanelPrefab: {fileID: 1502816813844481242, guid: 9656813b0e0634ca1ad2019f33e9748b, type: 3}
   scenarioStories:
-  - scenarioId: 5
+  - scenarioId: 8
     leftImage: {fileID: 21300000, guid: 3a37400d762fc47368ff61782aa71941, type: 3}
-    rightImage: {fileID: 21300000, guid: 1b52d6d7b039d694d82efc2a18bf4ab9, type: 3}
+    rightImage: {fileID: 21300000, guid: 8efd714cdc6af2943bbd31f0e1259075, type: 3}
     leftCharacter:
       localizedName:
         m_TableReference:
@@ -34,7 +34,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11951398993629184
+          m_KeyId: 11952500000000000
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
@@ -45,17 +45,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11952664938271560
-          m_Key:
-        m_FallbackState: 0
-        m_WaitForCompletion: 0
-        m_LocalVariables: []
-    - speakerSide: 0
-      localizedDialogue:
-        m_TableReference:
-          m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
-        m_TableEntryReference:
-          m_KeyId: 11952706172839450
+          m_KeyId: 11953036049382570
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
@@ -65,14 +55,24 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11952747407407340
+          m_KeyId: 11953077283950460
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-  - scenarioId: 6
+    - speakerSide: 0
+      localizedDialogue:
+        m_TableReference:
+          m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
+        m_TableEntryReference:
+          m_KeyId: 11953118518518350
+          m_Key:
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
+  - scenarioId: 9
     leftImage: {fileID: 21300000, guid: 3a37400d762fc47368ff61782aa71941, type: 3}
-    rightImage: {fileID: 21300000, guid: 75ff52369ace14dbe8c9391d9ab6b60e, type: 3}
+    rightImage: {fileID: 21300000, guid: de71dc1be5f0dbb4fbf7a0cd4eb4367b, type: 3}
     leftCharacter:
       localizedName:
         m_TableReference:
@@ -88,7 +88,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11951488680431616
+          m_KeyId: 11952541234567890
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11952788641975230
+          m_KeyId: 11953159753086240
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
@@ -109,7 +109,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11952829876543120
+          m_KeyId: 11953200987654130
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
@@ -119,14 +119,14 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11952871111111010
+          m_KeyId: 11953242222222020
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
         m_LocalVariables: []
-  - scenarioId: 7
+  - scenarioId: 10
     leftImage: {fileID: 21300000, guid: 3a37400d762fc47368ff61782aa71941, type: 3}
-    rightImage: {fileID: 21300000, guid: ff1b18dad357509468df6455b4352b5c, type: 3}
+    rightImage: {fileID: 21300000, guid: f73a7971ca9540888e10bd2c9d6be558, type: 3}
     leftCharacter:
       localizedName:
         m_TableReference:
@@ -142,7 +142,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11951520179654656
+          m_KeyId: 11952582469135780
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11952912345678900
+          m_KeyId: 11953283456789910
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
@@ -163,7 +163,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11952953580246790
+          m_KeyId: 11953324691357800
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
@@ -173,7 +173,7 @@ MonoBehaviour:
         m_TableReference:
           m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
         m_TableEntryReference:
-          m_KeyId: 11952994814814680
+          m_KeyId: 11953365925925690
           m_Key:
         m_FallbackState: 0
         m_WaitForCompletion: 0
