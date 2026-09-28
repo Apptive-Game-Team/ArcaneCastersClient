@@ -12,6 +12,7 @@ namespace LobbyScene
         [SerializeField] private MatchQueueApiService _matchQueueApi;
         private MatchmakingCoordinator coordinator;
         private bool enteringGameScene;
+        public string DeckMode { get; set; } = MatchDeckMode.Selected;
 
         public enum LobbyState
         {
@@ -50,7 +51,7 @@ namespace LobbyScene
         {
             Debug.Log("Enqueue button clicked: Enqueueing player.");
             StartMatching();
-            coordinator.Enqueue();
+            coordinator.Enqueue(DeckMode);
         }
 
         public void PlayPracticeMatch()

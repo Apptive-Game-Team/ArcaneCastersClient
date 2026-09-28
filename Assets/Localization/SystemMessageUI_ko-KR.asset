@@ -168,6 +168,10 @@ MonoBehaviour:
       \uB85C\uADF8\uC544\uC6C3\uD558\uB824\uBA74 \uD55C \uBC88 \uB354 \uB204\uB974\uC138\uC694."
     m_Metadata:
       m_Items: []
+  - m_Id: 8100000000000
+    m_Localized: "\uB79C\uB364 \uB371 \uD50C\uB808\uC774"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

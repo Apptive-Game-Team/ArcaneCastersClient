@@ -40,6 +40,7 @@ namespace LobbyScene
         public LocalizedString noDecksAvailable;
         public LocalizedString deckSelectionFailed;
         public LocalizedString deckSelectionSuccess;
+        public LocalizedString randomDeckPlay;
         
         private bool initializing = true;
         private LoadingHandle loadingHandle;
@@ -67,7 +68,7 @@ namespace LobbyScene
 
         public IEnumerator FetchDecks()
         {
-            if (userDecks != null && userDecks.Length > 0)
+            if (userDecks != null)
             {
                 PopulateDropdown();
             }
@@ -94,14 +95,7 @@ namespace LobbyScene
                 WDebug.LogError($"덱 리스트 파싱 실패: {parseError} / {JsonCodec.Excerpt(body)}");
             }
 
-            if (userDecks == null || userDecks.Length == 0)
-            {
-                SystemMessageUI.Instance.ShowMessage(noDecksAvailable);
-                WDebug.LogWarning("덱이 하나도 없습니다.");
-                loadingHandle?.Dispose();
-                SceneManager.LoadScene("ManageDeckScene");
-                yield break;
-            }
+            userDecks ??= Array.Empty<DeckResponseDto>();
         
             PopulateDropdown();
         
@@ -112,32 +106,43 @@ namespace LobbyScene
         private void PopulateDropdown()
         {
             // 옵션 이름만 뽑아서 리스트로
-            var names = userDecks.Select(d => d.name).ToList();
+            string randomDeckName = randomDeckPlay.GetLocalizedString();
+            var names = new List<string> { randomDeckName };
+            names.AddRange(userDecks.Select(d => d.name));
 
             // 드랍다운 옵션 클리어 후 추가
             deckDropdown.ClearOptions();
             deckDropdown.AddOptions(names);
             
             // 현재 선택된 덱 인덱스 찾아 세팅
-            int idx = userDecks
+            int savedDeckIndex = userDecks
                 .Select(d => d.id)
                 .ToList()
                 .IndexOf(SceneContext.User.selectedDeckId);
 
-            //
-            if (idx == -1)
+            int dropdownIndex;
+            if (savedDeckIndex == -1 && userDecks.Length > 0)
             {
                 StartCoroutine(SelectDeckCoroutine(userDecks[0].id));
-                idx = 0;
+                savedDeckIndex = 0;
             }
 
-            deckDropdown.value = idx;
+            if (savedDeckIndex >= 0)
+            {
+                dropdownIndex = savedDeckIndex + 1;
+                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Selected;
+                DeckSceneContext.CurrentDeck = userDecks[savedDeckIndex];
+            }
+            else
+            {
+                dropdownIndex = 0;
+                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Random;
+                DeckSceneContext.CurrentDeck = null;
+            }
+
+            deckDropdown.SetValueWithoutNotify(dropdownIndex);
             deckDropdown.RefreshShownValue();
-
-            // 드랍다운을 건드리지 않아도 선택된 덱이 컨텍스트에 반영되어야 매칭 화면에서 읽을 수 있다.
-            DeckSceneContext.CurrentDeck = userDecks[idx];
-
-            UpdateCaption(names[idx]);
+            UpdateCaption(names[dropdownIndex]);
         
             loadingHandle?.Dispose();
             initializing = false;
@@ -146,7 +151,17 @@ namespace LobbyScene
         // 3) 드랍다운에서 선택 바뀌었을 때
         public void OnDropdownChanged(int newIndex)
         {
-            var selected = userDecks[newIndex];
+            if (newIndex == 0)
+            {
+                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Random;
+                DeckSceneContext.CurrentDeck = null;
+                UpdateCaption(randomDeckPlay.GetLocalizedString());
+                WDebug.Log("랜덤 덱 플레이 선택");
+                return;
+            }
+
+            var selected = userDecks[newIndex - 1];
+            LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Selected;
             DeckSceneContext.CurrentDeck = selected;     // 컨텍스트 갱신
             WDebug.Log($"index: {newIndex} 선택된 덱: {selected.name} (ID: {selected.id})");
             UpdateCaption(selected.name);                // 상단 텍스트 갱신

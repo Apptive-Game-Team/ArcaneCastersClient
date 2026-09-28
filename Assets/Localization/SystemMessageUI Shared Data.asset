@@ -151,6 +151,10 @@ MonoBehaviour:
     m_Key: guestLogoutWarning
     m_Metadata:
       m_Items: []
+  - m_Id: 8100000000000
+    m_Key: randomDeckPlay
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
