@@ -23,8 +23,10 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  stages: []
-  battleTheme: {fileID: 0}
+  stages:
+  - {fileID: 11400000, guid: f02eca3c8a8b4cf499135c0784d9177b, type: 2}
+  - {fileID: 11400000, guid: fdd684bddb34431f9fba3d3a26f76f18, type: 2}
+  battleTheme: {fileID: 11400000, guid: 13bcbcaed1f9489abb1ddf8b4f5213da, type: 2}
   references:
     version: 2
     RefIds: []
