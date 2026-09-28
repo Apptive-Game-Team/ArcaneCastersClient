@@ -27,7 +27,7 @@ namespace DeckScene
         public GameObject cardInDeckItemPrefab;        // 덱 카드 UI 프리팹
         public Button submitDeckButton;        // 덱 제출 버튼
         public Button removeDeckButton;        // 덱 삭제 버튼
-        public TMP_InputField deckNameInputField; // 덱 이름 입력 필드
+        public UnityEngine.UI.InputField deckNameInputField; // 덱 이름 입력 필드
         [SerializeField] private HaveCardMagicPopup ownedCardMagicPopup;
         [SerializeField] private DeckMagicInfoButton deckMagicInfoButton;
         [SerializeField] private DeckRequirementStatusText deckRequirementStatusText;

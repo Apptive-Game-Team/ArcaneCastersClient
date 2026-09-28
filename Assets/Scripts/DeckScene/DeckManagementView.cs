@@ -19,7 +19,7 @@ namespace DeckScene
         private readonly GameObject cardInDeckItemPrefab;
         private readonly Button submitDeckButton;
         private readonly Button removeDeckButton;
-        private readonly TMP_InputField deckNameInputField;
+        private readonly UnityEngine.UI.InputField deckNameInputField;
         private readonly HaveCardMagicPopup ownedCardMagicPopup;
 
         private readonly Action<DeckResponseDto> onDeckSelected;
@@ -42,7 +42,7 @@ namespace DeckScene
             GameObject cardInDeckItemPrefab,
             Button submitDeckButton,
             Button removeDeckButton,
-            TMP_InputField deckNameInputField,
+            UnityEngine.UI.InputField deckNameInputField,
             Action<DeckResponseDto> onDeckSelected,
             Action onNewDeckSelected,
             Action<CardDto> onOwnedCardSelected,

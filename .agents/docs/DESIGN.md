@@ -101,6 +101,12 @@ change one, edit the CSS and render again rather than painting the PNG.
   of `Button Variant` with orange fill and white outlined text.
 - A red button is a `Button Primary` instance with `m_Color` set to `#F0443A`.
 
+- Input fields are legacy `UnityEngine.UI.InputField` with legacy `Text`
+  (font `Assets/Art/Fonts/Pretendard-Regular.otf`, whole-number size, ink
+  colour), on a white FlatTile. Never `TMP_InputField`: on mobile WebGL only the
+  legacy field opens the on-screen keyboard correctly. Legacy `Text` cannot use
+  the Lilita One SDF font, so typed text stays in Pretendard.
+
 On a 2000 or 1920 canvas, override the instance's image
 `m_PixelsPerUnitMultiplier` and text sizes by the table above.
 

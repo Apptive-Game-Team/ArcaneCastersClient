@@ -13,7 +13,7 @@ namespace Admin
         [SerializeField] private GameObject roomUIPrefab;
         [SerializeField] private Transform contentTransform;
         [SerializeField] private TMP_Text roomCountText;
-        [SerializeField] private TMP_InputField filterInput;
+        [SerializeField] private UnityEngine.UI.InputField filterInput;
 
         private readonly List<RoomInfo> fetchedRooms = new List<RoomInfo>();
 

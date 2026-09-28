@@ -10,8 +10,8 @@ namespace Admin
     public class BotMatchPanelController : MonoBehaviour
     {
         [SerializeField] private AdminViewModel adminViewModel;
-        [SerializeField] private TMP_InputField leftBotIdInputField;
-        [SerializeField] private TMP_InputField rightBotIdInputField;
+        [SerializeField] private UnityEngine.UI.InputField leftBotIdInputField;
+        [SerializeField] private UnityEngine.UI.InputField rightBotIdInputField;
         [SerializeField] private Button matchButton;
         [SerializeField] private TMP_Text statusText;
         [SerializeField] private bool enterSpectatingSceneOnMatched = true;
@@ -68,7 +68,7 @@ namespace Admin
             });
         }
 
-        private bool TryReadBotId(TMP_InputField inputField, out long botId)
+        private bool TryReadBotId(UnityEngine.UI.InputField inputField, out long botId)
         {
             botId = 0;
             return inputField != null &&

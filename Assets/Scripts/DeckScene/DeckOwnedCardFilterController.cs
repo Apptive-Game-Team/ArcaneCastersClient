@@ -14,7 +14,7 @@ namespace DeckScene
         private const string ElementTable = "Element";
 
         [SerializeField] private DeckManagementController deckManagementController;
-        [SerializeField] private TMP_InputField searchInput;
+        [SerializeField] private UnityEngine.UI.InputField searchInput;
         [SerializeField] private TMP_Dropdown sortDropdown;
         [SerializeField] private TMP_Dropdown attributeDropdown;
 
@@ -41,7 +41,7 @@ namespace DeckScene
         private void Awake()
         {
             deckManagementController ??= FindObjectOfType<DeckManagementController>();
-            searchInput ??= transform.Find("SearchInput")?.GetComponent<TMP_InputField>();
+            searchInput ??= transform.Find("SearchInput")?.GetComponent<UnityEngine.UI.InputField>();
             sortDropdown ??= transform.Find("SortDropdown")?.GetComponent<TMP_Dropdown>();
             attributeDropdown ??= transform.Find("AttributeDropdown")?.GetComponent<TMP_Dropdown>();
 
@@ -135,7 +135,7 @@ namespace DeckScene
             SetOptions(sortDropdown, sortLabels);
             SetOptions(attributeDropdown, attributeLabels);
 
-            if (searchInput?.placeholder is TMP_Text placeholder)
+            if (searchInput?.placeholder is UnityEngine.UI.Text placeholder)
             {
                 placeholder.text = await GetMagicBookText("filter.search", "검색");
             }
