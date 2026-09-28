@@ -9,6 +9,7 @@ namespace LobbyScene.SettingPage
         [SerializeField] private GameObject closeButton;
         [SerializeField] private GameObject settingPage;
         [SerializeField] private GameObject guestRegisterPage;
+        [SerializeField] private GameObject creditsPage;
     
         private readonly Stack<GameObject> pageStack = new Stack<GameObject>();
     
@@ -21,6 +22,9 @@ namespace LobbyScene.SettingPage
                     break;
                 case "GuestRegister":
                     pageStack.Push(guestRegisterPage);
+                    break;
+                case "Credits":
+                    pageStack.Push(creditsPage);
                     break;
                 case "Profile":
                     SceneManager.LoadScene("ProfileScene");

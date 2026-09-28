@@ -62,6 +62,7 @@
 | `ChainLightning.png` | 클라이언트 PR #557, 웹사이트 PR #29 | 256x76 RGBA, 64px 실루엣 검수 완료 |
 | `MagmaExplosion.png`, `MagmaExplosionStrike1.png`–`MagmaExplosionStrike4.png` | 클라이언트 PR #565 | 217x256 RGBA, 갑각 파편 우선 실루엣과 4프레임(균열→개방→피크→냉각) 검수 완료 |
 | `PlayerCharacterBase.png`, `PlayerCharacterAttack.png` | 클라이언트 PR (이슈 #586) | 플레이어 수습 마법생 D안. 2048x2048 RGBA, 캐릭터 키 1140px, 발끝 y=1679 로 두 프레임 정렬. Unity Editor 검수는 남아 있다 |
+| `PlayerCharacterBase.png`, `PlayerCharacterStaffRaised.png`, `PlayerCharacterAttack.png` | 클라이언트 PR (이슈 #116) | 지팡이 머리만 앱 아이콘의 말린 지팡이로 교체. 981x1245 RGBA 캔버스와 몸 픽셀은 원본 그대로, 세 머리는 `.art/tools/transplant-staff-head.py` 로 붙인 같은 픽셀. 비교 시트 `.art/concept/player-staff/staff-compare.png`, `staff-compare-64.png`. Unity Editor 검수는 남아 있다 |
 | `SeaSerpent.png` | 클라이언트 PR (이슈 #672) | 201x256 RGBA. magic book 이 빈 칸이던 신규 아이콘. 물 소환수 문법, 곧추선 몸통에 두 겹 똬리. Unity Editor 검수는 남아 있다 |
 | `BoulderStrike.png` | 클라이언트 PR (이슈 #672) | 256x146 RGBA. 밀려 나가는 바위와 뒤따르는 초승달. 전투 화면 투사체는 여전히 `RockRolling.png` 를 빌려 쓴다 |
 | `SpiritBomb.png` | 클라이언트 PR (이슈 #672) | 256x183 RGBA. 필드 오브젝트가 없는 마법이라 책 아이콘 전용. LIGHTNING 과 NATURE 두 원소를 금색과 풀색으로 같이 쓴다 |

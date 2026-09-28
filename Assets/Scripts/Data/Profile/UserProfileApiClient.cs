@@ -88,7 +88,7 @@ namespace Data.Profile
 
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
-                string body = NormalizeGameHistoryJson(webRequest.downloadHandler.text);
+                string body = webRequest.downloadHandler.text;
                 if (!JsonCodec.TryDeserialize(body, out UserGameHistoryResponseDto response, out string error))
                 {
                     WDebug.LogError($"Failed to parse user game history: {error} / {JsonCodec.Excerpt(body)}");
@@ -101,14 +101,6 @@ namespace Data.Profile
                 WDebug.LogError($"Failed to get user game history: {webRequest.responseCode} / {webRequest.error}");
                 callback?.Invoke(new UserGameHistoryResponseDto { games = Array.Empty<UserGameHistoryDto>(), last = true });
             }
-        }
-
-        private static string NormalizeGameHistoryJson(string json)
-        {
-            return json
-                .Replace("\"상대 id\"", "\"opponent_id\"")
-                .Replace("\"opponent id\"", "\"opponent_id\"")
-                .Replace("\"opponent-id\"", "\"opponent_id\"");
         }
     }
 }

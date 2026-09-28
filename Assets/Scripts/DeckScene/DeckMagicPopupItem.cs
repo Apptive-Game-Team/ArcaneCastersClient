@@ -1,4 +1,5 @@
 using System;
+using Data;
 using Data.Magic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -86,22 +87,34 @@ namespace DeckScene
                 Destroy(child.gameObject);
             }
 
-            // 조합이 없어졌으므로 재료 아이콘 자리에 마법의 원소 아이콘 하나를 그린다.
+            // 조합이 없어졌으므로 재료 아이콘 자리에 마법이 가진 원소 아이콘을 하나씩 그린다.
             // TODO(#577): 덱 화면이 정리되면 이 줄 전체를 원소 표시로 다시 설계한다.
-            Sprite elementSprite = magic != null
-                ? DeckCardSpriteResolver.GetElementSprite(magic.element)
-                : null;
-            if (elementSprite == null)
+            int drawnCount = 0;
+            if (magic?.elements != null)
+            {
+                foreach (ElementType element in magic.elements)
+                {
+                    Sprite elementSprite = DeckCardSpriteResolver.GetElementSprite(element);
+                    if (elementSprite == null)
+                    {
+                        // None 이나 mapper 가 모르는 원소는 자리 없이 건너뛴다.
+                        continue;
+                    }
+
+                    Image icon = CreateRecipeIcon(recipeIconRoot);
+                    icon.sprite = elementSprite;
+                    icon.preserveAspect = true;
+                    drawnCount++;
+                }
+            }
+
+            if (drawnCount == 0)
             {
                 ResizeRecipeRoot(0);
                 return;
             }
 
-            Image icon = CreateRecipeIcon(recipeIconRoot);
-            icon.sprite = elementSprite;
-            icon.preserveAspect = true;
-
-            ResizeRecipeRoot(1);
+            ResizeRecipeRoot(drawnCount);
             LayoutRebuilder.ForceRebuildLayoutImmediate(recipeIconRoot);
             if (transform is RectTransform rectTransform)
             {

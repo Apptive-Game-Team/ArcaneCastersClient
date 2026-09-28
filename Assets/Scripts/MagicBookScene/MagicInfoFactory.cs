@@ -25,12 +25,17 @@ namespace MagicBookScene
         [SerializeField] private Transform magicInfoParent;
         [SerializeField] private GameObject magicInfoPrefab;
         [SerializeField] private MagicInfo magicInfo;
+        [SerializeField] private SelectedMagicView selectedMagicView;
         
         [SerializeField] private UserMagicApiClient userMagicApiClient;
 
         public event Action MagicSelected;
 
+        private static readonly List<ElementType> EmptyElements = new();
+
         private readonly List<MagicBookEntry> entries = new();
+        private readonly List<MagicButton> magicButtons = new();
+        private long? selectedMagicId;
         private MagicBookSortMode sortMode = MagicBookSortMode.Name;
         private ElementType? selectedAttribute;
         private System.Threading.SynchronizationContext unityContext;
@@ -77,8 +82,30 @@ namespace MagicBookScene
         
         private void OnClickMagicButton(CombinedMagicData data)
         {
-            magicInfo.Init(data);
+            ShowMagic(data);
             MagicSelected?.Invoke();
+        }
+
+        /// <summary>
+        /// 오른쪽 카드에 마법을 채우고 그 칸에 금색 테두리를 켠다.
+        /// 튜토리얼은 <see cref="MagicSelected"/> 를 사용자가 고른 신호로 읽으므로 여기서는 부르지 않는다.
+        /// </summary>
+        private void ShowMagic(CombinedMagicData data)
+        {
+            selectedMagicId = data.id;
+            magicInfo.Init(data);
+            selectedMagicView?.Show(data);
+            RefreshSelectedRing();
+        }
+
+        private void RefreshSelectedRing()
+        {
+            foreach (MagicButton magicButton in magicButtons)
+            {
+                magicButton.SetSelected(selectedMagicId.HasValue &&
+                                        magicButton.Data != null &&
+                                        magicButton.Data.id == selectedMagicId.Value);
+            }
         }
 
         private async Task<List<MagicBookEntry>> BuildEntriesAsync(List<long> userMagicIds)
@@ -105,10 +132,24 @@ namespace MagicBookScene
         {
             ClearMagicInfo();
 
+            MagicBookEntry firstOwned = null;
             foreach (MagicBookEntry entry in GetVisibleEntries())
             {
                 CreateMagicInfo(entry.Data, entry.IsOwned);
+                if (firstOwned == null && entry.IsOwned)
+                {
+                    firstOwned = entry;
+                }
             }
+
+            // 카드가 빈 채로 열리지 않도록 처음에는 보이는 첫 보유 마법을 고른다.
+            if (!selectedMagicId.HasValue && firstOwned != null)
+            {
+                ShowMagic(firstOwned.Data);
+                return;
+            }
+
+            RefreshSelectedRing();
         }
 
         private IEnumerable<MagicBookEntry> GetVisibleEntries()
@@ -130,16 +171,28 @@ namespace MagicBookScene
 
         private bool PassesFilters(MagicBookEntry entry)
         {
-            return !selectedAttribute.HasValue || entry.Data.element == selectedAttribute.Value;
+            return !selectedAttribute.HasValue ||
+                   (entry.Data.elements != null && entry.Data.elements.Contains(selectedAttribute.Value));
         }
 
+        /// <summary>
+        /// 원소가 여럿인 마법은 <see cref="ElementType"/> 선언 순서가 가장 앞인 원소로 묶는다.
+        /// 원소가 하나도 없는 마법은 맨 뒤로 보낸다.
+        /// </summary>
         private static int GetPrimaryAttributeSortValue(MagicBookEntry entry)
         {
-            return (int)entry.Data.element;
+            int lowest = int.MaxValue;
+            foreach (ElementType element in entry.Data.elements ?? EmptyElements)
+            {
+                lowest = Math.Min(lowest, (int)element);
+            }
+
+            return lowest;
         }
 
         private void ClearMagicInfo()
         {
+            magicButtons.Clear();
             foreach (Transform child in magicInfoParent)
             {
                 Destroy(child.gameObject);
@@ -164,6 +217,7 @@ namespace MagicBookScene
             var magicButton = magicInfoObj.GetComponent<MagicButton>();
             magicButton.Init(data);
             magicButton.SetActive(active);
+            magicButtons.Add(magicButton);
             
             if (active)
             {

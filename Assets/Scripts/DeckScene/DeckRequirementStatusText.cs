@@ -9,6 +9,9 @@ namespace DeckScene
         [SerializeField] private TMP_Text statusText;
         [SerializeField] private Button submitButton;
 
+        // 막대 안의 채움. anchorMax.x 를 덱 장수 비율로 맞춘다.
+        [SerializeField] private RectTransform progressFill;
+
         private void Awake()
         {
             statusText ??= GetComponent<TMP_Text>();
@@ -16,9 +19,17 @@ namespace DeckScene
 
         public void Render(DeckRequirementSummary summary, bool canSubmit)
         {
+            int required = DeckManagementViewModel.DeckCardCount;
             if (statusText != null)
             {
-                statusText.text = $"카드 : {summary.CardCount} / {DeckManagementViewModel.DeckCardCount}";
+                statusText.text = $"{summary.CardCount} / {required}";
+            }
+
+            if (progressFill != null)
+            {
+                float ratio = Mathf.Clamp01((float)summary.CardCount / required);
+                progressFill.anchorMax = new Vector2(ratio, progressFill.anchorMax.y);
+                progressFill.gameObject.SetActive(ratio > 0f);
             }
 
             if (submitButton != null)

@@ -14,8 +14,9 @@ namespace Data.Profile
         public bool last;
 
         public UserGameHistoryDto[] Items => games ?? content ?? Array.Empty<UserGameHistoryDto>();
-        public int PageNumber => number != 0 ? number : page;
-        public bool HasExplicitLast => last || totalPages > 0;
-        public bool IsLastPage => last || (totalPages > 0 && PageNumber >= totalPages - 1);
+
+        // The server now always sends an explicit last (page, size, totalPages, last —
+        // ArcaneCastersLobby#27), so this is a direct read, not a guess from page length.
+        public bool IsLastPage => last;
     }
 }

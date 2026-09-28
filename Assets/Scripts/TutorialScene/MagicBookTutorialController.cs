@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Global.Button;
 using MagicBookScene;
 using UnityEngine;
@@ -10,11 +11,14 @@ namespace TutorialScene
         [Header("Magic Book Targets")]
         [SerializeField] private MagicInfoFactory magicInfoFactory;
         [SerializeField] private GameObject magicBookArea;
-        [SerializeField] private GameObject magicListArea;
+        [SerializeField] private GameObject magicPageArea;
         [SerializeField] private GameObject magicDescriptionScrollArea;
         [SerializeField] private GameObject elementChartArea;
         [SerializeField] private Button elementChartButton;
         [SerializeField] private ButtonBase elementChartButtonBase;
+
+        [Tooltip("속성표 탭과 함께 올릴 탭 막대 조각. 아래에 깔 것부터 둔다.")]
+        [SerializeField] private RectTransform[] elementChartTabBar;
         [SerializeField] private ButtonBase returnToLobbyButton;
 
         public event System.Action MagicSelected;
@@ -97,38 +101,65 @@ namespace TutorialScene
 
         public void ShowMagicSelection()
         {
-            Show("onboarding.magicBook.selectAnyMagic", magicListArea != null ? magicListArea.transform : null);
+            Show("onboarding.magicBook.selectAnyMagic", magicPageArea != null ? magicPageArea.transform : null);
         }
 
+        /// <summary>
+        /// 마법을 고르면 왼쪽 페이지가 목록 대신 그 마법의 그림을 보여준다. 안내는 짚는 것을
+        /// 마스크 위로 올리므로, 왼쪽 페이지도 함께 넘기지 않으면 그림이 마스크에 덮인다.
+        /// </summary>
         public void ShowMagicInfo(System.Action onNext)
         {
-            Show("onboarding.magicBook.readMagicInfo", magicDescriptionScrollArea != null ? magicDescriptionScrollArea.transform : null, onNext);
+            var targets = new List<Transform>();
+            if (magicPageArea != null)
+            {
+                targets.Add(magicPageArea.transform);
+            }
+
+            if (magicDescriptionScrollArea != null)
+            {
+                targets.Add(magicDescriptionScrollArea.transform);
+            }
+
+            Show("onboarding.magicBook.readMagicInfo", targets.ToArray(), onNext);
         }
 
         public void ShowElementChart(System.Action onNext)
         {
-            // 유닛 미리보기 모달은 이 안내와 같은 자리를 덮는다. 플레이어가 앞 단계에서 열어
-            // 두었으면 원소표 버튼도 안내도 그 뒤에 가려지므로, 짚어 주기 전에 걷어낸다.
-            CloseMagicPreviews();
-
             Transform target = elementChartButton != null ? elementChartButton.transform : null;
             if (target == null && elementChartButtonBase != null)
             {
                 target = elementChartButtonBase.transform;
             }
 
-            Show("onboarding.magicBook.elementChart", target, onNext);
+            Show("onboarding.magicBook.elementChart", WithTabBar(target), onNext);
         }
 
-        // 미리보기는 마법 정보 칸마다 붙으므로 정해진 하나를 들고 있을 수 없다. 씬에 있는 것을
-        // 모두 닫는다. 이미 닫힌 것에 걸어도 아무 일도 일어나지 않는다.
-        private static void CloseMagicPreviews()
+        /// <summary>
+        /// 속성표 탭 버튼은 투명하고 글자만 있다. 흰 알약 배경(TabSegment)과 옆 도감 탭은
+        /// 따로 떨어진 형제라, 버튼만 올리면 글자만 마스크 위에 뜨고 탭은 어둡게 남는다.
+        /// 탭 막대 조각을 먼저 깔고 버튼을 맨 위에 올린다.
+        /// </summary>
+        private Transform[] WithTabBar(Transform tabButton)
         {
-            MagicPrefabPreview[] previews = FindObjectsOfType<MagicPrefabPreview>(true);
-            foreach (MagicPrefabPreview preview in previews)
+            var targets = new List<Transform>();
+            if (elementChartTabBar != null)
             {
-                preview.Close();
+                foreach (RectTransform piece in elementChartTabBar)
+                {
+                    if (piece != null)
+                    {
+                        targets.Add(piece);
+                    }
+                }
             }
+
+            if (tabButton != null)
+            {
+                targets.Add(tabButton);
+            }
+
+            return targets.ToArray();
         }
 
         public void ShowOpenedElementChart(System.Action onNext)

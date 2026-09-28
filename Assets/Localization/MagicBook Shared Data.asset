@@ -275,6 +275,14 @@ MonoBehaviour:
     m_Key: titan_remnant
     m_Metadata:
       m_Items: []
+  - m_Id: 1864750230507531
+    m_Key: filter.search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507532
+    m_Key: filter.manaCost
+    m_Metadata:
+      m_Items: []
   - m_Id: 1000050
     m_Key: wall_golem
     m_Metadata:
@@ -325,6 +333,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1000062
     m_Key: seed_nest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000063
+    m_Key: detail.backToList
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -13,6 +13,9 @@ namespace DeckScene
         private const float DetailAnchorOffset = 12f;
         private const float DetailExitGraceSeconds = 0.05f;
 
+        // 팝업 배경이 흰 FlatCard 라서 글자는 ink(#1C1A2B)로 쓴다.
+        private static readonly Color InkColor = new Color32(0x1C, 0x1A, 0x2B, 0xFF);
+
         [SerializeField] private GameObject panelRoot;
         [SerializeField] private Transform itemRoot;
         [SerializeField] private RectTransform detailRoot;
@@ -97,6 +100,7 @@ namespace DeckScene
             var text = textObject.GetComponent<TextMeshProUGUI>();
             text.text = "None";
             text.fontSize = 18f;
+            text.color = InkColor;
             text.alignment = TextAlignmentOptions.Center;
         }
 
@@ -118,7 +122,7 @@ namespace DeckScene
         private async void ShowDetail(CombinedMagicData magic, RectTransform anchor, int requestId)
         {
             string localizedName = await GetLocalizedTextAsync("Magic", magic.localizationKey, magic.localizationKey);
-            string localizedText = await GetLocalizedTextAsync("MagicBook", magic.textLocalizationKey, string.Empty);
+            string localizedText = await MagicBookDetailText.BuildAsync(magic);
             if (requestId != detailRequestId)
             {
                 return;

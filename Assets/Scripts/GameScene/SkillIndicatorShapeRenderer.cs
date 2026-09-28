@@ -32,6 +32,18 @@ namespace GameScene
             DefaultFillColor.g,
             DefaultFillColor.b,
             DefaultEdgeColor.a);
+
+        /// <summary>
+        /// indicator document layer 채움에 쓰는 색. <see cref="DefaultEdgeColor"/>의 색상에
+        /// <see cref="DefaultFillColor"/>의 alpha 를 섞어, 사거리 원/조준 원과 같은
+        /// <see cref="DefaultFillColor"/>(주황)를 쓰지 않고도 테두리와 같은 계열(청록)로 보이게 한다.
+        /// </summary>
+        public static Color LayerFillColor => new Color(
+            DefaultEdgeColor.r,
+            DefaultEdgeColor.g,
+            DefaultEdgeColor.b,
+            DefaultFillColor.a);
+
         public static Material SharedMaterial => GetSharedMaterial();
 
         private enum ShapeMode
@@ -66,6 +78,7 @@ namespace GameScene
         private float lastWidth;
         private int lastSortingOrder;
         private bool lastIncludeFill;
+        private Color lastFillColor;
         private bool hasBuiltShape;
 
         private void Awake()
@@ -83,14 +96,23 @@ namespace GameScene
             }
         }
 
-        public void SetCircle(Vector3 position, float radius, bool includeFill, int sortingOrder, float edgeWidth)
+        /// <param name="fillColor">
+        /// 채움 색. 생략하면(<c>null</c>) 사거리 원/조준 원이 쓰던 <see cref="DefaultFillColor"/> 그대로다.
+        /// indicator document layer 는 <see cref="LayerFillColor"/> 를 넘겨 두 원과 색으로 구분된다.
+        /// </param>
+        public void SetCircle(
+            Vector3 position, float radius, bool includeFill, int sortingOrder, float edgeWidth,
+            Color? fillColor = null)
         {
-            if (IsUnchanged(ShapeMode.Circle, position, Vector3.zero, radius, edgeWidth, sortingOrder, includeFill))
+            Color resolvedFillColor = fillColor ?? DefaultFillColor;
+            if (IsUnchanged(ShapeMode.Circle, position, Vector3.zero, radius, edgeWidth, sortingOrder, includeFill,
+                    resolvedFillColor))
             {
                 return;
             }
 
-            RecordShapeState(ShapeMode.Circle, position, Vector3.zero, radius, edgeWidth, sortingOrder, includeFill);
+            RecordShapeState(ShapeMode.Circle, position, Vector3.zero, radius, edgeWidth, sortingOrder, includeFill,
+                resolvedFillColor);
 
             EnsureRenderers();
             DisableSpriteRenderer();
@@ -108,7 +130,7 @@ namespace GameScene
 
             SetVisible(true);
             SetSorting(sortingOrder);
-            BuildCircleMesh(safeRadius, includeFill);
+            BuildCircleMesh(safeRadius, includeFill, resolvedFillColor);
             if (edgeWidth > 0f)
             {
                 BuildCircleEdge(safeRadius, edgeWidth);
@@ -121,12 +143,14 @@ namespace GameScene
 
         public void SetLocalCircle(float radius, int sortingOrder)
         {
-            if (IsUnchanged(ShapeMode.LocalCircle, Vector3.zero, Vector3.zero, radius, 0f, sortingOrder, true))
+            if (IsUnchanged(ShapeMode.LocalCircle, Vector3.zero, Vector3.zero, radius, 0f, sortingOrder, true,
+                    DefaultFillColor))
             {
                 return;
             }
 
-            RecordShapeState(ShapeMode.LocalCircle, Vector3.zero, Vector3.zero, radius, 0f, sortingOrder, true);
+            RecordShapeState(ShapeMode.LocalCircle, Vector3.zero, Vector3.zero, radius, 0f, sortingOrder, true,
+                DefaultFillColor);
 
             EnsureRenderers();
             DisableSpriteRenderer();
@@ -142,18 +166,28 @@ namespace GameScene
 
             SetVisible(true);
             SetSorting(sortingOrder);
-            BuildCircleMesh(safeRadius, true);
+            BuildCircleMesh(safeRadius, true, DefaultFillColor);
             edgeRenderer.enabled = false;
         }
 
-        public void SetLine(Vector3 startPosition, Vector3 targetPosition, float length, int sortingOrder, float width)
+        /// <param name="fillColor">
+        /// 채움 색. 생략하면(<c>null</c>) 기존 line indicator(<see cref="LineSkillIndicator"/>)가 쓰던
+        /// <see cref="DefaultFillColor"/> 그대로다. indicator document 의 lane layer 는
+        /// <see cref="LayerFillColor"/> 를 넘겨 사거리 원/조준 원과 색으로 구분된다.
+        /// </param>
+        public void SetLine(
+            Vector3 startPosition, Vector3 targetPosition, float length, int sortingOrder, float width,
+            Color? fillColor = null)
         {
-            if (IsUnchanged(ShapeMode.Line, startPosition, targetPosition, length, width, sortingOrder, true))
+            Color resolvedFillColor = fillColor ?? DefaultFillColor;
+            if (IsUnchanged(ShapeMode.Line, startPosition, targetPosition, length, width, sortingOrder, true,
+                    resolvedFillColor))
             {
                 return;
             }
 
-            RecordShapeState(ShapeMode.Line, startPosition, targetPosition, length, width, sortingOrder, true);
+            RecordShapeState(ShapeMode.Line, startPosition, targetPosition, length, width, sortingOrder, true,
+                resolvedFillColor);
 
             EnsureRenderers();
             DisableSpriteRenderer();
@@ -181,7 +215,7 @@ namespace GameScene
             transform.localScale = Vector3.one;
 
             float halfWidth = Mathf.Max(width, 0.01f) * 0.5f;
-            BuildLineMesh(safeLength, halfWidth);
+            BuildLineMesh(safeLength, halfWidth, resolvedFillColor);
             edgeRenderer.enabled = false;
         }
 
@@ -197,7 +231,8 @@ namespace GameScene
             float size,
             float width,
             int sortingOrder,
-            bool includeFill)
+            bool includeFill,
+            Color fillColor)
         {
             return hasBuiltShape &&
                    lastMode == mode &&
@@ -206,7 +241,8 @@ namespace GameScene
                    lastSize == size &&
                    lastWidth == width &&
                    lastSortingOrder == sortingOrder &&
-                   lastIncludeFill == includeFill;
+                   lastIncludeFill == includeFill &&
+                   lastFillColor == fillColor;
         }
 
         private void RecordShapeState(
@@ -216,7 +252,8 @@ namespace GameScene
             float size,
             float width,
             int sortingOrder,
-            bool includeFill)
+            bool includeFill,
+            Color fillColor)
         {
             lastMode = mode;
             lastPosition = position;
@@ -225,6 +262,7 @@ namespace GameScene
             lastWidth = width;
             lastSortingOrder = sortingOrder;
             lastIncludeFill = includeFill;
+            lastFillColor = fillColor;
             hasBuiltShape = true;
         }
 
@@ -321,7 +359,7 @@ namespace GameScene
 
         // ─── Circle ──────────────────────────────────────────────────────────────
 
-        private void BuildCircleMesh(float radius, bool includeFill)
+        private void BuildCircleMesh(float radius, bool includeFill, Color fillColor)
         {
             if (!includeFill)
             {
@@ -338,7 +376,7 @@ namespace GameScene
             }
 
             // 월드 XZ 공간에서 필드 경계로 클리핑 후 로컬 XZ로 역변환
-            ApplyPolygonToMesh(ClipPolygonToFieldInWorldSpace(polygonBuffer));
+            ApplyPolygonToMesh(ClipPolygonToFieldInWorldSpace(polygonBuffer), fillColor);
         }
 
         private void BuildCircleEdge(float radius, float edgeWidth)
@@ -359,7 +397,7 @@ namespace GameScene
 
         // ─── Line ────────────────────────────────────────────────────────────────
 
-        private void BuildLineMesh(float length, float halfWidth)
+        private void BuildLineMesh(float length, float halfWidth, Color fillColor)
         {
             // Stadium(rounded rectangle) polygon:
             //  - 우측 반원 캡 (center: length, 0),  각도 -90° → +90° (CCW)
@@ -383,13 +421,13 @@ namespace GameScene
             }
 
             // 월드 XZ 공간에서 필드 경계로 클리핑 후 로컬 XZ로 역변환
-            ApplyPolygonToMesh(ClipPolygonToFieldInWorldSpace(polygonBuffer));
+            ApplyPolygonToMesh(ClipPolygonToFieldInWorldSpace(polygonBuffer), fillColor);
         }
 
         // ─── Mesh upload ─────────────────────────────────────────────────────────
 
         /// <summary>XZ polygon을 fan triangulation으로 메시에 올린다.</summary>
-        private void ApplyPolygonToMesh(List<Vector2> polygon)
+        private void ApplyPolygonToMesh(List<Vector2> polygon, Color fillColor)
         {
             if (polygon == null || polygon.Count < 3)
             {
@@ -406,7 +444,7 @@ namespace GameScene
             {
                 Vector2 point = polygon[i];
                 vertexBuffer.Add(new Vector3(point.x, 0f, point.y));
-                colorBuffer.Add(DefaultFillColor);
+                colorBuffer.Add(fillColor);
             }
 
             for (int i = 0; i < vertCount - 2; i++)

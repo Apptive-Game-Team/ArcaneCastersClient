@@ -124,6 +124,14 @@ where only one frame was redrawn, reads worse than six old runes: the
 inconsistency is what the eye catches. Hold the finished members until the set
 is complete.
 
+Driving `codex exec` with an `image_gen` instruction sometimes makes it write
+its own restated copy of the prompt as a side effect — an untracked
+`<name>-prompt.txt` or `.md` next to the output image, in whatever directory
+the output was saved to. This is codex's own note-taking, not something the
+prompt asked for, and it duplicates the `.txt` prompt file already committed
+under `.art/concept/<batch>-prompts/`. Delete it before committing rather than
+folding it in as a second source of truth for the same prompt.
+
 ## Production sprite rules
 
 - Single subject; centered; right-facing unless gameplay needs otherwise.
@@ -196,6 +204,17 @@ smaller in game, and if it no longer reaches the bottom edge, it floats.
   different scales.
 - A square generation cropped into a non-square canvas is where this creeps in,
   which is every generation. Measure it every time.
+- **Changing only a held item is a transplant, not a generation.** Issue #116
+  swapped the player's staff head on three frames with zero `image_gen` calls:
+  `.art/tools/transplant-staff-head.py` clears the old head, extends the old
+  shaft along its own axis, and pastes one head cut from an approved image at
+  one scale, so the body pixels are the originals and the three heads are the
+  same pixels. Prove it by diffing against the old file: every changed pixel
+  must sit in the item's region. Two traps it hit: an image keyed off a coloured
+  background with a hard edge keeps that colour in its outermost opaque ring,
+  which shows as a pale halo after a colour shift (erode it 2px); and where the
+  old item covered the hair, the hair behind it is missing and has to be refilled
+  from the pixels beside it.
 
 ## Validation
 

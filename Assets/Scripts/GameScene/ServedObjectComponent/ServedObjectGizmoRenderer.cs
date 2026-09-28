@@ -11,7 +11,9 @@ namespace GameScene.ServedObjectComponent
     {
         private const int GizmoCircleSegments = 40;
         private const float GizmoLineWidth = 0.035f;
-        private const float GizmoZOffsetStep = 0.01f;
+        // Successive gizmos are nudged along the ground plane's normal (local up), not along
+        // the plane itself, so overlapping shapes don't z-fight without shifting their footprint.
+        private const float GizmoNormalOffsetStep = 0.01f;
 
         private static Material _gizmoLineMaterial;
 
@@ -75,14 +77,37 @@ namespace GameScene.ServedObjectComponent
             _gizmoContainer.localScale = Vector3.one;
         }
 
+        /// <summary>
+        /// The transform <see cref="Gizmo.relativePosition"/> is relative to. This is the
+        /// ServedObject's own transform, not <see cref="ServedObject.GetActualTransform"/>: that
+        /// method can resolve to a child sprite transform carrying its own local offset and scale
+        /// (for example <c>WindTotem.prefab</c>'s sprite, offset and scaled 1.5x), which would
+        /// move and resize the gizmo away from the range the server actually described.
+        /// <see cref="PositionUpdater"/> writes the server position onto this same transform.
+        /// </summary>
         private Transform GetAnchorTransform()
         {
             if (servedObject != null)
             {
-                return servedObject.GetActualTransform();
+                return servedObject.transform;
             }
 
             return transform;
+        }
+
+        private void LateUpdate()
+        {
+            if (_gizmoContainer == null)
+            {
+                return;
+            }
+
+            // The anchor transform is the ServedObject's own transform, which SetMaster rotates
+            // 180° on Y for RightPlayer to face the other side. SetGizmos and SetMaster can run in
+            // either order, so correct the world rotation every frame instead of once at creation;
+            // otherwise a RightPlayer gizmo would be flipped a second time on top of the
+            // already-mirrored relativePosition the server sent.
+            _gizmoContainer.rotation = Quaternion.identity;
         }
 
         private void ClearGizmoRenderers()
@@ -100,7 +125,6 @@ namespace GameScene.ServedObjectComponent
 
         private void CreateGizmoRenderer(Gizmo gizmo, int index)
         {
-            Debug.Log("[Gizmo] Creating Gizmo Renderer");
             GameObject gizmoObject = new GameObject(GetGizmoObjectName(gizmo, index));
             gizmoObject.transform.SetParent(_gizmoContainer, false);
 
@@ -112,7 +136,13 @@ namespace GameScene.ServedObjectComponent
             lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             lineRenderer.receiveShadows = false;
             lineRenderer.textureMode = LineTextureMode.Stretch;
-            lineRenderer.alignment = LineAlignment.TransformZ;
+            // The shape now lies flat in the ground XZ plane instead of standing in the
+            // container's local XY plane, and the container's rotation is kept at world identity
+            // (see LateUpdate), so TransformZ would face the ribbon along world Z — edge-on to the
+            // tilted camera and barely visible for segments running along X. View billboards each
+            // segment's width to the camera instead, so the outline reads at a consistent
+            // thickness no matter which way a segment runs on the ground.
+            lineRenderer.alignment = LineAlignment.View;
             lineRenderer.sharedMaterial = GetGizmoLineMaterial();
             ApplyGizmoSorting(lineRenderer, index);
             lineRenderer.startColor = GetGizmoColor(gizmo.category);
@@ -193,7 +223,7 @@ namespace GameScene.ServedObjectComponent
 
         private static Vector3[] BuildGizmoPoints(Gizmo gizmo, int index)
         {
-            Vector3 center = gizmo.relativePosition + Vector3.forward * (index * GizmoZOffsetStep);
+            Vector3 center = gizmo.relativePosition + Vector3.up * (index * GizmoNormalOffsetStep);
             if (string.Equals(gizmo.type, "Box", StringComparison.OrdinalIgnoreCase))
             {
                 return BuildBoxPoints(center, gizmo.boxSize);
@@ -202,6 +232,9 @@ namespace GameScene.ServedObjectComponent
             return BuildCirclePoints(center, gizmo.radius);
         }
 
+        // World X-Z is the ground plane and Y is height, same as the ranges the server sends
+        // (relativePosition, boxSize) and SkillIndicatorShapeRenderer clips to, so both shapes are
+        // built in local X-Z rather than local X-Y.
         private static Vector3[] BuildCirclePoints(Vector3 center, float radius)
         {
             float safeRadius = Mathf.Max(radius, 0.05f);
@@ -211,8 +244,8 @@ namespace GameScene.ServedObjectComponent
             {
                 float angle = Mathf.PI * 2f * i / GizmoCircleSegments;
                 float x = Mathf.Cos(angle) * safeRadius;
-                float y = Mathf.Sin(angle) * safeRadius;
-                points[i] = center + new Vector3(x, y, 0f);
+                float z = Mathf.Sin(angle) * safeRadius;
+                points[i] = center + new Vector3(x, 0f, z);
             }
 
             return points;
@@ -221,19 +254,19 @@ namespace GameScene.ServedObjectComponent
         private static Vector3[] BuildBoxPoints(Vector3 center, Vector3 boxSize)
         {
             WDebug.Log($"[Gizmo] Building box points for gizmo at {center} with size {boxSize}");
-            Vector3 safeSize = new Vector3(
-                Mathf.Max(boxSize.x, 0.1f),
-                Mathf.Max(boxSize.y, 0.1f),
-                Mathf.Max(boxSize.z, 0f)
-            );
+            // boxSize.y is the height of a ground-plane footprint and plays no part in this
+            // outline, so only x and z are floored. z keeps a 0 floor rather than x's 0.1 floor: a
+            // zero-depth box (for example a launcher's line-shaped attack range) is meant to
+            // collapse into a line along x, not thicken into a band.
+            float halfWidth = Mathf.Max(boxSize.x, 0.1f) * 0.5f;
+            float halfDepth = Mathf.Max(boxSize.z, 0f) * 0.5f;
 
-            Vector3 half = safeSize * 0.5f;
             return new[]
             {
-                center + new Vector3(-half.x, -half.y, 0f),
-                center + new Vector3(-half.x, half.y, 0f),
-                center + new Vector3(half.x, half.y, 0f),
-                center + new Vector3(half.x, -half.y, 0f),
+                center + new Vector3(-halfWidth, 0f, -halfDepth),
+                center + new Vector3(-halfWidth, 0f, halfDepth),
+                center + new Vector3(halfWidth, 0f, halfDepth),
+                center + new Vector3(halfWidth, 0f, -halfDepth),
             };
         }
 

@@ -13,6 +13,7 @@ namespace GameScene.Dto
             { "magicValid", typeof(MagicValidInfo) },
             { "result", typeof(ResultInfo) },
             { "botThought", typeof(BotThoughtInfo) },
+            { "emote", typeof(EmoteInfo) },
             { "pveScript", typeof(PveScriptEventInfo) },
             { "pveScriptEvent", typeof(PveScriptEventInfo) }
         };

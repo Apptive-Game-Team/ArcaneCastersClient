@@ -7,6 +7,10 @@ namespace ProfileScene
 {
     public class ProfilePanel : MonoBehaviour
     {
+        // Shown instead of a stale or blank number when the overview request fails,
+        // so the panel never presents old or default data as if it were current.
+        private const string UnavailableValue = "-";
+
         [SerializeField] TMP_Text nameText;
         [SerializeField] TMP_Text emailText;
         [SerializeField] TMP_Text mmrText;
@@ -33,6 +37,12 @@ namespace ProfileScene
         {
             totalGamesText.text = $"{overview.TotalGameNum}";
             totalWinText.text = $"{overview.TotalWinNum}";
+        }
+
+        public void SetOverviewUnavailable()
+        {
+            totalGamesText.text = UnavailableValue;
+            totalWinText.text = UnavailableValue;
         }
 
         public void SetUser(User user)

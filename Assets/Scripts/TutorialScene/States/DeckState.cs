@@ -70,7 +70,7 @@ namespace TutorialScene
             }
 
             GlobalTutorialManager.Instance.SetProgress(OnboardingProgress.Deck_ExplainCard);
-            deckController.ShowCardExplanation(ShowDeckRules);
+            ShowDeckRules();
         }
 
         private void ShowDeckRules()

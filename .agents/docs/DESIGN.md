@@ -1,130 +1,141 @@
 ---
-version: "alpha"
-name: "WordOnline Client Design System"
-description: "Visual identity and design tokens for the WordOnline Unity WebGL client, describing UI base structures, colors, typography, shapes, and layouts."
+version: "beta"
+name: "Arcane Casters Client Design System"
+description: "Flat, ink-outlined UI for the Arcane Casters Unity WebGL client, following the per-screen mockup (Super Auto Pets style)."
+mockup: "https://claude.ai/artifact/B5mkt5ahBc287zAjfv9K7C (Screens page)"
 colors:
-  background: "#1E2327"       # Default dark background slate (WebGL container theme)
-  primary: "#2FB8A8"          # Vibrant Turquoise/Teal used for primary buttons in tutorials
-  secondary: "#2D3543"        # Dark charcoal/slate-blue used for secondary buttons
-  brown-base: "#D99F71"       # Warm Brown/Tan for default panel backgrounds (UI-Base)
-  card-base: "#E2AA7D"        # Soft peach/tan used for cards/reward panel backdrops
-  panel-bg: "#DBD8D8"         # Light warm grey used for main panel backgrounds (Lobby/Join panels)
-  text-light: "#D7DEE8"       # Light blue-grey text for dark backgrounds
-  text-dark: "#000000"        # Black text for light backgrounds (buttons/panels)
-  overlay: "#0000007D"        # Translucent black backdrop overlay (alpha ~ 0.49)
-  disabled: "#C8C8C880"       # Disabled element overlay color
+  orange: "#FF9A1F"        # primary button, selected segment
+  gold: "#FFD23F"          # selected tile ring, highlight
+  green: "#5BD04C"         # on switch, magic already in the deck, progress fill
+  mana: "#3B82F6"          # mana cost badge
+  red: "#F0443A"           # destructive button (Delete)
+  navy: "#0F2438"          # background of list screens (Magic Book, Manage Deck)
+  tile: "#22425F"          # tile fill on navy
+  tile-light: "#EEF3F8"    # tile fill on white cards, empty slot
+  ink: "#1C1A2B"           # every outline, hard shadow, body text on white
+  grey-text: "#5B6275"     # caption and label text on white
+  dim: "#0A121E9E"         # modal backdrop (rgba 10,18,30,0.62)
 typography:
-  family-primary: "Pretendard"
-  family-bold: "Pretendard-Bold"
-  family-extrabold: "Pretendard-ExtraBold"
-  label-button:
-    fontFamily: "Pretendard-Regular"
-    fontSize: "25px"
-    fontWeight: 400
-  label-bold:
-    fontFamily: "Pretendard-Bold"
-    fontSize: "25px"
-    fontWeight: 700
-rounded:
-  border-slice: "30px"        # 9-slice sprite borders (30, 30, 30, 30) for rounded panel/button corners
-spacing:
-  button-margin: "10px"
-  panel-padding: "20px"
-components:
-  ui-base:
-    backgroundColor: "{colors.brown-base}"
-    rounded: "{rounded.border-slice}"
-    width: "200px"
-    height: "50px"
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.text-dark}"
-    rounded: "{rounded.border-slice}"
-    width: "100px"
-    height: "50px"
-  button-secondary:
-    backgroundColor: "{colors.secondary}"
-    textColor: "{colors.text-light}"
-    rounded: "{rounded.border-slice}"
-    width: "100px"
-    height: "50px"
-  button-variant:
-    backgroundColor: "{colors.brown-base}"
-    textColor: "{colors.text-dark}"
-    rounded: "{rounded.border-slice}"
-    width: "200px"
-    height: "50px"
-  lobby-panel:
-    backgroundColor: "{colors.panel-bg}"
-    width: "500px"
-    height: "400px"
-  reward-panel:
-    backgroundColor: "{colors.card-base}"
-    width: "500px"
-    height: "400px"
+  display: "Lilita One (Latin) with Jua fallback (Hangul)"
+  body: "Pretendard (long descriptions only)"
+  scale-mockup-px: { title: 40, button: 24, label: 20, caption: 18, small: 15 }
 ---
 
 ## Overview
 
-The WordOnline WebGL Client visual identity features a warm, tactile, and game-oriented interface. The design combines structured panels, rounded cards, and high-contrast interactive elements. By using a warm limestone backdrop texture (`background.png`), classic brown framing, and clear typographic hierarchy built on the **Pretendard** font family, the interface balances legibility with a premium gaming feel.
+Every element has a 3px ink (`#1C1A2B`) outline, a flat fill, and a hard
+5px ink shadow straight below. No gradients, no soft shadows. One orange
+button per screen marks the main action; every other button is white.
 
-## Colors
+The source of truth is the Screens page of the mockup linked above. Match
+it screen by screen.
 
-The design system employs a curated palette consisting of warm earthy tones for structure and high-contrast cooler tones for interactions:
+## Units: mockup px to canvas units
 
-- **Earthy Structural Colors:**
-  - **Brown Base (`#D99F71`):** A warm, grounding brown/tan tone. Drives the default framing (`UI-Base`, `Button Variant`).
-  - **Card Base (`#E2AA7D`):** A softer peach-tan tone used for reward popups and card backings to draw focus.
-  - **Panel Background (`#DBD8D8`):** A neutral light-grey container backdrop.
-- **Interactive Colors:**
-  - **Primary Interactive (`#2FB8A8`):** A vibrant turquoise/teal. Directs the user to primary navigation or confirmation paths (e.g., tutorial confirm buttons).
-  - **Secondary Interactive (`#2D3543`):** A dark charcoal/slate-blue used for neutral, secondary actions (e.g., dismissals, tutorial back-buttons).
-- **Text & Feedback Colors:**
-  - **Text Light (`#D7DEE8`):** Light blue-grey for text on dark backgrounds.
-  - **Text Dark (`#000000`):** Pitch black for high contrast on light/brown panels.
-  - **Overlay (`#0000007D`):** Dark translucent backdrop for modal screens.
+The mockup is drawn at 1280x720. Convert every size by the canvas the object
+lives on:
 
-## Typography
+| canvas reference | factor | sprite `m_PixelsPerUnitMultiplier` |
+|---|---|---|
+| 800x450 | x0.625 | 4 |
+| 1920x1080 | x1.5 | 1.6667 |
+| 2000x1125 | x1.5625 | 1.6 |
 
-Typography relies entirely on the **Pretendard** typeface family, configured in Unity using TextMeshPro (TMP) SDF assets:
+The flat sprites are rendered at 2.5x mockup px with pixels-per-unit 100, so
+the multiplier above keeps a 3px mockup outline 3px on screen. A different
+multiplier makes the outline thicker or thinner than the rest of the screen.
 
-- **Pretendard-Regular (SDF GUID: `9a8c64c89aee44fa2ac41fff91221f41`):** Used for standard button labels, options, description bodies, and dialog texts. Normal sizing runs around `25px`.
-- **Pretendard-Bold (SDF GUID: `600c4f1b47bd94ef3a97ca54333d5085`):** Used for key information sections, lobby lists, and confirm pages.
-- **Pretendard-ExtraBold (SDF GUID: `b15c5506cbcd44b48b4a55fb77fea659`):** Reserved for scene headers, magic info titles, and reward headings.
+Text sizes convert with the same factor: button text 24 mockup px is 15 on an
+800 canvas and 37.5 on a 2000 canvas.
 
-## Layout
+## Fonts (`Assets/Art/Fonts`)
 
-Layout positioning focuses on standardized panel dimensions and 9-sliced stretching:
+- `LilitaOne SDF.asset` (guid `27eb6710ab8b4024989693d7f57479f3`, material
+  fileID `2180264`): all titles, buttons, labels. Dynamic atlas; its fallback
+  is `Jua SDF.asset` (guid `e6a59172da1347b78e224d6c7df59404`) for Hangul.
+- `LilitaOne SDF Outline.mat` (guid `af8a3c93a6bf4ba08894f839cc6276fa`,
+  fileID `2100000`): white text with ink outline and ink shadow. Use it for
+  text on orange buttons, screen titles on the navy or grass background, and
+  big numbers on colored badges. Set the text color to white.
+- Pretendard stays for long body text only.
 
-- **Dialogs and Settings Panels:** Sized at `500x400` pixels, centered in canvas space, with a dark full-screen overlay backdrop (`Overlay`).
-- **Standard Action Buttons:** Standard size defaults to `200x50` pixels. Tutorial/Modal buttons use a smaller footprint of `100x50` pixels.
-- **Background Layering:** All menus should place the `Background` Image (guid `4fe2d02ca2c9b49fc938a577493218e1`) as the very first child of the scene's primary Canvas.
+Both new font assets are dynamic (`m_AtlasPopulationMode: 1`) with empty glyph
+tables, hand-written from TextMesh Pro's own `LiberationSans SDF - Fallback`.
+Glyphs are rasterised at runtime; do not expect a baked atlas in the file.
 
-## Shapes
+## Sprites (`Assets/Art/Images/UI/Flat`)
 
-Shapes feature soft, rounded contours:
+All are white on transparent and tinted with `Image.color`; the ink outline
+stays dark under any tint.
 
-- **9-Sliced Roundness:** Framed panels (`UI-Base`, `Brown-UI-Base`, `RewardUI`) utilize a 9-sliced border setting of `30` pixels (`spriteBorder: {x: 30, y: 30, z: 30, w: 30}`). This ensures corners remain smooth and round across all panel scales.
-- **Drop Shadows:** Base frames include a Unity UGUI `Shadow` component with a shadow color of `#0000007D` (translucent black) and an offset distance of `x: 0, y: -10` to add elevation.
+| sprite | guid | use | Image type |
+|---|---|---|---|
+| FlatButton | 479a46a33fab413d8d1eaf3fd2081950 | buttons, dropdowns, segmented control box | Sliced |
+| FlatCard | 5fa9efed53cb40869b9ade226431f66c | white cards and modal panels | Sliced |
+| FlatTile | 391554cb40254700a095ab20cfa32db1 | magic tiles, input fields, deck slots | Sliced |
+| FlatTileRing | aa3a5cf97f0b495fa340cc8358cb1e90 | selection ring over a tile (tint gold or green) | Sliced |
+| FlatPill | 07d54f842f674c798047bd4fe1ba0587 | player name pill, switch track | Sliced |
+| FlatChip | 008da381db86437b85037fe7cf340d8a | element chip, count badge, progress and slider track | Sliced |
+| FlatCircle | 5f2a460e72e346678b07bc73ef09a7ce | mana cost badge, avatar frame | Simple |
+| FlatKnob | 6a88d5dc2f474108b249217be117bdca | switch knob, slider handle | Simple |
+| SlotDashed | d25775de9e6e4e8b8c0157e4b653f41a | empty deck slot | Simple |
+| Banner | ca4401f7043041a48ab453cb1fdd136e | slanted white title banner | Sliced |
+| Sign | 35e83eaa0ca14255868a2211373ba394 | lobby signpost, flip x with scale -1 for left | Simple |
+| IconBack, IconMenu, IconClose, IconPlus, IconSearch, IconLock, IconPlay, IconChevronDown | see `.meta` | white icon with ink shadow; tint ink on white buttons | Simple |
 
-## Components
+Element icons: `Assets/Art/Images/UI/Card/type_{fire,lightning,nature,rock,water,wind}.png`.
+Logo: `Assets/Art/Images/UI/ArcaneCastersLogo.png` (lobby), `ArcaneCastersLogoWide.png` (login).
+Lobby character: `Assets/Art/Images/Customize/PlayerCharacterStaffRaised.png`.
 
-The system includes preconfigured prefab components located in [Assets/Prefabs/UI](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI):
+The flat sprites are rendered from the mockup's own CSS in headless Chromium
+(`omitBackground`, device scale 2.5), so they match the mockup exactly. To
+change one, edit the CSS and render again rather than painting the PNG.
 
-- [UI-Base.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/UI-Base.prefab): The root UI panel using the card sprite (`Card.png`) with white tinting.
-- [Brown-UI-Base.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Brown-UI-Base.prefab): Extends `UI-Base` with the default warm-brown tint `#D99F71`.
-- [Button Variant.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Button%20Variant.prefab): Default 200x50 button incorporating a brown panel base and Pretendard-Regular text.
-- [PrimaryButton.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Tutorial/PrimaryButton.prefab): 100x50 turquoise action button.
-- [SecondaryButton.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/Tutorial/SecondaryButton.prefab): 100x50 charcoal dismissal button.
+## Components (`Assets/Prefabs/UI`)
+
+- `Button Variant.prefab`: white FlatButton, ink Lilita One text 15 (800
+  canvas), autosize 9 to 15, no word wrap, margins 10/2/10/5 (the bottom
+  margin keeps the text off the 5px shadow). Its inherited soft `Shadow` from
+  `UI-Base` is disabled because the sprite carries the shadow.
+- `Button Primary.prefab` (guid `b50deebbc8674433b61fa1b960d8eb5a`): variant
+  of `Button Variant` with orange fill and white outlined text.
+- A red button is a `Button Primary` instance with `m_Color` set to `#F0443A`.
+
+- Input fields are legacy `UnityEngine.UI.InputField` with legacy `Text`
+  (font `Assets/Art/Fonts/Pretendard-Regular.otf`, whole-number size, ink
+  colour), on a white FlatTile. Never `TMP_InputField`: on mobile WebGL only the
+  legacy field opens the on-screen keyboard correctly. Legacy `Text` cannot use
+  the Lilita One SDF font, so typed text stays in Pretendard.
+
+- A `TMP_Dropdown` list: `Template` is a white FlatCard. `Viewport` keeps its
+  `Image` for the `Mask` but with no sprite and `m_ShowMaskGraphic: 0`; a
+  sprite there still clips the list to that sprite's alpha. `Item Background`
+  has no sprite and a white `m_Color`, and the item `Toggle` colours it:
+  normal transparent, highlighted `#EEF3F8`, pressed and selected `#FFF1B8`.
+  Items are 42 mockup px tall with ink Lilita One 18 mockup px labels.
+- A scrollbar is a FlatChip track (`#EEF3F8` on a white card, `#22425F` on
+  navy) with a `#9AA6B8` FlatChip handle, about 10 mockup px wide. Set the
+  `Sliding Area` size delta to minus the track width and the `Handle` size
+  delta to plus it.
+- Some panels build their text in code. `HaveCardMagicPopup` and
+  `DeckInfoMagicPopup` set `TMP_Text.color` themselves, so changing the panel
+  sprite to a white card left white text on it until the code changed too.
+  Grep the panel's script for `.color =` before restyling it.
+
+On a 2000 or 1920 canvas, override the instance's image
+`m_PixelsPerUnitMultiplier` and text sizes by the table above.
 
 ## Do's and Don'ts
 
-### Do's:
-1. Always inherit custom panels from [UI-Base.prefab](file:///Users/jeong-yunseong/development/word-online/dev/word-online/client/Assets/Prefabs/UI/UI-Base.prefab) to preserve 9-slice rendering consistency.
-2. Use **Pretendard-Regular** for labels and **Pretendard-Bold** or **Pretendard-ExtraBold** for headers.
-3. Wire scene buttons to use `ButtonBase` or `DisableableButtonBase` to trigger standard audio clicking behaviors.
+Do:
+1. Put exactly one orange button on a screen.
+2. Title a sub-screen with the Banner sprite and orange outlined text, placed
+   right of an orange back button in the top-left corner.
+3. Use navy (`#0F2438`) behind list screens and the floor texture behind the
+   lobby, login, settings and adventure screens.
+4. Dim the screen behind a modal with `#0A121E9E`.
 
-### Don'ts:
-1. Avoid introducing raw camera colors or custom background textures in menus; always use the default `background.png` (GUID `4fe2d02ca2c9b49fc938a577493218e1`).
-2. Do not use pure white or generic CSS/Unity colors for panels. Stick to `#D99F71` (Brown Base), `#E2AA7D` (Card Base), or `#DBD8D8` (Panel Background).
-3. Do not instantiate custom fonts; use the registered TextMeshPro SDF assets under `Assets/Art/Fonts`.
+Don't:
+1. Add a Unity `Shadow` or `Outline` component; the sprites carry both.
+2. Use `Brown-UI-Base` tint or a soft drop shadow for new UI.
+3. Mix a gradient into a flat element.

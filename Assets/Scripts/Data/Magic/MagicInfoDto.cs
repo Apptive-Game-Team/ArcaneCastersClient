@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Data.Magic
 {
@@ -12,7 +13,16 @@ namespace Data.Magic
         public string name;
         public string text;
 
-        /// <summary>Fire, Water, Lightning, Rock, Nature, Wind, None 중 하나.</summary>
+        /// <summary>
+        /// 마법이 가진 원소 전체 목록. Fire, Water, Lightning, Rock, Nature, Wind, None 중
+        /// 하나씩 담기고, 마법 하나는 항상 최소 한 항목을 받는다.
+        /// </summary>
+        public List<string> elements;
+
+        /// <summary>
+        /// 원소 목록이 생기기 전의 서버가 보내던 단일 원소. deploy 의 lobby 는 아직 이것만
+        /// 보내므로, elements 가 비어 있을 때만 대신 읽는다.
+        /// </summary>
         public string element;
 
         public int manaCost;

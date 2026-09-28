@@ -33,7 +33,10 @@ namespace TutorialScene
     
         [SerializeField] private MagicFailEffecter leftUserMagicFailEffecter;
         [SerializeField] private MagicFailEffecter rightUserMagicFailEffecter;
-    
+
+        private Transform leftPlayerTr;
+        private Transform rightPlayerTr;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -47,8 +50,19 @@ namespace TutorialScene
 
         private void Start()
         {
-            AttachPopupBookPresenter(GameObject.Find("LeftPlayer"));
-            AttachPopupBookPresenter(GameObject.Find("RightPlayer"));
+            GameObject leftObj = GameObject.Find("LeftPlayer");
+            if (leftObj != null)
+            {
+                leftPlayerTr = leftObj.transform;
+                AttachPopupBookPresenter(leftObj);
+            }
+
+            GameObject rightObj = GameObject.Find("RightPlayer");
+            if (rightObj != null)
+            {
+                rightPlayerTr = rightObj.transform;
+                AttachPopupBookPresenter(rightObj);
+            }
 
             if (leftUserIDText == null || rightUserIDText == null) return;
 
@@ -82,20 +96,36 @@ namespace TutorialScene
         {
             if (leftUserHpSlider.value > leftUserHp)
             {
-                Transform leftPlayerTr = GameObject.Find("LeftPlayer").transform;
-                DOTweenAction.BounceMob(leftPlayerTr.GetChild(0));
-                DamagedObjectEffect.SetSelfDestroyEffect("HitEffect",leftPlayerTr);
+                if (leftPlayerTr == null)
+                {
+                    GameObject leftObj = GameObject.Find("LeftPlayer");
+                    if (leftObj != null) leftPlayerTr = leftObj.transform;
+                }
+
+                if (leftPlayerTr != null)
+                {
+                    DOTweenAction.BounceMob(leftPlayerTr.GetChild(0));
+                    DamagedObjectEffect.SetSelfDestroyEffect("HitEffect", leftPlayerTr);
+                }
             }
             else if (rightUserHpSlider.value > rightUserHp)
             {
-                Transform rightPlayerTr = GameObject.Find("RightPlayer").transform;
-                DOTweenAction.BounceMob(rightPlayerTr.GetChild(0));
-                DamagedObjectEffect.SetSelfDestroyEffect("HitEffect", rightPlayerTr);
+                if (rightPlayerTr == null)
+                {
+                    GameObject rightObj = GameObject.Find("RightPlayer");
+                    if (rightObj != null) rightPlayerTr = rightObj.transform;
+                }
+
+                if (rightPlayerTr != null)
+                {
+                    DOTweenAction.BounceMob(rightPlayerTr.GetChild(0));
+                    DamagedObjectEffect.SetSelfDestroyEffect("HitEffect", rightPlayerTr);
+                }
             }
-        
+
             leftUserHpSlider.value = leftUserHp;
             rightUserHpSlider.value = rightUserHp;
-        
+
             leftUserIDText.text = $"ME\n HP: {leftUserHp}";
             rightUserIDText.text = $"ENEMY\n HP: {rightUserHp}";
         }
@@ -134,9 +164,7 @@ namespace TutorialScene
         {
             if (lowerBar == null || cardUIPrefab == null) return;
             TutorialCardUI cardUI = Instantiate(cardUIPrefab, lowerBar.transform);
-            // 카드 앞면은 마법마다 다른 아트다.
-            cardUI.transform.GetChild(2).GetComponent<Image>().sprite =
-                DeckScene.DeckCardSpriteResolver.GetMagicSprite(cardname);
+            cardUI.SetArt(DeckScene.DeckCardSpriteResolver.GetMagicSprite(cardname));
             cardUI.Init(cardname);
         }
 
