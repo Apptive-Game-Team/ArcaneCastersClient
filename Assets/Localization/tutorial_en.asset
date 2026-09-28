@@ -28,33 +28,10 @@ MonoBehaviour:
       to open the card window'
     m_Metadata:
       m_Items: []
-  - m_Id: 145272856576
-    m_Localized: 'There are Spell Cards (verbs)
-
-      and Attribute Cards (nouns)'
-    m_Metadata:
-      m_Items: []
   - m_Id: 190177075200
     m_Localized: 'You can check the
 
       mana cost for each card'
-    m_Metadata:
-      m_Items: []
-  - m_Id: 224868163584
-    m_Localized: 'Select cards
-
-      (Hint: Spell + Attribute)'
-    m_Metadata:
-      m_Items: []
-  - m_Id: 282485317632
-    m_Localized: 'If the card combination is successful,
-
-      the spell appears
-      in the orb'
-    m_Metadata:
-      m_Items: []
-  - m_Id: 348331696128
-    m_Localized: Click the orb to combine the magic
     m_Metadata:
       m_Items: []
   - m_Id: 391205871616
@@ -75,15 +52,6 @@ MonoBehaviour:
       on the main screen'
     m_Metadata:
       m_Items: []
-  - m_Id: 670076755968
-    m_Localized: 'In the Magic Book screen,
-
-      you can check the card combinations
-
-      for
-      each spell'
-    m_Metadata:
-      m_Items: []
   - m_Id: 17619801198428160
     m_Localized: Yay
     m_Metadata:
@@ -97,10 +65,6 @@ MonoBehaviour:
 
       If so, want me to show
       you how it works?'
-    m_Metadata:
-      m_Items: []
-  - m_Id: 22654931925569536
-    m_Localized: First of all, this world runs on Magic Cards. One card is one spell!
     m_Metadata:
       m_Items: []
   - m_Id: 22655127950561280

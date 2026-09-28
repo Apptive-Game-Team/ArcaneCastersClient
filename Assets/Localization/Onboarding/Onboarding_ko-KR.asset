@@ -38,12 +38,8 @@ MonoBehaviour:
     m_Localized: "덱"
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000006
-    m_Localized: "마법 카드와 속성 카드가 있어요. 보통 두 카드를 조합해 마법을 시전합니다."
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000007
-    m_Localized: "덱은 총 15장으로 구성합니다. 마법은 최대 3가지, 속성은 최소 2가지를 넣어야 해요."
+    m_Localized: "덱은 카드 15장으로 구성해요."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000008
@@ -150,12 +146,8 @@ MonoBehaviour:
     m_Localized: "마법을 시전할 위치를 클릭해 보세요."
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000034
-    m_Localized: "주문 버튼을 눌러 시전해 보세요."
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000035
-    m_Localized: "조합이 맞지 않아요. 강조된 카드로 다시 시도해 보세요."
+    m_Localized: "시전이 잘 안 되고 있어요. 강조된 카드를 골라 다시 시도해 보세요."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000036

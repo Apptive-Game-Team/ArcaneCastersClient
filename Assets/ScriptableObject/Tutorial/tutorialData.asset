@@ -14,11 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stringTableName: tutorial
   steps:
-  - localizationKey: tutorial.cards
-    cardNames: []
-    shouldClearCards: 0
-    waitType: 0
-    magicName: 
   - localizationKey: tutorial.basic
     cardNames: []
     shouldClearCards: 0

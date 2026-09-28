@@ -35,10 +35,6 @@ MonoBehaviour:
     m_Key: onboarding.deck.title
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000006
-    m_Key: onboarding.deck.cardTypes
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000007
     m_Key: onboarding.deck.rules
     m_Metadata:
@@ -145,10 +141,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000033
     m_Key: coach.fieldSelect
-    m_Metadata:
-      m_Items: []
-  - m_Id: 318000000034
-    m_Key: coach.combineButton
     m_Metadata:
       m_Items: []
   - m_Id: 318000000035

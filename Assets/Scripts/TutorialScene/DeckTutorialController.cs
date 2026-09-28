@@ -9,7 +9,6 @@ namespace TutorialScene
     {
         [Header("Deck Targets")]
         [SerializeField] private DeckManagementController deckManagementController;
-        [SerializeField] private GameObject cardTypeArea;
         [SerializeField] private GameObject deckRuleArea;
         [SerializeField] private GameObject deckListArea;
         [SerializeField] private GameObject ownedCardsArea;
@@ -71,11 +70,6 @@ namespace TutorialScene
             {
                 returnToLobbyButton.OnClick -= OnReturnToLobbySelected;
             }
-        }
-
-        public void ShowCardExplanation(System.Action onNext)
-        {
-            Show("onboarding.deck.cardTypes", cardTypeArea != null ? cardTypeArea.transform : null, onNext);
         }
 
         public void ShowDeckRules(System.Action onNext)
