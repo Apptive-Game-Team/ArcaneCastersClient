@@ -16,6 +16,9 @@ namespace TutorialScene
         [SerializeField] private GameObject elementChartArea;
         [SerializeField] private Button elementChartButton;
         [SerializeField] private ButtonBase elementChartButtonBase;
+
+        [Tooltip("속성표 탭과 함께 올릴 탭 막대 조각. 아래에 깔 것부터 둔다.")]
+        [SerializeField] private RectTransform[] elementChartTabBar;
         [SerializeField] private ButtonBase returnToLobbyButton;
 
         public event System.Action MagicSelected;
@@ -129,7 +132,34 @@ namespace TutorialScene
                 target = elementChartButtonBase.transform;
             }
 
-            Show("onboarding.magicBook.elementChart", target, onNext);
+            Show("onboarding.magicBook.elementChart", WithTabBar(target), onNext);
+        }
+
+        /// <summary>
+        /// 속성표 탭 버튼은 투명하고 글자만 있다. 흰 알약 배경(TabSegment)과 옆 도감 탭은
+        /// 따로 떨어진 형제라, 버튼만 올리면 글자만 마스크 위에 뜨고 탭은 어둡게 남는다.
+        /// 탭 막대 조각을 먼저 깔고 버튼을 맨 위에 올린다.
+        /// </summary>
+        private Transform[] WithTabBar(Transform tabButton)
+        {
+            var targets = new List<Transform>();
+            if (elementChartTabBar != null)
+            {
+                foreach (RectTransform piece in elementChartTabBar)
+                {
+                    if (piece != null)
+                    {
+                        targets.Add(piece);
+                    }
+                }
+            }
+
+            if (tabButton != null)
+            {
+                targets.Add(tabButton);
+            }
+
+            return targets.ToArray();
         }
 
         public void ShowOpenedElementChart(System.Action onNext)

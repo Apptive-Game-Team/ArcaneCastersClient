@@ -38,12 +38,8 @@ MonoBehaviour:
     m_Localized: "Deck"
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000006
-    m_Localized: "There are magic cards and attribute cards. Most spells are cast by combining one of each."
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000007
-    m_Localized: "A deck has 15 cards. It must include up to 3 magic types and at least 2 attribute types."
+    m_Localized: "A deck has 15 cards."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000008
@@ -150,12 +146,8 @@ MonoBehaviour:
     m_Localized: "Click where you want the spell to land."
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000034
-    m_Localized: "Press the cast button to cast the spell."
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000035
-    m_Localized: "That combination does not work. Try the outlined cards instead."
+    m_Localized: "Casting is not working. Try one of the outlined cards."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000036

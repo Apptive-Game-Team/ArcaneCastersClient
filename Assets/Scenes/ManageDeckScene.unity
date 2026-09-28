@@ -2540,8 +2540,7 @@ MonoBehaviour:
   targetClickBlocker: {fileID: 0}
   panel: {fileID: 997700345}
   deckManagementController: {fileID: 2065755163}
-  cardTypeArea: {fileID: 0}
-  deckRuleArea: {fileID: 0}
+  deckRuleArea: {fileID: 143048294}
   deckListArea: {fileID: 7344000000000000009}
   ownedCardsArea: {fileID: 282030229}
   currentDeckCardsArea: {fileID: 53430957}

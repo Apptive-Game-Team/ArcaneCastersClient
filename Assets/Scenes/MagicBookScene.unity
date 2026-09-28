@@ -4888,6 +4888,9 @@ MonoBehaviour:
   elementChartArea: {fileID: 1094756721}
   elementChartButton: {fileID: 1216604707}
   elementChartButtonBase: {fileID: 1216604706}
+  elementChartTabBar:
+  - {fileID: 7133000000000000126}
+  - {fileID: 683999007}
   returnToLobbyButton: {fileID: 504527496}
 --- !u!1 &924739883
 GameObject:

@@ -23,24 +23,8 @@ MonoBehaviour:
     m_Key: tutorial.clickManaBar
     m_Metadata:
       m_Items: []
-  - m_Id: 145272856576
-    m_Key: tutorial.cardTypes
-    m_Metadata:
-      m_Items: []
   - m_Id: 190177075200
     m_Key: tutorial.manaCost
-    m_Metadata:
-      m_Items: []
-  - m_Id: 224868163584
-    m_Key: tutorial.selectCards
-    m_Metadata:
-      m_Items: []
-  - m_Id: 282485317632
-    m_Key: tutorial.combinationSuccess
-    m_Metadata:
-      m_Items: []
-  - m_Id: 348331696128
-    m_Key: tutorial.combineMagic
     m_Metadata:
       m_Items: []
   - m_Id: 391205871616
@@ -55,10 +39,6 @@ MonoBehaviour:
     m_Key: tutorial.magicBookLocation
     m_Metadata:
       m_Items: []
-  - m_Id: 670076755968
-    m_Key: tutorial.magicBookExplanation
-    m_Metadata:
-      m_Items: []
   - m_Id: 17619801198428160
     m_Key: onb
     m_Metadata:
@@ -69,10 +49,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 17634470650839040
     m_Key: tutorial.wordSpeech
-    m_Metadata:
-      m_Items: []
-  - m_Id: 22654931925569536
-    m_Key: tutorial.cards
     m_Metadata:
       m_Items: []
   - m_Id: 22655127950561280
