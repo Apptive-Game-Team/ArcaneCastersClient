@@ -60,8 +60,11 @@ namespace TutorialScene
 
         /// <summary>
         /// 마스크가 그려지는 Canvas 순서를 기준으로 짚는 대상, 클릭 차단막, 안내 패널을
-        /// 차례로 한 칸씩 위에 올린다. 차단막은 대상을 보여 주되 누르지 못하게 하려고
-        /// 대상 바로 위에 두고, 패널의 다음 버튼은 차단막에 막히지 않도록 가장 위에 둔다.
+        /// 차례로 한 칸씩 위에 올린다. 대상끼리도 한 칸씩 올려 뒤에 준 대상이 앞 대상 위에
+        /// 그려진다. 순서가 같은 Canvas 끼리는 무엇이 위인지 보장되지 않으므로, 버튼 뒤의
+        /// 배경처럼 겹치는 대상은 아래에 깔 것을 먼저 준다. 차단막은 대상을 보여 주되
+        /// 누르지 못하게 하려고 대상 바로 위에 두고, 패널의 다음 버튼은 차단막에 막히지
+        /// 않도록 가장 위에 둔다.
         /// </summary>
         private void LiftAboveMask(Transform[] targets, bool blockTargetClick)
         {
@@ -78,18 +81,21 @@ namespace TutorialScene
             {
                 foreach (Transform target in targets)
                 {
-                    lift.Lift(target, layer, order + 1);
+                    if (target != null)
+                    {
+                        lift.Lift(target, layer, ++order);
+                    }
                 }
             }
 
             if (targetClickBlocker != null && blockTargetClick)
             {
-                lift.Lift(targetClickBlocker.transform, layer, order + 2);
+                lift.Lift(targetClickBlocker.transform, layer, ++order);
             }
 
-            if (panel != null && !SortsAbove(panel.RootRectTransform, layer, order + 2))
+            if (panel != null && !SortsAbove(panel.RootRectTransform, layer, order))
             {
-                lift.Lift(panel.RootRectTransform, layer, order + 3);
+                lift.Lift(panel.RootRectTransform, layer, order + 1);
             }
         }
 
