@@ -198,6 +198,12 @@ namespace Adventures
 
             int stageNumber = currentAdventure.Stages.IndexOf(stage) + 1;
             stageCaptionText.text = $"{currentAdventure.Name} · Stage {stageNumber}";
+            if (stage.Scenarios.Count > 1)
+            {
+                // A stage holds several matches; show how far into it the player is.
+                int cleared = stage.Scenarios.FindAll(s => s.State == State.FINISHED).Count;
+                stageCaptionText.text += $" · {cleared}/{stage.Scenarios.Count}";
+            }
 
             bool hasName = !string.IsNullOrEmpty(stage.Name);
             stageNameText.gameObject.SetActive(hasName);
@@ -239,8 +245,19 @@ namespace Adventures
                 return;
             }
 
-            Scenario scenario = selectedStage.Scenarios[0];
+            Scenario scenario = NextScenario(selectedStage);
             AdventureStoryOverlayUI.Play(scenario, () => AdventureViewModel.Instance.PlayPVE(scenario.Id));
+        }
+
+        /// <summary>
+        /// The match the play button starts: the stage's first unlocked, unfinished
+        /// scenario, so a stage of several matches is played through in order. A fully
+        /// cleared stage replays its last scenario.
+        /// </summary>
+        private static Scenario NextScenario(Stage stage)
+        {
+            Scenario active = stage.Scenarios.Find(s => s.State == State.ACTIVE);
+            return active ?? stage.Scenarios[stage.Scenarios.Count - 1];
         }
 
         private void OnAdventureStateChanged(AdventureViewModel.AdventureState state)
