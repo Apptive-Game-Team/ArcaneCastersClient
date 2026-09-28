@@ -5,18 +5,18 @@ namespace GameScene
 {
     /// <summary>
     /// 마나 바 위에 "지금 준비한 조합이 먹을 마나"를 덧그린다.
-    /// 구간은 언제나 초록 채움의 오른쪽 끝에서 왼쪽으로 자란다. 소모량이 현재 마나 이하면
-    /// 그만큼만 주황으로 덮고, 현재 마나보다 크면 시전할 수 없다는 뜻이므로 초록 채움 전체를
+    /// 구간은 언제나 파란 채움의 오른쪽 끝에서 왼쪽으로 자란다. 소모량이 현재 마나 이하면
+    /// 그만큼만 주황으로 덮고, 현재 마나보다 크면 시전할 수 없다는 뜻이므로 파란 채움 전체를
     /// 빨갛게 덮는다.
     /// 씬 계층에 오브젝트를 미리 심어 두지 않아도 되도록 덧그리는 이미지는 런타임에 만든다.
     /// </summary>
     public class ManaCostPreview
     {
         /// <summary>소모 가능. "이만큼 빠진다".</summary>
-        private static readonly Color AffordableColor = new Color(0.94f, 0.55f, 0.15f, 1f);
+        private static readonly Color AffordableColor = new Color32(0xFF, 0x9A, 0x1F, 0xFF);
 
         /// <summary>마나 부족. "지금은 못 쓴다".</summary>
-        private static readonly Color InsufficientColor = new Color(0.85f, 0.21f, 0.18f, 1f);
+        private static readonly Color InsufficientColor = new Color32(0xF0, 0x44, 0x3A, 0xFF);
 
         private const string ClipObjectName = "ManaCostOverlayClip";
         private const string OverlayObjectName = "ManaCostOverlay";
@@ -26,7 +26,7 @@ namespace GameScene
         /// <summary>소모 구간만 남기고 잘라 내는 창.</summary>
         private RectTransform clip;
 
-        /// <summary>초록 채움과 똑같은 사각형. 잘린 뒤 남은 부분만 보인다.</summary>
+        /// <summary>파란 채움과 똑같은 사각형. 잘린 뒤 남은 부분만 보인다.</summary>
         private RectTransform overlay;
 
         private Image overlayImage;
@@ -59,7 +59,7 @@ namespace GameScene
                 ? 0f
                 : Mathf.Clamp01((currentMana - cost - slider.minValue) / valueRange);
 
-            // 마나가 0이면 덮을 초록이 없다.
+            // 마나가 0이면 덮을 파란 채움이 없다.
             float clipWidth = filledEnd - costStart;
             if (clipWidth <= 0f)
             {
@@ -74,8 +74,8 @@ namespace GameScene
 
             overlayImage.color = insufficient ? InsufficientColor : AffordableColor;
 
-            // 덧그리는 사각형은 초록 채움과 완전히 같은 자리(Fill Area의 0..filledEnd)에 놓고,
-            // 창으로 소모 구간만 남긴다. 그래야 오른쪽 꼭지의 라운드가 초록과 정확히 같다.
+            // 덧그리는 사각형은 파란 채움과 완전히 같은 자리(Fill Area의 0..filledEnd)에 놓고,
+            // 창으로 소모 구간만 남긴다. 그래야 오른쪽 꼭지의 라운드가 파란 채움과 정확히 같다.
             // 좁은 구간에 9-slice를 직접 씌우면 테두리가 폭에 맞춰 줄어들어 라운드가 어긋난다.
             StretchHorizontally(clip, costStart, filledEnd);
             StretchHorizontally(overlay, -costStart / clipWidth, 1f);
@@ -142,7 +142,7 @@ namespace GameScene
             return true;
         }
 
-        /// <summary>모서리 라운드가 초록 채움과 같도록 채움의 스프라이트 설정을 그대로 가져온다.</summary>
+        /// <summary>모서리 라운드가 파란 채움과 같도록 채움의 스프라이트 설정을 그대로 가져온다.</summary>
         private void CopyFillLook(Image target)
         {
             Image fillImage = slider.fillRect.GetComponent<Image>();

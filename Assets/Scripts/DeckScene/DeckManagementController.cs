@@ -7,6 +7,7 @@ using Data.Deck;
 using Data.Localization;
 using Data.Magic;
 using Global;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
@@ -18,16 +19,15 @@ namespace DeckScene
     public class DeckManagementController : MonoBehaviour
     {
         [Header("UI")]
-        public Transform deckListContainer;      // 덱 리스트
-        public GameObject deckPrefab; // 덱 
+        public TMP_Dropdown deckDropdown;        // 덱 고르기
+        public Button createDeckButton;          // 새 덱 만들기
         public Transform deckCardsContainer;     // 선택된 덱 카드
         public Transform ownedCardsContainer;    // 보유 카드
         public GameObject cardItemPrefab;        // 카드 UI 프리팹
         public GameObject cardInDeckItemPrefab;        // 덱 카드 UI 프리팹
-        public GameObject createDeckPrefab;        // 덱 생성 UI 프리팹
         public Button submitDeckButton;        // 덱 제출 버튼
         public Button removeDeckButton;        // 덱 삭제 버튼
-        public InputField deckNameInputField; // 덱 이름 입력 필드
+        public UnityEngine.UI.InputField deckNameInputField; // 덱 이름 입력 필드
         [SerializeField] private HaveCardMagicPopup ownedCardMagicPopup;
         [SerializeField] private DeckMagicInfoButton deckMagicInfoButton;
         [SerializeField] private DeckRequirementStatusText deckRequirementStatusText;
@@ -76,13 +76,12 @@ namespace DeckScene
             }
 
             view = new DeckManagementView(
-                deckListContainer,
-                deckPrefab,
+                deckDropdown,
+                createDeckButton,
                 deckCardsContainer,
                 ownedCardsContainer,
                 cardItemPrefab,
                 cardInDeckItemPrefab,
-                createDeckPrefab,
                 submitDeckButton,
                 removeDeckButton,
                 deckNameInputField,
@@ -196,7 +195,25 @@ namespace DeckScene
 
         private void PopulateDeckList()
         {
-            view.RenderDecks(viewModel.UserDecks);
+            view.RenderDecks(viewModel.UserDecks, viewModel.CurrentDeck, viewModel.CurrentMode);
+            SelectInitialDeck();
+        }
+
+        /// <summary>
+        /// 덱 목록이 드롭다운이 되면서 늘 덱 하나가 골라져 있어야 한다.
+        /// 아직 고른 덱이 없으면 사용자가 쓰는 덱을, 없으면 첫 덱을 고른다.
+        /// </summary>
+        private void SelectInitialDeck()
+        {
+            DeckResponseDto[] decks = viewModel.UserDecks;
+            if (viewModel.CurrentDeck != null || decks.Length == 0)
+            {
+                return;
+            }
+
+            long selectedDeckId = SceneContext.User?.selectedDeckId ?? 0;
+            DeckResponseDto deck = decks.FirstOrDefault(d => d.id == selectedDeckId) ?? decks[0];
+            OnDeckSelected(deck);
         }
         
         private void ReloadDeckList()
@@ -210,6 +227,7 @@ namespace DeckScene
             viewModel.SelectDeck(deck);
             view.SetDeckName(viewModel.CurrentDeck.name);
             UpdateRemoveButton();
+            view.RenderDecks(viewModel.UserDecks, viewModel.CurrentDeck, viewModel.CurrentMode);
 
             ReloadDeckList();
             UpdateDeckRequirements();
@@ -223,6 +241,7 @@ namespace DeckScene
             viewModel.SelectNewDeck(newDeckString);
             view.SetDeckName(viewModel.CurrentDeck.name);
             UpdateRemoveButton();
+            view.RenderDecks(viewModel.UserDecks, viewModel.CurrentDeck, viewModel.CurrentMode);
             ReloadDeckList();
             UpdateDeckRequirements();
             NewDeckSelected?.Invoke();

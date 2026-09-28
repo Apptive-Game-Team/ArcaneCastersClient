@@ -25,9 +25,16 @@ namespace DeckScene
         [SerializeField] private TextMeshProUGUI unlockProgressText;
         [SerializeField] private Image cardArtImage;
 
+        // 칸 배경. 비어 있으면 이 GameObject 의 Image 를 쓴다.
+        [SerializeField] private Image tileImage;
+
+        // 지금 덱에 든 마법에 켜는 초록 테두리.
+        [SerializeField] private GameObject inDeckMarker;
+
         private static readonly Color LockedColor = new Color(0f, 0f, 0f, 0.85f);
         private System.Action<CardItemUI> onPointerEnter;
         private System.Action onPointerExit;
+        private Color? tileBaseColor;
 
         public void Init(string cName, int count)
         {
@@ -45,29 +52,53 @@ namespace DeckScene
             // TODO(#577): 카드에 원소 아이콘을 함께 붙이려면 cardImageMapper.GetElementImage 를 쓴다.
             cardArtImage.sprite = magic != null ? magic.GetSprite() : null;
 
-            cardManaText.text = CardManaCost.Of(magic).ToString();
+            if (cardManaText != null)
+            {
+                cardManaText.text = CardManaCost.Of(magic).ToString();
+            }
 
-            var bg = GetComponent<Image>();
+            Image bg = tileImage != null ? tileImage : GetComponent<Image>();
+            if (bg != null)
+            {
+                tileBaseColor ??= bg.color;
+            }
 
-            cardNameText.text = await LocaleUtils.GetStringAsync("Magic", magic?.localizationKey ?? cName);
+            if (cardNameText != null)
+            {
+                string localizedName = await LocaleUtils.GetStringAsync("Magic", magic?.localizationKey ?? cName);
+                if (this == null)
+                {
+                    return;
+                }
+
+                cardNameText.text = localizedName;
+            }
 
             if (unlocked)
             {
-                cardCountText.text = $" X {count}";
+                if (cardCountText != null) cardCountText.text = $"×{count}";
                 if (lockRoot != null) lockRoot.SetActive(false);
                 if (unlockConditionText != null) unlockConditionText.text = "";
                 if (unlockProgressText != null) unlockProgressText.text = "";
                 cardArtImage.color = Color.white;
-                bg.color = Color.white;
+                if (bg != null) bg.color = tileBaseColor ?? Color.white;
             }
             else
             {
-                cardCountText.text = "";
+                if (cardCountText != null) cardCountText.text = "";
                 if (lockRoot != null) lockRoot.SetActive(true);
                 if (unlockConditionText != null) unlockConditionText.text = unlockText ?? "";
                 if (unlockProgressText != null) unlockProgressText.text = progressText ?? "";
                 cardArtImage.color = LockedColor;
-                bg.color = LockedColor;
+                if (bg != null) bg.color = LockedColor;
+            }
+        }
+
+        public void SetInDeck(bool isInDeck)
+        {
+            if (inDeckMarker != null)
+            {
+                inDeckMarker.SetActive(isInDeck);
             }
         }
 

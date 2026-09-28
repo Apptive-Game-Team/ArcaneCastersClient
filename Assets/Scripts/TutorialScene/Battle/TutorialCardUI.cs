@@ -15,7 +15,8 @@ namespace TutorialScene
         [SerializeField] private TextMeshProUGUI cardNameText;
         [SerializeField] private TextMeshProUGUI cardManaText;
         [SerializeField] private AudioSource cardSound;
-        
+        [SerializeField] private Image cardImage;
+
         [SerializeField] private Outline outline;
         
         private void Awake()
@@ -38,6 +39,16 @@ namespace TutorialScene
 
         public string DisplayName => cardNameText.text;
         public string Mana => cardManaText.text;
+
+        /// <summary>카드 앞면은 마법마다 다른 아트다. 배치가 바뀌어도 art Image를 직접
+        /// 가리키도록, 위치에 의존하는 transform.GetChild 대신 이 메서드를 쓴다.</summary>
+        public void SetArt(Sprite sprite)
+        {
+            if (cardImage != null)
+            {
+                cardImage.sprite = sprite;
+            }
+        }
 
         public async void Init(string magicName)
         {

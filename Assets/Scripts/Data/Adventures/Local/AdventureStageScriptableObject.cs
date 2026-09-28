@@ -75,10 +75,19 @@ namespace Data.Adventures.Local
         [SerializeField] private long stageId;
         [SerializeField] private Sprite backgroundImage;
         [SerializeField] private GameObject stagePanelPrefab;
+        [SerializeField] private LocalizedString stageName;
         [SerializeField] private List<AdventureScenarioStoryData> scenarioStories = new List<AdventureScenarioStoryData>();
-        
+
         public long Id => stageId;
         public GameObject StagePanelPrefab => stagePanelPrefab;
+        public Sprite BackgroundImage => backgroundImage;
+
+        /// <summary>
+        /// Display name for this stage, or null when no localized name has been
+        /// assigned yet. The Adventure map screen leaves the name off rather than
+        /// showing a raw or placeholder string when this is null.
+        /// </summary>
+        public string StageName => stageName != null && !stageName.IsEmpty ? stageName.GetLocalizedString() : null;
 
         public AdventureScenarioStoryData FindStoryByScenarioId(long scenarioId)
         {

@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.49019608}
+  m_Color: {r: 0.03922, g: 0.07059, b: 0.11765, a: 0.61961}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -407,11 +407,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8320429006835075308, guid: fa0b43538f80245f7b6e641cb506bfb0, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 375
       objectReference: {fileID: 0}
     - target: {fileID: 8320429006835075308, guid: fa0b43538f80245f7b6e641cb506bfb0, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 400
+      value: 368.75
       objectReference: {fileID: 0}
     - target: {fileID: 8320429006835075308, guid: fa0b43538f80245f7b6e641cb506bfb0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -447,7 +447,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8320429006835075308, guid: fa0b43538f80245f7b6e641cb506bfb0, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 5.625
       objectReference: {fileID: 0}
     - target: {fileID: 8320429006835075308, guid: fa0b43538f80245f7b6e641cb506bfb0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -462,6 +462,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7200000000000001055, guid: fa0b43538f80245f7b6e641cb506bfb0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2270396608857390691}
+    - target: {fileID: 8895680639967573116, guid: fa0b43538f80245f7b6e641cb506bfb0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2270396608857390691}

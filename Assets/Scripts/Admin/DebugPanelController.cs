@@ -30,8 +30,8 @@ namespace Admin
 
         private readonly List<(string name, GameObject item)> magicItems = new List<(string, GameObject)>();
         private readonly List<(string name, GameObject item)> prefabItems = new List<(string, GameObject)>();
-        private TMP_InputField magicSearch;
-        private TMP_InputField prefabSearch;
+        private UnityEngine.UI.InputField magicSearch;
+        private UnityEngine.UI.InputField prefabSearch;
 
         private void Start()
         {
@@ -117,12 +117,12 @@ namespace Admin
             });
         }
 
-        private static TMP_InputField CreateSearchField(
+        private static UnityEngine.UI.InputField CreateSearchField(
             Transform parent,
             string placeholder,
             List<(string name, GameObject item)> items)
         {
-            GameObject root = TMP_DefaultControls.CreateInputField(new TMP_DefaultControls.Resources());
+            GameObject root = UnityEngine.UI.DefaultControls.CreateInputField(new UnityEngine.UI.DefaultControls.Resources());
             root.name = "SearchField";
             root.transform.SetParent(parent, false);
             root.transform.SetAsFirstSibling();
@@ -131,8 +131,8 @@ namespace Admin
                 child.gameObject.layer = parent.gameObject.layer;
             }
 
-            TMP_InputField input = root.GetComponent<TMP_InputField>();
-            if (input.placeholder is TMP_Text placeholderText) placeholderText.text = placeholder;
+            UnityEngine.UI.InputField input = root.GetComponent<UnityEngine.UI.InputField>();
+            if (input.placeholder is UnityEngine.UI.Text placeholderText) placeholderText.text = placeholder;
             input.onValueChanged.AddListener(query => ApplyFilter(items, query));
             return input;
         }

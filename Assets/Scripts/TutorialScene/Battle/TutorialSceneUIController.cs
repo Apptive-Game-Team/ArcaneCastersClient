@@ -134,9 +134,7 @@ namespace TutorialScene
         {
             if (lowerBar == null || cardUIPrefab == null) return;
             TutorialCardUI cardUI = Instantiate(cardUIPrefab, lowerBar.transform);
-            // 카드 앞면은 마법마다 다른 아트다.
-            cardUI.transform.GetChild(2).GetComponent<Image>().sprite =
-                DeckScene.DeckCardSpriteResolver.GetMagicSprite(cardname);
+            cardUI.SetArt(DeckScene.DeckCardSpriteResolver.GetMagicSprite(cardname));
             cardUI.Init(cardname);
         }
 

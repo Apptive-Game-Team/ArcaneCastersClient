@@ -19,6 +19,12 @@ namespace Data.Magic
         /// </summary>
         public List<string> elements;
 
+        /// <summary>
+        /// 원소 목록이 생기기 전의 서버가 보내던 단일 원소. deploy 의 lobby 는 아직 이것만
+        /// 보내므로, elements 가 비어 있을 때만 대신 읽는다.
+        /// </summary>
+        public string element;
+
         public int manaCost;
 
         /// <summary>
