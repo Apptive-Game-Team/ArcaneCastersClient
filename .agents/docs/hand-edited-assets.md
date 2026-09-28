@@ -208,6 +208,49 @@ path handed to the Windows `dotnet.exe` is misparsed as a compiler switch
 `/mnt/c/...` working directory (or run `wslpath -w` on every path argument)
 before invoking it.
 
+## `StagePanel` caps scenarios at the prefab's button count, silently
+
+`Assets/Scripts/Adventures/Scenarios/StagePanal.cs`'s `StagePanel.PropagateSetup`
+loops `for (var i = 0; i < buttons.Count; i++)` and only ever reads
+`stage.Scenarios[i]` for `i < buttons.Count`. A stage with more scenarios than
+its `stagePanelPrefab` has `ScenarioButton` slots does not throw and does not
+show a fifth button — the extra scenarios are simply never displayed, and there
+is no error to notice. `Assets/Prefabs/UI/Adventures/StagePanel/Stage.prefab`
+carries exactly 4 slots (built for Stage 1's 4 scenarios); it happens to be
+enough for every stage introduced with the adventure rework (each new stage has
+3 scenarios), so all of Stage2–Stage4 reuse it unchanged with the trailing slot
+left inactive. Before wiring a new `AdventureStageScriptableObject.stagePanelPrefab`,
+count that stage's scenarios against the target prefab's `buttons` list
+(`Stage.prefab`'s `StagePanel` component lists 4 `fileID`s) rather than assuming
+the existing prefab scales.
+
+## A stub stage asset can carry a placeholder wiring and a field the class no longer has
+
+`Stage2.asset` existed before this content pass as a placeholder: its
+`stagePanelPrefab` pointed at `EmptyStage.prefab` (a `StagePanel` with
+`buttons: []`, guid `c5e33552230124a83a36a0d1ed9d9fea`) instead of the real
+`Stage.prefab`, and it carried a `stageName:` `LocalizedString` block that
+`AdventureStageScriptableObject` (`Assets/Scripts/Data/Adventures/Local/AdventureStageScriptableObject.cs`)
+no longer declares as a field — Unity's serializer keeps unknown keys in a
+`.asset` file instead of erroring, so the stale block sat there silently until
+someone diffed the class against the asset. When filling in a stub
+`AdventureStageScriptableObject` asset that predates the class's current shape,
+diff every field the `.asset` declares against the script's current
+`[SerializeField]` list and delete anything the script no longer has, in the
+same pass that fills in the real content.
+
+## `stone_fortress.png` is the adventure icon, not a story backdrop
+
+`Assets/Art/Images/Adventure/stone_fortress.png` (guid
+`b9322f20c555b4d75bcafccb4ea3cf2b`) is already wired as `FortressAdventure.asset`'s
+`iconImage` and is 256×183 — a thumbnail. `forest_adventure_stage_1.png` (guid
+`2d4e57a2719ef429aa4d24882eca8f28`), the `backgroundImage` both existing forest
+stages use for the pre-match story overlay, is 867×256. Stretching the icon to
+that overlay's size would visibly pixelate it, so `Stage3.asset` and
+`Stage4.asset` reuse `forest_adventure_stage_1.png` for `backgroundImage`
+instead of the fortress icon. A new fortress-specific story background, sized
+to match the forest one, is still open work.
+
 A hand-built throwaway `.csproj` referencing `UnityEngine*.dll` from any
 locally available Unity player build's `Managed/` folder (even one from an
 unrelated project — the module DLLs are stable enough for `MonoBehaviour`,
