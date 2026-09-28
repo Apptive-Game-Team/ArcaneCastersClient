@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8abc68dc67e945908351a13c732ed56d, type: 3}
+  m_Name: ForestBattleTheme
+  m_EditorClassIdentifier:
+  groundTexture: {fileID: 2800000, guid: 4fe2d02ca2c9b49fc938a577493218e1, type: 3}
+  tree1: {fileID: 21300000, guid: a08e0de9a6bfd4b5f801cd13fc087301, type: 3}
+  tree2: {fileID: 21300000, guid: 4bc7fafc4cb4f4b57a2a9782a1a2707c, type: 3}
+  tree3: {fileID: 21300000, guid: b3e5b2646670e4ce3a5b66e440b0dd2f, type: 3}
+  tree4: {fileID: 21300000, guid: 4e8c69179c82e481795e111c909a81f6, type: 3}
+  rock: {fileID: 21300000, guid: 6be0b35135c204e489107fb9f8eae165, type: 3}
+  grass1: {fileID: 21300000, guid: fb135c52cbace49c1bb8be0d01d92de4, type: 3}
+  grass2: {fileID: 21300000, guid: b0f429d7dc57840eaaef2d36a7bb7b8d, type: 3}
+  skyColor: {r: 0.51764706, g: 0.67058825, b: 0.29411766, a: 1}

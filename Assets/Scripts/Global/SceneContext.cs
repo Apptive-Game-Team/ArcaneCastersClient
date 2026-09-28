@@ -1,4 +1,5 @@
 using Data;
+using Data.BattleThemes;
 using GameScene.Dto;
 
 namespace Global
@@ -61,7 +62,18 @@ namespace Global
         {
             get; set;
         }
-    
+
+        /// <summary>
+        /// Battle scene environment art for the PVE match about to start, read by
+        /// `BattleThemeApplier` when GameScene loads. Set right before that load for an
+        /// adventure match; null (the default, and the value on every non-adventure entry
+        /// point) keeps GameScene's forest look.
+        /// </summary>
+        public static BattleThemeScriptableObject BattleTheme
+        {
+            get; set;
+        }
+
         public static void ClearContext()
         {
             JwtToken = null;
@@ -70,6 +82,7 @@ namespace Global
             MatchResult = null;
             SelectedDeck = null;
             OwnedCards = null;
+            BattleTheme = null;
             GuestContext.ClearGuestInfo();
         }
     }

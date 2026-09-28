@@ -180,3 +180,47 @@ field with the text rect inset 10 top and bottom (14 left) and size 13 (a line
 of about 16): typed text and the placeholder were both invisible while the
 field still took focus. Give input text rects at least 1.3x the font size in
 height, or set `m_VerticalOverflow: 1`.
+
+## A checked-in count of hand-placed instances can be stale — recount before trusting it
+
+A task brief said `GameScene.unity`'s `Map` GameObject parents "~76" `tree_1`..
+`tree_4`/`rock` `SpriteRenderer` children. The actual count, read from the
+scene's own `m_Children` list under the `Map` `Transform` (fileID `1756437240`),
+is 271 (`tree_1` 65, `tree_2` 69, `tree_3` 59, `tree_4` 77, `rock` 1); no
+`grass_1`/`grass_2` instances exist in this scene yet. A prefix-matching approach (`BattleThemeApplier` walks `foreach (Transform
+child in transform)` and matches each child's name against `tree_1`,
+`tree_2`, … rather than holding 76 or 271 individual references) survives this
+kind of drift; a fixed list or count written into a script or a doc does not. When a brief states a count of
+hand-placed scene instances, recount from the `.unity` file's own children list
+before designing around it — do not carry the number forward unchecked.
+
+## Validating C# compiles here without the Editor or a generated `Assembly-CSharp.csproj`
+
+`dotnet build Assembly-CSharp.csproj` (see the root `AGENTS.md`) assumes the
+Editor has generated that project file at least once. In a fresh worktree in
+this environment the Editor never runs, so the `.csproj` (gitignored) does not
+exist and cannot be generated. `dotnet` itself is also not on `PATH` inside
+WSL, but `/mnt/c/Program Files/dotnet/dotnet.exe` is, and WSL runs `.exe`
+transparently — the same binfmt_misc path the `unity-cli` skill documents for
+`unity.exe`. The same path-translation trap applies: a Linux-style absolute
+path handed to the Windows `dotnet.exe` is misparsed as a compiler switch
+(`error CS2007: Unrecognized option: '/home\...'`). Copy the sources to a
+`/mnt/c/...` working directory (or run `wslpath -w` on every path argument)
+before invoking it.
+
+A hand-built throwaway `.csproj` referencing `UnityEngine*.dll` from any
+locally available Unity player build's `Managed/` folder (even one from an
+unrelated project — the module DLLs are stable enough for `MonoBehaviour`,
+`ScriptableObject`, `SerializeField`, and other core-engine types) compiles
+enough of `Assets/Scripts` to catch namespace, symbol and signature errors in
+new or edited files. It will not compile cleanly end to end: a Managed folder
+from a different project's build will be missing whatever packages that
+project didn't use (this repository's `com.unity.localization` and
+`com.unity.addressables` are common gaps — stub the handful of types actually
+referenced, such as `LocalizedString.GetLocalizedString()`, rather than
+chasing the whole package) and may carry a different `DOTween`/`Newtonsoft.Json`
+version than this project pins, which shows up as errors in unrelated files
+(`SpriteRenderer.DOFade`, a `JsonSubtypeConverter` overload). Confirm those
+errors are confined to files you did not touch — grep the error log for your
+changed file names — rather than treating a nonzero error count as a failed
+check.

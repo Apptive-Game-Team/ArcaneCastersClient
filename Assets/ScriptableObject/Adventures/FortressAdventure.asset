@@ -24,6 +24,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   stages: []
+  battleTheme: {fileID: 0}
   references:
     version: 2
     RefIds: []

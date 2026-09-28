@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Data.Adventures.Dto;
 using Data.Adventures.Local;
+using Data.BattleThemes;
 using UnityEngine;
 
 namespace Data.Adventures.Domain
@@ -75,14 +76,17 @@ namespace Data.Adventures.Domain
         public string Name { get; }
         public Sprite IconImage { get; }
         public List<Stage> Stages { get; }
+        public BattleThemeScriptableObject BattleTheme { get; }
 
-        public Adventure(long id, State state, string name, Sprite iconImage, List<Stage> stages)
+        public Adventure(long id, State state, string name, Sprite iconImage, List<Stage> stages,
+            BattleThemeScriptableObject battleTheme = null)
         {
             Id = id;
             State = state;
             Name = name;
             IconImage = iconImage;
             Stages = stages;
+            BattleTheme = battleTheme;
         }
 
         public Adventure(AdventureDto adventureDto, AdventureScriptableObject adventureScriptableObject)
@@ -91,6 +95,7 @@ namespace Data.Adventures.Domain
             State = (State)Enum.Parse(typeof(State), adventureDto.state.ToUpper());
             Name = adventureScriptableObject.AdventureName;
             IconImage = adventureScriptableObject.IconImage;
+            BattleTheme = adventureScriptableObject.BattleTheme;
             Stages = new List<Stage>();
             foreach (var stageDto in adventureDto.stages)
             {
