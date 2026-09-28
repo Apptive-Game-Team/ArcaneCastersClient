@@ -107,6 +107,21 @@ change one, edit the CSS and render again rather than painting the PNG.
   legacy field opens the on-screen keyboard correctly. Legacy `Text` cannot use
   the Lilita One SDF font, so typed text stays in Pretendard.
 
+- A `TMP_Dropdown` list: `Template` is a white FlatCard. `Viewport` keeps its
+  `Image` for the `Mask` but with no sprite and `m_ShowMaskGraphic: 0`; a
+  sprite there still clips the list to that sprite's alpha. `Item Background`
+  has no sprite and a white `m_Color`, and the item `Toggle` colours it:
+  normal transparent, highlighted `#EEF3F8`, pressed and selected `#FFF1B8`.
+  Items are 42 mockup px tall with ink Lilita One 18 mockup px labels.
+- A scrollbar is a FlatChip track (`#EEF3F8` on a white card, `#22425F` on
+  navy) with a `#9AA6B8` FlatChip handle, about 10 mockup px wide. Set the
+  `Sliding Area` size delta to minus the track width and the `Handle` size
+  delta to plus it.
+- Some panels build their text in code. `HaveCardMagicPopup` and
+  `DeckInfoMagicPopup` set `TMP_Text.color` themselves, so changing the panel
+  sprite to a white card left white text on it until the code changed too.
+  Grep the panel's script for `.color =` before restyling it.
+
 On a 2000 or 1920 canvas, override the instance's image
 `m_PixelsPerUnitMultiplier` and text sizes by the table above.
 

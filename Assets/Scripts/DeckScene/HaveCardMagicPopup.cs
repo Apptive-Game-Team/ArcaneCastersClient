@@ -18,6 +18,9 @@ namespace DeckScene
         private const float ContentPadding = 12f;
         private const float DetailSpacing = 8f;
 
+        // 팝업 배경이 흰 FlatCard 라서 글자는 ink(#1C1A2B)로 쓴다.
+        private static readonly Color InkColor = new Color32(0x1C, 0x1A, 0x2B, 0xFF);
+
         [SerializeField] private GameObject panelRoot;
         [SerializeField] private Transform itemRoot;
         [SerializeField] private TMP_FontAsset detailFont;
@@ -168,7 +171,7 @@ namespace DeckScene
             nameElement.preferredWidth = PanelWidth - MagicIconSize - 40f;
             nameElement.preferredHeight = MagicIconSize;
 
-            TMP_Text nameText = CreateText(nameRoot.transform, "MagicName", 21f, FontStyles.Bold);
+            TMP_Text nameText = CreateText(nameRoot.transform, "MagicName", 21f, FontStyles.Normal);
             nameText.alignment = TextAlignmentOptions.MidlineLeft;
             CreateElementIcons(nameRoot.transform, magic);
             return nameText;
@@ -213,7 +216,7 @@ namespace DeckScene
             }
             text.fontSize = fontSize;
             text.fontStyle = fontStyle;
-            text.color = Color.white;
+            text.color = InkColor;
             text.raycastTarget = false;
             return text;
         }
@@ -310,6 +313,7 @@ namespace DeckScene
             var text = textObject.GetComponent<TextMeshProUGUI>();
             text.text = "None";
             text.fontSize = 18f;
+            text.color = InkColor;
             text.alignment = TextAlignmentOptions.Center;
         }
 
