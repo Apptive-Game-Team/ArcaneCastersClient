@@ -10,6 +10,8 @@ namespace TutorialScene
         [SerializeField] private GameObject targetClickBlocker;
         [SerializeField] private TutorialPanel panel;
 
+        private readonly TutorialSortingLift lift = new TutorialSortingLift();
+
         protected override void Awake()
         {
             base.Awake();
@@ -38,37 +40,77 @@ namespace TutorialScene
 
         protected void Show(string messageKey, Transform[] targets, Action onNext, TutorialPanelSide panelSide, bool blockTargetClick = false)
         {
+            lift.RestoreAll();
+
             if (mask != null)
             {
                 mask.SetActive(true);
                 mask.transform.SetAsLastSibling();
             }
 
+            if (targetClickBlocker != null)
+            {
+                targetClickBlocker.SetActive(blockTargetClick);
+            }
+
+            panel?.Show(messageKey, onNext, panelSide);
+
+            LiftAboveMask(targets, blockTargetClick);
+        }
+
+        /// <summary>
+        /// 마스크가 그려지는 Canvas 순서를 기준으로 짚는 대상, 클릭 차단막, 안내 패널을
+        /// 차례로 한 칸씩 위에 올린다. 차단막은 대상을 보여 주되 누르지 못하게 하려고
+        /// 대상 바로 위에 두고, 패널의 다음 버튼은 차단막에 막히지 않도록 가장 위에 둔다.
+        /// </summary>
+        private void LiftAboveMask(Transform[] targets, bool blockTargetClick)
+        {
+            Canvas maskCanvas = mask != null ? mask.GetComponentInParent<Canvas>() : null;
+            if (maskCanvas == null)
+            {
+                return;
+            }
+
+            int layer = maskCanvas.sortingLayerID;
+            int order = maskCanvas.sortingOrder;
+
             if (targets != null)
             {
                 foreach (Transform target in targets)
                 {
-                    if (target != null)
-                    {
-                        target.SetAsLastSibling();
-                    }
+                    lift.Lift(target, layer, order + 1);
                 }
             }
 
-            if (targetClickBlocker != null)
+            if (targetClickBlocker != null && blockTargetClick)
             {
-                targetClickBlocker.SetActive(blockTargetClick);
-                if (blockTargetClick)
-                {
-                    targetClickBlocker.transform.SetAsLastSibling();
-                }
+                lift.Lift(targetClickBlocker.transform, layer, order + 2);
             }
 
-            panel?.Show(messageKey, onNext, panelSide);
+            if (panel != null && !SortsAbove(panel.RootRectTransform, layer, order + 2))
+            {
+                lift.Lift(panel.RootRectTransform, layer, order + 3);
+            }
+        }
+
+        // 패널은 원래 따로 높은 Canvas에 있다. 이미 차단막보다 위라면 그대로 두어, 패널보다
+        // 위에 떠야 하는 시스템 메시지나 로딩 화면 아래로 끌어내리지 않는다.
+        private static bool SortsAbove(Transform target, int layer, int order)
+        {
+            Canvas canvas = target != null ? target.GetComponentInParent<Canvas>() : null;
+            if (canvas == null)
+            {
+                return false;
+            }
+
+            Canvas sorting = canvas.overrideSorting || canvas.isRootCanvas ? canvas : canvas.rootCanvas;
+            return sorting.sortingLayerID == layer && sorting.sortingOrder > order;
         }
 
         public void Hide()
         {
+            lift.RestoreAll();
+
             if (mask != null)
             {
                 mask.SetActive(false);
