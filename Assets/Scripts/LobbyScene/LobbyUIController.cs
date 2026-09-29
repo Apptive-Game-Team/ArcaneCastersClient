@@ -26,6 +26,7 @@ namespace LobbyScene
         [SerializeField] private TMP_Dropdown deckDropdown;
         [SerializeField] private UnityEngine.UI.Button arrowButton;
         [SerializeField] private GameObject rewardUiPrefab;
+        [SerializeField] private LobbySummonShowcase summonShowcase;
         private static DeckResponseDto[] userDecks;
 
         /// <summary>
@@ -143,6 +144,7 @@ namespace LobbyScene
             deckDropdown.SetValueWithoutNotify(dropdownIndex);
             deckDropdown.RefreshShownValue();
             UpdateCaption(names[dropdownIndex]);
+            ShowDeckSummons();
         
             loadingHandle?.Dispose();
             initializing = false;
@@ -156,6 +158,7 @@ namespace LobbyScene
                 LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Random;
                 DeckSceneContext.CurrentDeck = null;
                 UpdateCaption(randomDeckPlay.GetLocalizedString());
+                ShowDeckSummons();
                 WDebug.Log("랜덤 덱 플레이 선택");
                 return;
             }
@@ -165,6 +168,7 @@ namespace LobbyScene
             DeckSceneContext.CurrentDeck = selected;     // 컨텍스트 갱신
             WDebug.Log($"index: {newIndex} 선택된 덱: {selected.name} (ID: {selected.id})");
             UpdateCaption(selected.name);                // 상단 텍스트 갱신
+            ShowDeckSummons();
             StartCoroutine(SelectDeckCoroutine(DeckSceneContext.CurrentDeck.id));
         }
         private IEnumerator SelectDeckCoroutine(long deckId)
@@ -189,6 +193,15 @@ namespace LobbyScene
                 WDebug.Log("덱 선택 성공: " + www.downloadHandler.text);
             }
         }
+        // 플레이어 곁의 소환수 두 마리를 고른 덱의 유닛으로 바꾼다. 랜덤 덱이면 기본 소환수로 돌아간다.
+        private void ShowDeckSummons()
+        {
+            if (summonShowcase != null)
+            {
+                summonShowcase.Show(DeckSceneContext.CurrentDeck);
+            }
+        }
+
         private void UpdateCaption(string deckName)
         {
             if (deckDropdown.captionText != null)

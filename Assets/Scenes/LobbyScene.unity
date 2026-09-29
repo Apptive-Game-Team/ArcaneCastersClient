@@ -1735,6 +1735,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab779775ba46f4e499c956b19c879e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &887010901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887010892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6d3230bf3c84b8c954c910453cd5a51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerImage: {fileID: 5139875977753087691}
+  readyPoseSprite: {fileID: 21300000, guid: a691e9e5e6e841d7a4e74603b302c52d, type: 3}
+  bouncers:
+  - {fileID: 7262210367496312218}
+  - {fileID: 2380672127465213812}
+  - {fileID: 7645406563379922811}
+  bounceHeight: 12
+  bounceDuration: 0.28
 --- !u!1 &910200001
 GameObject:
   m_ObjectHideFlags: 0
@@ -4213,6 +4233,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: AdventuresScene
+--- !u!114 &2065755170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065755157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c782de1a7e44460396401057765ee2c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  summonImages:
+  - {fileID: 8861282401474742997}
+  - {fileID: 3551174386606221307}
 --- !u!1 &2065755157
 GameObject:
   m_ObjectHideFlags: 0
@@ -4229,6 +4264,7 @@ GameObject:
   - component: {fileID: 2065755165}
   - component: {fileID: 2065755164}
   - component: {fileID: 2065755168}
+  - component: {fileID: 2065755170}
   m_Layer: 5
   m_Name: LobbyUIController
   m_TagString: Untagged
@@ -4401,6 +4437,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  summonShowcase: {fileID: 2065755170}
   references:
     version: 2
     RefIds: []
@@ -5312,6 +5349,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1042010048011351009, guid: df06919de6bf14dec8704fbbaef2d66a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 887010900}
+    - targetCorrespondingSourceObject: {fileID: 1042010048011351009, guid: df06919de6bf14dec8704fbbaef2d66a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 887010901}
     - targetCorrespondingSourceObject: {fileID: 1414512995440436844, guid: df06919de6bf14dec8704fbbaef2d66a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 400850613864542106}
