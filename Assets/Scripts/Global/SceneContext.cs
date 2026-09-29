@@ -104,16 +104,8 @@ namespace Global
             get; set;
         }
 
-        public static int AdventureStageScenarioCount
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// How many of the stage's scenarios were already FINISHED before this match, so the
-        /// result screen can show the caption's "x/y" without re-fetching the adventure.
-        /// </summary>
-        public static int AdventureStageClearedBeforeMatch
+        /// <summary>1-based position of the scenario inside its stage, for the "1-2" caption.</summary>
+        public static int AdventureScenarioNumber
         {
             get; set;
         }
@@ -142,8 +134,7 @@ namespace Global
             AdventureScenarioId = null;
             AdventureName = null;
             AdventureStageNumber = 0;
-            AdventureStageScenarioCount = 0;
-            AdventureStageClearedBeforeMatch = 0;
+            AdventureScenarioNumber = 0;
         }
     }
 }

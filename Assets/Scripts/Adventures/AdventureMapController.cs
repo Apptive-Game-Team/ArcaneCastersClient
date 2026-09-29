@@ -10,22 +10,27 @@ namespace Adventures
 {
     /// <summary>
     /// Builds the chapter map for the adventure currently selected on
-    /// <see cref="Data.Adventures.CurrentAdventure"/>: one round node per stage,
-    /// placed along a fixed road inside the map card, plus the bottom stage-info
-    /// card and its Play button.
+    /// <see cref="Data.Adventures.CurrentAdventure"/>: one round node per scenario
+    /// (one match), spread evenly along the road inside the map card, plus the bottom
+    /// info card and its Play button. A stage groups several scenarios on the server
+    /// and in rewards, but the player sees and picks individual matches.
     /// </summary>
     public class AdventureMapController : MonoBehaviour
     {
-        // Normalized (x, yFromTop) position of each stage node along the road,
-        // read off the approved mockup. A stage beyond the last waypoint keeps
-        // extending in the direction of the last segment.
-        private static readonly Vector2[] NodeWaypoints =
+        // Nodes sit on one horizontal line under the road (normalized yFromTop), spread
+        // evenly between these x bounds however many scenarios the adventure has.
+        private const float NodeRoadY = 0.70f;
+        private const float NodeFirstX = 0.12f;
+        private const float NodeLastX = 0.88f;
+
+        /// <summary>One map node: a scenario with the stage it belongs to.</summary>
+        private sealed class MapNode
         {
-            new Vector2(0.24f, 0.70f),
-            new Vector2(0.42f, 0.70f),
-            new Vector2(0.58f, 0.70f),
-            new Vector2(0.71f, 0.58f),
-        };
+            public Stage Stage;
+            public int StageNumber;
+            public Scenario Scenario;
+            public int ScenarioNumber;
+        }
 
         private static readonly Color CurrentColor = new Color(1f, 0.6039216f, 0.12156863f); // #FF9A1F
         private static readonly Color LockedColor = new Color(0.49411765f, 0.5294118f, 0.6f); // #7E8799
@@ -61,7 +66,8 @@ namespace Adventures
         [SerializeField] private AdventureDataSource dataSource;
 
         private Adventure currentAdventure;
-        private Stage selectedStage;
+        private readonly List<MapNode> nodes = new List<MapNode>();
+        private MapNode selectedNode;
         private Material defaultCaptionMaterial;
 
         private void Awake()
@@ -118,7 +124,8 @@ namespace Adventures
         public void Show(Adventure adventure)
         {
             currentAdventure = adventure;
-            selectedStage = null;
+            selectedNode = null;
+            nodes.Clear();
 
             foreach (Transform child in nodesContainer)
             {
@@ -146,33 +153,37 @@ namespace Adventures
             mapImage.sprite = background;
             mapImage.enabled = background != null;
 
-            Stage stageToSelect = null;
-            int currentIndex = -1;
-            for (int i = 0; i < adventure.Stages.Count; i++)
+            for (int stageIndex = 0; stageIndex < adventure.Stages.Count; stageIndex++)
             {
-                Stage stage = adventure.Stages[i];
-                // The first stage that still has an unfinished unlocked scenario is
-                // the one the player should land on by default.
-                if (stageToSelect == null && stage.EffectiveState == State.ACTIVE)
+                Stage stage = adventure.Stages[stageIndex];
+                for (int scenarioIndex = 0; scenarioIndex < stage.Scenarios.Count; scenarioIndex++)
                 {
-                    stageToSelect = stage;
-                    currentIndex = i;
+                    nodes.Add(new MapNode
+                    {
+                        Stage = stage,
+                        StageNumber = stageIndex + 1,
+                        Scenario = stage.Scenarios[scenarioIndex],
+                        ScenarioNumber = scenarioIndex + 1,
+                    });
                 }
-
-                CreateNode(stage, i);
             }
 
-            if (stageToSelect == null)
+            // Land on the first unlocked, unfinished match; when everything is cleared,
+            // on the last one instead of snapping back to the start.
+            int currentIndex = nodes.FindIndex(n => n.Scenario.State == State.ACTIVE);
+            for (int i = 0; i < nodes.Count; i++)
             {
-                // Nothing is in progress: the adventure is either brand new (unreachable
-                // in practice, since the first scenario is pre-activated) or fully
-                // cleared. Land on the last stage instead of snapping back to the first.
-                currentIndex = adventure.Stages.Count - 1;
-                stageToSelect = adventure.Stages[currentIndex];
+                CreateNode(nodes[i], i);
+            }
+
+            if (nodes.Count == 0)
+            {
+                infoCard.SetActive(false);
+                return;
             }
 
             PlaceCurrentMarker(currentIndex);
-            SelectStage(stageToSelect);
+            SelectNode(nodes[currentIndex >= 0 ? currentIndex : nodes.Count - 1]);
         }
 
         /// <summary>Puts the "you are here" head marker above the current playable stage's node.</summary>
@@ -196,7 +207,7 @@ namespace Adventures
             currentMarker.gameObject.SetActive(true);
         }
 
-        private void CreateNode(Stage stage, int index)
+        private void CreateNode(MapNode node, int index)
         {
             GameObject nodeObject = Instantiate(stageNodePrefab, nodesContainer);
             var rect = (RectTransform)nodeObject.transform;
@@ -206,7 +217,7 @@ namespace Adventures
             rect.anchorMax = anchor;
             rect.anchoredPosition = Vector2.zero;
 
-            State status = stage.EffectiveState;
+            State status = node.Scenario.State;
             bool isPlayable = status != State.INACTIVE;
             Image background = nodeObject.GetComponentInChildren<Image>();
             TMP_Text label = nodeObject.GetComponentInChildren<TMP_Text>();
@@ -226,50 +237,39 @@ namespace Adventures
             }
             background.color = nodeColor;
 
-            // A cleared stage shows a check mark instead of its number so progress
-            // reads at a glance; locked and current stages keep the stage number.
+            // A cleared match shows a check mark instead of its number so progress reads
+            // at a glance; locked and current matches keep their order number.
             label.text = status == State.FINISHED ? "✓" : (index + 1).ToString();
 
             Button button = nodeObject.GetComponent<Button>();
             button.interactable = isPlayable;
             if (isPlayable)
             {
-                button.onClick.AddListener(() => SelectStage(stage));
+                button.onClick.AddListener(() => SelectNode(node));
             }
         }
 
-        private static Vector2 GetNodeWaypoint(int index)
+        private Vector2 GetNodeWaypoint(int index)
         {
-            if (index < NodeWaypoints.Length)
+            if (nodes.Count <= 1)
             {
-                return NodeWaypoints[index];
+                return new Vector2((NodeFirstX + NodeLastX) / 2f, NodeRoadY);
             }
 
-            Vector2 last = NodeWaypoints[NodeWaypoints.Length - 1];
-            Vector2 previous = NodeWaypoints[NodeWaypoints.Length - 2];
-            Vector2 step = last - previous;
-            int extraSteps = index - (NodeWaypoints.Length - 1);
-            Vector2 extrapolated = last + step * extraSteps;
-            extrapolated.x = Mathf.Clamp01(extrapolated.x);
-            extrapolated.y = Mathf.Clamp01(extrapolated.y);
-            return extrapolated;
+            float t = index / (float)(nodes.Count - 1);
+            return new Vector2(Mathf.Lerp(NodeFirstX, NodeLastX, t), NodeRoadY);
         }
 
-        private void SelectStage(Stage stage)
+        private void SelectNode(MapNode node)
         {
-            selectedStage = stage;
+            selectedNode = node;
             infoCard.SetActive(true);
             stageIconImage.sprite = currentAdventure.IconImage;
 
-            int stageNumber = currentAdventure.Stages.IndexOf(stage) + 1;
-            stageCaptionText.text = $"{currentAdventure.Name} · Stage {stageNumber}";
-            if (stage.Scenarios.Count > 1)
-            {
-                // A stage holds several matches; show how far into it the player is.
-                int cleared = stage.Scenarios.FindAll(s => s.State == State.FINISHED).Count;
-                stageCaptionText.text += $" · {cleared}/{stage.Scenarios.Count}";
-            }
+            // "Forest · 1-2": stage 1, its second match.
+            stageCaptionText.text = $"{currentAdventure.Name} · {node.StageNumber}-{node.ScenarioNumber}";
 
+            Stage stage = node.Stage;
             bool hasName = !string.IsNullOrEmpty(stage.Name);
             stageNameText.gameObject.SetActive(hasName);
             stageNameText.text = hasName ? stage.Name : string.Empty;
@@ -299,18 +299,18 @@ namespace Adventures
         private void RefreshPlayButton()
         {
             bool isRequesting = AdventureViewModel.Instance.CurrentState.Data == AdventureViewModel.AdventureState.Requesting;
-            bool isPlayable = selectedStage != null && selectedStage.EffectiveState != State.INACTIVE;
+            bool isPlayable = selectedNode != null && selectedNode.Scenario.State != State.INACTIVE;
             playButton.interactable = isPlayable && !isRequesting;
         }
 
         private void OnPlayClicked()
         {
-            if (selectedStage == null || selectedStage.Scenarios.Count == 0)
+            if (selectedNode == null)
             {
                 return;
             }
 
-            Scenario scenario = NextScenario(selectedStage);
+            Scenario scenario = selectedNode.Scenario;
 
             // CurrentAdventure and this whole scene are gone by the time the match
             // ends (GameScene isn't in CurrentAdventure's bound scenes), so
@@ -319,23 +319,10 @@ namespace Adventures
             SceneContext.AdventureId = currentAdventure.Id;
             SceneContext.AdventureScenarioId = scenario.Id;
             SceneContext.AdventureName = currentAdventure.Name;
-            SceneContext.AdventureStageNumber = currentAdventure.Stages.IndexOf(selectedStage) + 1;
-            SceneContext.AdventureStageScenarioCount = selectedStage.Scenarios.Count;
-            SceneContext.AdventureStageClearedBeforeMatch =
-                selectedStage.Scenarios.FindAll(s => s.State == State.FINISHED).Count;
+            SceneContext.AdventureStageNumber = selectedNode.StageNumber;
+            SceneContext.AdventureScenarioNumber = selectedNode.ScenarioNumber;
 
             AdventureStoryOverlayUI.Play(scenario, () => AdventureViewModel.Instance.PlayPVE(scenario.Id));
-        }
-
-        /// <summary>
-        /// The match the play button starts: the stage's first unlocked, unfinished
-        /// scenario, so a stage of several matches is played through in order. A fully
-        /// cleared stage replays its last scenario.
-        /// </summary>
-        private static Scenario NextScenario(Stage stage)
-        {
-            Scenario active = stage.Scenarios.Find(s => s.State == State.ACTIVE);
-            return active ?? stage.Scenarios[stage.Scenarios.Count - 1];
         }
 
         private void OnAdventureStateChanged(AdventureViewModel.AdventureState state)

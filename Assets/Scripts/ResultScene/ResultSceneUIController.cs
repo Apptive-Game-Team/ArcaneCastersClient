@@ -98,9 +98,7 @@ namespace ResultScene
 
         /// <summary>
         /// Adventure result: cleared/failed instead of an MMR delta, plus the
-        /// adventure/stage caption (e.g. "Forest · Stage 2 · 2/3"). Cleared count
-        /// assumes the linear stage progression AdventureMapController already relies
-        /// on for NextScenario, so no re-fetch is needed here.
+        /// adventure caption (e.g. "Forest · 2-3": stage 2, its third match).
         /// </summary>
         private void ShowAdventureResult(string outcome)
         {
@@ -115,16 +113,8 @@ namespace ResultScene
             SetActive(mmrLabel, false);
             if (mmrDeltaText != null) mmrDeltaText.gameObject.SetActive(false);
 
-            int clearedCount = Mathf.Clamp(
-                SceneContext.AdventureStageClearedBeforeMatch + (cleared ? 1 : 0),
-                0,
-                SceneContext.AdventureStageScenarioCount);
-
-            string caption = $"{SceneContext.AdventureName} · Stage {SceneContext.AdventureStageNumber}";
-            if (SceneContext.AdventureStageScenarioCount > 1)
-            {
-                caption += $" · {clearedCount}/{SceneContext.AdventureStageScenarioCount}";
-            }
+            // "Forest · 1-2", the same label the map node shows.
+            string caption = $"{SceneContext.AdventureName} · {SceneContext.AdventureStageNumber}-{SceneContext.AdventureScenarioNumber}";
             SetResultText(caption);
 
             SetActive(retryButton, true);
