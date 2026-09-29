@@ -191,6 +191,9 @@
 | `explode/electric_explode_frame_1.png` | 클라이언트 PR (이슈 #76) | 192x116 RGBA. v1 한 번에 통과, magenta 배경이라 key 를 제거했다. 공유 crop box `(19, 334, 1235, 1016)` 와 배율 0.15789. `check-frame-pair.py` 세로 +0.000, 가로 -0.002 unit |
 | `Background/grass_1.png` | 클라이언트 PR (이슈 #76) | 238x117 RGBA, 원본 캔버스 유지, 내용 236x107 로 옛 내용과 정확히 같다. v1 반려(비 1.56, 폭이 옛 것의 76%), v2 반려(비 2.02, 폭 91.5% — 8% 한계를 넘었다), v3 통과. **비를 말이 아니라 숫자로 적어야 맞는다** — "twice as wide" 는 2.02 를 돌려줬고 "exactly 2.2 times as wide — 1760 x 800 pixels" 는 2.199 를 돌려줬다. 바닥 여백 5px(옛 5px) |
 | `Background/grass_2.png` | 클라이언트 PR (이슈 #76) | 466x99 RGBA, 원본 캔버스 유지, 내용 462x82. v1 한 번에 통과 — 확정한 `grass_1` 을 `-i` 로 붙여 같은 잎 모양과 팔레트를 받았다. 폭은 옛 462 와 같고 세로가 옛 90 보다 8.9% 짧다(생성물 비 5.58 대 원본 5.13). 어느 씬에서도 참조가 없는 자산이라 재생성으로 창을 더 쓰지 않았다. 바닥 여백 7px(옛 7px) |
+| `pve/pve_nature_slime_nest.png` | 클라이언트 PR (이슈 #169) | 192x142 RGBA, 원본 캔버스 유지. `PveNatureSlimeNest` 모험 보스. 애니메이션풍 유광 렌더링을 다면체 cut-paper 로 다시 그렸다. v1 반려(둥근 실루엣 가로세로비 0.997, 옛 1.35 대비 지나치게 좁고 높음), v2 통과(비 1.54, 바닥 정렬 0px). alignment 7(bottom-center) 유지 |
+| `pve/pve_water_slime_nest.png` | 클라이언트 PR (이슈 #169) | 192x158 RGBA, 원본 캔버스 유지. `PveWaterSlimeNest` 모험 보스. 위와 같은 이유로 다시 그렸다. v1 반려(비 1.59, 옛 1.22 대비 지나치게 낮고 넓음), v2 통과(비 1.21, 폭 99.5%·세로 100%). alignment 7 유지 |
+| `pve/pve_vine_witch.png` | 클라이언트 PR (이슈 #169) | 192x155 RGBA, 원본 캔버스 유지. `PveVineWitch` 모험 보스, 숲의 마녀. 애니메이션풍 인물이라 화풍 자체가 달랐던 것을 다면체 cut-paper 로 다시 그렸다. v1 한 번에 통과 — 빨간 장발·잎 후드·지팡이 실루엣 유지, `facing.py` 기준 눈 중심이 몸통 중심보다 오른쪽(오른쪽 방향 확인). alignment 7 유지 |
 
 ## 다음 교체 후보
 
@@ -254,7 +257,7 @@ v1 은 alpha 덩어리가 정확히 날 넷으로 갈라지므로(281x31, 450x68
 
 - `Art/Images/UI/Card/` 11장 — `type_fire`·`type_lightning`·`type_nature`·`type_rock`·`type_water`·`type_wind`, `magic_build`·`magic_drop`·`magic_explode`·`magic_shoot`·`magic_spawn`. 평면 vector 아이콘으로 자기들끼리는 일관돼 있다
 - `Art/Images/Customize/` 9장 — 모자·망토와 그 아이콘, `check.png`
-- `Art/Images/Adventure/` 3장, `Resources/Game/pve/` 3장 — 모험 모드 자산. `pve_vine_witch.png` 는 애니메이션풍 인물이라 화풍 자체가 다르다
+- `Art/Images/Adventure/` 3장 — 모험 지도/배경 자산, 아직 같은 기준을 댈지 정하지 않았다. `Resources/Game/pve/` 3장(`pve_nature_slime_nest.png`, `pve_water_slime_nest.png`, `pve_vine_witch.png`)은 이슈 #169 에서 다면체 cut-paper 로 다시 그려 완료 표로 옮겼다
 - 기타 UI 7장 — `Art/Images/Card.png`, `Art/Images/UI/Catalog.png`·`SpeechBubble.png`·`lockImage.png`, `Art/Images/Obstacle/CircleObstacle.png`, `Resources/UI/ObjectIndicator.png`·`SpeechBubble.png`
 - `Art/Images/Background/background.png` — PR #61 에서 교체 중이다
 

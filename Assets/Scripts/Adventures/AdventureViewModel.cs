@@ -1,4 +1,5 @@
 using Data;
+using Data.Adventures;
 using GameScene.Dto;
 using Global;
 using LobbyScene.Debugger;
@@ -72,6 +73,13 @@ namespace Adventures
             {
                 return;
             }
+
+            // CurrentAdventure is destroyed on this load (it is bound to AdventureScene /
+            // AdventuresScene), so the theme has to be copied into SceneContext now or it is
+            // gone by the time BattleThemeApplier reads it in GameScene.
+            SceneContext.BattleTheme = CurrentAdventure.Instance != null
+                ? CurrentAdventure.Instance.Adventure?.BattleTheme
+                : null;
 
             SceneManager.LoadScene(targetSceneName);
         }

@@ -56,6 +56,9 @@ namespace LobbyScene
             WDebug.Log("[EnterInGameByMine] successfully recover session: " + body);
 
             SceneContext.MatchInfo = matchedInfoDto;
+            // A recovered session is never an adventure match; guarantee the forest default
+            // in case a previous adventure match left a theme set.
+            SceneContext.ClearAdventureMatch();
             yield return GameDataRefresh.Refresh();
             SceneManager.LoadScene("GameScene");
         }

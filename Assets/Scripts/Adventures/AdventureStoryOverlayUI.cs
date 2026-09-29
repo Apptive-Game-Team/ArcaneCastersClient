@@ -210,8 +210,8 @@ namespace Adventures
             currentLineIndex = 0;
             inputReadyAt = Time.unscaledTime + InputBufferDuration;
 
-            ApplyPortrait(leftPortraitImage, activeScenario.Story.LeftImage);
-            ApplyPortrait(rightPortraitImage, activeScenario.Story.RightImage);
+            ApplyPortrait(leftPortraitImage, activeScenario.Story.LeftImage, false);
+            ApplyPortrait(rightPortraitImage, activeScenario.Story.RightImage, true);
 
             overlayRoot.SetActive(true);
             DisplayCurrentLine();
@@ -238,8 +238,8 @@ namespace Adventures
                 dialogueText.text = string.Empty;
             }
 
-            SetPortraitState(leftPortraitImage, isLeftSpeaker);
-            SetPortraitState(rightPortraitImage, !isLeftSpeaker);
+            SetPortraitState(leftPortraitImage, isLeftSpeaker, false);
+            SetPortraitState(rightPortraitImage, !isLeftSpeaker, true);
 
             if (lineResolutionCoroutine != null)
             {
@@ -291,7 +291,14 @@ namespace Adventures
             callback?.Invoke();
         }
 
-        private static void ApplyPortrait(Image portraitImage, Sprite portrait)
+        // Character art faces right. The speaker on the right is mirrored so both sides face
+        // each other instead of the enemy looking away from the player.
+        private static Vector3 PortraitScale(float scale, bool mirrored)
+        {
+            return new Vector3(mirrored ? -scale : scale, scale, 1f);
+        }
+
+        private static void ApplyPortrait(Image portraitImage, Sprite portrait, bool mirrored)
         {
             if (portraitImage == null)
             {
@@ -301,10 +308,10 @@ namespace Adventures
             portraitImage.sprite = portrait;
             portraitImage.enabled = portrait != null;
             portraitImage.color = new Color(1f, 1f, 1f, InactivePortraitAlpha);
-            portraitImage.rectTransform.localScale = Vector3.one * InactivePortraitScale;
+            portraitImage.rectTransform.localScale = PortraitScale(InactivePortraitScale, mirrored);
         }
 
-        private static void SetPortraitState(Image portraitImage, bool isActive)
+        private static void SetPortraitState(Image portraitImage, bool isActive, bool mirrored)
         {
             if (portraitImage == null || !portraitImage.enabled)
             {
@@ -314,7 +321,7 @@ namespace Adventures
             float alpha = isActive ? ActivePortraitAlpha : InactivePortraitAlpha;
             float scale = isActive ? ActivePortraitScale : InactivePortraitScale;
             portraitImage.color = new Color(1f, 1f, 1f, alpha);
-            portraitImage.rectTransform.localScale = Vector3.one * scale;
+            portraitImage.rectTransform.localScale = PortraitScale(scale, mirrored);
         }
 
         private IEnumerator ResolveLocalizedLine(AdventureStoryLineData line, int lineIndex, int lineVersion)
