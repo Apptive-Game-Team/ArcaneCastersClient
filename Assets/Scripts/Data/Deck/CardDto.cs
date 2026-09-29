@@ -18,5 +18,8 @@ namespace Data.Deck
         public bool unlocked;
         public string unlockText;
         public string progressText;
+
+        /// <summary><c>magics.cast_kind</c>. 옛 lobby 는 보내지 않아 null 이다.</summary>
+        public string castKind;
     }
 }

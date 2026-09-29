@@ -131,6 +131,7 @@ namespace Data.Magic
                     elements = elements,
                     manaCost = magic.manaCost,
                     indicator = magic.indicator,
+                    castKind = MagicCastKinds.Parse(magic.castKind),
                 });
             }
 
