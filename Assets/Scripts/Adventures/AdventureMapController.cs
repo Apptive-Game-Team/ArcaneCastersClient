@@ -182,29 +182,65 @@ namespace Adventures
                 return;
             }
 
-            PlaceCurrentMarker(currentIndex);
+            PlaceMarker(currentIndex >= 0 ? currentIndex : nodes.Count - 1, false);
             SelectNode(nodes[currentIndex >= 0 ? currentIndex : nodes.Count - 1]);
         }
 
-        /// <summary>Puts the "you are here" head marker above the current playable stage's node.</summary>
-        private void PlaceCurrentMarker(int stageIndex)
+        private const float MarkerMoveSeconds = 0.25f;
+        private Coroutine markerMove;
+
+        /// <summary>
+        /// Puts the player's head marker above node <paramref name="index"/>. It starts on the
+        /// current match and walks to whichever node the player selects, so the map shows where
+        /// the Play button will take them.
+        /// </summary>
+        private void PlaceMarker(int index, bool animate)
         {
             if (currentMarker == null)
             {
                 return;
             }
 
-            if (stageIndex < 0)
+            if (index < 0)
             {
                 currentMarker.gameObject.SetActive(false);
                 return;
             }
 
-            Vector2 waypoint = GetNodeWaypoint(stageIndex);
-            Vector2 anchor = new Vector2(waypoint.x, 1f - waypoint.y);
-            currentMarker.anchorMin = anchor;
-            currentMarker.anchorMax = anchor;
+            Vector2 waypoint = GetNodeWaypoint(index);
+            Vector2 target = new Vector2(waypoint.x, 1f - waypoint.y);
+            bool wasVisible = currentMarker.gameObject.activeSelf;
             currentMarker.gameObject.SetActive(true);
+
+            if (markerMove != null)
+            {
+                StopCoroutine(markerMove);
+                markerMove = null;
+            }
+
+            if (!animate || !wasVisible)
+            {
+                currentMarker.anchorMin = target;
+                currentMarker.anchorMax = target;
+                return;
+            }
+
+            markerMove = StartCoroutine(MoveMarker(currentMarker.anchorMin, target));
+        }
+
+        private System.Collections.IEnumerator MoveMarker(Vector2 from, Vector2 to)
+        {
+            float elapsed = 0f;
+            while (elapsed < MarkerMoveSeconds)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / MarkerMoveSeconds));
+                Vector2 anchor = Vector2.Lerp(from, to, t);
+                currentMarker.anchorMin = anchor;
+                currentMarker.anchorMax = anchor;
+                yield return null;
+            }
+            markerMove = null;
         }
 
         private void CreateNode(MapNode node, int index)
@@ -263,6 +299,7 @@ namespace Adventures
         private void SelectNode(MapNode node)
         {
             selectedNode = node;
+            PlaceMarker(nodes.IndexOf(node), true);
             infoCard.SetActive(true);
             stageIconImage.sprite = currentAdventure.IconImage;
 
