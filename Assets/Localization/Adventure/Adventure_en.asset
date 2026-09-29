@@ -243,6 +243,142 @@ MonoBehaviour:
     m_Localized: Then let's see this through to the end.
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000001
+    m_Localized: "Slimes are pouring out of that nest. Break it!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000002
+    m_Localized: "Squish! Squish!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000003
+    m_Localized: "Two nests this time. Mind both lanes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000004
+    m_Localized: "You'll pay for that!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000005
+    m_Localized: "The colony is too tough. Hold out for 90 seconds!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000006
+    m_Localized: "30 seconds left!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000007
+    m_Localized: "10 more seconds!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000008
+    m_Localized: "Heh... you made it this far?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000009
+    m_Localized: "Enough games!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000010
+    m_Localized: "Rise, my garden!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000011
+    m_Localized: "Something heavy is walking this way..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000012
+    m_Localized: "Guardians, protect the nest!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000013
+    m_Localized: "Cut the roots and the spring will show itself."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000014
+    m_Localized: "The spring awakens!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000015
+    m_Localized: "So you are the one burning my forest."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000016
+    m_Localized: "Wake, old one!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000017
+    m_Localized: "My nests, rise!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000018
+    m_Localized: "This forest is MINE!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000019
+    m_Localized: "The gate tower still fires. Stay out of its reach and break it."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000020
+    m_Localized: "The wall is cracking!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000021
+    m_Localized: "Two towers guard the wall."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000022
+    m_Localized: "The other tower turns toward you!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000023
+    m_Localized: "The gatekeeper wakes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000024
+    m_Localized: "Grrrraaah!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000025
+    m_Localized: "Defend the gate!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000026
+    m_Localized: "The forge is lit. Survive for 100 seconds!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000027
+    m_Localized: "30 seconds left!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000028
+    m_Localized: "10 more seconds!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000029
+    m_Localized: "Vines hold the keep together. Tear out the roots."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000030
+    m_Localized: "Something stirs at the heart of the keep..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000031
+    m_Localized: "You again? My fortress will be your grave."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000032
+    m_Localized: "Forge spirits, burn them!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000033
+    m_Localized: "Stone, rise!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000034
+    m_Localized: "No... NO!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

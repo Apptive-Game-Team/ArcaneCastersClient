@@ -229,6 +229,142 @@ MonoBehaviour:
     m_Key: 4-3_pre_002_right
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000001
+    m_Key: pve_1_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000002
+    m_Key: pve_1_phase_50
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000003
+    m_Key: pve_2_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000004
+    m_Key: pve_2_nature_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000005
+    m_Key: pve_3_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000006
+    m_Key: pve_3_warn_30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000007
+    m_Key: pve_3_warn_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000008
+    m_Key: pve_4_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000009
+    m_Key: pve_4_phase_60
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000010
+    m_Key: pve_4_phase_30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000011
+    m_Key: pve_5_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000012
+    m_Key: pve_5_phase_50
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000013
+    m_Key: pve_6_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000014
+    m_Key: pve_6_outer_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000015
+    m_Key: pve_7_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000016
+    m_Key: pve_7_phase_70
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000017
+    m_Key: pve_7_phase_40
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000018
+    m_Key: pve_7_phase_15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000019
+    m_Key: pve_8_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000020
+    m_Key: pve_8_phase_50
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000021
+    m_Key: pve_9_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000022
+    m_Key: pve_9_tower_a_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000023
+    m_Key: pve_10_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000024
+    m_Key: pve_10_phase_60
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000025
+    m_Key: pve_10_phase_30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000026
+    m_Key: pve_11_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000027
+    m_Key: pve_11_warn_30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000028
+    m_Key: pve_11_warn_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000029
+    m_Key: pve_12_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000030
+    m_Key: pve_12_root_a_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000031
+    m_Key: pve_13_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000032
+    m_Key: pve_13_phase_70
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000033
+    m_Key: pve_13_phase_40
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000034
+    m_Key: pve_13_phase_15
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
