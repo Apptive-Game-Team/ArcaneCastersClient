@@ -41,6 +41,46 @@ namespace Data.Adventures.Domain
         /// <summary>Chapter map artwork shared by every stage of the same adventure, or null.</summary>
         public Sprite BackgroundImage { get; }
 
+        /// <summary>
+        /// Stage progress recomputed from <see cref="Scenarios"/> instead of trusting
+        /// <see cref="State"/>. The lobby's per-stage aggregate groups its SQL by
+        /// scenario id, so the value it sends is really the *first* scenario's own
+        /// state relabeled as the stage's — a stage with 4 scenarios reports FINISHED
+        /// as soon as only the first one clears. Each `Scenario.State` is read from its
+        /// own `user_scenarios` row directly and is not affected by that bug, so
+        /// re-deriving the stage's status from the scenario list here is reliable:
+        /// FINISHED only when every scenario is finished, ACTIVE when any scenario has
+        /// been started, INACTIVE otherwise.
+        /// </summary>
+        public State EffectiveState
+        {
+            get
+            {
+                if (Scenarios.Count == 0)
+                {
+                    return State.INACTIVE;
+                }
+
+                bool allFinished = true;
+                bool anyStarted = false;
+                foreach (Scenario scenario in Scenarios)
+                {
+                    if (scenario.State != State.FINISHED)
+                    {
+                        allFinished = false;
+                    }
+                    if (scenario.State != State.INACTIVE)
+                    {
+                        anyStarted = true;
+                    }
+                }
+
+                if (allFinished) return State.FINISHED;
+                if (anyStarted) return State.ACTIVE;
+                return State.INACTIVE;
+            }
+        }
+
         public Stage(long id, State state, List<Scenario> scenarios)
         {
             Id = id;

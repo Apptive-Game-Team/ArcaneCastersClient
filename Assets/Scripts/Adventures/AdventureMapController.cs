@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Data.Adventures;
 using Data.Adventures.Domain;
+using Global;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,9 +12,7 @@ namespace Adventures
     /// Builds the chapter map for the adventure currently selected on
     /// <see cref="Data.Adventures.CurrentAdventure"/>: one round node per stage,
     /// placed along a fixed road inside the map card, plus the bottom stage-info
-    /// card and its Play button. <see cref="AdventureChapterSelector"/> calls
-    /// <see cref="Show"/> again when the player switches chapters from the
-    /// segmented control without leaving this scene.
+    /// card and its Play button.
     /// </summary>
     public class AdventureMapController : MonoBehaviour
     {
@@ -27,8 +27,11 @@ namespace Adventures
             new Vector2(0.71f, 0.58f),
         };
 
-        private static readonly Color PlayableColor = new Color(1f, 0.6039216f, 0.12156863f); // #FF9A1F
+        private static readonly Color CurrentColor = new Color(1f, 0.6039216f, 0.12156863f); // #FF9A1F
         private static readonly Color LockedColor = new Color(0.49411765f, 0.5294118f, 0.6f); // #7E8799
+        // Same green ScenarioButton already uses for a finished scenario, reused here
+        // so "cleared" reads the same way everywhere in the adventure UI.
+        private static readonly Color ClearedColor = new Color(0.30f, 0.80f, 0.45f);
 
         // The caption line ("Forest · Stage 1") normally sits small and grey above the
         // bigger orange stage name. When a stage has no name yet there is nothing to
@@ -53,6 +56,10 @@ namespace Adventures
         [SerializeField] private Button playButton;
         [SerializeField] private RectTransform currentMarker;
 
+        // Used only to restore CurrentAdventure when this scene is reached straight
+        // from ResultScene's "back to adventure" button; see Start().
+        [SerializeField] private AdventureDataSource dataSource;
+
         private Adventure currentAdventure;
         private Stage selectedStage;
         private Material defaultCaptionMaterial;
@@ -66,7 +73,27 @@ namespace Adventures
         private void Start()
         {
             AdventureViewModel.Instance.CurrentState.OnStateChange += OnAdventureStateChanged;
-            Show(CurrentAdventure.Instance != null ? CurrentAdventure.Instance.Adventure : null);
+
+            Adventure current = CurrentAdventure.Instance != null ? CurrentAdventure.Instance.Adventure : null;
+            if (current != null)
+            {
+                Show(current);
+                return;
+            }
+
+            // Reached directly from ResultScene's "Back to adventure" button:
+            // CurrentAdventure was destroyed when GameScene loaded (it is bound to
+            // AdventureScene / AdventuresScene only), so there is nothing to show yet.
+            // SceneContext.AdventureId survives the scene changes; refetch and
+            // reselect that adventure before building the map.
+            if (SceneContext.AdventureId.HasValue && dataSource != null)
+            {
+                long adventureId = SceneContext.AdventureId.Value;
+                dataSource.GetAdventures(adventures => RestoreAdventure(adventures, adventureId));
+                return;
+            }
+
+            Show(null);
         }
 
         private void OnDestroy()
@@ -77,7 +104,17 @@ namespace Adventures
             }
         }
 
-        /// <summary>Rebuilds the whole map for <paramref name="adventure"/>. Safe to call again on chapter switch.</summary>
+        private void RestoreAdventure(List<Adventure> adventures, long adventureId)
+        {
+            Adventure restored = adventures.Find(a => a.Id == adventureId);
+            if (restored != null && CurrentAdventure.Instance != null)
+            {
+                CurrentAdventure.Instance.SetAdventure(restored);
+            }
+            Show(restored);
+        }
+
+        /// <summary>Rebuilds the whole map for <paramref name="adventure"/>.</summary>
         public void Show(Adventure adventure)
         {
             currentAdventure = adventure;
@@ -114,8 +151,9 @@ namespace Adventures
             for (int i = 0; i < adventure.Stages.Count; i++)
             {
                 Stage stage = adventure.Stages[i];
-                bool isPlayable = stage.State != State.INACTIVE;
-                if (isPlayable && (stageToSelect == null || stage.State == State.ACTIVE))
+                // The first stage that still has an unfinished unlocked scenario is
+                // the one the player should land on by default.
+                if (stageToSelect == null && stage.EffectiveState == State.ACTIVE)
                 {
                     stageToSelect = stage;
                     currentIndex = i;
@@ -124,8 +162,17 @@ namespace Adventures
                 CreateNode(stage, i);
             }
 
+            if (stageToSelect == null)
+            {
+                // Nothing is in progress: the adventure is either brand new (unreachable
+                // in practice, since the first scenario is pre-activated) or fully
+                // cleared. Land on the last stage instead of snapping back to the first.
+                currentIndex = adventure.Stages.Count - 1;
+                stageToSelect = adventure.Stages[currentIndex];
+            }
+
             PlaceCurrentMarker(currentIndex);
-            SelectStage(stageToSelect ?? adventure.Stages[0]);
+            SelectStage(stageToSelect);
         }
 
         /// <summary>Puts the "you are here" head marker above the current playable stage's node.</summary>
@@ -159,11 +206,29 @@ namespace Adventures
             rect.anchorMax = anchor;
             rect.anchoredPosition = Vector2.zero;
 
-            bool isPlayable = stage.State != State.INACTIVE;
+            State status = stage.EffectiveState;
+            bool isPlayable = status != State.INACTIVE;
             Image background = nodeObject.GetComponentInChildren<Image>();
             TMP_Text label = nodeObject.GetComponentInChildren<TMP_Text>();
-            background.color = isPlayable ? PlayableColor : LockedColor;
-            label.text = (index + 1).ToString();
+
+            Color nodeColor;
+            switch (status)
+            {
+                case State.FINISHED:
+                    nodeColor = ClearedColor;
+                    break;
+                case State.ACTIVE:
+                    nodeColor = CurrentColor;
+                    break;
+                default:
+                    nodeColor = LockedColor;
+                    break;
+            }
+            background.color = nodeColor;
+
+            // A cleared stage shows a check mark instead of its number so progress
+            // reads at a glance; locked and current stages keep the stage number.
+            label.text = status == State.FINISHED ? "✓" : (index + 1).ToString();
 
             Button button = nodeObject.GetComponent<Button>();
             button.interactable = isPlayable;
@@ -234,7 +299,7 @@ namespace Adventures
         private void RefreshPlayButton()
         {
             bool isRequesting = AdventureViewModel.Instance.CurrentState.Data == AdventureViewModel.AdventureState.Requesting;
-            bool isPlayable = selectedStage != null && selectedStage.State != State.INACTIVE;
+            bool isPlayable = selectedStage != null && selectedStage.EffectiveState != State.INACTIVE;
             playButton.interactable = isPlayable && !isRequesting;
         }
 
@@ -246,6 +311,19 @@ namespace Adventures
             }
 
             Scenario scenario = NextScenario(selectedStage);
+
+            // CurrentAdventure and this whole scene are gone by the time the match
+            // ends (GameScene isn't in CurrentAdventure's bound scenes), so
+            // ResultScene needs its own copy of the adventure/stage context to route
+            // back to the right map and show the right caption.
+            SceneContext.AdventureId = currentAdventure.Id;
+            SceneContext.AdventureScenarioId = scenario.Id;
+            SceneContext.AdventureName = currentAdventure.Name;
+            SceneContext.AdventureStageNumber = currentAdventure.Stages.IndexOf(selectedStage) + 1;
+            SceneContext.AdventureStageScenarioCount = selectedStage.Scenarios.Count;
+            SceneContext.AdventureStageClearedBeforeMatch =
+                selectedStage.Scenarios.FindAll(s => s.State == State.FINISHED).Count;
+
             AdventureStoryOverlayUI.Play(scenario, () => AdventureViewModel.Instance.PlayPVE(scenario.Id));
         }
 

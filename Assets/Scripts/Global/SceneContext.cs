@@ -74,6 +74,50 @@ namespace Global
             get; set;
         }
 
+        /// <summary>
+        /// Adventure being played, carried the same way as <see cref="BattleTheme"/>:
+        /// `Data.Adventures.CurrentAdventure` is destroyed when GameScene loads (it is
+        /// bound to AdventureScene / AdventuresScene), so `AdventureMapController`
+        /// stamps these fields right before starting the match and `ResultScene`
+        /// reads them to route back to the right adventure and stage instead of the
+        /// lobby. Null on every non-adventure match.
+        /// </summary>
+        public static long? AdventureId
+        {
+            get; set;
+        }
+
+        /// <summary>Scenario the player just started; used by the result screen's Retry button.</summary>
+        public static long? AdventureScenarioId
+        {
+            get; set;
+        }
+
+        public static string AdventureName
+        {
+            get; set;
+        }
+
+        /// <summary>1-based stage index within <see cref="AdventureName"/>, for the result caption.</summary>
+        public static int AdventureStageNumber
+        {
+            get; set;
+        }
+
+        public static int AdventureStageScenarioCount
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// How many of the stage's scenarios were already FINISHED before this match, so the
+        /// result screen can show the caption's "x/y" without re-fetching the adventure.
+        /// </summary>
+        public static int AdventureStageClearedBeforeMatch
+        {
+            get; set;
+        }
+
         public static void ClearContext()
         {
             JwtToken = null;
@@ -83,6 +127,12 @@ namespace Global
             SelectedDeck = null;
             OwnedCards = null;
             BattleTheme = null;
+            AdventureId = null;
+            AdventureScenarioId = null;
+            AdventureName = null;
+            AdventureStageNumber = 0;
+            AdventureStageScenarioCount = 0;
+            AdventureStageClearedBeforeMatch = 0;
             GuestContext.ClearGuestInfo();
         }
     }
