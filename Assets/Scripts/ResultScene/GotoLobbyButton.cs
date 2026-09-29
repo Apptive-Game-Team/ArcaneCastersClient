@@ -16,8 +16,8 @@ namespace ResultScene
     /// </summary>
     public class GotoLobbyButton : ButtonBase
     {
-        // LobbyUI Shared Data.asset key "AdventureBackButton".
-        private static readonly TableEntryReference AdventureBackEntry = new TableEntryReference(76060000000000026);
+        // LobbyUI table key. TableEntryReference converts implicitly from a key string.
+        private static readonly TableEntryReference AdventureBackEntry = "AdventureBackButton";
 
         [SerializeField] private LocalizeStringEvent label;
 

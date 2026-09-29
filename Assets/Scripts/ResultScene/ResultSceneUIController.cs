@@ -32,9 +32,10 @@ namespace ResultScene
         [SerializeField] private GameObject mmrLabel;
         [SerializeField] private GameObject retryButton;
 
-        // LobbyUI Shared Data.asset keys "AdventureCleared" / "AdventureFailed".
-        private static readonly TableEntryReference AdventureClearedEntry = new TableEntryReference(76060000000000024);
-        private static readonly TableEntryReference AdventureFailedEntry = new TableEntryReference(76060000000000025);
+        // LobbyUI table keys. TableEntryReference has no public constructor; it converts
+        // implicitly from a key string or an entry id.
+        private static readonly TableEntryReference AdventureClearedEntry = "AdventureCleared";
+        private static readonly TableEntryReference AdventureFailedEntry = "AdventureFailed";
 
         private void Awake()
         {
