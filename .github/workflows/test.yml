@@ -57,11 +57,31 @@ jobs:
             Library-StandaloneLinux64-
             Library-
 
+      # unity-test-runner 는 UNITY_LICENSE 를 받으면 .ulf 파일을 그대로 활성화하는데,
+      # 이 저장소의 라이선스는 그 방식에서 "TimeStamp validation failed" 로 거절된다.
+      # unity-builder 는 시리얼이 없으면 .ulf 의 DeveloperData 에서 시리얼을 꺼내
+      # 이메일/비밀번호와 함께 활성화하므로, 같은 방식으로 시리얼을 넘겨준다.
+      - name: Extract Unity serial from license
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          SERIAL=$(python3 - <<'EOF'
+          import base64, os, re
+          m = re.search(r'<DeveloperData Value="([^"]+)"', os.environ.get("UNITY_LICENSE", ""))
+          print(base64.b64decode(m.group(1)).decode("latin-1")[4:] if m else "")
+          EOF
+          )
+          if [ -z "$SERIAL" ]; then
+            echo "::error::UNITY_LICENSE 에서 시리얼을 찾지 못했습니다."
+            exit 1
+          fi
+          echo "::add-mask::$SERIAL"
+          echo "UNITY_SERIAL=$SERIAL" >> "$GITHUB_ENV"
+
       - name: Run EditMode tests
         id: tests
         uses: game-ci/unity-test-runner@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
