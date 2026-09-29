@@ -126,6 +126,17 @@ namespace Global
             MatchResult = null;
             SelectedDeck = null;
             OwnedCards = null;
+            ClearAdventureMatch();
+            GuestContext.ClearGuestInfo();
+        }
+
+        /// <summary>
+        /// Forgets the adventure match: call it on every non-adventure entry into GameScene,
+        /// or a PVP match after an adventure would still get the adventure's battle theme and
+        /// its result screen would route back to the adventure map.
+        /// </summary>
+        public static void ClearAdventureMatch()
+        {
             BattleTheme = null;
             AdventureId = null;
             AdventureScenarioId = null;
@@ -133,7 +144,6 @@ namespace Global
             AdventureStageNumber = 0;
             AdventureStageScenarioCount = 0;
             AdventureStageClearedBeforeMatch = 0;
-            GuestContext.ClearGuestInfo();
         }
     }
 }

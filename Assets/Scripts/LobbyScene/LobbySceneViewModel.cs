@@ -72,7 +72,7 @@ namespace LobbyScene
             SceneContext.MatchInfo = matchedInfoDto;
             // PVP/practice matches from the lobby are never an adventure match; guarantee the
             // forest default in case a previous adventure match left a theme set.
-            SceneContext.BattleTheme = null;
+            SceneContext.ClearAdventureMatch();
             const string targetSceneName = "GameScene";
             if (SceneManager.GetActiveScene().name.Contains(targetSceneName)) return;
 
