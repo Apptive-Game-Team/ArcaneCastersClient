@@ -25,7 +25,6 @@ MonoBehaviour:
     m_LocalVariables: []
   stages:
   - {fileID: 11400000, guid: 2bc9ff07b230d4ffaa8bb16865e548f5, type: 2}
-  - {fileID: 11400000, guid: 80f160c8920294ad1a0f7bb1d76bef03, type: 2}
   battleTheme: {fileID: 11400000, guid: 05dd762f4d094cdc9feb169253ae35cd, type: 2}
   references:
     version: 2
