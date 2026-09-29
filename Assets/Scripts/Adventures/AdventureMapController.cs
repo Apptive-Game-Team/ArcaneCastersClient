@@ -237,9 +237,9 @@ namespace Adventures
             }
             background.color = nodeColor;
 
-            // A cleared match shows a check mark instead of its number so progress reads
-            // at a glance; locked and current matches keep their order number.
-            label.text = status == State.FINISHED ? "✓" : (index + 1).ToString();
+            // Every node shows its order number; the node color alone marks it cleared. A check
+            // mark character is not in the game fonts (Lilita One, Jua) and rendered as a box.
+            label.text = (index + 1).ToString();
 
             Button button = nodeObject.GetComponent<Button>();
             button.interactable = isPlayable;
