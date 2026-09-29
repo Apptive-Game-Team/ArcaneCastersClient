@@ -68,6 +68,24 @@ namespace GameScene.Handler
 
     internal class PveSpeechBubbleUI : MonoBehaviour
     {
+        // The game's label font (Lilita One, with Jua as its Hangul fallback; see
+        // .agents/docs/DESIGN.md). The bubble is built at runtime with no serialized
+        // font, so it borrows the one GameScene's HUD already loaded; without it TMP's
+        // default LiberationSans has no Hangul and Korean lines render as boxes.
+        private const string GameFontName = "LilitaOne SDF";
+
+        private static TMP_FontAsset FindGameFont()
+        {
+            foreach (TMP_FontAsset font in Resources.FindObjectsOfTypeAll<TMP_FontAsset>())
+            {
+                if (font.name == GameFontName)
+                {
+                    return font;
+                }
+            }
+            return null;
+        }
+
         private static PveSpeechBubbleUI instance;
 
         [SerializeField] private float duration = 3.5f;
@@ -233,6 +251,11 @@ namespace GameScene.Handler
             textRect.pivot = new Vector2(0.5f, 0.5f);
 
             bubbleText = textRect.gameObject.AddComponent<TextMeshProUGUI>();
+            TMP_FontAsset gameFont = FindGameFont();
+            if (gameFont != null)
+            {
+                bubbleText.font = gameFont;
+            }
             bubbleText.alignment = TextAlignmentOptions.Center;
             bubbleText.enableWordWrapping = true;
             bubbleText.fontSize = 26f;
