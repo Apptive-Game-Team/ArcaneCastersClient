@@ -13,6 +13,27 @@ This is a project-level skill for the WordOnline Unity WebGL client. Use it for
 Unity MCP work in this repository instead of relying on a user-level Unity MCP
 skill.
 
+## Unity Play MCP in this project
+
+The live player controls use a separate package from `com.coplaydev.unity-mcp`:
+`dev.yunseong.unityplaymcp` in `Packages/manifest.json`. If `get_unity_status`
+reports that nothing listens on `ws://127.0.0.1:17311/ws` while the Editor is
+playing, check that this package resolved in `Packages/packages-lock.json` and
+compiled before asking the user to press Play again. In this project, changing
+the manifest during Play Mode did not resolve the package until Play Mode was
+exited; compilation then interrupted the session. Re-enter Play Mode after the
+package finishes compiling and verify with `get_unity_status`.
+
+The Codex MCP server is configured separately from the Unity package. Codex
+normally reads its user `~/.codex/config.toml`; the project's `.codex/config.toml`
+applies only when `CODEX_HOME` points at that project directory. Follow the
+Unity Play MCP package settings for the agent being used.
+
+`get_scene_state` can include `Global.SceneContext.JwtToken` among scene
+statics. Use a narrow `root` or `selector` for routine play inspection and do
+not paste a full scene reading into issues, PRs, or chat. A broad first read in
+this project exposed a live access token in the tool output.
+
 ## Template Notice
 
 Examples in `references/workflows.md` and `references/tools-reference.md` are reusable templates. They may be inaccurate across Unity versions, package setups (UGUI/TMP/Input System), and project-specific conventions. Please check console, compilation errors, or use screenshot after implementation.
