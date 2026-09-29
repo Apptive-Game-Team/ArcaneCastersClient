@@ -30,7 +30,7 @@ namespace DeckScene
 
         // 드롭다운 항목 순서대로 든 덱. 저장 전의 새 덱 항목은 null 이다.
         private readonly List<DeckResponseDto> dropdownDecks = new();
-        private readonly List<(long CardId, CardItemUI Item)> ownedCardItems = new();
+        private readonly List<(CardDto Card, CardItemUI Item)> ownedCardItems = new();
         private DeckResponseDto renderedDeck;
 
         public DeckManagementView(
@@ -178,7 +178,7 @@ namespace DeckScene
                 Button button = item.GetComponent<Button>();
 
                 ui.Init(card.name, card.count, card.unlocked, card.unlockText, card.progressText);
-                ownedCardItems.Add((card.id, ui));
+                ownedCardItems.Add((card, ui));
                 CardDto localCard = card;
                 ui.BindHover(
                     hovered =>
@@ -241,15 +241,22 @@ namespace DeckScene
             }
         }
 
+        // 덱에 든 표시와 함께 보유 수에서 덱에 넣은 수를 뺀 남은 장수를 칸마다 고쳐 쓴다.
         private void RenderInDeckMarkers()
         {
-            var cardIdsInDeck = new HashSet<long>(renderedDeck?.cards?.Select(card => card.id) ?? Enumerable.Empty<long>());
-            foreach ((long cardId, CardItemUI item) in ownedCardItems)
+            Dictionary<long, int> inDeckCounts = (renderedDeck?.cards ?? Array.Empty<CardDto>())
+                .GroupBy(card => card.id)
+                .ToDictionary(group => group.Key, group => group.Count());
+            foreach ((CardDto card, CardItemUI item) in ownedCardItems)
             {
-                if (item != null)
+                if (item == null)
                 {
-                    item.SetInDeck(cardIdsInDeck.Contains(cardId));
+                    continue;
                 }
+
+                inDeckCounts.TryGetValue(card.id, out int inDeck);
+                item.SetInDeck(inDeck > 0);
+                item.SetRemaining(Math.Max(0, card.count - inDeck));
             }
         }
 
