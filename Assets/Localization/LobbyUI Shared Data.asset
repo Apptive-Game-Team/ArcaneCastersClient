@@ -195,6 +195,22 @@ MonoBehaviour:
     m_Key: ResultDraw
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000024
+    m_Key: AdventureCleared
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000025
+    m_Key: AdventureFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000026
+    m_Key: AdventureBackButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000027
+    m_Key: AdventureRetryButton
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

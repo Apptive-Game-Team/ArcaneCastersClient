@@ -194,6 +194,22 @@ MonoBehaviour:
     m_Localized: "Draw"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000024
+    m_Localized: "Cleared!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000025
+    m_Localized: "Failed"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000026
+    m_Localized: "Back to Adventure"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000027
+    m_Localized: "Retry"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
