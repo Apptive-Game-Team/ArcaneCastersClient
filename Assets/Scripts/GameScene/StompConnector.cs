@@ -68,6 +68,12 @@ namespace GameScene
         /// </summary>
         private bool _intentionalDisconnect;
 
+        /// <summary>
+        /// 경기 결과를 받았는지. 서버는 결과를 보낸 뒤 FrameInfo를 더 보내지 않으므로
+        /// 결과 화면으로 넘어가기 전까지의 무음과 끊김은 연결 문제가 아니다.
+        /// </summary>
+        private bool _matchEnded;
+
         // ─── 생명주기 ────────────────────────────────────────────────────────
 
         protected override void Awake()
@@ -136,7 +142,7 @@ namespace GameScene
 
         public void ConnectToServer()
         {
-            if (_intentionalDisconnect) return;
+            if (_intentionalDisconnect || _matchEnded) return;
 
             float now = Time.unscaledTime;
             switch (_connectGate.Decide(_transport.IsConnected, now))
@@ -196,6 +202,16 @@ namespace GameScene
             _registry.Unregister(subscriptionId);
             if (_transport.IsConnected)
                 _transport.Unsubscribe(subscriptionId);
+        }
+
+        /// <summary>
+        /// 결과를 받았다고 알린다. 무음 감시와 재연결을 멈춰, 결과 화면으로 넘어가기 전
+        /// 대기 시간에 재연결 문구가 뜨거나 이탈 신고가 나가지 않게 한다.
+        /// </summary>
+        public void NotifyMatchEnded()
+        {
+            _matchEnded = true;
+            _reconnect.ResetRetries();
         }
 
         // ─── 게임 플로우 ─────────────────────────────────────────────────────
@@ -259,6 +275,8 @@ namespace GameScene
             {
                 yield return null;
 
+                if (_matchEnded) yield break;
+
                 SilenceEscalation escalation = _silence.Tick(Time.unscaledTime, Time.unscaledDeltaTime);
                 if (escalation == SilenceEscalation.None) continue;
 
@@ -309,10 +327,10 @@ namespace GameScene
             WDebug.Log("[STOMP] 연결 종료: " + message);
             _connectGate.NoteSettled();
 
-            if (_intentionalDisconnect)
+            if (_intentionalDisconnect || _matchEnded)
             {
-                // OnDestroy에서 우리가 닫은 소켓이다. 씬을 떠나는 중에 사다리를 걸면
-                // 의도한 종료가 재연결 루프로 바뀐다.
+                // OnDestroy에서 우리가 닫은 소켓이거나 경기가 이미 끝났다. 씬을 떠나는 중에
+                // 사다리를 걸면 의도한 종료가 재연결 루프로 바뀐다.
                 return;
             }
 
@@ -325,7 +343,7 @@ namespace GameScene
             WDebug.LogError("[STOMP] 에러: " + error);
             _connectGate.NoteSettled();
 
-            if (_intentionalDisconnect) return;
+            if (_intentionalDisconnect || _matchEnded) return;
 
             SystemMessageUI.Instance.ShowMessage(connectionDelayed);
             _reconnect.NotifyConnectionLost();
@@ -333,6 +351,8 @@ namespace GameScene
 
         private void HandleMaxRetriesExceeded()
         {
+            if (_matchEnded) return;
+
             WDebug.LogError("[STOMP] 재연결 불가 – 최대 횟수 초과");
             StartCoroutine(AbandonSession(SessionLossReason.ReconnectAttemptsExhausted, RetryFromScratch));
         }
