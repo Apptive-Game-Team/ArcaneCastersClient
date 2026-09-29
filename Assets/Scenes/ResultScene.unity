@@ -1117,7 +1117,7 @@ GameObject:
   - component: {fileID: 1915461756}
   - component: {fileID: 1915461757}
   m_Layer: 5
-  m_Name: GotoLobbyButton
+  m_Name: ContinueButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1246,7 +1246,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1915461750}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1e64b2617396c6438a9bab2de4e9b80, type: 3}
+  m_Script: {fileID: 11500000, guid: d800982822804668a1f2e758bd819acb, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   label: {fileID: 629322528549070571}
