@@ -378,6 +378,16 @@ MonoBehaviour:
     m_Localized: All Mana
     m_Metadata:
       m_Items: []
+  - m_Id: 1000071
+    m_Localized: Shakes a circular area, turning medium rock remnants into Rock Golems
+      and small remnants into MiniRocks.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000072
+    m_Localized: Detonates every rock remnant in a circular area, creating an explosion
+      centered on each remnant.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -435,6 +435,14 @@ MonoBehaviour:
     m_Key: bombSprite
     m_Metadata:
       m_Items: []
+  - m_Id: 78337000000000000
+    m_Key: earthCall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78337100000000000
+    m_Key: rockBlast
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
