@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Data;
 using Global;
+using Global.Util;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
@@ -23,6 +24,9 @@ namespace LoginScene
 
         private static readonly LocalizedString serverDown = new LocalizedString
             { TableReference = "SystemMessageUI", TableEntryReference = "serverDown" };
+
+        private static readonly LocalizedString noInternet = new LocalizedString
+            { TableReference = "SystemMessageUI", TableEntryReference = "noInternet" };
 
         private static readonly LocalizedString serverDeploying = new LocalizedString
             { TableReference = "SystemMessageUI", TableEntryReference = "serverDeploying" };
@@ -54,7 +58,16 @@ namespace LoginScene
                 if (www.result != UnityWebRequest.Result.Success)
                 {
                     WDebug.LogError($"[CheckDeployStatus] fail: {www.responseCode} / {www.error}");
-                    onResult?.Invoke(false, serverDown.GetLocalizedString());
+
+                    // A ProtocolError means the server answered, so the connection is fine. Only a
+                    // request that never got an answer can be the device's own connection.
+                    bool online = true;
+                    if (www.result == UnityWebRequest.Result.ConnectionError)
+                    {
+                        yield return InternetProbe.IsOnline(isOnline => online = isOnline);
+                    }
+
+                    onResult?.Invoke(false, (online ? serverDown : noInternet).GetLocalizedString());
                     yield break;
                 }
 
