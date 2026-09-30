@@ -16,7 +16,7 @@ namespace GameScene
     ///
     /// 의존 관계:
     ///   StompConnector (게임 로직)
-    ///     ├─ IStompTransport            ← WebGLStompTransport | NativeStompTransport
+    ///     ├─ IStompTransport            ← IStompTransportFactory가 플랫폼별로 선택
     ///     ├─ StompSubscriptionRegistry  ← 구독 보관 및 재구독
     ///     ├─ StompReconnectController   ← 재연결 사다리 (인게임은 짧은 고정 간격)
     ///     ├─ ConnectAttemptSchedule     ← 최초 연결 재시도 예산
@@ -49,6 +49,11 @@ namespace GameScene
         /// </summary>
         private static readonly LocalizedString reconnecting = new LocalizedString
             { TableReference = MessageTable, TableEntryReference = "sessionReconnecting" };
+
+        /// <summary>
+        /// 전송 구현을 만드는 팩토리. 테스트나 새 전송을 붙일 때 Awake 전에 교체한다.
+        /// </summary>
+        public static IStompTransportFactory TransportFactory { get; set; } = new DefaultStompTransportFactory();
 
         private IStompTransport _transport;
         private StompSubscriptionRegistry _registry;
@@ -90,11 +95,7 @@ namespace GameScene
                     ? inGameReconnectDelays
                     : DefaultReconnectDelays);
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-            _transport = gameObject.AddComponent<WebGLStompTransport>();
-#else
-            _transport = gameObject.AddComponent<NativeStompTransport>();
-#endif
+            _transport = TransportFactory.Create(gameObject);
 
             _transport.Connected += HandleConnected;
             _transport.Disconnected += HandleDisconnected;
