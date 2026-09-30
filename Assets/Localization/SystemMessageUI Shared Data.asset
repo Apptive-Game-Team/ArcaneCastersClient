@@ -155,6 +155,10 @@ MonoBehaviour:
     m_Key: randomDeckPlay
     m_Metadata:
       m_Items: []
+  - m_Id: 8200000000000
+    m_Key: noInternet
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
