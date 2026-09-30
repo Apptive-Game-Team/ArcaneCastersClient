@@ -1,3 +1,4 @@
+using Data.Magic;
 using GameScene.Card;
 using Global;
 using UnityEngine;
@@ -94,6 +95,13 @@ namespace GameScene.ServedObjectComponent
 
             CardInputSender cardInputSender = CardInputSender.Instance;
             if (cardInputSender == null)
+            {
+                return;
+            }
+
+            // 유닛과 건물은 누른 유닛 자리로 끌어당기지 않는다. FieldSelector 가 마우스 아래 바닥에 놓는다.
+            if (cardInputSender.TryGetCurrentMagicData(out CombinedMagicData magic) &&
+                MagicCastKinds.LeavesBody(magic.castKind))
             {
                 return;
             }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Data;
 using Data.Deck;
+using Data.Magic;
 
 namespace DeckScene
 {
@@ -20,18 +21,21 @@ namespace DeckScene
             CardDto card,
             string localizedName,
             IReadOnlyCollection<ElementType> elements,
-            int manaCost)
+            int manaCost,
+            MagicCastKind castKind = MagicCastKind.Unknown)
         {
             Card = card;
             LocalizedName = localizedName ?? string.Empty;
             Elements = elements ?? Array.Empty<ElementType>();
             ManaCost = manaCost;
+            CastKind = castKind;
         }
 
         public CardDto Card { get; }
         public string LocalizedName { get; }
         public IReadOnlyCollection<ElementType> Elements { get; }
         public int ManaCost { get; }
+        public MagicCastKind CastKind { get; }
     }
 
     public static class DeckOwnedCardQuery
@@ -40,11 +44,15 @@ namespace DeckScene
             IEnumerable<DeckOwnedCardEntry> entries,
             string searchText,
             DeckOwnedCardSortMode sortMode,
-            ElementType? selectedAttribute)
+            ElementType? selectedAttribute,
+            MagicCastKind? selectedCastKind = null,
+            ManaBand? selectedManaBand = null)
         {
             IEnumerable<DeckOwnedCardEntry> visibleEntries = (entries ?? Array.Empty<DeckOwnedCardEntry>())
                 .Where(entry => PassesSearch(entry, searchText))
-                .Where(entry => PassesAttribute(entry, selectedAttribute));
+                .Where(entry => PassesAttribute(entry, selectedAttribute))
+                .Where(entry => !selectedCastKind.HasValue || entry.CastKind == selectedCastKind.Value)
+                .Where(entry => ManaBands.Contains(selectedManaBand, entry.ManaCost));
 
             CompareInfo compareInfo = CultureInfo.CurrentCulture.CompareInfo;
             var nameComparer = Comparer<string>.Create((left, right) =>

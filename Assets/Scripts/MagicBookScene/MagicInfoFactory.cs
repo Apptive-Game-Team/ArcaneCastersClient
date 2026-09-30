@@ -15,9 +15,7 @@ namespace MagicBookScene
     {
         Name,
         Attribute,
-
-        // TODO(#578): 조합이 없어져 카드 수 정렬은 의미가 없다. 도감 화면 정리 때 마나 순으로 바꾼다.
-        CardCount,
+        ManaCost,
     }
 
     public class MagicInfoFactory : MonoBehaviour
@@ -38,6 +36,8 @@ namespace MagicBookScene
         private long? selectedMagicId;
         private MagicBookSortMode sortMode = MagicBookSortMode.Name;
         private ElementType? selectedAttribute;
+        private MagicCastKind? selectedCastKind;
+        private ManaBand? selectedManaBand;
         private System.Threading.SynchronizationContext unityContext;
         
         private void Awake()
@@ -64,6 +64,18 @@ namespace MagicBookScene
         public void SetAttributeFilter(ElementType? attribute)
         {
             selectedAttribute = attribute;
+            RenderCurrentView();
+        }
+
+        public void SetCastKindFilter(MagicCastKind? castKind)
+        {
+            selectedCastKind = castKind;
+            RenderCurrentView();
+        }
+
+        public void SetManaBandFilter(ManaBand? manaBand)
+        {
+            selectedManaBand = manaBand;
             RenderCurrentView();
         }
         
@@ -161,8 +173,8 @@ namespace MagicBookScene
                 MagicBookSortMode.Attribute => visibleEntries
                     .OrderBy(GetPrimaryAttributeSortValue)
                     .ThenBy(entry => entry.LocalizedName, StringComparer.Create(CultureInfo.CurrentCulture, true)),
-                MagicBookSortMode.CardCount => visibleEntries
-                    .OrderBy(entry => entry.CardCount)
+                MagicBookSortMode.ManaCost => visibleEntries
+                    .OrderBy(entry => entry.ManaCost)
                     .ThenBy(entry => entry.LocalizedName, StringComparer.Create(CultureInfo.CurrentCulture, true)),
                 _ => visibleEntries
                     .OrderBy(entry => entry.LocalizedName, StringComparer.Create(CultureInfo.CurrentCulture, true)),
@@ -171,8 +183,10 @@ namespace MagicBookScene
 
         private bool PassesFilters(MagicBookEntry entry)
         {
-            return !selectedAttribute.HasValue ||
+            bool passesAttribute = !selectedAttribute.HasValue ||
                    (entry.Data.elements != null && entry.Data.elements.Contains(selectedAttribute.Value));
+            bool passesCastKind = !selectedCastKind.HasValue || entry.Data.castKind == selectedCastKind.Value;
+            return passesAttribute && passesCastKind && ManaBands.Contains(selectedManaBand, entry.ManaCost);
         }
 
         /// <summary>
@@ -241,8 +255,7 @@ namespace MagicBookScene
             public bool IsOwned { get; }
             public string LocalizedName { get; }
 
-            // TODO(#578): 카드 수 정렬을 마나 순으로 바꿀 때까지 마나 비용으로 대신 정렬한다.
-            public int CardCount => Data.manaCost;
+            public int ManaCost => CardManaCost.Of(Data);
         }
     }
 }

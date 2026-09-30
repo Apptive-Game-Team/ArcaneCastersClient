@@ -41,6 +41,8 @@ namespace DeckScene
         private string ownedCardSearchText = string.Empty;
         private DeckOwnedCardSortMode ownedCardSortMode = DeckOwnedCardSortMode.Name;
         private ElementType? ownedCardAttributeFilter;
+        private MagicCastKind? ownedCardCastKindFilter;
+        private ManaBand? ownedCardManaBandFilter;
         private int ownedCardLoadVersion;
         
         public LocalizedString newDeck;
@@ -160,7 +162,10 @@ namespace DeckScene
             }
 
             int manaCost = magic?.manaCost ?? card.manaCost;
-            return new DeckOwnedCardEntry(card, localizedName, elements, manaCost);
+            MagicCastKind castKind = magic != null && magic.castKind != MagicCastKind.Unknown
+                ? magic.castKind
+                : MagicCastKinds.Parse(card.castKind);
+            return new DeckOwnedCardEntry(card, localizedName, elements, manaCost, castKind);
         }
 
         private void RenderOwnedCards()
@@ -169,7 +174,9 @@ namespace DeckScene
                     ownedCardEntries,
                     ownedCardSearchText,
                     ownedCardSortMode,
-                    ownedCardAttributeFilter)
+                    ownedCardAttributeFilter,
+                    ownedCardCastKindFilter,
+                    ownedCardManaBandFilter)
                 .Select(entry => entry.Card)
                 .ToArray();
             view.RenderOwnedCards(visibleCards);
@@ -190,6 +197,18 @@ namespace DeckScene
         public void SetOwnedCardAttributeFilter(ElementType? attribute)
         {
             ownedCardAttributeFilter = attribute;
+            RenderOwnedCards();
+        }
+
+        public void SetOwnedCardCastKindFilter(MagicCastKind? castKind)
+        {
+            ownedCardCastKindFilter = castKind;
+            RenderOwnedCards();
+        }
+
+        public void SetOwnedCardManaBandFilter(ManaBand? manaBand)
+        {
+            ownedCardManaBandFilter = manaBand;
             RenderOwnedCards();
         }
 

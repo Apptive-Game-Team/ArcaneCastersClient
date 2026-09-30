@@ -137,7 +137,6 @@ namespace GameScene
             }
 
             Vector3 previewPosition = ClampToRange(mouseWorldPos, casterPosition, range);
-            aimShapeRenderer.SetCircle(previewPosition, AimIndicatorRadius, true, AimIndicatorSortingOrder, 0f);
 
             MagicIndicatorResolver.Resolve(
                 magicData,
@@ -146,7 +145,14 @@ namespace GameScene
                 MagicIndicatorResolver.GetForwardDirection(),
                 range,
                 resolvedShapes);
-            DrawSkillIndicatorLayers(resolvedShapes);
+
+            // 건물은 땅 위 다른 몸과 겹치는 자리에 놓을 수 없다. 서버도 거절하므로 미리 빨갛게 보이고 보내지 않는다.
+            bool placementBlocked = PlacementPreview.ChecksOverlap(magicData) &&
+                                    PlacementPreview.IsBlocked(previewPosition, GetFootprintRadius(radius));
+            Color? blockedColor = placementBlocked ? PlacementPreview.BlockedFillColor : (Color?)null;
+            aimShapeRenderer.SetCircle(previewPosition, AimIndicatorRadius, true, AimIndicatorSortingOrder, 0f,
+                blockedColor);
+            DrawSkillIndicatorLayers(resolvedShapes, blockedColor);
 
             // UI 레이캐스트는 클릭을 걸러내는 용도뿐이므로, 실제로 버튼을 뗀 프레임에만 수행한다.
             if (!Input.GetMouseButtonUp(0))
@@ -159,7 +165,18 @@ namespace GameScene
             // 시작한 끌기가 필드 위에서 끝났을 때 마법이 시전된다.
             if (PointerInputUtility.IsPointerCapturedByUi) return;
 
-            if (PointerInputUtility.IsPointerOverUiOrSelectable()) return;
+            // 유닛과 건물은 누른 유닛 자리로 끌려가지 않고 마우스가 가리키는 바닥에 놓인다. 그 밖의 마법은
+            // 유닛을 누르면 Selectable 이 그 유닛 자리로 보낸다.
+            bool leavesBody = MagicCastKinds.LeavesBody(magicData.castKind);
+            if (leavesBody ? PointerInputUtility.IsPointerOverUi() : PointerInputUtility.IsPointerOverUiOrSelectable())
+            {
+                return;
+            }
+
+            if (placementBlocked)
+            {
+                return;
+            }
 
             if (!CardInputSender.Instance.TrySendInput(previewPosition))
             {
@@ -408,11 +425,28 @@ namespace GameScene
         }
 
         /// <summary>
+        /// 건물이 차지할 땅의 반경. indicator 의 첫 원이 건물 몸이므로 그것을 쓰고, 없으면 마법의 radius 파라미터로 떨어진다.
+        /// </summary>
+        private float GetFootprintRadius(float fallbackRadius)
+        {
+            foreach (ResolvedIndicatorShape shape in resolvedShapes)
+            {
+                if (shape.kind == ResolvedIndicatorShape.Kind.Circle && shape.radius > 0f)
+                {
+                    return shape.radius;
+                }
+            }
+
+            return Mathf.Max(fallbackRadius, 0f);
+        }
+
+        /// <summary>
         /// 푼 도형을 순서대로 그린다. pool 이 모자라면 그때만 GameObject 를 만들고, 남으면 비활성화만 한다.
         /// 여기서는 list 도 문자열도 새로 만들지 않으므로 프레임마다 GC 가 생기지 않는다.
         /// </summary>
-        private void DrawSkillIndicatorLayers(List<ResolvedIndicatorShape> shapes)
+        private void DrawSkillIndicatorLayers(List<ResolvedIndicatorShape> shapes, Color? overrideColor = null)
         {
+            Color layerColor = overrideColor ?? SkillIndicatorShapeRenderer.LayerFillColor;
             for (int i = 0; i < shapes.Count; i++)
             {
                 SkillIndicatorShapeRenderer layerRenderer = GetOrCreateSkillIndicatorLayer(i);
@@ -437,14 +471,14 @@ namespace GameScene
                     float edgeWidth = hasDocumentEdgeWidth ? shape.edgeWidth : DefaultSkillIndicatorLayerEdgeWidth;
                     layerRenderer.SetCircle(
                         shape.origin, shape.radius, !hasDocumentEdgeWidth, sortingOrder, edgeWidth,
-                        SkillIndicatorShapeRenderer.LayerFillColor);
+                        layerColor);
                 }
                 else
                 {
                     // SetLine 의 width 는 전체 폭이라 다시 반으로 나눈다.
                     layerRenderer.SetLine(
                         shape.origin, shape.target, shape.length, sortingOrder, shape.halfWidth * 2f,
-                        SkillIndicatorShapeRenderer.LayerFillColor);
+                        layerColor);
                 }
             }
 
