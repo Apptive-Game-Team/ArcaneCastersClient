@@ -1,5 +1,6 @@
 using Admin.Dto;
 using Data.Net;
+using Global.Udp;
 
 namespace Data
 {
@@ -12,6 +13,13 @@ namespace Data
         public User leftUser;
         public User rightUser;
         public string sessionId;
+
+        /// <summary>
+        /// 게임 서버가 UDP로 받는 주소. 서버가 UDP를 켜고 알려줄 때만 채워진다.
+        /// 비어 있으면 WebSocket으로 접속한다.
+        /// </summary>
+        public string udpHost;
+        public int udpPort;
 
         /// <summary>접속 주소를 어느 필드에서 가져왔는지. 진단 로그용이다.</summary>
         public string ConnectionSource => string.IsNullOrEmpty(webSocketUrl) ? server : webSocketUrl;
@@ -36,6 +44,20 @@ namespace Data
             if (!ServerEndpoint.TryOf(server, out endpoint)) return false;
 
             endpoint = endpoint.AsWebSocket().Path(fallbackPath);
+            return true;
+        }
+
+        /// <summary>
+        /// UDP 접속 주소를 만든다. 서버가 UDP 주소를 내려주지 않았거나 세션·유저를 알 수 없으면
+        /// false이고, 호출부는 WebSocket을 쓴다.
+        /// </summary>
+        public bool TryResolveUdp(long userId, out string url)
+        {
+            url = null;
+            if (string.IsNullOrEmpty(udpHost) || udpPort <= 0) return false;
+            if (string.IsNullOrEmpty(sessionId) || userId <= 0) return false;
+
+            url = UdpEndpoint.Build(udpHost, udpPort, sessionId, userId);
             return true;
         }
 
