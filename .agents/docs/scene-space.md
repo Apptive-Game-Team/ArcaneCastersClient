@@ -178,6 +178,15 @@ three mechanisms:
   `ServedObjectComponent/Motion` controllers start an idle tween in `Awake`.
 - **Spawned effect prefabs**, for hits, deaths and spawns.
 
+### A ground-spawned effect also needs a bottom pivot
+
+`OnDestroySpawner` instantiates its effect at the destroyed object's world position, which is the
+ground contact point. A sprite imported with the default centred pivot therefore puts its lower
+half below the battlefield. `Effects/Explode` rendered only its upper half this way even though the
+PNG itself was complete. Import ground-spawned effect sprites with `Bottom Center` alignment, or
+explicitly offset them along screen-up when their visual is intentionally centred on the spawn
+point. Check the importer pivot before changing the PNG or scaling the prefab.
+
 ### Replacing a hit visual may also require suppressing a projectile
 
 Do not assume that changing `HitEffectController` replaces every visual attached
