@@ -35,7 +35,7 @@ BACKGROUND_ALPHA = 0.10
 SUBJECT_ALPHA = 0.94
 
 
-def key_alpha(rgb, key_channel):
+def key_alpha(rgb, key_channel, deadzone=0):
     """Per-pixel coverage, from how much the key channel exceeds the other two.
 
     With ``C = a * F + (1 - a) * K`` and a subject whose key channel never
@@ -45,12 +45,12 @@ def key_alpha(rgb, key_channel):
     others = [channel for channel in range(3) if channel != key_channel]
     strongest_other = np.maximum(rgb[:, :, others[0]], rgb[:, :, others[1]])
     excess = rgb[:, :, key_channel].astype(np.int16) - strongest_other.astype(np.int16)
-    headroom = np.maximum(255 - strongest_other.astype(np.int16), 1)
-    coverage = 1.0 - np.clip(excess / headroom, 0.0, 1.0)
+    headroom = np.maximum(255 - strongest_other.astype(np.int16) - deadzone, 1)
+    coverage = 1.0 - np.clip(np.maximum(excess - deadzone, 0) / headroom, 0.0, 1.0)
     return coverage.astype(np.float32)
 
 
-def magenta_alpha(rgb):
+def magenta_alpha(rgb, deadzone=0):
     """Per-pixel coverage for a magenta key, where red and blue are both the key.
 
     The single-channel form cannot express magenta, because either of red or blue
@@ -65,8 +65,8 @@ def magenta_alpha(rgb):
     weakest_key = np.minimum(rgb[:, :, 0], rgb[:, :, 2])
     green = rgb[:, :, 1]
     excess = weakest_key.astype(np.int16) - green.astype(np.int16)
-    headroom = np.maximum(255 - green.astype(np.int16), 1)
-    coverage = 1.0 - np.clip(excess / headroom, 0.0, 1.0)
+    headroom = np.maximum(255 - green.astype(np.int16) - deadzone, 1)
+    coverage = 1.0 - np.clip(np.maximum(excess - deadzone, 0) / headroom, 0.0, 1.0)
     return coverage.astype(np.float32)
 
 
@@ -99,14 +99,19 @@ def main():
     parser.add_argument("source", type=Path)
     parser.add_argument("destination", type=Path)
     parser.add_argument("--key", choices=("green", "magenta", "blue"), default="green")
+    parser.add_argument(
+        "--deadzone", type=int, default=0,
+        help="key excess below this counts as subject. Raise it (40) for pale or white "
+             "subjects, whose lilac shading otherwise reads as partly magenta and "
+             "leaves speckle holes. Costs a slightly softer edge.")
     args = parser.parse_args()
 
     image = Image.open(args.source).convert("RGB")
     rgb = np.asarray(image)
     if args.key == "magenta":
-        coverage = magenta_alpha(rgb)
+        coverage = magenta_alpha(rgb, args.deadzone)
     else:
-        coverage = key_alpha(rgb, {"green": 1, "blue": 2}[args.key])
+        coverage = key_alpha(rgb, {"green": 1, "blue": 2}[args.key], args.deadzone)
 
     background = coverage < SUBJECT_ALPHA
     alpha = np.ones(coverage.shape, dtype=np.float32)
