@@ -210,6 +210,54 @@ MonoBehaviour:
     m_Localized: "Retry"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000101
+    m_Localized: "Chests"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000102
+    m_Localized: "Open"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000103
+    m_Localized: "No chests to open"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000104
+    m_Localized: "Tap to continue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000105
+    m_Localized: "Magic"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000106
+    m_Localized: "Decoration"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000107
+    m_Localized: "New Look"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000108
+    m_Localized: "Chest"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000109
+    m_Localized: "Reward"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000110
+    m_Localized: "You got a chest! Open it on the chest screen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000111
+    m_Localized: "Could not load chests."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000112
+    m_Localized: "Could not open the chest."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

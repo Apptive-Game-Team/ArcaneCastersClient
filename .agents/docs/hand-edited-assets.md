@@ -267,3 +267,28 @@ version than this project pins, which shows up as errors in unrelated files
 errors are confined to files you did not touch — grep the error log for your
 changed file names — rather than treating a nonzero error count as a failed
 check.
+
+## The Windows checkout's `ScriptAssemblies` make a real compile check
+
+`/mnt/c/Users/jys09/Projects/ArcaneCasters/Client/Library/ScriptAssemblies` holds
+the DLLs the Editor last built for this project: `Assembly-CSharp.dll`,
+`WordOnline.*.dll`, `Unity.TextMeshPro.dll`, `Unity.Localization.dll` and the
+rest. Compiling changed files with the Roslyn `csc.dll` from
+`/mnt/c/Program Files/dotnet/sdk/<version>/Roslyn/bincore/` against those DLLs,
+the 2022.3.34f1 Editor's `Managed/UnityEngine/*.dll`, its
+`NetStandard/ref/2.1.0/netstandard.dll` and
+`NetStandard/compat/2.1.0/shims/netfx/mscorlib.dll` checks the new code against
+the project's real types instead of stubs. Two things make it work:
+
+- Pass every argument through a response file (`@args.rsp`) with quoted Windows
+  paths. `Program Files` split on the command line becomes a missing source file
+  for every reference.
+- Compile a changed asmdef assembly under its real name (`-out:WordOnline.Contracts.dll`).
+  Under any other name, `Assembly-CSharp.dll` still asks for `WordOnline.Contracts`
+  and every type it exposes from there fails with CS0012.
+
+Unity's NUnit (`com.unity.ext.nunit`) throws `TypeLoadException` for
+`System.Runtime.Remoting.Messaging.CallContext` on .NET 8, so it cannot run the
+EditMode tests outside the Editor. Running test sources that only touch plain C#
+needs a small stand-in for `Assert`, `[Test]` and `[TestCase]`; that checks the
+logic, not NUnit's own behavior.
