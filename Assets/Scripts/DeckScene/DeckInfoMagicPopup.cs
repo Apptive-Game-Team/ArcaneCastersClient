@@ -61,6 +61,7 @@ namespace DeckScene
             }
 
             panelRoot.SetActive(true);
+            HoverPopupTransition.BringToFront(panelRoot, HoverPopupTransition.PopupSortingOrder);
         }
 
         public void Hide()
