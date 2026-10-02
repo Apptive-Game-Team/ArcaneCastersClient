@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using LobbyScene;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace WordOnline.Tests
 {
@@ -111,6 +113,9 @@ namespace WordOnline.Tests
         {
             int invokeCount = 0;
             stream.TicketReceived += _ => invokeCount++;
+
+            LogAssert.Expect(LogType.Error, new Regex(@"\[Match SSE\] Invalid envelope"));
+            LogAssert.Expect(LogType.Error, new Regex(@"\[Match SSE\] Invalid event"));
 
             // Invalid envelope JSON (will log error and not queue)
             stream.OnMatchSseEvent("invalid envelope json");
