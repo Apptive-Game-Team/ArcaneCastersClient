@@ -16,12 +16,16 @@ namespace Global.Util
     {
         private const string JwksPath = "/.well-known/jwks";
         private const int JwksTimeoutSeconds = 10; // seconds
-        private const string DefaultAccountServerUrl = "https://account.theevilent.com:443";
 
         private static readonly Dictionary<string, JwksKey> _cachedKeys =
             new Dictionary<string, JwksKey>();
 
         private static bool _isFetched;
+
+        /// <summary>
+        /// Delegate provider for the default Account Server base URL (e.g. ServerList.AccountServer.url).
+        /// </summary>
+        public static Func<string> DefaultAccountServerUrlProvider;
 
         /// <summary>True when JWKS has been successfully fetched and cached.</summary>
         public static bool IsFetched => _isFetched;
@@ -41,7 +45,13 @@ namespace Global.Util
         /// </summary>
         public static IEnumerator FetchJwks(string accountServerUrl = null)
         {
-            string baseUrl = string.IsNullOrEmpty(accountServerUrl) ? DefaultAccountServerUrl : accountServerUrl;
+            string baseUrl = accountServerUrl;
+            if (string.IsNullOrEmpty(baseUrl))
+            {
+                baseUrl = DefaultAccountServerUrlProvider != null
+                    ? DefaultAccountServerUrlProvider()
+                    : "https://account.theevilent.com:443";
+            }
             string url = baseUrl + JwksPath;
 
             using UnityWebRequest request = UnityWebRequest.Get(url);
