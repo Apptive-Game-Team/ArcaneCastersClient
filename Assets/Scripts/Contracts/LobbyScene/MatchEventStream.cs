@@ -58,6 +58,11 @@ namespace LobbyScene
 #endif
         }
 
+        public void SetConnectedForTesting(bool isConnected)
+        {
+            IsConnected = isConnected;
+        }
+
         public void DrainCallbacks()
         {
             while (true)
