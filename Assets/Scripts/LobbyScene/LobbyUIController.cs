@@ -27,6 +27,8 @@ namespace LobbyScene
         [SerializeField] private UnityEngine.UI.Button arrowButton;
         [SerializeField] private GameObject rewardUiPrefab;
         [SerializeField] private LobbySummonShowcase summonShowcase;
+        [SerializeField] private Image avatarHeadImage;
+        [SerializeField] private BattleHoverPresenter battleHoverPresenter;
         private static DeckResponseDto[] userDecks;
 
         /// <summary>
@@ -63,8 +65,37 @@ namespace LobbyScene
             }
         
             lobbyUserNameUI.SetUserName(SceneContext.User.name);
+            ApplyOwnAppearance(SceneContext.User.appearance);
             yield return QuestRewardTracker.CheckAndShowRewards(rewardUiPrefab);
             yield return FetchDecks();
+        }
+
+        /// <summary>
+        /// The profile avatar, the lobby character and its hover pose all come from one resolved set.
+        /// When no complete set exists, including the default set, the sprites serialized in the scene stay.
+        /// </summary>
+        private void ApplyOwnAppearance(string appearance)
+        {
+            string loadedId = PlayerAppearanceResolver.Resolve(
+                appearance,
+                Resources.Load<Sprite>,
+                out Sprite idle,
+                out Sprite raised,
+                out Sprite attacking);
+            if (loadedId == null)
+            {
+                return;
+            }
+
+            if (avatarHeadImage != null)
+            {
+                avatarHeadImage.sprite = idle;
+            }
+
+            if (battleHoverPresenter != null)
+            {
+                battleHoverPresenter.SetPoseSprites(raised, attacking);
+            }
         }
 
         public IEnumerator FetchDecks()
