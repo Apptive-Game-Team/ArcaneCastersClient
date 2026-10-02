@@ -26,7 +26,7 @@ namespace WordOnline.Tests
         {
             if (testObject != null)
             {
-                Object.DestroyImmediate(testObject);
+                UnityEngine.Object.DestroyImmediate(testObject);
             }
         }
 
