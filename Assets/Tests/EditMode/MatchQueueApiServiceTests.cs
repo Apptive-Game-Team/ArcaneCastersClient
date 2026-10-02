@@ -17,7 +17,7 @@ namespace WordOnline.Tests
             string json = JsonCodec.Serialize(request);
 
             Assert.IsNotNull(json, "Serialized JSON should not be null");
-            Assert.That(json, Does.Contain("\"deckMode\":\"SELECTED\""));
+            StringAssert.Contains("\"deckMode\":\"SELECTED\"", json);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace WordOnline.Tests
             string json = JsonCodec.Serialize(request);
 
             Assert.IsNotNull(json, "Serialized JSON should not be null");
-            Assert.That(json, Does.Contain("\"deckMode\":\"RANDOM\""));
+            StringAssert.Contains("\"deckMode\":\"RANDOM\"", json);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace WordOnline.Tests
             string json = JsonCodec.Serialize(request);
 
             Assert.IsNotNull(json, "Serialized JSON should not be null");
-            Assert.That(json, Does.Contain("\"deckMode\":null"));
+            StringAssert.Contains("\"deckMode\":null", json);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace WordOnline.Tests
             string json = JsonCodec.Serialize(request);
 
             Assert.IsNotNull(json, "Serialized JSON should not be null");
-            Assert.That(json, Does.Contain("\"deckMode\":\"CUSTOM_MODE\""));
+            StringAssert.Contains("\"deckMode\":\"CUSTOM_MODE\"", json);
         }
     }
 }
