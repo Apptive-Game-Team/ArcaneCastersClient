@@ -14,7 +14,7 @@ namespace LobbyScene
         private static ServerEndpoint MatchTickets =>
             ServerList.MatchingServer.Api.Path("api", "match", "tickets");
 
-        public IEnumerator CreateTicket(string deckMode, Action<MatchTicket> callback)
+        public virtual IEnumerator CreateTicket(string deckMode, Action<MatchTicket> callback)
         {
             using var webRequest = new UnityWebRequest(MatchTickets, "POST");
             string json = JsonCodec.Serialize(new MatchTicketRequest { deckMode = deckMode });
@@ -24,7 +24,7 @@ namespace LobbyScene
             yield return SendTicketRequest(webRequest, callback, "CreateTicket");
         }
 
-        public IEnumerator GetActiveTicket(Action<bool, MatchTicket> callback)
+        public virtual IEnumerator GetActiveTicket(Action<bool, MatchTicket> callback)
         {
             using var webRequest = UnityWebRequest.Get(MatchTickets.Path("active"));
             Server.SetAcceptLanguage(webRequest);
@@ -55,7 +55,7 @@ namespace LobbyScene
             callback(true, ticket);
         }
 
-        public IEnumerator CancelTicket(string ticketId, Action<MatchCancelResult> callback)
+        public virtual IEnumerator CancelTicket(string ticketId, Action<MatchCancelResult> callback)
         {
             using var webRequest = UnityWebRequest.Delete(MatchTickets.Path(ticketId));
             webRequest.downloadHandler = new DownloadHandlerBuffer();
