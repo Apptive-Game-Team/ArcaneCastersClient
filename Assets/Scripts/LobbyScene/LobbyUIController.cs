@@ -380,11 +380,7 @@ namespace LobbyScene
             RewardTileView rewardTilePrefab,
             RewardTileRendererSelector selector)
         {
-            var panel = rewardUI.transform.Find("Panal");
-            if (panel == null)
-            {
-                panel = rewardUI.transform;
-            }
+            var panel = FindRewardPanel(rewardUI.transform);
 
             var contentRoot = EnsureContentRoot(panel);
             ClearContent(contentRoot);
@@ -408,6 +404,23 @@ namespace LobbyScene
             }
 
             ShowChestHint(panel, hasChest);
+        }
+
+        internal static Transform FindRewardPanel(Transform rewardTransform)
+        {
+            var panel = rewardTransform.Find("Panel");
+            if (panel != null)
+            {
+                return panel;
+            }
+
+            panel = rewardTransform.Find("Panal");
+            if (panel != null)
+            {
+                return panel;
+            }
+
+            return rewardTransform;
         }
 
         private static RectTransform EnsureContentRoot(Transform panel)
