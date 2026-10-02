@@ -1,0 +1,17 @@
+{
+    "name": "WordOnline.Util",
+    "rootNamespace": "Global.Util",
+    "references": [
+        "WordOnline.Serialization",
+        "WordOnline.Net"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
