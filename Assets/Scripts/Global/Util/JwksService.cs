@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Global.Serialization;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("WordOnline.Tests.EditMode")]
+
 namespace Global.Util
 {
     /// <summary>
@@ -23,8 +25,17 @@ namespace Global.Util
 
         private static bool _isFetched;
 
+        internal static Func<string, string> WebRequestOverride { get; set; }
+
         /// <summary>True when JWKS has been successfully fetched and cached.</summary>
         public static bool IsFetched => _isFetched;
+
+        internal static void Reset()
+        {
+            _cachedKeys.Clear();
+            _isFetched = false;
+            WebRequestOverride = null;
+        }
 
         /// <summary>
         /// Coroutine that fetches the JWKS from the account server and caches
@@ -33,6 +44,20 @@ namespace Global.Util
         public static IEnumerator FetchJwks()
         {
             string url = ServerList.AccountServer.url + JwksPath;
+
+            if (WebRequestOverride != null)
+            {
+                string overrideText = WebRequestOverride(url);
+                if (overrideText != null)
+                {
+                    ParseJwksResponse(overrideText);
+                }
+                else
+                {
+                    WDebug.LogWarning("[JwksService] Failed to fetch JWKS: Network error");
+                }
+                yield break;
+            }
 
             using UnityWebRequest request = UnityWebRequest.Get(url);
             request.timeout = JwksTimeoutSeconds;
@@ -44,9 +69,14 @@ namespace Global.Util
                 yield break;
             }
 
+            ParseJwksResponse(request.downloadHandler.text);
+        }
+
+        internal static bool ParseJwksResponse(string json)
+        {
             try
             {
-                JwksResponse response = JsonCodec.Deserialize<JwksResponse>(request.downloadHandler.text);
+                JwksResponse response = JsonCodec.Deserialize<JwksResponse>(json);
                 if (response?.keys != null)
                 {
                     _cachedKeys.Clear();
@@ -57,12 +87,14 @@ namespace Global.Util
                     }
                     _isFetched = true;
                     WDebug.Log($"[JwksService] Fetched {_cachedKeys.Count} JWKS key(s).");
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 WDebug.LogWarning($"[JwksService] Failed to parse JWKS response: {ex.Message}");
             }
+            return false;
         }
 
         /// <summary>Returns the cached key matching <paramref name="kid"/>, or null.</summary>
