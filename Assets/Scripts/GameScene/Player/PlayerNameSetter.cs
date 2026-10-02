@@ -12,19 +12,7 @@ namespace GameScene.Player
 
         private void Start()
         {
-            string master = servedObject.GetMaster();
-            switch (master)
-            {
-                case "LeftPlayer":
-                    playerName.text = SceneContext.MatchInfo.leftUser.name;
-                    break;
-                case "RightPlayer":
-                    playerName.text = SceneContext.MatchInfo.rightUser.name;
-                    break;
-                default:
-                    playerName.text = "";
-                    break;
-            }
+            playerName.text = SceneContext.MatchInfo.FindUserByMaster(servedObject.GetMaster())?.name ?? "";
         }
     }
 }
