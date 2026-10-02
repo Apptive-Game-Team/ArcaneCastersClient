@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Data;
 using UnityEngine;
 using UnityEngine.Networking;
 using Global.Serialization;
@@ -23,16 +22,37 @@ namespace Global.Util
 
         private static bool _isFetched;
 
+        /// <summary>
+        /// Delegate provider for the default Account Server base URL (e.g. ServerList.AccountServer.url).
+        /// </summary>
+        public static Func<string> DefaultAccountServerUrlProvider;
+
         /// <summary>True when JWKS has been successfully fetched and cached.</summary>
         public static bool IsFetched => _isFetched;
+
+        /// <summary>
+        /// Resets cached keys and fetched status. Used primarily for unit tests.
+        /// </summary>
+        public static void ResetForTest()
+        {
+            _cachedKeys.Clear();
+            _isFetched = false;
+        }
 
         /// <summary>
         /// Coroutine that fetches the JWKS from the account server and caches
         /// the keys. On failure the cache remains empty and IsFetched stays false.
         /// </summary>
-        public static IEnumerator FetchJwks()
+        public static IEnumerator FetchJwks(string accountServerUrl = null)
         {
-            string url = ServerList.AccountServer.url + JwksPath;
+            string baseUrl = accountServerUrl;
+            if (string.IsNullOrEmpty(baseUrl))
+            {
+                baseUrl = DefaultAccountServerUrlProvider != null
+                    ? DefaultAccountServerUrlProvider()
+                    : "https://account.theevilent.com:443";
+            }
+            string url = baseUrl + JwksPath;
 
             using UnityWebRequest request = UnityWebRequest.Get(url);
             request.timeout = JwksTimeoutSeconds;
