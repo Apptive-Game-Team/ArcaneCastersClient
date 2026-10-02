@@ -6329,6 +6329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   magicImage: {fileID: 7133000000000000074}
+  previewPrefab: {fileID: 11400001, guid: aa570083ce364c4485dd61ac12ca4301, type: 3}
 --- !u!1 &1549812395
 GameObject:
   m_ObjectHideFlags: 0

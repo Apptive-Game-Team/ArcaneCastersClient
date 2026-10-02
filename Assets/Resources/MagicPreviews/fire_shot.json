@@ -1,0 +1,780 @@
+{
+  "version" : 1,
+  "magic" : "fire_shot",
+  "frameDuration" : 0.05,
+  "duration" : 3.0,
+  "source" : "FireShotPreviewTest; real FireShotMagic/Shot/PhysicSystem; stationary fixture targets",
+  "parameters" : {
+    "speed" : 8,
+    "radius" : 0.5,
+    "damage" : 100
+  },
+  "frames" : [ {
+    "time" : 0.0,
+    "objects" : {
+      "create" : [ {
+        "id" : 1,
+        "type" : "Player",
+        "position" : {
+          "x" : 2.0,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "master" : "LeftPlayer",
+        "gizmos" : [ ]
+      }, {
+        "id" : 2,
+        "type" : "ElectricSlime",
+        "position" : {
+          "x" : 8.0,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "master" : "RightPlayer",
+        "gizmos" : [ {
+          "relativePosition" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "z" : 0.0
+          },
+          "radius" : 0.35,
+          "boxSize" : null,
+          "type" : "Circle",
+          "category" : "Collider"
+        } ]
+      }, {
+        "id" : 3,
+        "type" : "ElectricSlime",
+        "position" : {
+          "x" : 8.0,
+          "y" : 0.0,
+          "z" : 5.7
+        },
+        "master" : "RightPlayer",
+        "gizmos" : [ {
+          "relativePosition" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "z" : 0.0
+          },
+          "radius" : 0.35,
+          "boxSize" : null,
+          "type" : "Circle",
+          "category" : "Collider"
+        } ]
+      }, {
+        "id" : 4,
+        "type" : "ElectricSlime",
+        "position" : {
+          "x" : 10.0,
+          "y" : 0.0,
+          "z" : 7.0
+        },
+        "master" : "RightPlayer",
+        "gizmos" : [ {
+          "relativePosition" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "z" : 0.0
+          },
+          "radius" : 0.35,
+          "boxSize" : null,
+          "type" : "Circle",
+          "category" : "Collider"
+        } ]
+      } ],
+      "update" : [ {
+        "id" : 1,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 2.0,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      }, {
+        "id" : 2,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "RightPlayer",
+        "position" : {
+          "x" : 8.0,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      }, {
+        "id" : 3,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "RightPlayer",
+        "position" : {
+          "x" : 8.0,
+          "y" : 0.0,
+          "z" : 5.7
+        },
+        "gauges" : [ ]
+      }, {
+        "id" : 4,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "RightPlayer",
+        "position" : {
+          "x" : 10.0,
+          "y" : 0.0,
+          "z" : 7.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.05,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.1,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.15000000000000002,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.2,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.25,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.30000000000000004,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.35000000000000003,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.4,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.45,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.5,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.55,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.6000000000000001,
+    "objects" : {
+      "create" : [ {
+        "id" : 5,
+        "type" : "FireShot",
+        "position" : {
+          "x" : 2.0,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "master" : "LeftPlayer",
+        "gizmos" : [ {
+          "relativePosition" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "z" : 0.0
+          },
+          "radius" : 0.5,
+          "boxSize" : null,
+          "type" : "Circle",
+          "category" : "Collider"
+        }, {
+          "relativePosition" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "z" : 0.0
+          },
+          "radius" : 1.0,
+          "boxSize" : null,
+          "type" : "Circle",
+          "category" : "AreaOfEffect"
+        } ]
+      } ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 2.0,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.65,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 2.4,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.7000000000000001,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 2.8000002,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.75,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 3.2000003,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.8,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 3.6000004,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.8500000000000001,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 4.0000005,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.9,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 4.4000006,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 0.9500000000000001,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 4.8000007,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.0,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 5.200001,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.05,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 5.600001,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.1,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 6.000001,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.1500000000000001,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 6.400001,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.2000000000000002,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 6.800001,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.25,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 5,
+        "status" : "Destroyed",
+        "effects" : [ ],
+        "master" : "LeftPlayer",
+        "position" : {
+          "x" : 7.2000012,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      }, {
+        "id" : 2,
+        "status" : "Damaged",
+        "effects" : [ ],
+        "master" : "RightPlayer",
+        "position" : {
+          "x" : 8.0,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      }, {
+        "id" : 3,
+        "status" : "Damaged",
+        "effects" : [ ],
+        "master" : "RightPlayer",
+        "position" : {
+          "x" : 8.0,
+          "y" : 0.0,
+          "z" : 5.7
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    },
+    "impact" : {
+      "x" : 7.2000012,
+      "y" : 0.0,
+      "z" : 5.0
+    }
+  }, {
+    "time" : 1.3,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ {
+        "id" : 2,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "RightPlayer",
+        "position" : {
+          "x" : 8.0,
+          "y" : 0.0,
+          "z" : 5.0
+        },
+        "gauges" : [ ]
+      }, {
+        "id" : 3,
+        "status" : "Idle",
+        "effects" : [ ],
+        "master" : "RightPlayer",
+        "position" : {
+          "x" : 8.0,
+          "y" : 0.0,
+          "z" : 5.7
+        },
+        "gauges" : [ ]
+      } ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.35,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.4000000000000001,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.4500000000000002,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.5,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.55,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.6,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.6500000000000001,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.7000000000000002,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.75,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.8,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.85,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.9000000000000001,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 1.9500000000000002,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.0,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.0500000000000003,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.1,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.15,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.2,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.25,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.3000000000000003,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.35,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.4000000000000004,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.45,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.5,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.5500000000000003,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.6,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.6500000000000004,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.7,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.75,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.8000000000000003,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.85,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.9000000000000004,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  }, {
+    "time" : 2.95,
+    "objects" : {
+      "create" : [ ],
+      "update" : [ ],
+      "projectile" : [ ]
+    }
+  } ]
+}
