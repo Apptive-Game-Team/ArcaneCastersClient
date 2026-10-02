@@ -26,7 +26,7 @@ namespace LobbyScene
 
         private void Awake()
         {
-            if (playerImage != null)
+            if (playerImage != null && restPoseSprite == null)
             {
                 restPoseSprite = playerImage.sprite;
             }
@@ -37,6 +37,35 @@ namespace LobbyScene
                 {
                     restPositions[bouncer] = bouncer.anchoredPosition;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Replaces the rest and ready sprites with the ones for the user's appearance. Safe to call at any
+        /// time: while the pointer is already over the button the image shows the new ready sprite, and the
+        /// new rest sprite is what <see cref="StopHover"/> restores afterwards.
+        /// </summary>
+        public void SetPoseSprites(Sprite restSprite, Sprite readySprite)
+        {
+            if (restSprite != null)
+            {
+                restPoseSprite = restSprite;
+            }
+
+            if (readySprite != null)
+            {
+                readyPoseSprite = readySprite;
+            }
+
+            if (playerImage == null)
+            {
+                return;
+            }
+
+            Sprite shown = hovering ? readyPoseSprite : restPoseSprite;
+            if (shown != null)
+            {
+                playerImage.sprite = shown;
             }
         }
 
