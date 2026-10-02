@@ -41,10 +41,9 @@ namespace WordOnline.Tests
             Assert.IsNotNull(coroutine, "CreateTicket should return a valid IEnumerator instance");
             Assert.IsFalse(callbackInvoked, "Callback should not be invoked synchronously upon calling CreateTicket");
 
-            // Advance outer coroutine to yield SendTicketRequest inner enumerator
             bool hasNext = coroutine.MoveNext();
             Assert.IsTrue(hasNext, "CreateTicket coroutine should yield inner request enumerator before completing");
-            Assert.IsNotNull(coroutine.Current, "Current yield object should be non-null (nested SendTicketRequest enumerator)");
+            Assert.IsNotNull(coroutine.Current, "Current yield object should be non-null");
             Assert.IsInstanceOf<IEnumerator>(coroutine.Current, "Current yield object should be SendTicketRequest enumerator");
         }
 
