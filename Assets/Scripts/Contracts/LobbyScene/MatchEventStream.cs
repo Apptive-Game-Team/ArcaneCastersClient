@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Data;
-using Global;
+using Data.Net;
 using Global.Serialization;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -29,21 +29,28 @@ namespace LobbyScene
         private static extern void DisconnectMatchEventStream();
 #endif
 
-        public UnityWebRequestAsyncOperation Connect()
+        public UnityWebRequestAsyncOperation Connect(ServerEndpoint endpoint = default, string token = null)
         {
             DisposeRequest();
-            string url = ServerList.MatchingServer.Api.Path("api", "match", "events");
+            if (!endpoint.HasValue)
+            {
+                endpoint = ServerEndpoint.Of("http://localhost:7777");
+            }
+
+            string url = endpoint.Path("api", "match", "events");
 
 #if UNITY_WEBGL && !UNITY_EDITOR
             IsConnected = true;
-            ConnectMatchEventStream(gameObject.name, url, SceneContext.JwtToken);
+            ConnectMatchEventStream(gameObject.name, url, token);
             return null;
 #else
             request = UnityWebRequest.Get(url);
             request.downloadHandler = new SseDownloadHandler(QueueEvent);
             request.SetRequestHeader("Accept", "text/event-stream");
-            Server.SetAcceptLanguage(request);
-            Server.SetAuthorization(request);
+            if (!string.IsNullOrEmpty(token))
+            {
+                request.SetRequestHeader("Authorization", $"Bearer {token}");
+            }
             IsConnected = true;
             UnityWebRequestAsyncOperation operation = request.SendWebRequest();
             operation.completed += _ => QueueCallback(HandleCompleted);
@@ -76,7 +83,7 @@ namespace LobbyScene
             {
                 if (!JsonCodec.TryDeserialize(json, out MatchTicket ticket, out string error))
                 {
-                    WDebug.LogError($"[Match SSE] Invalid event: {error} / {JsonCodec.Excerpt(json)}");
+                    Debug.LogError($"[Match SSE] Invalid event: {error} / {JsonCodec.Excerpt(json)}");
                     return;
                 }
 
@@ -112,7 +119,7 @@ namespace LobbyScene
         {
             if (!JsonCodec.TryDeserialize(envelopeJson, out SseEnvelope envelope, out string error))
             {
-                WDebug.LogError($"[Match SSE] Invalid envelope: {error} / {JsonCodec.Excerpt(envelopeJson)}");
+                Debug.LogError($"[Match SSE] Invalid envelope: {error} / {JsonCodec.Excerpt(envelopeJson)}");
                 return;
             }
 
