@@ -452,7 +452,7 @@ namespace LobbyScene
 
         private static void PopulateRewardUI(GameObject rewardUI, IReadOnlyList<RewardVisual> visuals)
         {
-            var panel = FindRewardPanel(rewardUI.transform);
+            var panel = RewardUiPanelLookup.FindRewardPanel(rewardUI.transform);
 
             var contentRoot = EnsureContentRoot(panel);
             ClearContent(contentRoot);
@@ -461,23 +461,6 @@ namespace LobbyScene
             {
                 CreateRewardItem(contentRoot, visuals[i], i);
             }
-        }
-
-        public static Transform FindRewardPanel(Transform rewardTransform)
-        {
-            var panel = rewardTransform.Find("Panel");
-            if (panel != null)
-            {
-                return panel;
-            }
-
-            panel = rewardTransform.Find("Panal");
-            if (panel != null)
-            {
-                return panel;
-            }
-
-            return rewardTransform;
         }
 
         private static RectTransform EnsureContentRoot(Transform panel)
