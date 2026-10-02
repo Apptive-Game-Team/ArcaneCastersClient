@@ -71,6 +71,16 @@ Existing scenes heavily instantiate:
 
 Follow those patterns before inventing new UI structure.
 
+## Check RawImage UVs in the running Editor
+
+For a prefab-backed `RawImage` showing a `RenderTexture`, inspect `RawImage.uvRect`
+on the instantiated object in Play Mode. `FireShotPreview.prefab`'s YAML contains
+`m_UVRect` with width and height of 1, but Unity read both as 0 in the deck
+scene. The preview camera rendered sprites into the texture while the UI sampled
+only one background pixel, making the preview look blank. Set the UV explicitly
+to `new Rect(0f, 0f, 1f, 1f)` when binding the texture and verify a Game View
+capture; checking that `RawImage.texture` is non-null is not sufficient.
+
 ## Instancing a UI prefab by hand
 
 The Editor cannot open this checkout from WSL, so a new panel is usually written

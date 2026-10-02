@@ -79,6 +79,9 @@ namespace Global
             texture.Create();
             previewCamera.targetTexture = texture;
             output.texture = texture;
+            // The prefab's RawImage UV rect can deserialize as zero in Unity, sampling only
+            // one background pixel despite a correctly rendered texture.
+            output.uvRect = new Rect(0f, 0f, 1f, 1f);
             output.raycastTarget = false;
             impact = CreateSprite("Impact", impactSprite, 2.4f);
             impact.sortingOrder = 20;
