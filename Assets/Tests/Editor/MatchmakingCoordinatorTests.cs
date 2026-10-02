@@ -104,14 +104,14 @@ namespace WordOnline.Tests
                 ticketId = "ticket-103",
                 version = 1,
                 state = "MATCHED",
-                matchInfo = new MatchedInfoDto { matchId = "match-777" }
+                matchInfo = new MatchedInfoDto { sessionId = "session-777" }
             };
 
             coordinator.Enqueue("normal_deck");
 
             Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Matched));
             Assert.That(matchedDto, Is.Not.Null);
-            Assert.That(matchedDto.matchId, Is.EqualTo("match-777"));
+            Assert.That(matchedDto.sessionId, Is.EqualTo("session-777"));
         }
 
         private class FakeMatchQueueApiService : MatchQueueApiService
