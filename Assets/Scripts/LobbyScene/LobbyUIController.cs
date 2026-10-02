@@ -463,7 +463,7 @@ namespace LobbyScene
             }
         }
 
-        internal static Transform FindRewardPanel(Transform rewardTransform)
+        public static Transform FindRewardPanel(Transform rewardTransform)
         {
             var panel = rewardTransform.Find("Panel");
             if (panel != null)
