@@ -1,8 +1,13 @@
 # Fire Shot preview example
 
 `fire_shot` is the internal name of the requested fireball example. The deck
-management owned-card/deck-slot hover and selected magic book image use the same
+management owned-card/deck-slot hover and magic book explanation area use the same
 `Assets/Prefabs/UI/FireShotPreview.prefab`. Other spells keep their existing UI.
+The book keeps the selected spell's icon and places the replay after its text in
+the scrollable explanation. The Fire Shot hover opens immediately and is
+positioned under the root canvas: its original deck scroll parent is only
+420×239 units, smaller than the preview popup, and the shared hover transition
+otherwise waits one second before showing anything.
 
 ## Data ownership
 

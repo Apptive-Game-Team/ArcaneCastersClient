@@ -37,6 +37,14 @@ namespace DeckScene
             panelRoot ??= gameObject;
             hoverTransition = new HoverPopupTransition(this);
             Hide();
+            Canvas canvas = panelRoot.GetComponentInParent<Canvas>(true);
+            if (canvas != null)
+            {
+                // The popup is taller than its original scroll-view parent.
+                // Use the full canvas for both drawing and edge placement.
+                panelRoot.transform.SetParent(canvas.rootCanvas.transform, true);
+                panelRoot.transform.SetAsLastSibling();
+            }
             panelRoot.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
@@ -68,7 +76,7 @@ namespace DeckScene
             }
 
             hoverTransition ??= new HoverPopupTransition(this);
-            hoverTransition.ShowAfterDelay(panelRoot, () =>
+            void BeforeShow()
             {
                 if (panelRoot.transform is RectTransform panelRect)
                 {
@@ -76,7 +84,11 @@ namespace DeckScene
                 }
 
                 PlaceNextTo(anchor);
-            });
+            }
+
+            // A preview should appear while the card is still under the pointer.
+            if (hasPreview) hoverTransition.ShowNow(panelRoot, BeforeShow);
+            else hoverTransition.ShowAfterDelay(panelRoot, BeforeShow);
         }
 
         public void Hide()

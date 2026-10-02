@@ -1,5 +1,4 @@
 using Data.Magic;
-using Global;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,12 +11,9 @@ namespace MagicBookScene
     public class SelectedMagicView : MonoBehaviour
     {
         [SerializeField] private Image magicImage;
-        [SerializeField] private FireShotPreview previewPrefab;
-        private FireShotPreview preview;
 
         public void Show(CombinedMagicData data)
         {
-            if (preview != null) preview.gameObject.SetActive(false);
             if (data == null || magicImage == null)
             {
                 return;
@@ -25,20 +21,7 @@ namespace MagicBookScene
 
             Sprite sprite = data.GetSprite();
             magicImage.sprite = sprite;
-            bool showPreview = previewPrefab != null && FireShotPreview.Supports(data);
-            if (showPreview)
-            {
-                if (preview == null)
-                {
-                    preview = Instantiate(previewPrefab, magicImage.transform);
-                    RectTransform rect = (RectTransform)preview.transform;
-                    rect.anchorMin = Vector2.zero;
-                    rect.anchorMax = Vector2.one;
-                    rect.offsetMin = rect.offsetMax = Vector2.zero;
-                }
-                preview.gameObject.SetActive(true);
-            }
-            magicImage.enabled = !showPreview && sprite != null;
+            magicImage.enabled = sprite != null;
         }
     }
 }
