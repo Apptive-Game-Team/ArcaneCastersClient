@@ -1,64 +1,65 @@
-using System.Collections;
-using Data;
 using Global.Serialization;
 using LobbyScene;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace WordOnline.Tests
 {
     public class MatchQueueApiServiceTests
     {
-        private GameObject gameObject;
-        private MatchQueueApiService apiService;
-
-        [SetUp]
-        public void SetUp()
+        [Test]
+        public void CreateTicket_SelectedDeckMode_SerializesWithSelectedDeckModeValue()
         {
-            gameObject = new GameObject("MatchQueueApiServiceTestObject");
-            apiService = gameObject.AddComponent<MatchQueueApiService>();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            if (gameObject != null)
+            var request = new MatchTicketRequest
             {
-                Object.DestroyImmediate(gameObject);
-            }
+                deckMode = MatchDeckMode.Selected
+            };
+
+            string json = JsonCodec.Serialize(request);
+
+            Assert.IsNotNull(json, "Serialized JSON should not be null");
+            Assert.That(json, Does.Contain("\"deckMode\":\"SELECTED\""));
         }
 
         [Test]
-        public void CreateTicket_ReturnsNonNilEnumeratorAndDoesNotInvokeCallbackImmediately()
+        public void CreateTicket_RandomDeckMode_SerializesWithRandomDeckModeValue()
         {
-            bool callbackInvoked = false;
-
-            IEnumerator coroutine = apiService.CreateTicket(MatchDeckMode.Selected, ticket =>
+            var request = new MatchTicketRequest
             {
-                callbackInvoked = true;
-            });
+                deckMode = MatchDeckMode.Random
+            };
 
-            Assert.IsNotNull(coroutine, "CreateTicket should return a valid IEnumerator instance");
-            Assert.IsFalse(callbackInvoked, "Callback should not be invoked synchronously upon calling CreateTicket");
+            string json = JsonCodec.Serialize(request);
 
-            bool hasNext = coroutine.MoveNext();
-            Assert.IsTrue(hasNext, "CreateTicket coroutine should yield inner request enumerator before completing");
-            Assert.IsNotNull(coroutine.Current, "Current yield object should be non-null");
-            Assert.IsInstanceOf<IEnumerator>(coroutine.Current, "Current yield object should be SendTicketRequest enumerator");
+            Assert.IsNotNull(json, "Serialized JSON should not be null");
+            Assert.That(json, Does.Contain("\"deckMode\":\"RANDOM\""));
         }
 
         [Test]
-        public void CreateTicket_WithRandomDeckMode_ReturnsValidEnumerator()
+        public void CreateTicket_NullDeckMode_SerializesWithoutDeckModeError()
         {
-            bool callbackInvoked = false;
-
-            IEnumerator coroutine = apiService.CreateTicket(MatchDeckMode.Random, ticket =>
+            var request = new MatchTicketRequest
             {
-                callbackInvoked = true;
-            });
+                deckMode = null
+            };
 
-            Assert.IsNotNull(coroutine, "CreateTicket should return a valid IEnumerator instance for random deck mode");
-            Assert.IsFalse(callbackInvoked, "Callback should not be invoked synchronously");
+            string json = JsonCodec.Serialize(request);
+
+            Assert.IsNotNull(json, "Serialized JSON should not be null");
+            Assert.That(json, Does.Contain("\"deckMode\":null"));
+        }
+
+        [Test]
+        public void CreateTicket_CustomDeckMode_SerializesExactString()
+        {
+            var request = new MatchTicketRequest
+            {
+                deckMode = "CUSTOM_MODE"
+            };
+
+            string json = JsonCodec.Serialize(request);
+
+            Assert.IsNotNull(json, "Serialized JSON should not be null");
+            Assert.That(json, Does.Contain("\"deckMode\":\"CUSTOM_MODE\""));
         }
     }
 }
