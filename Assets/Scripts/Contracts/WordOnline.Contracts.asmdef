@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "WordOnline.Net",
-        "WordOnline.Serialization"
+        "WordOnline.Serialization",
+        "Unity.Localization"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
