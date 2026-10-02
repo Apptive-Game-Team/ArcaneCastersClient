@@ -81,7 +81,7 @@ namespace WordOnline.Tests
             bool disconnectedFired = false;
             stream.Disconnected += () => disconnectedFired = true;
 
-            stream.Connect();
+            stream.SetConnectedForTesting(true);
             Assert.That(stream.IsConnected, Is.True);
 
             stream.OnMatchSseDisconnected("Network loss");
