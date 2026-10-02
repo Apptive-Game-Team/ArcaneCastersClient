@@ -2,7 +2,8 @@
     "name": "WordOnline.Contracts",
     "rootNamespace": "",
     "references": [
-        "WordOnline.Net"
+        "WordOnline.Net",
+        "WordOnline.Serialization"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

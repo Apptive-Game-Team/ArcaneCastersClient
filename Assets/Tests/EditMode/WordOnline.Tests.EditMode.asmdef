@@ -7,8 +7,7 @@
         "WordOnline.Serialization",
         "WordOnline.GameContracts",
         "WordOnline.Net",
-        "WordOnline.Contracts",
-        "Assembly-CSharp"
+        "WordOnline.Contracts"
     ],
     "includePlatforms": [
         "Editor"
