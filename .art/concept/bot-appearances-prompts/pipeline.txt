@@ -1,0 +1,7 @@
+Each sprite: prompt = common-idle-prefix.txt + <look>-look.txt (idle), or common-pose-prefix.txt + pose-raised.txt / pose-thrust.txt (raised, attacking).
+codex exec --approve-for-me -i <reference images> < prompt.txt   (idle references: default idle.png and master-v2/ApprenticeMage.png; pose references: the approved idle source and default raised.png or attacking.png)
+Key out: .art/tools/key-out-background.py raw.png cut.png --key magenta --deadzone 45   (summoner: 70)
+Place on the 981x1245 canvas: normalize-to-default.py fit cut.png <idle|raised|attacking> out.png
+  scales so eye-centre-to-boot-bottom equals the default pose's, and puts the eye centre on the default pose's eye centre.
+Attempts: storm idle 2 raised 1 attacking 2; blaze 1/1/1; grass 1/1/1; summoner 1/1/1; golem idle 2 raised 1 attacking 1; tide idle 2 raised 1 attacking 1.
+Rejected attempts (cape or staff head wider than the default canvas, clipped at the left edge) are not kept.
