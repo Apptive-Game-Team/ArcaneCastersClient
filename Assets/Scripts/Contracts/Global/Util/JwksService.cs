@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Data;
 using UnityEngine;
 using UnityEngine.Networking;
 using Global.Serialization;
@@ -24,6 +23,17 @@ namespace Global.Util
             new Dictionary<string, JwksKey>();
 
         private static bool _isFetched;
+        private static string _accountServerUrl;
+
+        /// <summary>
+        /// Base URL of the account server (e.g. "https://account.theevilent.com:443").
+        /// Defaults to "https://account.theevilent.com:443" if not set.
+        /// </summary>
+        public static string AccountServerUrl
+        {
+            get => _accountServerUrl ?? "https://account.theevilent.com:443";
+            set => _accountServerUrl = value;
+        }
 
         internal static Func<string, string> WebRequestOverride { get; set; }
 
@@ -34,6 +44,7 @@ namespace Global.Util
         {
             _cachedKeys.Clear();
             _isFetched = false;
+            _accountServerUrl = null;
             WebRequestOverride = null;
         }
 
@@ -43,7 +54,7 @@ namespace Global.Util
         /// </summary>
         public static IEnumerator FetchJwks()
         {
-            string url = ServerList.AccountServer.url + JwksPath;
+            string url = AccountServerUrl + JwksPath;
 
             if (WebRequestOverride != null)
             {
