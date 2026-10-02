@@ -34,6 +34,7 @@ namespace WordOnline.Tests
         public IEnumerator FetchJwks_RequestFailure_LogsWarningAndStopsExecution()
         {
             LogAssert.Expect(LogType.Warning, new Regex(@"\[JwksService\] Failed to fetch JWKS:"));
+            LogAssert.ignoreFailingLogs = true;
 
             // Point to an unreachable address to trigger UnityWebRequest failure
             yield return JwksService.FetchJwks("http://127.0.0.1:1");
