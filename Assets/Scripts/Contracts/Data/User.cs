@@ -8,6 +8,8 @@ namespace Data
         public int mmr;
         public string name;
         public string email;
+        /// <summary>Look key for a bot player body; null for human users. See <see cref="PlayerAppearanceResolver"/>.</summary>
+        public string appearance;
 
         /// <summary>
         /// Json.NET needs a parameterless constructor. Declaring any constructor removes the implicit one,

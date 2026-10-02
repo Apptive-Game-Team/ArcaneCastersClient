@@ -1,4 +1,6 @@
 using System;
+using Data;
+using Global;
 using DG.Tweening;
 using UnityEngine;
 using Sequence = DG.Tweening.Sequence;
@@ -40,6 +42,7 @@ namespace GameScene.ServedObjectComponent.OnAttack
                 return;
             }
 
+            ApplyAppearance();
             isRaised = HasRaisingEffect();
             Owner.OnAttack += Play;
             Owner.OnEffectsChanged += HandleEffectsChanged;
@@ -62,6 +65,29 @@ namespace GameScene.ServedObjectComponent.OnAttack
         {
             StopThrustSequence();
             EndThrust();
+        }
+
+        /// <summary>
+        /// Replaces the three serialized sprites with the set for this player's <c>appearance</c>.
+        /// When no complete set exists, including the default set, the serialized sprites stay.
+        /// </summary>
+        private void ApplyAppearance()
+        {
+            string appearance = SceneContext.MatchInfo?.FindUserByMaster(Owner.GetMaster())?.appearance;
+            string loadedId = PlayerAppearanceResolver.Resolve(
+                appearance,
+                Resources.Load<Sprite>,
+                out Sprite idle,
+                out Sprite raised,
+                out Sprite attacking);
+            if (loadedId == null)
+            {
+                return;
+            }
+
+            staffLoweredSprite = idle;
+            staffRaisedSprite = raised;
+            staffThrustSprite = attacking;
         }
 
         private void HandleEffectsChanged()
