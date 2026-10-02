@@ -257,6 +257,108 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000112
     m_Key: ChestOpenFailed
+  - m_Id: 76060000000000201
+    m_Key: QuestTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000202
+    m_Key: AppearanceTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000203
+    m_Key: QuestChestButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000204
+    m_Key: QuestStageClearTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000205
+    m_Key: QuestTotalWinTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000206
+    m_Key: QuestAdventureClearTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000207
+    m_Key: QuestAdventureFallbackName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000208
+    m_Key: QuestAdventureAnyName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000209
+    m_Key: QuestAdventureStageFormat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000210
+    m_Key: QuestProgressFormat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000211
+    m_Key: QuestCompleted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000212
+    m_Key: QuestEmpty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000213
+    m_Key: QuestLoadFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000214
+    m_Key: AppearanceConfirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000215
+    m_Key: AppearanceChanged
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000216
+    m_Key: AppearanceNotOwned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000217
+    m_Key: AppearanceUnknown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000218
+    m_Key: AppearanceSelectFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000219
+    m_Key: AppearanceLoadFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000220
+    m_Key: AppearanceDefault
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000221
+    m_Key: AppearanceBlaze
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000222
+    m_Key: AppearanceGolem
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000223
+    m_Key: AppearanceGrass
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000224
+    m_Key: AppearanceStorm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000225
+    m_Key: AppearanceSummoner
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000226
+    m_Key: AppearanceTide
     m_Metadata:
       m_Items: []
   m_Metadata:

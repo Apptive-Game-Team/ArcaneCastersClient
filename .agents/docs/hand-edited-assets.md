@@ -292,3 +292,34 @@ Unity's NUnit (`com.unity.ext.nunit`) throws `TypeLoadException` for
 EditMode tests outside the Editor. Running test sources that only touch plain C#
 needs a small stand-in for `Assert`, `[Test]` and `[TestCase]`; that checks the
 logic, not NUnit's own behavior.
+### A full compile, Localization included, from a Windows checkout's generated projects
+
+When a Windows checkout of this project has been opened in the Editor (on the
+profile quests work it was `C:\dev\ac-client`), its generated `*.csproj` files and
+`Library\ScriptAssemblies` / `Library\PackageCache` give a real compile of a WSL
+worktree, `com.unity.localization` and Addressables included. Copy the worktree's
+`Assets/Scripts` and `Assets/Tests` under `C:\temp\<name>`, copy the generated
+`Assembly-CSharp.csproj` and `WordOnline.*.csproj` next to them, replace every
+`<Compile Include>` with the worktree's own file list (one list per `.asmdef`
+folder, everything else under `Assets/Scripts` minus `Editor` folders for
+Assembly-CSharp), and point the `Assembly-CSharp-firstpass` and `MCPForUnity.*`
+project references at the DLLs in that checkout's `Library\ScriptAssemblies`.
+`dotnet.exe build` on `Assembly-CSharp.csproj` then reports 0 errors only when the
+new code really compiles; the remaining warnings are reference-version conflicts.
+The checkout's packages are whatever it last imported, so compare its
+`Packages/packages-lock.json` with yours before trusting a package API.
+
+The EditMode test DLL built this way cannot be run outside Unity: Unity's
+`nunit.framework.dll` needs .NET Framework remoting (`CallContext`). Tests that
+touch only `WordOnline.Contracts` and `JsonCodec` run under `dotnet test` in a
+`net8.0` project that compiles those sources directly with the NuGet `NUnit`,
+`NUnit3TestAdapter` and `Newtonsoft.Json` packages; drop the two converters in
+`JsonCodec.CreateSettings()` that need UnityEngine types.
+
+## ProfileScene had no SystemMessage overlay
+
+`SystemMessageUI.Instance` is a scene-local singleton set in `Awake`, and the
+`SystemMessage` prefab is instanced per scene. Every scene had it except
+`ProfileScene`, so a `SystemMessageUI.Instance.ShowMessage` there was a
+`NullReferenceException`. Before calling it from a scene, grep the scene for the
+prefab guid `c3bf6386364e64872904c6d1fa77d05d`.
