@@ -367,6 +367,14 @@ MonoBehaviour:
     m_Key: filter.mana.all
     m_Metadata:
       m_Items: []
+  - m_Id: 1000071
+    m_Key: earth_call
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000072
+    m_Key: rock_blast
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

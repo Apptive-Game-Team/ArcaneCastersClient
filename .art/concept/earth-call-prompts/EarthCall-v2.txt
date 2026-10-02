@@ -1,0 +1,15 @@
+Use case: stylized-concept
+Asset type: production game magic sprite, big tier, replacing Assets/Resources/Game/sprites/EarthCall.png
+Input images: Image 1 is the canonical MasterStyleKey rendering reference; Image 2 is the canonical RockGolem stone-and-moss material reference; Image 3 is the canonical ArcaneImpact magic-effect silhouette reference.
+
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no environmental ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas.
+
+Create completely new art for the Rock magic "Earth Call". Depict one cohesive summoning effect: a broad circular earthen vibration ring with cracked stone plates, one visibly small rubble pile and one visibly medium rubble pile breaking apart, and several chunky stones rising upward as they begin to assemble. The image must communicate that nearby rubble is being awakened and transformed by the spell. Do not show a completed humanoid rock golem or reuse the RockGolem pose.
+
+Match the canonical 2.5D cut-paper cartoon rendering exactly. Build every rock and magical shape from large overlapping matte paper planes with three value bands per material: base, broad upper-left highlight, and broad lower-right shadow. Use no painterly brushwork, texture noise, glossy 3D rendering, fine debris scatter, thin lines, or outer contour. Use one soft upper-left light and restrained saturation.
+
+Use the Rock golem tribe material language: blocky stacked warm tan stone with visible seams and restrained moss or tiny plants. Palette: warm tan stone #CDC8B8 #A3A29D #8A857A, moss #55572D #374725. The vibration and magic accents are pale warm cream, expressed as broad matte paper bands rather than neon glow.
+
+Composition: centered square icon, slightly elevated three-quarter view. The vibration ring forms a wide readable base, while the two rubble masses and rising stones create one compact upward silhouette. The subject must touch or nearly touch the top, bottom, left, and right bounds with no more than a few pixels of magenta margin after trimming. Keep all fragments chunky and connected visually so the silhouette survives at 64px.
+
+No text, no frame, no card mockup, no logos, no watermark, no character face, no eyes, no finished creature, no background scenery.

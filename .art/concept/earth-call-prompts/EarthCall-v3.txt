@@ -1,0 +1,15 @@
+Use case: stylized-concept
+Asset type: production game magic sprite, big tier, replacing Assets/Resources/Game/sprites/EarthCall.png
+Input images: Image 1 is the canonical MasterStyleKey rendering reference; Image 2 is the canonical RockGolem stone-and-moss material reference; Image 3 is the canonical ArcaneImpact magic-effect silhouette reference.
+
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no checkerboard, white, grey, gradient, texture, vignette, environmental ground plane, cast shadow, glow, or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a square canvas.
+
+Create completely new art for the Rock magic "Earth Call". Depict one cohesive summoning effect: a compact earthen vibration ring seen in three-quarter perspective, one visibly small rubble pile and one visibly medium rubble pile breaking apart, and several chunky stones rising vertically as they begin to assemble. The image must communicate that nearby rubble is being awakened and transformed. Do not show a completed humanoid rock golem or reuse the RockGolem pose.
+
+Match the canonical 2.5D cut-paper cartoon rendering exactly. Build every rock and magical shape from large overlapping matte paper planes with three value bands: base, broad upper-left highlight, broad lower-right shadow. No painterly brushwork, texture noise, glossy 3D rendering, fine debris scatter, thin lines, or outer contour. Use one soft upper-left light and restrained saturation.
+
+Use the Rock golem tribe material language: blocky stacked warm tan stone with visible seams and restrained moss or tiny plants. Palette: warm tan stone #CDC8B8 #A3A29D #8A857A, moss #55572D #374725. The vibration and magic accents are pale warm cream, expressed as broad matte paper bands rather than neon glow.
+
+Geometry lock: the subject's opaque content bounds must be about 0.89 times as wide as tall, equivalent to 1120 pixels wide by 1254 pixels tall. It should fill about 83% of the square canvas width and 98% of its height. Keep the perspective vibration ring compact and narrow; do not let it make the composition square or landscape. The ring touches the bottom, the highest rising stone nearly touches the top, and the two rubble piles sit inside the ring. Center the subject. Keep all fragments chunky and visually connected so the silhouette survives at 64px.
+
+No text, no frame, no card mockup, no logos, no watermark, no character face, no eyes, no finished creature, no background scenery.
