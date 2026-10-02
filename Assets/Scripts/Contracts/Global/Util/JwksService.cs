@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Data;
 using UnityEngine;
 using UnityEngine.Networking;
 using Global.Serialization;
+
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("WordOnline.Tests.EditMode")]
 
 namespace Global.Util
 {
@@ -22,9 +23,30 @@ namespace Global.Util
             new Dictionary<string, JwksKey>();
 
         private static bool _isFetched;
+        private static string _accountServerUrl;
+
+        /// <summary>
+        /// Base URL of the account server (e.g. "https://account.theevilent.com:443").
+        /// Defaults to "https://account.theevilent.com:443" if not set.
+        /// </summary>
+        public static string AccountServerUrl
+        {
+            get => _accountServerUrl ?? "https://account.theevilent.com:443";
+            set => _accountServerUrl = value;
+        }
+
+        internal static Func<string, string> WebRequestOverride { get; set; }
 
         /// <summary>True when JWKS has been successfully fetched and cached.</summary>
         public static bool IsFetched => _isFetched;
+
+        internal static void Reset()
+        {
+            _cachedKeys.Clear();
+            _isFetched = false;
+            _accountServerUrl = null;
+            WebRequestOverride = null;
+        }
 
         /// <summary>
         /// Coroutine that fetches the JWKS from the account server and caches
@@ -32,7 +54,21 @@ namespace Global.Util
         /// </summary>
         public static IEnumerator FetchJwks()
         {
-            string url = ServerList.AccountServer.url + JwksPath;
+            string url = AccountServerUrl + JwksPath;
+
+            if (WebRequestOverride != null)
+            {
+                string overrideText = WebRequestOverride(url);
+                if (overrideText != null)
+                {
+                    ParseJwksResponse(overrideText);
+                }
+                else
+                {
+                    WDebug.LogWarning("[JwksService] Failed to fetch JWKS: Network error");
+                }
+                yield break;
+            }
 
             using UnityWebRequest request = UnityWebRequest.Get(url);
             request.timeout = JwksTimeoutSeconds;
@@ -44,9 +80,14 @@ namespace Global.Util
                 yield break;
             }
 
+            ParseJwksResponse(request.downloadHandler.text);
+        }
+
+        internal static bool ParseJwksResponse(string json)
+        {
             try
             {
-                JwksResponse response = JsonCodec.Deserialize<JwksResponse>(request.downloadHandler.text);
+                JwksResponse response = JsonCodec.Deserialize<JwksResponse>(json);
                 if (response?.keys != null)
                 {
                     _cachedKeys.Clear();
@@ -57,12 +98,14 @@ namespace Global.Util
                     }
                     _isFetched = true;
                     WDebug.Log($"[JwksService] Fetched {_cachedKeys.Count} JWKS key(s).");
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 WDebug.LogWarning($"[JwksService] Failed to parse JWKS response: {ex.Message}");
             }
+            return false;
         }
 
         /// <summary>Returns the cached key matching <paramref name="kid"/>, or null.</summary>
