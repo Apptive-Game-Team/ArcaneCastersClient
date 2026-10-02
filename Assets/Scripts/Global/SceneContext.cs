@@ -6,7 +6,11 @@ namespace Global
 {
     public class SceneContext : SingletonObject<SceneContext>
     {
-    
+        static SceneContext()
+        {
+            Server.JwtTokenProvider = () => JwtToken;
+        }
+
         public static string JwtToken
         {
             get; set;

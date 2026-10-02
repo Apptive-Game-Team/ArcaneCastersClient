@@ -22,6 +22,11 @@ namespace Global.Auth
     /// </summary>
     public class AuthSession : SingletonObject<AuthSession>
     {
+        static AuthSession()
+        {
+            Server.TokenDeliveryIsCookieProvider = () => Instance != null && Instance.TokenDelivery == RefreshTokenDelivery.Cookie;
+        }
+
         /// <summary>access token 이 3600초로 줄어드는 계약에 맞춰, 만료 10분 전쯤 미리 갱신한다.</summary>
         private const float RenewalIntervalSeconds = 50f * 60f;
 
