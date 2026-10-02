@@ -22,6 +22,7 @@ namespace Data
             this.id = gameUser.id;
             this.selectedDeckId = gameUser.selectedDeckId;
             this.mmr = gameUser.mmr;
+            this.appearance = gameUser.appearance;
             this.name = accountUser?.DisplayName;
             this.email = accountUser?.email;
         }

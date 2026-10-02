@@ -4388,6 +4388,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lobbyUserNameUI: {fileID: 1346169579}
+  avatarHeadImage: {fileID: 6472150092938119882}
+  battleHoverPresenter: {fileID: 887010901}
   deckDropdown: {fileID: 191327567}
   arrowButton: {fileID: 1362459989}
   rewardUiPrefab: {fileID: 0}
