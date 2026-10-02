@@ -13,7 +13,7 @@ namespace WordOnline.Tests
             var panel = new GameObject("Panel");
             panel.transform.SetParent(root.transform);
 
-            var found = QuestRewardTracker.FindRewardPanel(root.transform);
+            var found = LobbyUIController.FindRewardPanel(root.transform);
 
             Assert.AreEqual(panel.transform, found);
 
@@ -27,7 +27,7 @@ namespace WordOnline.Tests
             var panal = new GameObject("Panal");
             panal.transform.SetParent(root.transform);
 
-            var found = QuestRewardTracker.FindRewardPanel(root.transform);
+            var found = LobbyUIController.FindRewardPanel(root.transform);
 
             Assert.AreEqual(panal.transform, found);
 
@@ -39,7 +39,7 @@ namespace WordOnline.Tests
         {
             var root = new GameObject("RewardUI");
 
-            var found = QuestRewardTracker.FindRewardPanel(root.transform);
+            var found = LobbyUIController.FindRewardPanel(root.transform);
 
             Assert.AreEqual(root.transform, found);
 
