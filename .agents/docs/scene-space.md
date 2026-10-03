@@ -23,6 +23,13 @@ places `LeftPlayer` at `x = 1` and `RightPlayer` at `x = 17`, so **`LeftPlayer`
 faces `+X` and `RightPlayer` faces `-X`**, and `Z` is the width of the field, not
 a heading. `SceneContext.Me` is the string that says which side you are.
 
+For a runtime XZ ground made with Unity's built-in `PrimitiveType.Quad`, check
+its mesh normal before choosing the rotation. This project's Unity 2022 Quad
+normal is local `-Z`, so `Quaternion.Euler(90f, 0f, 0f)` faces it upward; `-90f`
+faces it into the ground. The first magic-preview grass quad had the right
+texture and camera position but remained invisible because it was back-facing.
+Check the Game View or RenderTexture pixels, not only `MeshRenderer.isVisible`.
+
 `MagicIndicatorResolver.GetForwardDirection()` is that convention written down;
 use it rather than hard-coding `Vector3.right`. Code that forgets the right side
 looks correct in every left-side test and points backwards in half of all matches.

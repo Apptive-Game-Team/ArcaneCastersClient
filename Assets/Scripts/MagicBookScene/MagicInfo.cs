@@ -34,7 +34,7 @@ namespace MagicBookScene
         [SerializeField] private MagicInfoChip elementChipTemplate;
         [SerializeField] private Transform statRowsParent;
         [SerializeField] private MagicStatRow statRowTemplate;
-        [SerializeField] private FireShotPreview previewPrefab;
+        [SerializeField] private MagicPreview previewPrefab;
 
         private readonly List<GameObject> spawned = new();
         private int initVersion;
@@ -45,7 +45,7 @@ namespace MagicBookScene
             // Stop the previous replay as soon as selection changes, even while text loads.
             foreach (GameObject spawnedObject in spawned)
             {
-                if (spawnedObject != null && spawnedObject.GetComponent<FireShotPreview>() != null)
+                if (spawnedObject != null && spawnedObject.GetComponent<MagicPreview>() != null)
                     spawnedObject.SetActive(false);
             }
 
@@ -99,10 +99,11 @@ namespace MagicBookScene
                 statsText.transform.SetAsLastSibling();
             }
 
-            if (previewPrefab != null && statRowsParent != null && FireShotPreview.Supports(data))
+            if (previewPrefab != null && statRowsParent != null && previewPrefab.Supports(data))
             {
-                FireShotPreview preview = Instantiate(previewPrefab, statRowsParent);
-                preview.name = "FireShotExplanationPreview";
+                MagicPreview preview = Instantiate(previewPrefab, statRowsParent);
+                preview.Configure(data);
+                preview.name = "MagicExplanationPreview";
                 LayoutElement layout = preview.GetComponent<LayoutElement>();
                 layout.minHeight = 260f;
                 layout.preferredHeight = 260f;

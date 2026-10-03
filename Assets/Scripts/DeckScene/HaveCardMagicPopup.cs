@@ -26,7 +26,7 @@ namespace DeckScene
         [SerializeField] private Transform itemRoot;
         [SerializeField] private TMP_FontAsset detailFont;
         [SerializeField] private TMP_FontAsset descriptionFont;
-        [SerializeField] private FireShotPreview previewPrefab;
+        [SerializeField] private MagicPreview previewPrefab;
         private float currentPanelHeight = PanelHeight;
 
         private HoverPopupTransition hoverTransition;
@@ -58,7 +58,7 @@ namespace DeckScene
             panelRoot ??= gameObject;
             Hide();
             ClearItems();
-            bool hasPreview = previewPrefab != null && magics != null && magics.Count == 1 && FireShotPreview.Supports(magics[0]);
+            bool hasPreview = previewPrefab != null && magics != null && magics.Count == 1 && previewPrefab.Supports(magics[0]);
             currentPanelHeight = hasPreview ? PanelHeight + 160f : PanelHeight;
             ConfigureLayout();
             int version = ++renderVersion;
@@ -143,9 +143,10 @@ namespace DeckScene
             bodyElement.preferredHeight = bodyHeight;
             bodyElement.flexibleHeight = 0f;
 
-            if (currentPanelHeight > PanelHeight && previewPrefab != null && FireShotPreview.Supports(magic))
+            if (currentPanelHeight > PanelHeight && previewPrefab != null && previewPrefab.Supports(magic))
             {
-                FireShotPreview preview = Instantiate(previewPrefab, detailObject.transform);
+                MagicPreview preview = Instantiate(previewPrefab, detailObject.transform);
+                preview.Configure(magic);
                 preview.gameObject.SetActive(true);
             }
 

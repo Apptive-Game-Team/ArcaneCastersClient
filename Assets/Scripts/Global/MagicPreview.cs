@@ -9,18 +9,16 @@ using UnityEngine.UI;
 namespace Global
 {
     /// <summary>
-    /// Replays the bundled server example. Visual-only objects never register with GameScene.
-    /// Deliberately supports FireShot only: this is not a second gameplay simulator.
+    /// Replays bundled server recordings with visual-only objects. It never simulates
+    /// a spell or registers objects with GameScene.
     /// </summary>
-    public sealed class FireShotPreview : MonoBehaviour
+    public sealed class MagicPreview : MonoBehaviour
     {
         [SerializeField] private RawImage output;
-        [SerializeField] private TextAsset recordingAsset;
-        [SerializeField] private Sprite casterSprite;
-        [SerializeField] private Sprite targetSprite;
-        [SerializeField] private Sprite shotSprite;
-        [SerializeField] private Sprite impactSprite;
+        [SerializeField] private Material groundMaterial;
+        [SerializeField] private PreviewClip[] clips;
 
+        private PreviewClip clip;
         private Recording recording;
         private GameObject stage;
         private Camera previewCamera;
@@ -30,37 +28,66 @@ namespace Global
         private float impactStarted = -10f;
         private float elapsed;
         private int nextFrame;
+        private readonly HashSet<string> missingVisuals = new();
 
-        public static bool Supports(CombinedMagicData magic) =>
-            magic != null && string.Equals(magic.serverName, "fire_shot", StringComparison.OrdinalIgnoreCase);
+        public bool Supports(CombinedMagicData magic) => FindClip(magic?.serverName) != null;
+
+        public bool Configure(CombinedMagicData magic)
+        {
+            clip = FindClip(magic?.serverName);
+            recording = null;
+            missingVisuals.Clear();
+            return clip != null;
+        }
+
+        private PreviewClip FindClip(string serverName)
+        {
+            if (string.IsNullOrWhiteSpace(serverName) || clips == null) return null;
+            foreach (PreviewClip candidate in clips)
+            {
+                if (candidate != null && candidate.recordingAsset != null &&
+                    string.Equals(candidate.magicId, serverName, StringComparison.OrdinalIgnoreCase))
+                    return candidate;
+            }
+            return null;
+        }
 
         private void OnEnable()
         {
-            if (output == null || recordingAsset == null) return;
+            if (output == null || clip == null) return;
             try
             {
-                recording ??= JsonCodec.Deserialize<Recording>(recordingAsset.text);
-                if (recording == null || recording.version != 1 || recording.magic != "fire_shot" ||
+                recording ??= JsonCodec.Deserialize<Recording>(clip.recordingAsset.text);
+                if (recording == null || recording.version != 1 ||
+                    !string.Equals(recording.magic, clip.magicId, StringComparison.OrdinalIgnoreCase) ||
                     recording.frames == null || recording.frames.Length == 0 || recording.duration <= 0f ||
-                    recording.frameDuration <= 0f || casterSprite == null || targetSprite == null ||
-                    shotSprite == null || impactSprite == null)
-                    throw new InvalidOperationException("Unsupported FireShot preview recording.");
+                    recording.frameDuration <= 0f || groundMaterial == null || clip.visuals == null)
+                    throw new InvalidOperationException("Unsupported magic preview recording or visual mapping.");
                 CreateStage();
                 ResetPlayback();
             }
             catch (Exception exception)
             {
-                Debug.LogWarning($"FireShot preview unavailable: {exception.Message}");
+                Debug.LogWarning($"Magic preview unavailable ({clip.magicId}): {exception.Message}");
                 ReleaseStage();
             }
         }
 
         private void CreateStage()
         {
-            // Far outside scene cameras. Renderers are enabled only during this camera's manual
-            // render, so even another all-layer camera cannot accidentally draw the preview.
-            stage = new GameObject("FireShotPreviewStage") { hideFlags = HideFlags.DontSave };
+            // Far outside scene cameras. Dynamic sprites are enabled only during this
+            // camera's manual render; the ground stays here for the whole replay.
+            stage = new GameObject("MagicPreviewStage") { hideFlags = HideFlags.DontSave };
             stage.transform.position = new Vector3(10000f, 10000f, 10000f);
+            var groundObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            groundObject.name = "ForestGround";
+            groundObject.transform.SetParent(stage.transform, false);
+            groundObject.transform.localPosition = new Vector3(6f, -0.1f, 5f);
+            // Unity's built-in Quad faces local -Z, so +90 degrees faces it upward.
+            groundObject.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            groundObject.transform.localScale = new Vector3(20f, 20f, 1f);
+            groundObject.GetComponent<MeshRenderer>().sharedMaterial = groundMaterial;
+            Destroy(groundObject.GetComponent<Collider>());
             var cameraObject = new GameObject("PreviewCamera");
             cameraObject.transform.SetParent(stage.transform, false);
             previewCamera = cameraObject.AddComponent<Camera>();
@@ -75,7 +102,7 @@ namespace Global
             previewCamera.allowMSAA = false;
             previewCamera.transform.localRotation = Quaternion.Euler(45f, 0f, 0f);
             previewCamera.transform.localPosition = new Vector3(6f, 12f, -6f);
-            texture = new RenderTexture(512, 288, 16) { name = "FireShotPreview", hideFlags = HideFlags.DontSave };
+            texture = new RenderTexture(512, 288, 16) { name = "MagicPreview", hideFlags = HideFlags.DontSave };
             texture.Create();
             previewCamera.targetTexture = texture;
             output.texture = texture;
@@ -83,8 +110,11 @@ namespace Global
             // one background pixel despite a correctly rendered texture.
             output.uvRect = new Rect(0f, 0f, 1f, 1f);
             output.raycastTarget = false;
-            impact = CreateSprite("Impact", impactSprite, 2.4f);
-            impact.sortingOrder = 20;
+            if (clip.impactSprite != null)
+            {
+                impact = CreateSprite("Impact", clip.impactSprite, 2.4f);
+                impact.sortingOrder = 20;
+            }
         }
 
         private SpriteRenderer CreateSprite(string objectName, Sprite sprite, float height)
@@ -118,20 +148,23 @@ namespace Global
         private void LateUpdate()
         {
             if (previewCamera == null) return;
-            // Preserve the same framing in both the wide hover and the square book icon slot.
+            // Preserve framing in both the deck hover and book explanation layouts.
             Rect rect = output.rectTransform.rect;
             float aspect = rect.height > 0 ? rect.width / rect.height : 16f / 9f;
             previewCamera.aspect = Mathf.Max(0.5f, aspect);
             previewCamera.orthographicSize = Mathf.Max(3.5f, 5.5f / previewCamera.aspect);
             foreach (var visual in visuals.Values) visual.renderer.enabled = true;
             float age = elapsed - impactStarted;
-            impact.enabled = age >= 0f && age < 0.45f;
-            impact.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - age / 0.45f));
+            if (impact != null)
+            {
+                impact.enabled = age >= 0f && age < 0.45f;
+                impact.color = new Color(1f, 1f, 1f, Mathf.Clamp01(1f - age / 0.45f));
+            }
             try { previewCamera.Render(); }
             finally
             {
                 foreach (var visual in visuals.Values) visual.renderer.enabled = false;
-                impact.enabled = false;
+                if (impact != null) impact.enabled = false;
             }
         }
 
@@ -141,12 +174,16 @@ namespace Global
             foreach (var item in frame.objects.create ?? Array.Empty<Created>())
             {
                 if (visuals.ContainsKey(item.id)) continue;
-                bool shot = item.type == "FireShot";
-                bool caster = item.type == "Player";
-                Sprite sprite = shot ? shotSprite : caster ? casterSprite : targetSprite;
-                var renderer = CreateSprite(item.type, sprite, shot ? 0.85f : caster ? 2.2f : 1.1f);
-                renderer.flipX = !shot && item.master == "RightPlayer";
-                renderer.sortingOrder = shot ? 10 : 2;
+                VisualStyle style = FindVisual(item.type);
+                if (style == null)
+                {
+                    if (missingVisuals.Add(item.type ?? string.Empty))
+                        Debug.LogWarning($"Magic preview {clip.magicId}: no visual for {item.type}.");
+                    continue;
+                }
+                var renderer = CreateSprite(item.type, style.sprite, style.height);
+                renderer.flipX = style.flipForRight && item.master == "RightPlayer";
+                renderer.sortingOrder = style.sortingOrder;
                 renderer.transform.localPosition = item.position;
                 visuals.Add(item.id, new Visual { renderer = renderer, from = item.position, to = item.position });
             }
@@ -168,9 +205,21 @@ namespace Global
             // Explicit marker comes only from a damage-confirmed collision in the server capture.
             if (frame.impact != null)
             {
-                impact.transform.localPosition = new Vector3(frame.impact.x, frame.impact.y, frame.impact.z);
+                if (impact != null)
+                    impact.transform.localPosition = new Vector3(frame.impact.x, frame.impact.y, frame.impact.z);
                 impactStarted = frame.time;
             }
+        }
+
+        private VisualStyle FindVisual(string prefabType)
+        {
+            foreach (VisualStyle style in clip.visuals)
+            {
+                if (style != null && style.sprite != null && style.height > 0f &&
+                    string.Equals(style.prefabType, prefabType, StringComparison.Ordinal))
+                    return style;
+            }
+            return null;
         }
 
         private void ResetPlayback()
@@ -184,7 +233,7 @@ namespace Global
             elapsed = 0f;
             nextFrame = 0;
             impactStarted = -10f;
-            impact.enabled = false;
+            if (impact != null) impact.enabled = false;
             while (nextFrame < recording.frames.Length && recording.frames[nextFrame].time <= 0f)
                 Apply(recording.frames[nextFrame++]);
         }
@@ -202,6 +251,24 @@ namespace Global
             stage = null;
             previewCamera = null;
             texture = null;
+            impact = null;
+        }
+
+        [Serializable] private sealed class PreviewClip
+        {
+            public string magicId;
+            public TextAsset recordingAsset;
+            public Sprite impactSprite;
+            public VisualStyle[] visuals;
+        }
+
+        [Serializable] private sealed class VisualStyle
+        {
+            public string prefabType;
+            public Sprite sprite;
+            public float height;
+            public int sortingOrder;
+            public bool flipForRight;
         }
 
         private sealed class Visual
