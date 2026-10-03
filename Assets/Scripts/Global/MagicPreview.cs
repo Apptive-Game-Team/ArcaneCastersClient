@@ -42,6 +42,8 @@ namespace Global
         private readonly HashSet<string> missingVisuals = new();
         private readonly List<Transient> transients = new();
         private Sprite gaugeSprite;
+        private SpriteRenderer manaGauge;
+        private float manaRate = 1f;
         private float viewZoom = 1f;
 
         public void SetViewZoom(float zoom) => viewZoom = Mathf.Clamp(zoom, 1f, 2f);
@@ -195,6 +197,11 @@ namespace Global
                     visual.gauge.transform.localPosition = visual.renderer.transform.localPosition + previewCamera.transform.up * (visual.style.height + 0.2f);
                     visual.gauge.transform.localRotation = previewCamera.transform.localRotation;
                 }
+                if (visual.lifetimeGauge != null)
+                {
+                    visual.lifetimeGauge.transform.localPosition = visual.renderer.transform.localPosition + previewCamera.transform.up * (visual.style.height + 0.38f);
+                    visual.lifetimeGauge.transform.localRotation = previewCamera.transform.localRotation;
+                }
                 if (elapsed - visual.attackAt < 0.25f)
                     visual.renderer.transform.localPosition += Vector3.right * (visual.master == "RightPlayer" ? -1 : 1) * Mathf.Sin((elapsed - visual.attackAt) / 0.25f * Mathf.PI) * 0.18f;
             }
@@ -209,7 +216,26 @@ namespace Global
                     transients.RemoveAt(i);
                     continue;
                 }
-                item.renderer.transform.localPosition = Vector3.Lerp(item.from, item.to, Mathf.Clamp01(progress));
+                if (item.segment)
+                {
+                    if (TryEndpoint(item.start, out Vector3 start)) item.from = start;
+                    if (TryEndpoint(item.end, out Vector3 end)) item.to = end;
+                    float extension = item.impactFraction > 0f ? Mathf.Min(Mathf.Min(progress / item.impactFraction, (1f - progress) / 0.15f), 1f) : 1f;
+                    Vector3 tip = Vector3.Lerp(item.from, item.to, Mathf.Clamp01(extension));
+                    Vector3 span = tip - item.from;
+                    float x = Vector3.Dot(span, previewCamera.transform.right), y = Vector3.Dot(span, previewCamera.transform.up);
+                    item.renderer.transform.localRotation = previewCamera.transform.localRotation * Quaternion.Euler(0f, 0f, Mathf.Atan2(y, x) * Mathf.Rad2Deg);
+                    item.renderer.transform.localScale = new Vector3(Mathf.Sqrt(x * x + y * y) / item.renderer.sprite.bounds.size.x, item.width / item.renderer.sprite.bounds.size.y, 1f);
+                    item.renderer.transform.localPosition = (item.from + tip) * 0.5f - item.renderer.transform.localRotation * Vector3.Scale(item.renderer.sprite.bounds.center, item.renderer.transform.localScale);
+                }
+                else item.renderer.transform.localPosition = Vector3.Lerp(item.from, item.to, Mathf.Clamp01(progress));
+            }
+            if (manaGauge != null)
+            {
+                manaGauge.transform.localPosition = new Vector3(2f, 0f, 5f) + previewCamera.transform.up * 2.6f;
+                manaGauge.transform.localRotation = previewCamera.transform.localRotation;
+                // Actual server charger rate controls a filling cyan bar, without a bottom caption.
+                manaGauge.transform.localScale = new Vector3(Mathf.Repeat(elapsed * manaRate * 0.4f, 1f) * 1.5f / gaugeSprite.bounds.size.x, 0.14f / gaugeSprite.bounds.size.y, 1f);
             }
         }
 
@@ -246,12 +272,24 @@ namespace Global
                 visual.renderer.enabled = value;
                 foreach (var effect in visual.effects.Values) effect.enabled = value;
                 if (visual.gauge != null) visual.gauge.enabled = value;
+                if (visual.lifetimeGauge != null) visual.lifetimeGauge.enabled = value;
             }
+            if (manaGauge != null) manaGauge.enabled = value;
             foreach (var item in transients) item.renderer.enabled = value;
         }
 
         private void Apply(Frame frame)
         {
+            if (clip.magicId == "mana_well" && frame.manaRate > 0f)
+            {
+                manaRate = frame.manaRate;
+                if (manaGauge == null)
+                {
+                    manaGauge = CreateSprite("ManaChargeRate", gaugeSprite, 0.14f);
+                    manaGauge.color = Color.cyan;
+                    manaGauge.sortingOrder = 40;
+                }
+            }
             if (frame.objects == null) return;
             foreach (var item in frame.objects.create ?? Array.Empty<Created>())
             {
@@ -287,6 +325,7 @@ namespace Global
                     Destroy(visual.renderer.gameObject);
                     foreach (var effect in visual.effects.Values) { effect.enabled = false; Destroy(effect.gameObject); }
                     if (visual.gauge != null) { visual.gauge.enabled = false; Destroy(visual.gauge.gameObject); }
+                    if (visual.lifetimeGauge != null) { visual.lifetimeGauge.enabled = false; Destroy(visual.lifetimeGauge.gameObject); }
                     visuals.Remove(item.id);
                     continue;
                 }
@@ -300,6 +339,14 @@ namespace Global
                 if (item.status == "Damaged") FlashDamage(visual, frame.time);
                 foreach (Gauge gauge in item.gauges ?? Array.Empty<Gauge>())
                 {
+                    if (gauge.category == "TTL" && gauge.maxValue > 0f && visual.hp >= 0f)
+                    {
+                        if (visual.lifetimeGauge == null) visual.lifetimeGauge = CreateSprite("Lifetime", gaugeSprite, 0.08f);
+                        visual.lifetimeGauge.transform.localScale = new Vector3(Mathf.Max(0.02f, Mathf.Clamp01(gauge.value / gauge.maxValue) * 1.3f) / gaugeSprite.bounds.size.x, 0.08f / gaugeSprite.bounds.size.y, 1f);
+                        visual.lifetimeGauge.color = new Color(1f, 0.85f, 0.3f);
+                        visual.lifetimeGauge.sortingOrder = 40;
+                        continue;
+                    }
                     if (gauge.category != "HP" || gauge.maxValue <= 0f) continue;
                     if (visual.hp >= 0f && gauge.value < visual.hp) FlashDamage(visual, frame.time);
                     if (visual.hp >= 0f && gauge.value > visual.hp) visual.healAt = frame.time;
@@ -316,13 +363,23 @@ namespace Global
                 VisualStyle style = FindStyle(projectileVisuals, projection.type);
                 if (style == null) { WarnMissing("projectile", projection.type); continue; }
                 if (!TryEndpoint(projection.start, out Vector3 start) || !TryEndpoint(projection.end, out Vector3 end)) continue;
-                AddTransient(style.sprite, style.height, start, end, frame.time, Mathf.Max(0.05f, projection.duration));
+                AddTransient(projection.type == "SpiritBombBeam" ? gaugeSprite : style.sprite, style.height, start, end, frame.time, Mathf.Max(0.05f, projection.duration));
+                if (projection.type == "SpiritBombBeam") transients[transients.Count - 1].renderer.color = new Color(0.5f, 0.85f, 1f);
+                if (style.segment)
+                {
+                    Transient segment = transients[transients.Count - 1];
+                    segment.segment = true;
+                    segment.start = projection.start;
+                    segment.end = projection.end;
+                    segment.width = projection.width > 0f ? projection.width : style.height;
+                    segment.impactFraction = projection.type == "EvilEntGrabArm" ? 0.22f : projection.type == "EvilEntPunchArm" ? 0.55f : projection.type == "EvilEntFireFist" ? 0.45f : 0f;
+                }
             }
             foreach (HitEvent hit in frame.events ?? Array.Empty<HitEvent>())
             {
                 if (hit.type == "hit" && visuals.TryGetValue(hit.targetId, out Visual victim))
                 {
-                    victim.hitAt = frame.time;
+                    FlashDamage(victim, frame.time);
                     if (clip.impactSprite != null)
                         AddTransient(clip.impactSprite, 1f, victim.to, victim.to, frame.time, 0.25f);
                 }
@@ -340,7 +397,7 @@ namespace Global
         {
             position = Vector3.zero;
             if (point == null) return false;
-            if (point.targetType == "position") { position = point.position; return true; }
+            if (point.targetType == "position") { position = point.position ?? new Vector3(point.x, point.y, point.z); return true; }
             if (point.targetType != "reference" || !visuals.TryGetValue(point.id, out Visual visual)) return false;
             position = visual.to + previewCamera.transform.up * (visual.style.height * 0.5f);
             return true;
@@ -413,6 +470,7 @@ namespace Global
                 Destroy(visual.renderer.gameObject);
                 foreach (var effect in visual.effects.Values) { effect.enabled = false; Destroy(effect.gameObject); }
                 if (visual.gauge != null) { visual.gauge.enabled = false; Destroy(visual.gauge.gameObject); }
+                if (visual.lifetimeGauge != null) { visual.lifetimeGauge.enabled = false; Destroy(visual.lifetimeGauge.gameObject); }
             }
             visuals.Clear();
             foreach (var item in transients) { item.renderer.enabled = false; Destroy(item.renderer.gameObject); }
@@ -448,6 +506,8 @@ namespace Global
             texture = null;
             impact = null;
             gaugeSprite = null;
+            manaGauge = null;
+            manaRate = 1f;
         }
 
         [Serializable] private sealed class PreviewClip
@@ -469,6 +529,7 @@ namespace Global
             public int sortingOrder;
             public bool flipForRight;
             public float lingerOnDestroy;
+            public bool segment;
         }
 
         private sealed class Visual
@@ -477,6 +538,7 @@ namespace Global
             public VisualStyle style;
             public string master;
             public SpriteRenderer gauge;
+            public SpriteRenderer lifetimeGauge;
             public readonly Dictionary<string, SpriteRenderer> effects = new();
             public float hp = -1f;
             public Vector3 from, to;
@@ -486,7 +548,7 @@ namespace Global
             public float healAt = -10f, attackAt = -10f;
         }
 
-        private sealed class Transient { public SpriteRenderer renderer; public Vector3 from, to; public float started, duration; }
+        private sealed class Transient { public SpriteRenderer renderer; public Vector3 from, to; public float started, duration, width, impactFraction; public bool segment; public Endpoint start, end; }
 
         [Serializable, Preserve] private sealed class Recording
         {
@@ -498,13 +560,13 @@ namespace Global
             public Scenario[] scenarios;
         }
         [Serializable, Preserve] private sealed class Scenario { [Preserve] public Scenario() { } public string id, labelKo, labelEn; public float duration; public Frame[] frames; }
-        [Serializable, Preserve] private sealed class Frame { [Preserve] public Frame() { } public float time; public Objects objects; public Point impact; public HitEvent[] events; }
+        [Serializable, Preserve] private sealed class Frame { [Preserve] public Frame() { } public float time, manaRate; public Objects objects; public Point impact; public HitEvent[] events; }
         [Serializable, Preserve] private sealed class Objects { [Preserve] public Objects() { } public Created[] create; public Updated[] update; public Projection[] projectile; }
         [Serializable, Preserve] private sealed class Created { [Preserve] public Created() { } public int id; public string type, master; public Vector3 position; }
         [Serializable, Preserve] private sealed class Updated { [Preserve] public Updated() { } public int id; public string status, master; public Vector3 position; public string[] effects; public Gauge[] gauges; }
         [Serializable, Preserve] private sealed class Gauge { [Preserve] public Gauge() { } public float value, maxValue; public string category; }
-        [Serializable, Preserve] private sealed class Projection { [Preserve] public Projection() { } public string type; public Endpoint start, end; public float duration; }
-        [Serializable, Preserve] private sealed class Endpoint { [Preserve] public Endpoint() { } public string targetType; public int id; public Vector3 position; }
+        [Serializable, Preserve] private sealed class Projection { [Preserve] public Projection() { } public string type; public Endpoint start, end; public float duration, width; }
+        [Serializable, Preserve] private sealed class Endpoint { [Preserve] public Endpoint() { } public string targetType; public int id; public Vector3? position; public float x, y, z; }
         [Serializable, Preserve] private sealed class HitEvent { [Preserve] public HitEvent() { } public string type; public int actorId, targetId; }
         [Serializable, Preserve] private sealed class Point { [Preserve] public Point() { } public float x, y, z; }
     }

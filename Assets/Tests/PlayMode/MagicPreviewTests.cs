@@ -150,7 +150,7 @@ namespace WordOnline.Tests
         {
             Create();
             Array clips = (Array)Field("clips");
-            Assert.That(clips.Length, Is.EqualTo(21));
+            Assert.That(clips.Length, Is.EqualTo(85));
             foreach (object clip in clips)
             {
                 Type type = clip.GetType();
@@ -200,6 +200,120 @@ namespace WordOnline.Tests
         {
             var method = previewType.GetMethod("FindStyle", BindingFlags.Static | BindingFlags.NonPublic);
             Assert.That(method.Invoke(null, new[] { Field(field), name }), Is.Not.Null, magic + " " + field + " " + name);
+        }
+
+        [UnityTest]
+        public IEnumerator SupportGaugesAndBeamUseRecordedValues()
+        {
+            Create();
+            Configure("mana_well");
+            preview.gameObject.SetActive(true);
+            yield return null;
+            previewType.GetField("elapsed", Private).SetValue(preview, 2f);
+            Advance();
+            Assert.That((float)Field("manaRate"), Is.EqualTo(1.8f).Within(0.001f));
+            Assert.That(Field("manaGauge"), Is.Not.Null);
+            previewType.GetField("elapsed", Private).SetValue(preview, 4f);
+            Advance();
+            Assert.That((float)Field("manaRate"), Is.EqualTo(1f).Within(0.001f));
+
+            Configure("repair_totem");
+            previewType.GetField("elapsed", Private).SetValue(preview, 4.2f);
+            Advance();
+            var visuals = (IDictionary)Field("visuals");
+            Assert.That(visuals.Contains(2), Is.True, "Protected building survives");
+            Assert.That(visuals.Contains(3), Is.False, "Control building expires");
+            object ally = visuals[2];
+            Assert.That(ally.GetType().GetField("lifetimeGauge").GetValue(ally), Is.Not.Null);
+            Assert.That((float)ally.GetType().GetField("hp").GetValue(ally), Is.EqualTo(1000f));
+
+            Configure("spirit_bomb");
+            previewType.GetField("elapsed", Private).SetValue(preview, 1.5f);
+            Advance();
+            bool sawBeam = false;
+            foreach (object transient in (IEnumerable)Field("transients"))
+            {
+                Type type = transient.GetType();
+                if (!(bool)type.GetField("segment").GetValue(transient)) continue;
+                sawBeam = true;
+                Assert.That((float)type.GetField("width").GetValue(transient), Is.GreaterThan(0f));
+                var renderer = (SpriteRenderer)type.GetField("renderer").GetValue(transient);
+                Assert.That(renderer.transform.localScale.x * renderer.sprite.bounds.size.x, Is.GreaterThan(3f));
+            }
+            Assert.That(sawBeam, Is.True);
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [UnityTest]
+        public IEnumerator CaptureComplexPreviewViewports()
+        {
+            Create();
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Temp/PreviewCaptures");
+            System.IO.Directory.CreateDirectory(directory);
+            foreach (string magic in new[] { "sea_serpent", "evil_ent", "spirit_bomb", "cloud_dragon" })
+            {
+                Configure(magic);
+                preview.gameObject.SetActive(true);
+                yield return null;
+                var rect = preview.GetComponent<RectTransform>();
+                rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+                Array clips = (Array)Field("clips");
+                JObject recording = null;
+                foreach (object clip in clips)
+                    if ((string)clip.GetType().GetField("magicId").GetValue(clip) == magic)
+                        recording = JObject.Parse(((TextAsset)clip.GetType().GetField("recordingAsset").GetValue(clip)).text);
+                JArray scenarios = (JArray)recording["scenarios"];
+                string wanted = magic == "evil_ent" ? "pull" : magic == "sea_serpent" ? "multiple" : magic == "spirit_bomb" ? "channel" : "air";
+                int index = 0;
+                for (int i = 0; i < scenarios.Count; i++) if ((string)scenarios[i]["id"] == wanted) index = i;
+                float moment = 2f;
+                string projectile = magic == "evil_ent" ? "EvilEntGrabArm" : magic == "sea_serpent" ? "SeaSerpentHydroPump" : magic == "spirit_bomb" ? "SpiritBombBeam" : "WaterShot";
+                bool found = false;
+                foreach (JToken frame in scenarios[index]["frames"])
+                {
+                    foreach (JToken item in frame["objects"]["projectile"])
+                        if ((string)item["type"] == projectile) { moment = (float)frame["time"] + (float)item["duration"] * 0.4f; found = true; break; }
+                    if (found) break;
+                }
+                Assert.That(found, Is.True, magic);
+                foreach (bool book in new[] { true, false })
+                {
+                    int width = book ? 540 : 400, height = book ? 420 : 220;
+                    rect.sizeDelta = new Vector2(width, height);
+                    previewType.GetMethod("SetViewZoom").Invoke(preview, new object[] { book ? 1.35f : 1f });
+                    previewType.GetField("scenarioIndex", Private).SetValue(preview, index);
+                    Invoke("ResetPlayback");
+                    previewType.GetField("elapsed", Private).SetValue(preview, moment);
+                    Advance();
+                    if (magic == "sea_serpent")
+                    {
+                        bool visibleBeam = false;
+                        foreach (object transient in (IEnumerable)Field("transients"))
+                        {
+                            Type type = transient.GetType();
+                            if (!(bool)type.GetField("segment").GetValue(transient)) continue;
+                            var renderer = (SpriteRenderer)type.GetField("renderer").GetValue(transient);
+                            Assert.That(renderer.transform.localScale.x * renderer.sprite.bounds.size.x, Is.GreaterThan(2f), "Flattened position endpoints must form a visible beam");
+                            visibleBeam = true;
+                        }
+                        Assert.That(visibleBeam, Is.True);
+                    }
+                    Invoke("LateUpdate");
+                    var viewport = new RenderTexture(width, height, 0);
+                    RenderTexture previous = RenderTexture.active;
+                    Graphics.Blit(preview.GetComponent<RawImage>().texture, viewport);
+                    RenderTexture.active = viewport;
+                    var pixels = new Texture2D(width, height, TextureFormat.RGB24, false);
+                    pixels.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                    pixels.Apply();
+                    System.IO.File.WriteAllBytes(System.IO.Path.Combine(directory, magic + (book ? "-book.png" : "-hover.png")), pixels.EncodeToPNG());
+                    RenderTexture.active = previous;
+                    viewport.Release();
+                    UnityEngine.Object.Destroy(viewport);
+                    UnityEngine.Object.Destroy(pixels);
+                }
+            }
+            LogAssert.NoUnexpectedReceived();
         }
 
         [UnityTest]

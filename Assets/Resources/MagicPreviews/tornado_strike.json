@@ -1,0 +1,8062 @@
+{
+  "version" : 2,
+  "magic" : "tornado_strike",
+  "frameDuration" : 0.05,
+  "source" : "RemainingMagicPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; seeded random draws and collision directions",
+  "scenarios" : [ {
+    "id" : "ground",
+    "labelKo" : "지상 공격",
+    "labelEn" : "Ground attack",
+    "duration" : 9.0,
+    "frames" : [ {
+      "time" : 0.0,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ {
+          "id" : 1,
+          "type" : "Player",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "master" : "LeftPlayer",
+          "gizmos" : [ ]
+        }, {
+          "id" : 2,
+          "type" : "ElectricSlime",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "master" : "RightPlayer",
+          "gizmos" : [ {
+            "relativePosition" : {
+              "x" : 0.0,
+              "y" : 0.0,
+              "z" : 0.0
+            },
+            "radius" : 0.35,
+            "boxSize" : null,
+            "type" : "Circle",
+            "category" : "Collider"
+          } ]
+        } ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.05000000074505806,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.10000000149011612,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.15000000223517418,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.20000000298023224,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.2500000037252903,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.30000000447034836,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.3500000052154064,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.4000000059604645,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.45000000670552254,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.5000000074505806,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.5500000081956387,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.6000000089406967,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ {
+          "id" : 3,
+          "type" : "TornadoStrike",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "master" : "LeftPlayer",
+          "gizmos" : [ {
+            "relativePosition" : {
+              "x" : 0.0,
+              "y" : 0.0,
+              "z" : 0.0
+            },
+            "radius" : 0.4,
+            "boxSize" : null,
+            "type" : "Circle",
+            "category" : "Collider"
+          }, {
+            "relativePosition" : {
+              "x" : 0.0,
+              "y" : 0.0,
+              "z" : 0.0
+            },
+            "radius" : 0.4,
+            "boxSize" : null,
+            "type" : "Circle",
+            "category" : "AreaOfEffect"
+          } ]
+        } ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 8.0,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.6500000096857548,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.1,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.95,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.7000000104308128,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.2951055,
+            "y" : 0.39000002,
+            "z" : 4.969098
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.2,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.9,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.7500000111758709,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.3809013,
+            "y" : 0.77000004,
+            "z" : 4.941221
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.2999997,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.85,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.800000011920929,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.4587784,
+            "y" : 1.1400001,
+            "z" : 4.9190984
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.3999996,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.8,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.850000012665987,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.5309014,
+            "y" : 1.5000001,
+            "z" : 4.9048944
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.4999995,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.75,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.9000000134110451,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.5999994,
+            "y" : 1.8500001,
+            "z" : 4.9
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.5999994,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.7,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 0.9500000141561031,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.6690974,
+            "y" : 2.1900003,
+            "z" : 4.9048944
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.6999993,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.65,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.0000000149011612,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.741221,
+            "y" : 2.5200005,
+            "z" : 4.9190984
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.799999,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.6,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.0500000156462193,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.8190975,
+            "y" : 2.8400006,
+            "z" : 4.9412217
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.899999,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.55,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.1000000163912773,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.9048934,
+            "y" : 3.1500008,
+            "z" : 4.969098
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 7.999999,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.5,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.1500000171363354,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.9999995,
+            "y" : 3.450001,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.099999,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.45,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.2000000178813934,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 8.104895,
+            "y" : 3.7400012,
+            "z" : 5.030902
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.2,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.4,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.2500000186264515,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 8.219098,
+            "y" : 4.0200014,
+            "z" : 5.058779
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.3,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.35,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.3000000193715096,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 8.341222,
+            "y" : 4.2900014,
+            "z" : 5.0809016
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.400001,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.2999997,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.3500000201165676,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 8.469099,
+            "y" : 4.5500016,
+            "z" : 5.0951056
+          },
+          "gauges" : [ {
+            "value" : 10000.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.500001,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.25,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.4000000208616257,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 8.600001,
+            "y" : 4.8000016,
+            "z" : 5.1
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.600001,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.2,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ {
+        "type" : "hit",
+        "actorId" : 3,
+        "targetId" : 2
+      } ]
+    }, {
+      "time" : 1.4500000216066837,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 8.730904,
+            "y" : 4.84,
+            "z" : 5.0951056
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.700002,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.1499996,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.5000000223517418,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 8.858781,
+            "y" : 4.83,
+            "z" : 5.0809016
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.800002,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.1,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.5500000230967999,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 8.980905,
+            "y" : 4.82,
+            "z" : 5.0587783
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 8.9000025,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.0499997,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.600000023841858,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.095109,
+            "y" : 4.81,
+            "z" : 5.0309014
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.000003,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 7.0,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.650000024586916,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.200004,
+            "y" : 4.8,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.100003,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.95,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.700000025331974,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.295109,
+            "y" : 4.79,
+            "z" : 4.969098
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.200004,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.9,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.750000026077032,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.380905,
+            "y" : 4.78,
+            "z" : 4.941221
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.300004,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.85,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.8000000268220901,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.458783,
+            "y" : 4.77,
+            "z" : 4.9190984
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.400004,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.8,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.8500000275671482,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.530907,
+            "y" : 4.76,
+            "z" : 4.9048944
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.500005,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.75,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.9000000283122063,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.600005,
+            "y" : 4.75,
+            "z" : 4.9
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.600005,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.7000003,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 1.9500000290572643,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.669104,
+            "y" : 4.7400002,
+            "z" : 4.9048944
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.700006,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.65,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.0000000298023224,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.741227,
+            "y" : 4.73,
+            "z" : 4.9190984
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.800006,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.6000004,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.0500000305473804,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.819104,
+            "y" : 4.7200003,
+            "z" : 4.9412217
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 9.900006,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.55,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.1000000312924385,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 9.904901,
+            "y" : 4.71,
+            "z" : 4.9690986
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.000007,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.5000005,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.1500000320374966,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.000007,
+            "y" : 4.7000003,
+            "z" : 5.0000005
+          },
+          "gauges" : [ {
+            "value" : 9898.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.100007,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.4500003,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.2000000327825546,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.104902,
+            "y" : 4.69,
+            "z" : 5.030902
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.200007,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.4000006,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ {
+        "type" : "hit",
+        "actorId" : 3,
+        "targetId" : 2
+      } ]
+    }, {
+      "time" : 2.2500000335276127,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.219107,
+            "y" : 4.6800003,
+            "z" : 5.058779
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.300008,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.3500004,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.3000000342726707,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.34123,
+            "y" : 4.67,
+            "z" : 5.080902
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.400008,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.3000007,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.350000035017729,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.469108,
+            "y" : 4.6600003,
+            "z" : 5.0951056
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.500009,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.2500005,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.400000035762787,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.600009,
+            "y" : 4.65,
+            "z" : 5.1
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.600009,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.200001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.450000036507845,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.730911,
+            "y" : 4.6400003,
+            "z" : 5.0951056
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.700009,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.1500006,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.500000037252903,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.8587885,
+            "y" : 4.63,
+            "z" : 5.0809016
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.80001,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.100001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.550000037997961,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.980912,
+            "y" : 4.6200004,
+            "z" : 5.0587783
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 10.90001,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.0500007,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.600000038743019,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.095117,
+            "y" : 4.61,
+            "z" : 5.0309014
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.0000105,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 6.000001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.650000039488077,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.200011,
+            "y" : 4.6000004,
+            "z" : 4.9999995
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.100011,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.950001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.7000000402331352,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.295116,
+            "y" : 4.59,
+            "z" : 4.969098
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.200011,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.9000006,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.7500000409781933,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.380913,
+            "y" : 4.5700006,
+            "z" : 4.941221
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.300012,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.850001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.8000000417232513,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.45879,
+            "y" : 4.540001,
+            "z" : 4.919098
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.400012,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.800001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.8500000424683094,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.530913,
+            "y" : 4.500001,
+            "z" : 4.9048944
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.500012,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.750001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.9000000432133675,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.600012,
+            "y" : 4.4500012,
+            "z" : 4.9
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.600013,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.700001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 2.9500000439584255,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.669111,
+            "y" : 4.3900013,
+            "z" : 4.9048944
+          },
+          "gauges" : [ {
+            "value" : 9796.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.700013,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.650001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.0000000447034836,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.741235,
+            "y" : 4.3200016,
+            "z" : 4.9190984
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.800014,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.6000013,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ {
+        "type" : "hit",
+        "actorId" : 3,
+        "targetId" : 2
+      } ]
+    }, {
+      "time" : 3.0500000454485416,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.819112,
+            "y" : 4.2400017,
+            "z" : 4.9412217
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 11.900014,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.550001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.1000000461935997,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 11.904908,
+            "y" : 4.150002,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.000014,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.500001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.1500000469386578,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.000014,
+            "y" : 4.050002,
+            "z" : 5.0000005
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.100015,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.4500012,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.200000047683716,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.10491,
+            "y" : 3.9400024,
+            "z" : 5.030902
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.200015,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.4000015,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.250000048428774,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.219114,
+            "y" : 3.8200028,
+            "z" : 5.058779
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.300015,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.3500013,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.300000049173832,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.341238,
+            "y" : 3.690003,
+            "z" : 5.080902
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.400016,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.300001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.35000004991889,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.469115,
+            "y" : 3.5500033,
+            "z" : 5.0951056
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.500016,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.2500014,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.400000050663948,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.600018,
+            "y" : 3.4000037,
+            "z" : 5.1
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.600017,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.2000017,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.450000051409006,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.730919,
+            "y" : 3.240004,
+            "z" : 5.0951056
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.700017,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.1500015,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.500000052154064,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.858796,
+            "y" : 3.0700045,
+            "z" : 5.080901
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.800017,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.1000013,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.5500000528991222,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 12.98092,
+            "y" : 2.8900049,
+            "z" : 5.0587783
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 12.900018,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.0500016,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.6000000536441803,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.095124,
+            "y" : 2.7000053,
+            "z" : 5.030901
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.000018,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 5.000002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.6500000543892384,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.200019,
+            "y" : 2.5000057,
+            "z" : 4.9999995
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.1000185,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.9500017,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.7000000551342964,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.295124,
+            "y" : 2.2900062,
+            "z" : 4.9690976
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.200019,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.9000015,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.7500000558793545,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.38092,
+            "y" : 2.0700066,
+            "z" : 4.9412208
+          },
+          "gauges" : [ {
+            "value" : 9694.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.300019,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.850002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.8000000566244125,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.458797,
+            "y" : 1.8400071,
+            "z" : 4.919098
+          },
+          "gauges" : [ {
+            "value" : 9592.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.40002,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.800002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ {
+        "type" : "hit",
+        "actorId" : 3,
+        "targetId" : 2
+      } ]
+    }, {
+      "time" : 3.8500000573694706,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.530921,
+            "y" : 1.6000075,
+            "z" : 4.9048944
+          },
+          "gauges" : [ {
+            "value" : 9592.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.50002,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.750002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.9000000581145287,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.600019,
+            "y" : 1.350008,
+            "z" : 4.9
+          },
+          "gauges" : [ {
+            "value" : 9592.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.60002,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.7000017,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 3.9500000588595867,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.669119,
+            "y" : 1.0900084,
+            "z" : 4.9048944
+          },
+          "gauges" : [ {
+            "value" : 9592.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.700021,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.650002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.000000059604645,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.741242,
+            "y" : 0.82000875,
+            "z" : 4.919099
+          },
+          "gauges" : [ {
+            "value" : 9592.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.800021,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.6000023,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.050000060349703,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.819119,
+            "y" : 0.54000914,
+            "z" : 4.941222
+          },
+          "gauges" : [ {
+            "value" : 9592.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 13.900022,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.550002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.100000061094761,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 13.904916,
+            "y" : 0.25000954,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9592.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.000022,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.500002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.150000061839819,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.000022,
+            "y" : 0.0,
+            "z" : 5.0000005
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.100022,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.450002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.200000062584877,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.104918,
+            "y" : 0.39000002,
+            "z" : 5.0309024
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.200023,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.4000025,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.250000063329935,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.219122,
+            "y" : 0.77000004,
+            "z" : 5.0587792
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.300023,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.3500023,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.300000064074993,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.341246,
+            "y" : 1.1400001,
+            "z" : 5.080902
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.400023,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.300002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.350000064820051,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.469123,
+            "y" : 1.5000001,
+            "z" : 5.095106
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.500024,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.2500024,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.400000065565109,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.600025,
+            "y" : 1.8500001,
+            "z" : 5.1
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.600024,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.2000027,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.450000066310167,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.730927,
+            "y" : 2.1900003,
+            "z" : 5.095105
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.700025,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.1500025,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.500000067055225,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.858804,
+            "y" : 2.5200005,
+            "z" : 5.080901
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.800025,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.1000023,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.550000067800283,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 14.980927,
+            "y" : 2.8400006,
+            "z" : 5.058778
+          },
+          "gauges" : [ {
+            "value" : 9589.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 14.900025,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.0500026,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.6000000685453415,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.095132,
+            "y" : 3.1500008,
+            "z" : 5.030901
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.000026,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 4.000003,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ {
+        "type" : "hit",
+        "actorId" : 3,
+        "targetId" : 2
+      } ]
+    }, {
+      "time" : 4.6500000692903996,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.2000265,
+            "y" : 3.450001,
+            "z" : 4.999999
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.100026,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.9500027,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.700000070035458,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.295132,
+            "y" : 3.7400012,
+            "z" : 4.9690976
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.2000265,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.9000025,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.750000070780516,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.380928,
+            "y" : 4.0200014,
+            "z" : 4.9412208
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.300027,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.8500023,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.800000071525574,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.458805,
+            "y" : 4.2900014,
+            "z" : 4.919098
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.400027,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.800002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.850000072270632,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.530929,
+            "y" : 4.5500016,
+            "z" : 4.904894
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.500028,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.750002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.90000007301569,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.600027,
+            "y" : 4.8000016,
+            "z" : 4.9
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.600028,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.7000017,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 4.950000073760748,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.669126,
+            "y" : 4.84,
+            "z" : 4.904895
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.700028,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.6500015,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.000000074505806,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.741249,
+            "y" : 4.83,
+            "z" : 4.919099
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.800029,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.6000013,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.050000075250864,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.819127,
+            "y" : 4.82,
+            "z" : 4.941222
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 15.900029,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.5500011,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.100000075995922,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 15.9049225,
+            "y" : 4.81,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.000029,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.500001,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.15000007674098,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.000029,
+            "y" : 4.8,
+            "z" : 5.000001
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.100029,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.4500008,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.200000077486038,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.104923,
+            "y" : 4.79,
+            "z" : 5.030903
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.20003,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.4000006,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.250000078231096,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.21913,
+            "y" : 4.78,
+            "z" : 5.0587792
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.30003,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.3500004,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.300000078976154,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.341253,
+            "y" : 4.77,
+            "z" : 5.080902
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.40003,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.3000002,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.350000079721212,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.46913,
+            "y" : 4.76,
+            "z" : 5.095106
+          },
+          "gauges" : [ {
+            "value" : 9487.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.50003,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.25,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.4000000804662704,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.600033,
+            "y" : 4.75,
+            "z" : 5.1
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.60003,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.1999998,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ {
+        "type" : "hit",
+        "actorId" : 3,
+        "targetId" : 2
+      } ]
+    }, {
+      "time" : 5.4500000812113285,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.730934,
+            "y" : 4.7400002,
+            "z" : 5.095105
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.700031,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.1499996,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.500000081956387,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.85881,
+            "y" : 4.73,
+            "z" : 5.080901
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.800032,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.0999994,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.550000082701445,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 16.980934,
+            "y" : 4.7200003,
+            "z" : 5.058778
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 16.900032,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 3.0499992,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.600000083446503,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.095139,
+            "y" : 4.71,
+            "z" : 5.0309005
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.000032,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.999999,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.650000084191561,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.200033,
+            "y" : 4.7000003,
+            "z" : 4.999999
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.100033,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.9499989,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.700000084936619,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.29514,
+            "y" : 4.69,
+            "z" : 4.969097
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.200033,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.8999987,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.750000085681677,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.380936,
+            "y" : 4.6800003,
+            "z" : 4.9412208
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.300034,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.8499985,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.800000086426735,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.45881,
+            "y" : 4.67,
+            "z" : 4.919098
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.400034,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.7999983,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.850000087171793,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.530935,
+            "y" : 4.6600003,
+            "z" : 4.904894
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.500034,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.749998,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.900000087916851,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.600033,
+            "y" : 4.65,
+            "z" : 4.9
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.600035,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.699998,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 5.950000088661909,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.669132,
+            "y" : 4.6400003,
+            "z" : 4.904895
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.700035,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.6499977,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.000000089406967,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.741257,
+            "y" : 4.63,
+            "z" : 4.919099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.800035,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.5999975,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.050000090152025,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.819134,
+            "y" : 4.6200004,
+            "z" : 4.941222
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 17.900036,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.5499973,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.100000090897083,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 4.61,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Destroyed",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 18.000036,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 2.5499973,
+            "maxValue" : 8.0,
+            "category" : "TTL"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.150000091642141,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 4.2100005,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.200000092387199,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 3.8000007,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.2500000931322575,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 3.3800008,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.3000000938773155,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 2.950001,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.350000094622374,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 2.5100012,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.400000095367432,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 2.0600014,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.45000009611249,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 1.6000016,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.500000096857548,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 1.1300018,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.550000097602606,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.650002,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.600000098347664,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.16000223,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9385.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.650000099092722,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.70000009983778,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.750000100582838,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.800000101327896,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.850000102072954,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.900000102818012,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 6.95000010356307,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.000000104308128,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.050000105053186,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.1000001057982445,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.1500001065433025,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.200000107288361,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.250000108033419,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.300000108778477,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.350000109523535,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.400000110268593,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.450000111013651,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.500000111758709,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.550000112503767,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.600000113248825,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.650000113993883,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.700000114738941,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.750000115483999,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.800000116229057,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.850000116974115,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.900000117719173,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 7.9500001184642315,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.00000011920929,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.050000119954348,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.100000120699406,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.150000121444464,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.200000122189522,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.25000012293458,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.300000123679638,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.350000124424696,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.400000125169754,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.450000125914812,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.50000012665987,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.550000127404928,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.600000128149986,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.650000128895044,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.700000129640102,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.75000013038516,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.800000131130219,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.850000131875277,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.900000132620335,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    }, {
+      "time" : 8.950000133365393,
+      "manaRate" : 1.0,
+      "objects" : {
+        "create" : [ ],
+        "update" : [ {
+          "id" : 1,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "LeftPlayer",
+          "position" : {
+            "x" : 2.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
+        }, {
+          "id" : 2,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 17.90493,
+            "y" : 0.0,
+            "z" : 4.969099
+          },
+          "gauges" : [ {
+            "value" : 9383.0,
+            "maxValue" : 10000.0,
+            "category" : "HP"
+          } ]
+        } ],
+        "projectile" : [ ]
+      },
+      "events" : [ ]
+    } ]
+  } ]
+}
