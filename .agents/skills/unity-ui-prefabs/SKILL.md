@@ -81,6 +81,14 @@ only one background pixel, making the preview look blank. Set the UV explicitly
 to `new Rect(0f, 0f, 1f, 1f)` when binding the texture and verify a Game View
 capture; checking that `RawImage.texture` is non-null is not sufficient.
 
+For a deck hover smoke test, call `HaveCardMagicPopup.Show(magics, anchor)`
+with a real scene `RectTransform` (a card or, in a login-free fixture, a filter
+button). `Show(magics)` has no placement anchor; its prefab may remain outside
+the viewport while the preview is active and its texture renders correctly.
+Do not assign pixel screen coordinates directly to `RectTransform.position`:
+use the existing placement path, which converts through the canvas camera.
+Verify the full Game View, not just the active flag or RenderTexture.
+
 ## Instancing a UI prefab by hand
 
 The Editor cannot open this checkout from WSL, so a new panel is usually written
