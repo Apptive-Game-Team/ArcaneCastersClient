@@ -12,9 +12,11 @@ namespace RewardChest
     /// Shows a closed chest, opens it, reveals the rewards one tile at a time and waits for the player to
     /// tap. It knows nothing about quests or the chest endpoints: callers hand it <see cref="RewardView"/>s.
     /// <para>
-    /// The chest is drawn with placeholder shapes until art exists. Put the real sprites in
-    /// <see cref="closedChestSprite"/> and <see cref="openChestSprite"/>; with an open sprite set, the body
-    /// swaps to it on open and the separate lid is hidden.
+    /// <see cref="closedChestSprite"/> and <see cref="openChestSprite"/> hold the default chest art; a chest
+    /// key (passed to <see cref="Play"/>, or the first CHEST reward in the list) swaps in that chest's own art
+    /// through <see cref="RewardSpriteResolver"/>. While a closed sprite exists the placeholder lid stays hidden;
+    /// with an open sprite, the body swaps to it on open. The rays turn behind the chest and the sparkles
+    /// twinkle once it is open.
     /// </para>
     /// </summary>
     public class RewardChestPresenter : MonoBehaviour
@@ -27,6 +29,14 @@ namespace RewardChest
         [SerializeField] private Image glowImage;
         [SerializeField] private Sprite closedChestSprite;
         [SerializeField] private Sprite openChestSprite;
+
+        [Header("Open effects")]
+        [SerializeField] private Image rayImage;
+        [SerializeField] private Image[] sparkleImages;
+        [SerializeField] private float rayAlpha = 0.8f;
+        [SerializeField] private float raySecondsPerTurn = 24f;
+        [SerializeField] private float sparkleSeconds = 0.6f;
+        [SerializeField] private float sparkleStaggerSeconds = 0.17f;
 
         [Header("Rewards")]
         [SerializeField] private RectTransform tileRoot;
@@ -55,6 +65,8 @@ namespace RewardChest
         private Quaternion lidRotation;
         private Sprite authoredBodySprite;
         private bool authoredBodySpriteCaptured;
+        private Sprite activeClosedSprite;
+        private Sprite activeOpenSprite;
 
         public bool IsPlaying { get; private set; }
 
@@ -69,12 +81,15 @@ namespace RewardChest
         /// opens or the tiles appear skips to the end of the reveal instead.
         /// Run it from the caller's coroutine (<c>yield return presenter.Play(...)</c>): the presenter may
         /// start inactive, and an inactive object cannot start a coroutine of its own.
+        /// <paramref name="chestKey"/> names the chest being opened; when null, the first CHEST reward in
+        /// <paramref name="rewards"/> names it, and with neither the default chest is drawn.
         /// </summary>
-        public IEnumerator Play(IReadOnlyList<RewardView> rewards, Action onDismissed = null)
+        public IEnumerator Play(IReadOnlyList<RewardView> rewards, Action onDismissed = null, string chestKey = null)
         {
             selector ??= RewardTileRenderers.CreateDefaultSelector();
             IsPlaying = true;
             gameObject.SetActive(true);
+            ChooseChestSprites(chestKey ?? FirstChestKey(rewards));
             PrepareClosedChest();
 
             yield return Appear();
@@ -91,6 +106,7 @@ namespace RewardChest
             waitingForDismiss = false;
             yield return Disappear();
 
+            DOTween.Kill(this);
             gameObject.SetActive(false);
             IsPlaying = false;
             onDismissed?.Invoke();
@@ -99,6 +115,30 @@ namespace RewardChest
         private void OnDestroy()
         {
             DOTween.Kill(this);
+        }
+
+        private void ChooseChestSprites(string chestKey)
+        {
+            activeClosedSprite = RewardSpriteResolver.TryResolveChestIcon(chestKey, out Sprite closed) ? closed : closedChestSprite;
+            activeOpenSprite = RewardSpriteResolver.TryResolveChestOpenIcon(chestKey, out Sprite open) ? open : openChestSprite;
+        }
+
+        private static string FirstChestKey(IReadOnlyList<RewardView> rewards)
+        {
+            if (rewards == null)
+            {
+                return null;
+            }
+
+            foreach (RewardView reward in rewards)
+            {
+                if (reward != null && reward.Type == RewardTypes.Chest)
+                {
+                    return reward.Key;
+                }
+            }
+
+            return null;
         }
 
         private void PrepareClosedChest()
@@ -124,7 +164,7 @@ namespace RewardChest
                     authoredBodySpriteCaptured = true;
                 }
 
-                chestBodyImage.sprite = closedChestSprite != null ? closedChestSprite : authoredBodySprite;
+                chestBodyImage.sprite = activeClosedSprite != null ? activeClosedSprite : authoredBodySprite;
             }
 
             if (chestLid != null)
@@ -138,11 +178,20 @@ namespace RewardChest
 
                 chestLid.anchoredPosition = lidAnchoredPosition;
                 chestLid.localRotation = lidRotation;
-                chestLid.gameObject.SetActive(true);
+                chestLid.gameObject.SetActive(activeClosedSprite == null);
             }
 
             SetAlpha(chestLidImage, 1f);
             SetAlpha(glowImage, 0f);
+            SetAlpha(rayImage, 0f);
+            if (sparkleImages != null)
+            {
+                foreach (Image sparkle in sparkleImages)
+                {
+                    SetAlpha(sparkle, 0f);
+                }
+            }
+
             if (glowImage != null)
             {
                 glowImage.rectTransform.localScale = Vector3.one * 0.3f;
@@ -184,8 +233,12 @@ namespace RewardChest
                 sequence.Append(chestRoot.DOShakeRotation(shakeSeconds, new Vector3(0f, 0f, 12f), 14, 90f));
             }
 
-            sequence.AppendCallback(SwapToOpenSprite);
-            if (chestLid != null && openChestSprite == null)
+            sequence.AppendCallback(() =>
+            {
+                SwapToOpenSprite();
+                StartOpenEffects();
+            });
+            if (chestLid != null && activeOpenSprite == null)
             {
                 sequence.Append(chestLid.DOAnchorPosY(lidAnchoredPosition.y + lidLift, openSeconds).SetEase(Ease.OutQuad));
                 sequence.Join(chestLid.DOLocalRotate(new Vector3(0f, 0f, 20f), openSeconds));
@@ -193,6 +246,11 @@ namespace RewardChest
                 {
                     sequence.Join(chestLidImage.DOFade(0f, openSeconds).SetEase(Ease.InQuad));
                 }
+            }
+
+            if (rayImage != null)
+            {
+                sequence.Join(rayImage.DOFade(rayAlpha, openSeconds));
             }
 
             if (glowImage != null)
@@ -204,14 +262,46 @@ namespace RewardChest
             yield return WaitOrSkip(sequence);
         }
 
-        private void SwapToOpenSprite()
+        /// <summary>Spins the rays and starts the sparkles. They loop on their own tweens, so a skip does not wait for them.</summary>
+        private void StartOpenEffects()
         {
-            if (openChestSprite == null || chestBodyImage == null)
+            if (rayImage != null)
+            {
+                rayImage.rectTransform
+                    .DOLocalRotate(new Vector3(0f, 0f, -360f), raySecondsPerTurn, RotateMode.FastBeyond360)
+                    .SetEase(Ease.Linear)
+                    .SetLoops(-1, LoopType.Restart)
+                    .SetTarget(this);
+            }
+
+            if (sparkleImages == null)
             {
                 return;
             }
 
-            chestBodyImage.sprite = openChestSprite;
+            for (int index = 0; index < sparkleImages.Length; index++)
+            {
+                if (sparkleImages[index] == null)
+                {
+                    continue;
+                }
+
+                sparkleImages[index].DOFade(1f, sparkleSeconds)
+                    .SetDelay(index * sparkleStaggerSeconds)
+                    .SetEase(Ease.InOutSine)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetTarget(this);
+            }
+        }
+
+        private void SwapToOpenSprite()
+        {
+            if (activeOpenSprite == null || chestBodyImage == null)
+            {
+                return;
+            }
+
+            chestBodyImage.sprite = activeOpenSprite;
             if (chestLid != null)
             {
                 chestLid.gameObject.SetActive(false);

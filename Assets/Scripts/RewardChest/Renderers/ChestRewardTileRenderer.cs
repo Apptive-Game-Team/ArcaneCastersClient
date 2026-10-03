@@ -3,8 +3,8 @@ using UnityEngine;
 namespace RewardChest.Renderers
 {
     /// <summary>
-    /// <c>CHEST</c>: a chest the player has to open on the chest screen. The icon comes from
-    /// <see cref="RewardSpriteResolver.ChestIconRoot"/> once chest art exists; until then the placeholder shows.
+    /// <c>CHEST</c>: a chest the player has to open on the chest screen. The icon is the closed chest from
+    /// <see cref="RewardSpriteResolver.ChestIconRoot"/>; the placeholder shows only if even the default art is missing.
     /// </summary>
     public sealed class ChestRewardTileRenderer : IRewardTileRenderer
     {

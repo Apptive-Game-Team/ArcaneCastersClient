@@ -10,14 +10,10 @@ namespace RewardChest
     /// </summary>
     public static class RewardSpriteResolver
     {
-        /// <summary>
-        /// Where real chest art goes: <c>Assets/Resources/RewardChest/Chests/&lt;chestKey&gt;.png</c>, with
-        /// <c>default.png</c> for every chest that has no art of its own. Neither exists yet, so chest
-        /// tiles show their placeholder.
-        /// </summary>
-        public const string ChestIconRoot = "RewardChest/Chests";
+        /// <summary>Chest art lives under <c>Assets/Resources/RewardChest/Chests/&lt;chestKey&gt;/closed.png</c> and <c>open.png</c>; see <see cref="ChestSpritePaths"/>.</summary>
+        public const string ChestIconRoot = ChestSpritePaths.Root;
 
-        public const string DefaultChestIconName = "default";
+        public const string DefaultChestIconName = ChestSpritePaths.DefaultKey;
 
         /// <summary>
         /// The magic a <c>MAGIC</c> (or older <c>CARD</c>) reward points at, by <c>magics.id</c>.
@@ -58,20 +54,20 @@ namespace RewardChest
             return sprite != null;
         }
 
+        /// <summary>
+        /// The closed chest of <paramref name="chestKey"/>, then the default chest's closed art. False only when
+        /// neither exists, and the caller keeps its placeholder. An unsafe key never throws; it loads the default.
+        /// </summary>
         public static bool TryResolveChestIcon(string chestKey, out Sprite sprite)
         {
-            sprite = null;
-            // ResolveId returns the key unchanged only when it is a safe single path segment.
-            if (!string.IsNullOrWhiteSpace(chestKey) && PlayerAppearanceResolver.ResolveId(chestKey) == chestKey)
-            {
-                sprite = Resources.Load<Sprite>(ChestIconRoot + "/" + chestKey);
-            }
+            sprite = ChestSpritePaths.Load(chestKey, ChestSpritePaths.Closed, Resources.Load<Sprite>);
+            return sprite != null;
+        }
 
-            if (sprite == null)
-            {
-                sprite = Resources.Load<Sprite>(ChestIconRoot + "/" + DefaultChestIconName);
-            }
-
+        /// <summary>The opened chest of <paramref name="chestKey"/>, with the same fallback as <see cref="TryResolveChestIcon"/>.</summary>
+        public static bool TryResolveChestOpenIcon(string chestKey, out Sprite sprite)
+        {
+            sprite = ChestSpritePaths.Load(chestKey, ChestSpritePaths.Open, Resources.Load<Sprite>);
             return sprite != null;
         }
     }

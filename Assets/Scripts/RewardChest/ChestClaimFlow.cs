@@ -211,7 +211,7 @@ namespace RewardChest
 
             if (presenter != null)
             {
-                yield return presenter.Play(rewards);
+                yield return presenter.Play(rewards, null, chestKey);
             }
 
             onDone(true);

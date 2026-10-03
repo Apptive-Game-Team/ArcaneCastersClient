@@ -106,6 +106,7 @@ namespace Adventures
             }
 
             adventureQuest = AdventureChestQuest.Select(quests, id);
+            chest.SetChestKey(AdventureChestQuest.ChestRewardOf(adventureQuest)?.Key);
             chest.SetState(AdventureChestQuest.StateOf(adventureQuest));
         }
 

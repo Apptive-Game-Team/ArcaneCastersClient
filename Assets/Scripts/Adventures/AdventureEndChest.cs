@@ -1,6 +1,7 @@
 using System;
 using Data.Quests;
 using DG.Tweening;
+using RewardChest;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,10 +11,10 @@ namespace Adventures
     /// The chest at the end of an adventure's stage path. It only draws a state and reports clicks;
     /// <see cref="AdventureEndChestController"/> decides the state and runs the claim.
     /// <para>
-    /// Drawn with the same placeholder shapes as <c>RewardChestPresenter.prefab</c> (body, lid, lock, glow)
-    /// until chest art exists. Put real sprites in <see cref="closedChestSprite"/> and
-    /// <see cref="openChestSprite"/>; with an open sprite set, the claimed chest swaps the body to it and hides
-    /// the separate lid.
+    /// <see cref="closedChestSprite"/> and <see cref="openChestSprite"/> hold the default chest art, and
+    /// <see cref="SetChestKey"/> swaps in the art of the quest's own chest. While a closed sprite exists the
+    /// placeholder lid and lock stay hidden; with an open sprite, the claimed chest swaps the body to it.
+    /// Without sprites the chest falls back to the placeholder shapes (body, lid, lock).
     /// </para>
     /// </summary>
     public class AdventureEndChest : MonoBehaviour
@@ -45,6 +46,11 @@ namespace Adventures
         private Color authoredBodyColor;
         private bool busy;
         private bool listenerAdded;
+        private Sprite keyedClosedSprite;
+        private Sprite keyedOpenSprite;
+
+        private Sprite ClosedSprite => keyedClosedSprite != null ? keyedClosedSprite : closedChestSprite;
+        private Sprite OpenSprite => keyedOpenSprite != null ? keyedOpenSprite : openChestSprite;
 
         public event Action Clicked;
 
@@ -59,6 +65,16 @@ namespace Adventures
         private void OnDestroy()
         {
             DOTween.Kill(this);
+        }
+
+        /// <summary>
+        /// Picks the art of <paramref name="chestKey"/> (the quest's <c>rewardKey</c>); an unknown or empty key
+        /// gets the default chest. Call it before <see cref="SetState"/>, which draws the sprite.
+        /// </summary>
+        public void SetChestKey(string chestKey)
+        {
+            keyedClosedSprite = RewardSpriteResolver.TryResolveChestIcon(chestKey, out Sprite closed) ? closed : null;
+            keyedOpenSprite = RewardSpriteResolver.TryResolveChestOpenIcon(chestKey, out Sprite open) ? open : null;
         }
 
         /// <summary>Hidden turns the whole chest off; the other two show it closed and bobbing, or open and empty.</summary>
@@ -130,10 +146,14 @@ namespace Adventures
 
             if (chestBodyImage != null)
             {
-                chestBodyImage.color = claimedBodyColor;
-                if (openChestSprite != null)
+                // Real open art keeps its own colours; only the placeholder body is darkened to read as taken.
+                if (OpenSprite != null)
                 {
-                    chestBodyImage.sprite = openChestSprite;
+                    chestBodyImage.sprite = OpenSprite;
+                }
+                else
+                {
+                    chestBodyImage.color = claimedBodyColor;
                 }
             }
 
@@ -142,7 +162,7 @@ namespace Adventures
                 return;
             }
 
-            if (openChestSprite != null)
+            if (OpenSprite != null)
             {
                 chestLid.gameObject.SetActive(false);
                 return;
@@ -162,19 +182,19 @@ namespace Adventures
 
             if (chestLid != null)
             {
-                chestLid.gameObject.SetActive(true);
+                chestLid.gameObject.SetActive(ClosedSprite == null);
                 chestLid.anchoredPosition = lidPosition;
                 chestLid.localRotation = lidRotation;
             }
 
             if (lockObject != null)
             {
-                lockObject.SetActive(true);
+                lockObject.SetActive(ClosedSprite == null);
             }
 
             if (chestBodyImage != null)
             {
-                chestBodyImage.sprite = closedChestSprite != null ? closedChestSprite : authoredBodySprite;
+                chestBodyImage.sprite = ClosedSprite != null ? ClosedSprite : authoredBodySprite;
                 chestBodyImage.color = authoredBodyColor;
             }
 

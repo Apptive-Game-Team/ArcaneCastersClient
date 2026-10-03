@@ -99,10 +99,10 @@ namespace RewardChest
                 return;
             }
 
-            StartCoroutine(OpenChest(item.Chest.id));
+            StartCoroutine(OpenChest(item.Chest.id, item.Chest.chestKey));
         }
 
-        private IEnumerator OpenChest(long ownedChestId)
+        private IEnumerator OpenChest(long ownedChestId, string chestKey)
         {
             busy = true;
             SetItemsInteractable(false);
@@ -121,7 +121,7 @@ namespace RewardChest
                 case ChestOpenOutcome.Opened:
                     if (presenter != null)
                     {
-                        yield return presenter.Play(rewards);
+                        yield return presenter.Play(rewards, null, chestKey);
                     }
 
                     yield return RefreshList();
