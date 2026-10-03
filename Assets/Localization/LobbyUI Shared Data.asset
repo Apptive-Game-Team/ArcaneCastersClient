@@ -361,6 +361,38 @@ MonoBehaviour:
     m_Key: AppearanceTide
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000301
+    m_Key: AdventureChestTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000302
+    m_Key: AdventureChestOpenNow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000303
+    m_Key: AdventureChestLater
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000304
+    m_Key: AdventureChestLaterHint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000305
+    m_Key: AdventureChestNotClaimableYet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000306
+    m_Key: AdventureChestNotFound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000307
+    m_Key: AdventureChestClaimFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000308
+    m_Key: AdventureChestOpenFailed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -360,6 +360,38 @@ MonoBehaviour:
     m_Localized: "Tide"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000301
+    m_Localized: You got a treasure chest!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000302
+    m_Localized: Open now
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000303
+    m_Localized: Later
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000304
+    m_Localized: You can also open it later on the chest screen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000305
+    m_Localized: Clear every stage to take this chest.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000306
+    m_Localized: This reward is no longer available.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000307
+    m_Localized: Could not take the chest. Try again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000308
+    m_Localized: Could not open it now. It is waiting in your chests.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

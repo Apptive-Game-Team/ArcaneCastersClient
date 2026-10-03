@@ -22,6 +22,21 @@ namespace Data.Quests
         public int requireValue;
         public QuestRewardDto[] rewards;
 
+        /// <summary>
+        /// <c>AUTO</c> (granted by <c>POST /api/users/mine/quests/check</c>) or <c>MANUAL</c> (granted only by
+        /// <c>POST /api/users/mine/quests/{questId}/claim</c>). Null from a server that predates manual claims.
+        /// </summary>
+        public string claimMode;
+
+        /// <summary>
+        /// True when the condition is met and the rewards were not granted yet, so the claim endpoint would
+        /// grant them now. A server that does not send the field reads as false, which hides every claim button.
+        /// </summary>
+        public bool claimable;
+
+        [JsonIgnore]
+        public bool IsManualClaim => string.Equals(claimMode, QuestClaimModes.Manual, StringComparison.OrdinalIgnoreCase);
+
         [JsonIgnore]
         public bool IsCompleted => string.Equals(state, QuestStates.Completed, StringComparison.OrdinalIgnoreCase);
 
@@ -66,6 +81,12 @@ namespace Data.Quests
         public const string Pending = "PENDING";
         public const string InProgress = "IN_PROGRESS";
         public const string Completed = "COMPLETED";
+    }
+
+    public static class QuestClaimModes
+    {
+        public const string Auto = "AUTO";
+        public const string Manual = "MANUAL";
     }
 
     public static class QuestConditionTypes

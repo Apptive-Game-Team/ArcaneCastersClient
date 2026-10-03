@@ -309,6 +309,16 @@ new code really compiles; the remaining warnings are reference-version conflicts
 The checkout's packages are whatever it last imported, so compare its
 `Packages/packages-lock.json` with yours before trusting a package API.
 
+An earlier compile workspace (`C:\temp\claude-pq`) is a tempting shortcut: copy
+its `*.csproj` and only swap the `<Compile Include>` lists. Its project files are
+a snapshot of the asmdefs at the time, not of yours. When the chest work added
+`WordOnline.Serialization` to `WordOnline.Contracts.asmdef`, the copied
+`WordOnline.Contracts.csproj` still lacked that `ProjectReference`, and the build
+failed with `CS0234: 'Serialization' does not exist in the namespace 'Global'`
+in three contract files nobody had touched. Compare each copied project's
+`ProjectReference` list with the `references` of the matching `.asmdef` before
+reading the error list.
+
 The EditMode test DLL built this way cannot be run outside Unity: Unity's
 `nunit.framework.dll` needs .NET Framework remoting (`CallContext`). Tests that
 touch only `WordOnline.Contracts` and `JsonCodec` run under `dotnet test` in a
@@ -323,3 +333,13 @@ touch only `WordOnline.Contracts` and `JsonCodec` run under `dotnet test` in a
 `ProfileScene`, so a `SystemMessageUI.Instance.ShowMessage` there was a
 `NullReferenceException`. Before calling it from a scene, grep the scene for the
 prefab guid `c3bf6386364e64872904c6d1fa77d05d`.
+
+## Everything under the adventure map's `Nodes` is destroyed on every rebuild
+
+`AdventureMapController.Show` deletes every child of `nodesContainer` (`Nodes` in
+`AdventureScene.unity`) before it draws the stage nodes again, except the objects
+it names: `currentMarker` and `endOfRoadSlot`. A scene object placed under `Nodes`
+without its own field in that skip list loads, renders in the Editor, and is gone
+the first time the map draws. The end-of-adventure chest lives there for that
+reason as `endOfRoadSlot`; anything else that has to sit on the road needs the
+same treatment.

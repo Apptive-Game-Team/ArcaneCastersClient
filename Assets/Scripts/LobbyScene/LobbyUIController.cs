@@ -257,6 +257,10 @@ namespace LobbyScene
             QuestRewardDto[] rewards = Array.Empty<QuestRewardDto>();
             yield return CheckRewards(result => rewards = result ?? Array.Empty<QuestRewardDto>());
 
+            // A quest claimed by hand (the chest at the end of an adventure) already showed its rewards
+            // on the claim screen. If the check ever reports it as well, do not show the same chest twice.
+            rewards = Data.Quests.ClaimedQuestLedger.Session.WithoutClaimed(rewards);
+
             if (rewards.Length == 0)
             {
                 yield break;
