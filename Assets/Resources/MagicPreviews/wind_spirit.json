@@ -4436,6 +4436,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "wind_spirit.attack_interval" : 0.8,
+      "wind_spirit.attack_range" : 3.0,
+      "wind_spirit.damage" : 100.0,
+      "wind_spirit.hp" : 1000.0,
+      "wind_spirit.mass" : 10.0,
+      "wind_spirit.quantity" : 1.0,
+      "wind_spirit.radius" : 0.6,
+      "wind_spirit.speed" : 2.0
+    }
   } ]
 }

@@ -13988,7 +13988,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "wall_golem.attack_interval" : 0.8,
+      "wall_golem.damage" : 100.0,
+      "wall_golem.hp" : 1000.0,
+      "wall_golem.mass" : 10.0,
+      "wall_golem.quantity" : 3.0,
+      "wall_golem.radius" : 0.4,
+      "wall_golem.speed" : 2.0
+    }
   }, {
     "id" : "death",
     "labelKo" : "사망·바위 잔해",
@@ -16869,6 +16880,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "medium_rock_remnant.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "wall_golem.attack_interval" : 0.8,
+      "wall_golem.damage" : 100.0,
+      "wall_golem.hp" : 1000.0,
+      "wall_golem.mass" : 10.0,
+      "wall_golem.radius" : 0.4,
+      "wall_golem.speed" : 2.0
+    }
   } ]
 }

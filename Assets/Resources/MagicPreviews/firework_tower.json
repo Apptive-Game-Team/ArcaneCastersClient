@@ -20323,7 +20323,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "firework_shell.damage" : 100.0,
+      "firework_shell.duration" : 8.0,
+      "firework_shell.radius" : 0.4,
+      "firework_tower.attack_interval" : 0.8,
+      "firework_tower.attack_offset" : 3.0,
+      "firework_tower.duration" : 8.0,
+      "firework_tower.hp" : 1000.0,
+      "firework_tower.mass" : 10.0,
+      "firework_tower.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -23770,6 +23783,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "firework_tower.attack_interval" : 0.8,
+      "firework_tower.attack_offset" : 3.0,
+      "firework_tower.duration" : 8.0,
+      "firework_tower.hp" : 1000.0,
+      "firework_tower.mass" : 10.0,
+      "firework_tower.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

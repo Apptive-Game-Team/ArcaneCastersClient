@@ -5368,6 +5368,13 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3, 4 ],
+    "parameters" : {
+      "electric_explode.damage" : 100.0,
+      "electric_explode.radius" : 2.0,
+      "game.shock_refresh_duration" : 1.0,
+      "game.shock_stun_duration" : 1.0
+    }
   } ]
 }

@@ -10245,7 +10245,23 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "ground_tower.attack_interval" : 0.8,
+      "ground_tower.attack_range" : 3.0,
+      "ground_tower.damage" : 100.0,
+      "ground_tower.duration" : 3.0,
+      "ground_tower.hp" : 1000.0,
+      "ground_tower.mass" : 10.0,
+      "ground_tower.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "repair_totem.duration" : 5.0,
+      "repair_totem.effect_radius" : 3.0,
+      "repair_totem.hp" : 1000.0,
+      "repair_totem.mass" : 10.0,
+      "repair_totem.radius" : 0.4
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -13702,6 +13718,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "repair_totem.duration" : 5.0,
+      "repair_totem.effect_radius" : 3.0,
+      "repair_totem.hp" : 1000.0,
+      "repair_totem.mass" : 10.0,
+      "repair_totem.radius" : 0.4
+    }
   } ]
 }

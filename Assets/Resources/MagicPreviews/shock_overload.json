@@ -6733,6 +6733,12 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "shock_overload.damage" : 100.0,
+      "shock_overload.radius" : 2.0
+    }
   } ]
 }

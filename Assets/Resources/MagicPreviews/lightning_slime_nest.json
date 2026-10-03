@@ -25080,7 +25080,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "electric_slime.attack_interval" : 0.8,
+      "electric_slime.damage" : 100.0,
+      "electric_slime.hp" : 1000.0,
+      "electric_slime.mass" : 10.0,
+      "electric_slime.radius" : 0.4,
+      "electric_slime.speed" : 2.0,
+      "electric_summon.hp" : 1000.0,
+      "electric_summon.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -27326,6 +27338,12 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "electric_summon.hp" : 1000.0,
+      "electric_summon.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

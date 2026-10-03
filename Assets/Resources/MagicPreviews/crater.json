@@ -21504,7 +21504,23 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "crater.attack_interval" : 0.8,
+      "crater.duration" : 8.0,
+      "crater.hp" : 1000.0,
+      "crater.mass" : 10.0,
+      "crater.radius" : 0.4,
+      "crater_ember.attack_range" : 3.0,
+      "crater_ember.damage" : 100.0,
+      "crater_ember.radius" : 0.4,
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "landing",
     "labelKo" : "불씨 착지·중립 화염 필드",
@@ -33557,7 +33573,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "crater.attack_interval" : 0.8,
+      "crater.duration" : 8.0,
+      "crater.hp" : 1000.0,
+      "crater.mass" : 10.0,
+      "crater.radius" : 0.4,
+      "crater_ember.attack_range" : 3.0,
+      "crater_ember.damage" : 100.0,
+      "crater_ember.radius" : 0.4,
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -37004,6 +37034,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "crater.attack_interval" : 0.8,
+      "crater.duration" : 8.0,
+      "crater.hp" : 1000.0,
+      "crater.mass" : 10.0,
+      "crater.radius" : 0.4,
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

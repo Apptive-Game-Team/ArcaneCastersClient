@@ -8718,6 +8718,16 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "mini_rock.attack_interval" : 0.8,
+      "mini_rock.damage" : 100.0,
+      "mini_rock.hp" : 1000.0,
+      "mini_rock.mass" : 10.0,
+      "mini_rock.quantity" : 3.0,
+      "mini_rock.radius" : 0.6,
+      "mini_rock.speed" : 2.0
+    }
   } ]
 }

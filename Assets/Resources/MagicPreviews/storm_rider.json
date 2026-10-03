@@ -14084,7 +14084,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "storm_rider.attack_interval" : 0.8,
+      "storm_rider.damage" : 100.0,
+      "storm_rider.hp" : 1000.0,
+      "storm_rider.mass" : 10.0,
+      "storm_rider.quantity" : 3.0,
+      "storm_rider.radius" : 0.4,
+      "storm_rider.speed" : 2.0
+    }
   }, {
     "id" : "death_energy",
     "labelKo" : "사망·아군 전기 에너지 흡수",
@@ -18209,6 +18220,26 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "electric_field.duration" : 8.0,
+      "electric_field.radius" : 0.4,
+      "electric_slime.attack_interval" : 0.8,
+      "electric_slime.damage" : 100.0,
+      "electric_slime.hp" : 1000.0,
+      "electric_slime.mass" : 10.0,
+      "electric_slime.radius" : 0.4,
+      "electric_slime.speed" : 2.0,
+      "player.max_mana" : 100.0,
+      "storm_rider.attack_interval" : 0.8,
+      "storm_rider.damage" : 100.0,
+      "storm_rider.hp" : 1000.0,
+      "storm_rider.mass" : 10.0,
+      "storm_rider.radius" : 0.4,
+      "storm_rider.speed" : 2.0,
+      "water_field.duration" : 8.0,
+      "water_field.radius" : 0.4
+    }
   } ]
 }

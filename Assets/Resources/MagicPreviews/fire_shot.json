@@ -5150,7 +5150,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "fire_shot.damage" : 100.0,
+      "fire_shot.radius" : 0.6,
+      "fire_shot.speed" : 8.0,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0
+    }
   }, {
     "id" : "wet",
     "labelKo" : "젖은 대상 · 상태 상쇄",
@@ -10298,6 +10306,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "fire_shot.damage" : 100.0,
+      "fire_shot.radius" : 0.6,
+      "fire_shot.speed" : 8.0,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "game.wet_duration" : 8.0
+    }
   } ]
 }

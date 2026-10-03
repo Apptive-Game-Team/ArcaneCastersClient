@@ -27749,7 +27749,24 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.leaf_field_heal_amount" : 20.0,
+      "game.leaf_field_heal_duration" : 2.0,
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "tree_golem.attack_interval" : 0.8,
+      "tree_golem.damage" : 100.0,
+      "tree_golem.heal_amount" : 80.0,
+      "tree_golem.heal_interval" : 0.8,
+      "tree_golem.hp" : 1000.0,
+      "tree_golem.mass" : 10.0,
+      "tree_golem.quantity" : 3.0,
+      "tree_golem.radius" : 0.4,
+      "tree_golem.speed" : 2.0
+    }
   }, {
     "id" : "healing_trail",
     "labelKo" : "자가 회복·잎 경로·아군 회복",
@@ -42280,7 +42297,26 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 3, 4 ],
+    "parameters" : {
+      "game.leaf_field_heal_amount" : 20.0,
+      "game.leaf_field_heal_duration" : 2.0,
+      "game.snare_duration" : 2.0,
+      "game.snare_fire_damage" : 20.0,
+      "game.snare_slow_percent" : 0.5,
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "tree_golem.attack_interval" : 0.8,
+      "tree_golem.damage" : 100.0,
+      "tree_golem.heal_amount" : 80.0,
+      "tree_golem.heal_interval" : 0.8,
+      "tree_golem.hp" : 1000.0,
+      "tree_golem.mass" : 10.0,
+      "tree_golem.radius" : 0.4,
+      "tree_golem.speed" : 2.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -48381,6 +48417,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "tree_golem.attack_interval" : 0.8,
+      "tree_golem.damage" : 100.0,
+      "tree_golem.heal_amount" : 80.0,
+      "tree_golem.heal_interval" : 0.8,
+      "tree_golem.hp" : 1000.0,
+      "tree_golem.mass" : 10.0,
+      "tree_golem.quantity" : 3.0,
+      "tree_golem.radius" : 0.4,
+      "tree_golem.speed" : 2.0
+    }
   } ]
 }

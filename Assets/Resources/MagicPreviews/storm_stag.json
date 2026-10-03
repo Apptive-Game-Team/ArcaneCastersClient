@@ -14190,7 +14190,21 @@
         "actorId" : 4,
         "targetId" : 2
       } ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "electric_shot.damage" : 100.0,
+      "player.max_mana" : 100.0,
+      "storm_stag.acceleration" : 5.0,
+      "storm_stag.damage" : 100.0,
+      "storm_stag.detection_range" : 0.6,
+      "storm_stag.hp" : 1000.0,
+      "storm_stag.mass" : 10.0,
+      "storm_stag.panic_duration" : 0.8,
+      "storm_stag.quantity" : 3.0,
+      "storm_stag.radius" : 0.4,
+      "storm_stag.speed" : 4.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -20261,6 +20275,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "electric_field.duration" : 8.0,
+      "electric_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "storm_stag.acceleration" : 5.0,
+      "storm_stag.damage" : 100.0,
+      "storm_stag.detection_range" : 0.6,
+      "storm_stag.hp" : 1000.0,
+      "storm_stag.mass" : 10.0,
+      "storm_stag.panic_duration" : 0.8,
+      "storm_stag.quantity" : 3.0,
+      "storm_stag.radius" : 0.4,
+      "storm_stag.speed" : 4.0
+    }
   } ]
 }

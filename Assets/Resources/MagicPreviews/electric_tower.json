@@ -9597,7 +9597,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "electric_tower.attack_interval" : 0.8,
+      "electric_tower.attack_range" : 3.0,
+      "electric_tower.chain_count" : 3.0,
+      "electric_tower.chain_damage" : 80.0,
+      "electric_tower.chain_radius" : 3.0,
+      "electric_tower.damage" : 100.0,
+      "electric_tower.duration" : 8.0,
+      "electric_tower.hp" : 1000.0,
+      "electric_tower.mass" : 10.0,
+      "electric_tower.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "air",
     "labelKo" : "공중 공격",
@@ -19192,7 +19206,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "electric_tower.attack_interval" : 0.8,
+      "electric_tower.attack_range" : 3.0,
+      "electric_tower.chain_count" : 3.0,
+      "electric_tower.chain_damage" : 80.0,
+      "electric_tower.chain_radius" : 3.0,
+      "electric_tower.damage" : 100.0,
+      "electric_tower.duration" : 8.0,
+      "electric_tower.hp" : 1000.0,
+      "electric_tower.mass" : 10.0,
+      "electric_tower.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -22659,6 +22687,22 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "electric_field.duration" : 8.0,
+      "electric_field.radius" : 0.4,
+      "electric_tower.attack_interval" : 0.8,
+      "electric_tower.attack_range" : 3.0,
+      "electric_tower.chain_count" : 3.0,
+      "electric_tower.chain_damage" : 80.0,
+      "electric_tower.chain_radius" : 3.0,
+      "electric_tower.damage" : 100.0,
+      "electric_tower.duration" : 8.0,
+      "electric_tower.hp" : 1000.0,
+      "electric_tower.mass" : 10.0,
+      "electric_tower.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

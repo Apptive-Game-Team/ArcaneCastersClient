@@ -6504,6 +6504,14 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "magma_explosion.damage" : 100.0,
+      "magma_explosion.radius" : 2.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

@@ -8057,6 +8057,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "tornado_strike.attack_interval" : 0.8,
+      "tornado_strike.damage" : 100.0,
+      "tornado_strike.duration" : 8.0,
+      "tornado_strike.radius" : 0.4,
+      "tornado_strike.speed" : 2.0
+    }
   } ]
 }

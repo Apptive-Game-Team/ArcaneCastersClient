@@ -25137,7 +25137,25 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "game.leaf_field_heal_amount" : 20.0,
+      "game.leaf_field_heal_duration" : 2.0,
+      "game.snare_duration" : 2.0,
+      "game.snare_fire_damage" : 20.0,
+      "game.snare_slow_percent" : 0.5,
+      "grass_generator.attack_interval" : 0.8,
+      "grass_generator.duration" : 8.0,
+      "grass_generator.effect_radius" : 3.0,
+      "grass_generator.hp" : 1000.0,
+      "grass_generator.mass" : 10.0,
+      "grass_generator.quantity" : 3.0,
+      "grass_generator.radius" : 0.4,
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -28584,6 +28602,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "grass_generator.attack_interval" : 0.8,
+      "grass_generator.duration" : 8.0,
+      "grass_generator.effect_radius" : 3.0,
+      "grass_generator.hp" : 1000.0,
+      "grass_generator.mass" : 10.0,
+      "grass_generator.quantity" : 3.0,
+      "grass_generator.radius" : 0.4,
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

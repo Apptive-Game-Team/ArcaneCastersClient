@@ -5506,7 +5506,22 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "fire_spirit.attack_interval" : 0.8,
+      "fire_spirit.attack_range" : 3.0,
+      "fire_spirit.damage" : 100.0,
+      "fire_spirit.hp" : 1000.0,
+      "fire_spirit.mass" : 10.0,
+      "fire_spirit.quantity" : 3.0,
+      "fire_spirit.radius" : 0.4,
+      "fire_spirit.speed" : 2.0,
+      "fire_spirit.sub_attack_range" : 1.0,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "aura",
     "labelKo" : "주변 상태 효과",
@@ -10114,7 +10129,22 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "fire_spirit.attack_interval" : 0.8,
+      "fire_spirit.attack_range" : 3.0,
+      "fire_spirit.damage" : 100.0,
+      "fire_spirit.hp" : 1000.0,
+      "fire_spirit.mass" : 10.0,
+      "fire_spirit.quantity" : 3.0,
+      "fire_spirit.radius" : 0.4,
+      "fire_spirit.speed" : 2.0,
+      "fire_spirit.sub_attack_range" : 1.0,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -16245,6 +16275,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "fire_spirit.attack_interval" : 0.8,
+      "fire_spirit.attack_range" : 3.0,
+      "fire_spirit.damage" : 100.0,
+      "fire_spirit.hp" : 1000.0,
+      "fire_spirit.mass" : 10.0,
+      "fire_spirit.quantity" : 3.0,
+      "fire_spirit.radius" : 0.4,
+      "fire_spirit.speed" : 2.0,
+      "fire_spirit.sub_attack_range" : 1.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

@@ -4536,6 +4536,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "aqua_archer.attack_interval" : 0.8,
+      "aqua_archer.attack_range" : 3.0,
+      "aqua_archer.damage" : 100.0,
+      "aqua_archer.hp" : 1000.0,
+      "aqua_archer.mass" : 10.0,
+      "aqua_archer.radius" : 0.4,
+      "aqua_archer.speed" : 2.0,
+      "player.max_mana" : 100.0,
+      "rallying_totem.buff_duration" : 2.0,
+      "rallying_totem.duration" : 8.0,
+      "rallying_totem.radius" : 0.4,
+      "rallying_totem.range" : 3.0
+    }
   } ]
 }

@@ -3830,7 +3830,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "towerback.attack_interval" : 0.8,
+      "towerback.attack_range" : 3.0,
+      "towerback.damage" : 100.0,
+      "towerback.hp" : 1000.0,
+      "towerback.mass" : 10.0,
+      "towerback.radius" : 0.6,
+      "towerback.sub_attack_range" : 0.5,
+      "towerback.sub_damage" : 80.0,
+      "towerback.sub_speed" : 1.5
+    }
   }, {
     "id" : "air",
     "labelKo" : "공중 공격 · 포탄 범위 피해",
@@ -8938,6 +8950,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "towerback.attack_interval" : 0.8,
+      "towerback.attack_range" : 3.0,
+      "towerback.damage" : 100.0,
+      "towerback.hp" : 1000.0,
+      "towerback.mass" : 10.0,
+      "towerback.radius" : 0.6,
+      "towerback.sub_attack_range" : 0.5,
+      "towerback.sub_damage" : 80.0,
+      "towerback.sub_speed" : 1.5
+    }
   } ]
 }

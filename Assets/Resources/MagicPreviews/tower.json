@@ -7594,7 +7594,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "ground_tower.attack_interval" : 0.8,
+      "ground_tower.attack_range" : 3.0,
+      "ground_tower.damage" : 100.0,
+      "ground_tower.duration" : 3.0,
+      "ground_tower.hp" : 1000.0,
+      "ground_tower.mass" : 10.0,
+      "ground_tower.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "death",
     "labelKo" : "사망·바위 잔해",
@@ -10575,6 +10586,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "ground_tower.attack_interval" : 0.8,
+      "ground_tower.attack_range" : 3.0,
+      "ground_tower.damage" : 100.0,
+      "ground_tower.duration" : 3.0,
+      "ground_tower.hp" : 1000.0,
+      "ground_tower.mass" : 10.0,
+      "ground_tower.radius" : 0.4,
+      "mini_rock.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

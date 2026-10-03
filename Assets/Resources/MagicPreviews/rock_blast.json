@@ -3139,7 +3139,14 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 3 ],
+    "parameters" : {
+      "mini_rock.radius" : 0.6,
+      "rock_blast.radius" : 2.0,
+      "rock_explode.damage" : 100.0,
+      "rock_explode.radius" : 2.0
+    }
   }, {
     "id" : "medium",
     "labelKo" : "중간 잔해 폭발·작은 잔해 잔존",
@@ -7316,6 +7323,14 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 3 ],
+    "parameters" : {
+      "medium_rock_remnant.radius" : 0.6,
+      "mini_rock.radius" : 0.6,
+      "rock_blast.radius" : 2.0,
+      "rock_explode.damage" : 100.0,
+      "rock_explode.radius" : 2.0
+    }
   } ]
 }

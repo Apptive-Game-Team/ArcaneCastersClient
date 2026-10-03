@@ -21667,7 +21667,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "titan_fist.damage" : 100.0,
+      "titan_fist.duration" : 8.0,
+      "titan_fist.radius" : 0.4,
+      "titan_remnant.attack_interval" : 0.8,
+      "titan_remnant.attack_range" : 3.0,
+      "titan_remnant.duration" : 8.0,
+      "titan_remnant.hp" : 1000.0,
+      "titan_remnant.mass" : 10.0,
+      "titan_remnant.radius" : 0.4
+    }
   }, {
     "id" : "death",
     "labelKo" : "사망·바위 잔해",
@@ -24648,6 +24661,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "medium_rock_remnant.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "titan_remnant.attack_interval" : 0.8,
+      "titan_remnant.attack_range" : 3.0,
+      "titan_remnant.duration" : 8.0,
+      "titan_remnant.hp" : 1000.0,
+      "titan_remnant.mass" : 10.0,
+      "titan_remnant.radius" : 0.4
+    }
   } ]
 }

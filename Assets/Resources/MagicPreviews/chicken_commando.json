@@ -8920,6 +8920,18 @@
         "actorId" : 3,
         "targetId" : 2
       } ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "chicken_commando.attack_interval" : 0.8,
+      "chicken_commando.damage" : 100.0,
+      "chicken_commando.fall_gravity" : 20.0,
+      "chicken_commando.hp" : 1000.0,
+      "chicken_commando.mass" : 10.0,
+      "chicken_commando.radius" : 0.4,
+      "chicken_commando.spawn_height" : 5.0,
+      "chicken_commando.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

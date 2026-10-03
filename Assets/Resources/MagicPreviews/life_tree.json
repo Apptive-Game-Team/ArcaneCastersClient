@@ -5240,7 +5240,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "life_tree.attack_interval" : 0.8,
+      "life_tree.damage" : -80.0,
+      "life_tree.duration" : 8.0,
+      "life_tree.hp" : 1000.0,
+      "life_tree.mass" : 10.0,
+      "life_tree.radius" : 0.4,
+      "life_tree.range" : 3.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -8697,6 +8708,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "life_tree.attack_interval" : 0.8,
+      "life_tree.damage" : -80.0,
+      "life_tree.duration" : 8.0,
+      "life_tree.hp" : 1000.0,
+      "life_tree.mass" : 10.0,
+      "life_tree.radius" : 0.4,
+      "life_tree.range" : 3.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

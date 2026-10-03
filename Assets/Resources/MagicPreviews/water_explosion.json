@@ -5368,6 +5368,14 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3, 4 ],
+    "parameters" : {
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "water_explosion.damage" : 100.0,
+      "water_explosion.radius" : 2.0,
+      "water_explosion.z_force" : 5.0
+    }
   } ]
 }

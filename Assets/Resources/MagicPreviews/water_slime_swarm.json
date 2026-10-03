@@ -11688,7 +11688,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "aqua_archer.attack_range" : 3.0,
+      "water_field.duration" : 3.0,
+      "water_field.radius" : 0.6,
+      "water_slime.attack_interval" : 0.8,
+      "water_slime.damage" : 100.0,
+      "water_slime.hp" : 1000.0,
+      "water_slime.mass" : 10.0,
+      "water_slime.quantity" : 3.0,
+      "water_slime.radius" : 0.6,
+      "water_slime.speed" : 2.0
+    }
   }, {
     "id" : "trail",
     "labelKo" : "이동 경로 물 필드·젖음",
@@ -23374,6 +23387,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "aqua_archer.attack_range" : 3.0,
+      "game.wet_duration" : 8.0,
+      "water_field.duration" : 3.0,
+      "water_field.radius" : 0.6,
+      "water_slime.attack_interval" : 0.8,
+      "water_slime.damage" : 100.0,
+      "water_slime.hp" : 1000.0,
+      "water_slime.mass" : 10.0,
+      "water_slime.quantity" : 3.0,
+      "water_slime.radius" : 0.6,
+      "water_slime.speed" : 2.0
+    }
   } ]
 }

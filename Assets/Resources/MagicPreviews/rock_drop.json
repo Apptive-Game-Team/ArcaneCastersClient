@@ -6947,6 +6947,12 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "rock_drop.damage" : 100.0,
+      "rock_drop.radius" : 0.4
+    }
   } ]
 }

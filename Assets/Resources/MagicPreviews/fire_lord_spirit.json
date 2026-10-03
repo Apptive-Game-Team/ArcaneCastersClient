@@ -33398,7 +33398,23 @@
         "actorId" : 9,
         "targetId" : 2
       } ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "fire_child_spirit.attack_interval" : 0.8,
+      "fire_child_spirit.attack_range" : 3.0,
+      "fire_child_spirit.damage" : 100.0,
+      "fire_child_spirit.hp" : 1000.0,
+      "fire_child_spirit.mass" : 10.0,
+      "fire_child_spirit.radius" : 0.4,
+      "fire_child_spirit.speed" : 2.0,
+      "fire_lord_spirit.hp" : 1000.0,
+      "fire_lord_spirit.mass" : 10.0,
+      "fire_lord_spirit.quantity" : 3.0,
+      "fire_lord_spirit.radius" : 0.4,
+      "fire_lord_spirit.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "air",
     "labelKo" : "공중 공격",
@@ -66794,7 +66810,23 @@
         "actorId" : 9,
         "targetId" : 2
       } ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "fire_child_spirit.attack_interval" : 0.8,
+      "fire_child_spirit.attack_range" : 3.0,
+      "fire_child_spirit.damage" : 100.0,
+      "fire_child_spirit.hp" : 1000.0,
+      "fire_child_spirit.mass" : 10.0,
+      "fire_child_spirit.radius" : 0.4,
+      "fire_child_spirit.speed" : 2.0,
+      "fire_lord_spirit.hp" : 1000.0,
+      "fire_lord_spirit.mass" : 10.0,
+      "fire_lord_spirit.quantity" : 3.0,
+      "fire_lord_spirit.radius" : 0.4,
+      "fire_lord_spirit.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -72865,6 +72897,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "fire_lord_spirit.hp" : 1000.0,
+      "fire_lord_spirit.mass" : 10.0,
+      "fire_lord_spirit.quantity" : 3.0,
+      "fire_lord_spirit.radius" : 0.4,
+      "fire_lord_spirit.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

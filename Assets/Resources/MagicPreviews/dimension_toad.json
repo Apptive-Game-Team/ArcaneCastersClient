@@ -69525,7 +69525,34 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "dimension_toad.attack_interval" : 0.8,
+      "dimension_toad.detection_range" : 20.0,
+      "dimension_toad.hp" : 1000.0,
+      "dimension_toad.mass" : 10.0,
+      "dimension_toad.panic_duration" : 0.8,
+      "dimension_toad.quantity" : 3.0,
+      "dimension_toad.radius" : 0.4,
+      "dimension_toad.spawn_interval" : 0.8,
+      "dimension_toad.speed" : 2.0,
+      "fire_tadpole.attack_interval" : 0.8,
+      "fire_tadpole.damage" : 100.0,
+      "fire_tadpole.duration" : 8.0,
+      "fire_tadpole.hp" : 1000.0,
+      "fire_tadpole.mass" : 10.0,
+      "fire_tadpole.radius" : 0.4,
+      "fire_tadpole.speed" : 2.0,
+      "lightning_tadpole.attack_interval" : 0.8,
+      "lightning_tadpole.damage" : 100.0,
+      "lightning_tadpole.duration" : 8.0,
+      "lightning_tadpole.hp" : 1000.0,
+      "lightning_tadpole.mass" : 10.0,
+      "lightning_tadpole.radius" : 0.4,
+      "lightning_tadpole.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "panic",
     "labelKo" : "적 유닛 접근·도주·자식 소환",
@@ -102404,7 +102431,40 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "dimension_toad.attack_interval" : 0.8,
+      "dimension_toad.detection_range" : 20.0,
+      "dimension_toad.hp" : 1000.0,
+      "dimension_toad.mass" : 10.0,
+      "dimension_toad.panic_duration" : 0.8,
+      "dimension_toad.quantity" : 3.0,
+      "dimension_toad.radius" : 0.4,
+      "dimension_toad.spawn_interval" : 0.8,
+      "dimension_toad.speed" : 2.0,
+      "fire_tadpole.attack_interval" : 0.8,
+      "fire_tadpole.damage" : 100.0,
+      "fire_tadpole.duration" : 8.0,
+      "fire_tadpole.hp" : 1000.0,
+      "fire_tadpole.mass" : 10.0,
+      "fire_tadpole.radius" : 0.4,
+      "fire_tadpole.speed" : 2.0,
+      "lightning_tadpole.attack_interval" : 0.8,
+      "lightning_tadpole.damage" : 100.0,
+      "lightning_tadpole.duration" : 8.0,
+      "lightning_tadpole.hp" : 1000.0,
+      "lightning_tadpole.mass" : 10.0,
+      "lightning_tadpole.radius" : 0.4,
+      "lightning_tadpole.speed" : 2.0,
+      "mini_rock.attack_interval" : 0.8,
+      "mini_rock.damage" : 100.0,
+      "mini_rock.hp" : 1000.0,
+      "mini_rock.mass" : 10.0,
+      "mini_rock.radius" : 0.4,
+      "mini_rock.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -121264,6 +121324,35 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "dimension_toad.attack_interval" : 0.8,
+      "dimension_toad.detection_range" : 20.0,
+      "dimension_toad.hp" : 1000.0,
+      "dimension_toad.mass" : 10.0,
+      "dimension_toad.panic_duration" : 0.8,
+      "dimension_toad.quantity" : 3.0,
+      "dimension_toad.radius" : 0.4,
+      "dimension_toad.spawn_interval" : 0.8,
+      "dimension_toad.speed" : 2.0,
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "fire_tadpole.attack_interval" : 0.8,
+      "fire_tadpole.damage" : 100.0,
+      "fire_tadpole.duration" : 8.0,
+      "fire_tadpole.hp" : 1000.0,
+      "fire_tadpole.mass" : 10.0,
+      "fire_tadpole.radius" : 0.4,
+      "fire_tadpole.speed" : 2.0,
+      "lightning_tadpole.attack_interval" : 0.8,
+      "lightning_tadpole.damage" : 100.0,
+      "lightning_tadpole.duration" : 8.0,
+      "lightning_tadpole.hp" : 1000.0,
+      "lightning_tadpole.mass" : 10.0,
+      "lightning_tadpole.radius" : 0.4,
+      "lightning_tadpole.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

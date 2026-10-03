@@ -31109,7 +31109,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "bomb_sprite.attack_interval" : 0.8,
+      "bomb_sprite.attack_range" : 3.0,
+      "bomb_sprite.hp" : 1000.0,
+      "bomb_sprite.mass" : 10.0,
+      "bomb_sprite.quantity" : 3.0,
+      "bomb_sprite.radius" : 0.4,
+      "bomb_sprite.speed" : 2.0,
+      "bomb_sprite_bomb.damage" : 100.0,
+      "bomb_sprite_bomb.radius" : 0.4,
+      "bomb_sprite_bomb.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -36440,6 +36454,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "bomb_sprite.attack_interval" : 0.8,
+      "bomb_sprite.attack_range" : 3.0,
+      "bomb_sprite.hp" : 1000.0,
+      "bomb_sprite.mass" : 10.0,
+      "bomb_sprite.quantity" : 3.0,
+      "bomb_sprite.radius" : 0.4,
+      "bomb_sprite.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

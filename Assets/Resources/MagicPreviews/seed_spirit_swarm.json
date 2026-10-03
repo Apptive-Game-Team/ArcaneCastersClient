@@ -27749,7 +27749,22 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.leaf_field_heal_amount" : 20.0,
+      "game.leaf_field_heal_duration" : 2.0,
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "seed_spirit.attack_interval" : 0.8,
+      "seed_spirit.damage" : 100.0,
+      "seed_spirit.hp" : 1000.0,
+      "seed_spirit.mass" : 10.0,
+      "seed_spirit.quantity" : 3.0,
+      "seed_spirit.radius" : 0.4,
+      "seed_spirit.speed" : 2.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -33850,6 +33865,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "seed_spirit.attack_interval" : 0.8,
+      "seed_spirit.damage" : 100.0,
+      "seed_spirit.hp" : 1000.0,
+      "seed_spirit.mass" : 10.0,
+      "seed_spirit.quantity" : 3.0,
+      "seed_spirit.radius" : 0.4,
+      "seed_spirit.speed" : 2.0
+    }
   } ]
 }

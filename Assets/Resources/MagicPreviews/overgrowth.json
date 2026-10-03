@@ -13767,7 +13767,23 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.snare_duration" : 2.0,
+      "game.snare_fire_damage" : 20.0,
+      "game.snare_slow_percent" : 0.5,
+      "overgrowth.damage" : 100.0,
+      "overgrowth.quantity" : 3.0,
+      "overgrowth.radius" : 2.0,
+      "player.max_mana" : 100.0,
+      "seed_spirit.attack_interval" : 0.8,
+      "seed_spirit.damage" : 100.0,
+      "seed_spirit.hp" : 1000.0,
+      "seed_spirit.mass" : 10.0,
+      "seed_spirit.radius" : 0.4,
+      "seed_spirit.speed" : 2.0
+    }
   }, {
     "id" : "evolution",
     "labelKo" : "씨앗 정령 진화·진화 후 공격",
@@ -20068,6 +20084,30 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 3 ],
+    "parameters" : {
+      "game.snare_duration" : 2.0,
+      "game.snare_fire_damage" : 20.0,
+      "game.snare_slow_percent" : 0.5,
+      "overgrowth.damage" : 100.0,
+      "overgrowth.quantity" : 3.0,
+      "overgrowth.radius" : 2.0,
+      "player.max_mana" : 100.0,
+      "seed_spirit.attack_interval" : 0.8,
+      "seed_spirit.damage" : 100.0,
+      "seed_spirit.hp" : 1000.0,
+      "seed_spirit.mass" : 10.0,
+      "seed_spirit.radius" : 0.4,
+      "seed_spirit.speed" : 2.0,
+      "tree_golem.attack_interval" : 0.8,
+      "tree_golem.damage" : 100.0,
+      "tree_golem.heal_amount" : 80.0,
+      "tree_golem.heal_interval" : 0.8,
+      "tree_golem.hp" : 1000.0,
+      "tree_golem.mass" : 10.0,
+      "tree_golem.radius" : 0.4,
+      "tree_golem.speed" : 2.0
+    }
   } ]
 }

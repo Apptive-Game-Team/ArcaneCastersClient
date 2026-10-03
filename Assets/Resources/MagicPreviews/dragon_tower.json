@@ -12231,7 +12231,22 @@
         "actorId" : 12,
         "targetId" : 2
       } ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "dragon_flame.damage" : 100.0,
+      "dragon_flame.radius" : 0.4,
+      "dragon_flame.speed" : 2.0,
+      "dragon_tower.attack_interval" : 0.8,
+      "dragon_tower.attack_range" : 3.0,
+      "dragon_tower.duration" : 8.0,
+      "dragon_tower.hp" : 1000.0,
+      "dragon_tower.mass" : 10.0,
+      "dragon_tower.radius" : 0.4,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -15692,6 +15707,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "dragon_tower.attack_interval" : 0.8,
+      "dragon_tower.attack_range" : 3.0,
+      "dragon_tower.duration" : 8.0,
+      "dragon_tower.hp" : 1000.0,
+      "dragon_tower.mass" : 10.0,
+      "dragon_tower.radius" : 0.4,
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

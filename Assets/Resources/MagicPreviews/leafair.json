@@ -6947,7 +6947,16 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.snare_duration" : 2.0,
+      "game.snare_fire_damage" : 20.0,
+      "game.snare_slow_percent" : 0.5,
+      "leaf_drop.damage" : 100.0,
+      "leaf_drop.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "ally_recovery",
     "labelKo" : "아군 체력 회복·수명 재충전",
@@ -18270,6 +18279,12 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "leaf_drop.damage" : 100.0,
+      "leaf_drop.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

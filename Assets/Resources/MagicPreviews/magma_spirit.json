@@ -49238,7 +49238,24 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "magma_fist.damage" : 100.0,
+      "magma_fist.duration" : 8.0,
+      "magma_fist.radius" : 0.4,
+      "magma_spirit.attack_interval" : 0.8,
+      "magma_spirit.attack_range" : 3.0,
+      "magma_spirit.hp" : 1000.0,
+      "magma_spirit.mass" : 10.0,
+      "magma_spirit.quantity" : 3.0,
+      "magma_spirit.radius" : 0.4,
+      "magma_spirit.speed" : 2.0,
+      "magma_spirit.sub_attack_range" : 1.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "aura",
     "labelKo" : "주변 상태 효과",
@@ -55778,7 +55795,24 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "magma_fist.damage" : 100.0,
+      "magma_fist.duration" : 8.0,
+      "magma_fist.radius" : 0.4,
+      "magma_spirit.attack_interval" : 0.8,
+      "magma_spirit.attack_range" : 3.0,
+      "magma_spirit.hp" : 1000.0,
+      "magma_spirit.mass" : 10.0,
+      "magma_spirit.quantity" : 3.0,
+      "magma_spirit.radius" : 0.4,
+      "magma_spirit.speed" : 2.0,
+      "magma_spirit.sub_attack_range" : 1.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "death",
     "labelKo" : "사망·바위 잔해",
@@ -59529,6 +59563,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "magma_spirit.attack_interval" : 0.8,
+      "magma_spirit.attack_range" : 3.0,
+      "magma_spirit.hp" : 1000.0,
+      "magma_spirit.mass" : 10.0,
+      "magma_spirit.radius" : 0.4,
+      "magma_spirit.speed" : 2.0,
+      "magma_spirit.sub_attack_range" : 1.0,
+      "medium_rock_remnant.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

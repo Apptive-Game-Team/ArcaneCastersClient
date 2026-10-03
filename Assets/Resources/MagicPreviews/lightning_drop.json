@@ -13598,6 +13598,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "electric_field.duration" : 8.0,
+      "electric_field.radius" : 0.4,
+      "game.shock_refresh_duration" : 1.0,
+      "game.shock_stun_duration" : 1.0,
+      "lightning_cloud.attack_interval" : 0.8,
+      "lightning_cloud.quantity" : 3.0,
+      "lightning_drop.damage" : 100.0,
+      "lightning_drop.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

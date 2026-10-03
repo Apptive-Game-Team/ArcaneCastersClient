@@ -5344,7 +5344,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 3 ],
+    "parameters" : {
+      "earth_call.radius" : 2.0,
+      "mini_rock.attack_interval" : 0.8,
+      "mini_rock.damage" : 100.0,
+      "mini_rock.hp" : 1000.0,
+      "mini_rock.mass" : 10.0,
+      "mini_rock.radius" : 0.6,
+      "mini_rock.speed" : 2.0
+    }
   }, {
     "id" : "medium",
     "labelKo" : "중간 잔해 → 바위 골렘 · 공격",
@@ -10670,6 +10680,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 3 ],
+    "parameters" : {
+      "earth_call.radius" : 2.0,
+      "medium_rock_remnant.radius" : 0.6,
+      "rock_golem.attack_interval" : 0.8,
+      "rock_golem.damage" : 100.0,
+      "rock_golem.hp" : 1000.0,
+      "rock_golem.mass" : 10.0,
+      "rock_golem.radius" : 0.6,
+      "rock_golem.speed" : 2.0
+    }
   } ]
 }

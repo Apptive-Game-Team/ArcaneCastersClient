@@ -14468,7 +14468,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "aqua_archer.attack_interval" : 0.8,
+      "aqua_archer.attack_range" : 3.0,
+      "aqua_archer.damage" : 100.0,
+      "aqua_archer.hp" : 1000.0,
+      "aqua_archer.mass" : 10.0,
+      "aqua_archer.quantity" : 3.0,
+      "aqua_archer.radius" : 0.4,
+      "aqua_archer.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "air",
     "labelKo" : "공중 공격",
@@ -28934,7 +28946,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "aqua_archer.attack_interval" : 0.8,
+      "aqua_archer.attack_range" : 3.0,
+      "aqua_archer.damage" : 100.0,
+      "aqua_archer.hp" : 1000.0,
+      "aqua_archer.mass" : 10.0,
+      "aqua_archer.quantity" : 3.0,
+      "aqua_archer.radius" : 0.4,
+      "aqua_archer.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -35035,6 +35059,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "aqua_archer.attack_interval" : 0.8,
+      "aqua_archer.attack_range" : 3.0,
+      "aqua_archer.damage" : 100.0,
+      "aqua_archer.hp" : 1000.0,
+      "aqua_archer.mass" : 10.0,
+      "aqua_archer.quantity" : 3.0,
+      "aqua_archer.radius" : 0.4,
+      "aqua_archer.speed" : 2.0,
+      "player.max_mana" : 100.0,
+      "water_field.duration" : 8.0,
+      "water_field.radius" : 0.4
+    }
   } ]
 }

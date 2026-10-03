@@ -62603,6 +62603,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.wet_duration" : 2.0,
+      "player.max_mana" : 100.0,
+      "tide_call.damage" : 100.0,
+      "tide_call.duration" : 8.0,
+      "tide_call.radius" : 0.4,
+      "tide_call.speed" : 6.0,
+      "water_field.duration" : 8.0,
+      "water_field.radius" : 0.4
+    }
   } ]
 }

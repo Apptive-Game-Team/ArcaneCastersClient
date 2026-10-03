@@ -14096,7 +14096,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "zap_mouse.attack_interval" : 0.8,
+      "zap_mouse.damage" : 100.0,
+      "zap_mouse.detection_range" : 0.6,
+      "zap_mouse.hp" : 1000.0,
+      "zap_mouse.mass" : 10.0,
+      "zap_mouse.panic_duration" : 0.8,
+      "zap_mouse.quantity" : 3.0,
+      "zap_mouse.radius" : 0.4,
+      "zap_mouse.speed" : 4.0
+    }
   }, {
     "id" : "death_energy",
     "labelKo" : "사망·아군 전기 에너지 흡수",
@@ -18221,6 +18234,26 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "electric_field.duration" : 8.0,
+      "electric_field.radius" : 0.4,
+      "electric_slime.attack_interval" : 0.8,
+      "electric_slime.damage" : 100.0,
+      "electric_slime.hp" : 1000.0,
+      "electric_slime.mass" : 10.0,
+      "electric_slime.radius" : 0.4,
+      "electric_slime.speed" : 2.0,
+      "player.max_mana" : 100.0,
+      "zap_mouse.attack_interval" : 0.8,
+      "zap_mouse.damage" : 100.0,
+      "zap_mouse.detection_range" : 0.6,
+      "zap_mouse.hp" : 1000.0,
+      "zap_mouse.mass" : 10.0,
+      "zap_mouse.panic_duration" : 0.8,
+      "zap_mouse.radius" : 0.4,
+      "zap_mouse.speed" : 4.0
+    }
   } ]
 }

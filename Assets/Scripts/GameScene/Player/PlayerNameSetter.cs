@@ -10,6 +10,12 @@ namespace GameScene.Player
         [SerializeField] private TextMeshProUGUI playerName;
         [SerializeField] private ServedObject servedObject;
 
+        public void SuppressPreviewName()
+        {
+            enabled = false;
+            if (playerName != null) playerName.gameObject.SetActive(false);
+        }
+
         private void Start()
         {
             string master = servedObject.GetMaster();

@@ -6548,6 +6548,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "boulder_strike.damage" : 100.0,
+      "boulder_strike.push_force" : 5.0,
+      "boulder_strike.radius" : 0.4,
+      "boulder_strike.speed" : 6.0,
+      "boulder_strike.sub_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

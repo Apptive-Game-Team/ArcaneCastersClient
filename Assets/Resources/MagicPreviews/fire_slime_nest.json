@@ -42310,7 +42310,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "fire_slime.attack_interval" : 0.8,
+      "fire_slime.damage" : 100.0,
+      "fire_slime.hp" : 1000.0,
+      "fire_slime.mass" : 10.0,
+      "fire_slime.radius" : 0.4,
+      "fire_slime.speed" : 2.0,
+      "fire_summon.hp" : 1000.0,
+      "fire_summon.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -44556,6 +44570,12 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "fire_summon.hp" : 1000.0,
+      "fire_summon.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

@@ -4388,6 +4388,13 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.sandstorm_effect_damage" : 30.0,
+      "game.sandstorm_effect_duration" : 1.0,
+      "sand_storm.duration" : 3.0,
+      "sand_storm.radius" : 2.0
+    }
   } ]
 }

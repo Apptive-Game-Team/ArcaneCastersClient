@@ -5702,6 +5702,12 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3, 4 ],
+    "parameters" : {
+      "wind_blade.damage" : 100.0,
+      "wind_blade.radius" : 0.6,
+      "wind_blade.speed" : 8.0
+    }
   } ]
 }

@@ -14987,7 +14987,21 @@
         "actorId" : 4,
         "targetId" : 2
       } ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "aqua_archer.attack_range" : 3.0,
+      "player.max_mana" : 100.0,
+      "pve_water_slime_nest.hp" : 1000.0,
+      "pve_water_slime_nest.mass" : 10.0,
+      "pve_water_slime_nest.radius" : 0.4,
+      "water_slime.attack_interval" : 0.8,
+      "water_slime.damage" : 100.0,
+      "water_slime.hp" : 1000.0,
+      "water_slime.mass" : 10.0,
+      "water_slime.radius" : 0.4,
+      "water_slime.speed" : 2.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -18388,6 +18402,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "pve_water_slime_nest.hp" : 1000.0,
+      "pve_water_slime_nest.mass" : 10.0,
+      "pve_water_slime_nest.radius" : 0.4,
+      "water_field.duration" : 8.0,
+      "water_field.radius" : 0.4
+    }
   } ]
 }

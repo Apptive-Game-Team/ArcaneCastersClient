@@ -7244,6 +7244,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 3 ],
+    "parameters" : {
+      "mini_rock.attack_interval" : 0.8,
+      "mini_rock.damage" : 100.0,
+      "mini_rock.hp" : 1000.0,
+      "mini_rock.mass" : 10.0,
+      "mini_rock.radius" : 0.4,
+      "mini_rock.speed" : 2.0,
+      "player.max_mana" : 100.0,
+      "will_o_wisp.radius" : 0.4,
+      "will_o_wisp.speed" : 6.0
+    }
   } ]
 }

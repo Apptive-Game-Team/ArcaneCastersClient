@@ -6753,6 +6753,13 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "tidal_warhead.damage" : 100.0,
+      "tidal_warhead.radius" : 0.4,
+      "tidal_warhead.speed" : 6.0
+    }
   } ]
 }

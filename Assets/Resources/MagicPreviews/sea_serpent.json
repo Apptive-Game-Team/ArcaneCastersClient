@@ -14576,7 +14576,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "sea_serpent.attack_interval" : 0.8,
+      "sea_serpent.attack_range" : 3.0,
+      "sea_serpent.beam_width" : 0.4,
+      "sea_serpent.damage" : 100.0,
+      "sea_serpent.hp" : 1000.0,
+      "sea_serpent.mass" : 10.0,
+      "sea_serpent.quantity" : 3.0,
+      "sea_serpent.radius" : 0.4,
+      "sea_serpent.speed" : 2.0
+    }
   }, {
     "id" : "air",
     "labelKo" : "공중 공격",
@@ -29150,7 +29163,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "sea_serpent.attack_interval" : 0.8,
+      "sea_serpent.attack_range" : 3.0,
+      "sea_serpent.beam_width" : 0.4,
+      "sea_serpent.damage" : 100.0,
+      "sea_serpent.hp" : 1000.0,
+      "sea_serpent.mass" : 10.0,
+      "sea_serpent.quantity" : 3.0,
+      "sea_serpent.radius" : 0.4,
+      "sea_serpent.speed" : 2.0
+    }
   }, {
     "id" : "water_trail",
     "labelKo" : "이동 경로 물 필드·젖음",
@@ -57184,7 +57210,22 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "sea_serpent.attack_interval" : 0.8,
+      "sea_serpent.attack_range" : 3.0,
+      "sea_serpent.beam_width" : 0.4,
+      "sea_serpent.damage" : 100.0,
+      "sea_serpent.hp" : 1000.0,
+      "sea_serpent.mass" : 10.0,
+      "sea_serpent.quantity" : 3.0,
+      "sea_serpent.radius" : 0.4,
+      "sea_serpent.speed" : 2.0,
+      "water_field.duration" : 8.0,
+      "water_field.radius" : 0.4
+    }
   }, {
     "id" : "multiple",
     "labelKo" : "복수 대상·공격 방식",
@@ -70442,7 +70483,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3, 4 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "sea_serpent.attack_interval" : 0.8,
+      "sea_serpent.attack_range" : 3.0,
+      "sea_serpent.beam_width" : 0.4,
+      "sea_serpent.damage" : 100.0,
+      "sea_serpent.hp" : 1000.0,
+      "sea_serpent.mass" : 10.0,
+      "sea_serpent.quantity" : 3.0,
+      "sea_serpent.radius" : 0.4,
+      "sea_serpent.speed" : 2.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -76543,6 +76597,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "sea_serpent.attack_interval" : 0.8,
+      "sea_serpent.attack_range" : 3.0,
+      "sea_serpent.beam_width" : 0.4,
+      "sea_serpent.damage" : 100.0,
+      "sea_serpent.hp" : 1000.0,
+      "sea_serpent.mass" : 10.0,
+      "sea_serpent.quantity" : 3.0,
+      "sea_serpent.radius" : 0.4,
+      "sea_serpent.speed" : 2.0,
+      "water_field.duration" : 8.0,
+      "water_field.radius" : 0.4
+    }
   } ]
 }

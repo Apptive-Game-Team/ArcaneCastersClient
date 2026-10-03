@@ -14948,7 +14948,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "rock_mage.attack_interval" : 0.8,
+      "rock_mage.attack_range" : 3.0,
+      "rock_mage.damage" : 100.0,
+      "rock_mage.hp" : 1000.0,
+      "rock_mage.mass" : 10.0,
+      "rock_mage.quantity" : 3.0,
+      "rock_mage.radius" : 0.4,
+      "rock_mage.speed" : 2.0
+    }
   }, {
     "id" : "air",
     "labelKo" : "공중 공격",
@@ -29894,7 +29906,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "rock_mage.attack_interval" : 0.8,
+      "rock_mage.attack_range" : 3.0,
+      "rock_mage.damage" : 100.0,
+      "rock_mage.hp" : 1000.0,
+      "rock_mage.mass" : 10.0,
+      "rock_mage.quantity" : 3.0,
+      "rock_mage.radius" : 0.4,
+      "rock_mage.speed" : 2.0
+    }
   }, {
     "id" : "multiple",
     "labelKo" : "복수 대상·공격 방식",
@@ -41476,7 +41500,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "rock_mage.attack_interval" : 0.8,
+      "rock_mage.attack_range" : 3.0,
+      "rock_mage.damage" : 100.0,
+      "rock_mage.hp" : 1000.0,
+      "rock_mage.mass" : 10.0,
+      "rock_mage.quantity" : 3.0,
+      "rock_mage.radius" : 0.4,
+      "rock_mage.speed" : 2.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -46432,6 +46468,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "rock_mage.attack_interval" : 0.8,
+      "rock_mage.attack_range" : 3.0,
+      "rock_mage.damage" : 100.0,
+      "rock_mage.hp" : 1000.0,
+      "rock_mage.mass" : 10.0,
+      "rock_mage.quantity" : 3.0,
+      "rock_mage.radius" : 0.4,
+      "rock_mage.speed" : 2.0
+    }
   } ]
 }

@@ -3808,7 +3808,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "rock_golem.attack_interval" : 0.8,
+      "rock_golem.damage" : 100.0,
+      "rock_golem.hp" : 1000.0,
+      "rock_golem.mass" : 10.0,
+      "rock_golem.quantity" : 1.0,
+      "rock_golem.radius" : 0.6,
+      "rock_golem.speed" : 2.0
+    }
   }, {
     "id" : "death",
     "labelKo" : "사망 후 바위 잔해",
@@ -5929,6 +5939,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "mini_rock.radius" : 0.6,
+      "rock_golem.attack_interval" : 0.8,
+      "rock_golem.damage" : 100.0,
+      "rock_golem.hp" : 1000.0,
+      "rock_golem.mass" : 10.0,
+      "rock_golem.quantity" : 1.0,
+      "rock_golem.radius" : 0.6,
+      "rock_golem.speed" : 2.0
+    }
   } ]
 }

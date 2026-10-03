@@ -16426,7 +16426,24 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.leaf_field_heal_amount" : 20.0,
+      "game.leaf_field_heal_duration" : 2.0,
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "leaf_slime.attack_interval" : 0.8,
+      "leaf_slime.damage" : 100.0,
+      "leaf_slime.hp" : 1000.0,
+      "leaf_slime.mass" : 10.0,
+      "leaf_slime.radius" : 0.4,
+      "leaf_slime.speed" : 2.0,
+      "player.max_mana" : 100.0,
+      "pve_nature_slime_nest.hp" : 1000.0,
+      "pve_nature_slime_nest.mass" : 10.0,
+      "pve_nature_slime_nest.radius" : 0.4
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -19827,6 +19844,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "pve_nature_slime_nest.hp" : 1000.0,
+      "pve_nature_slime_nest.mass" : 10.0,
+      "pve_nature_slime_nest.radius" : 0.4
+    }
   } ]
 }

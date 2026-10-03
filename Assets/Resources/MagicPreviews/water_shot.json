@@ -5128,6 +5128,13 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "game.wet_duration" : 8.0,
+      "water_shot.damage" : 100.0,
+      "water_shot.radius" : 0.3,
+      "water_shot.speed" : 8.0
+    }
   } ]
 }

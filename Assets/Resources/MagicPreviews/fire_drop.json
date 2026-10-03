@@ -3262,6 +3262,11 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "fire_drop.damage" : 100.0,
+      "fire_drop.radius" : 2.0
+    }
   } ]
 }

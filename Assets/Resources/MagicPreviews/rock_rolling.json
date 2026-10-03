@@ -3192,6 +3192,12 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "rock_rolling.damage" : 100.0,
+      "rock_rolling.radius" : 0.6,
+      "rock_rolling.speed" : 8.0
+    }
   } ]
 }

@@ -6134,6 +6134,10 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "player.max_mana" : 100.0
+    }
   } ]
 }

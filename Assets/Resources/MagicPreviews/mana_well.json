@@ -3559,7 +3559,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "mana_well.attack_interval" : 0.8,
+      "mana_well.damage" : 100.0,
+      "mana_well.hp" : 1000.0,
+      "mana_well.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -7006,6 +7014,16 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "mana_well.attack_interval" : 0.8,
+      "mana_well.damage" : 100.0,
+      "mana_well.hp" : 1000.0,
+      "mana_well.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

@@ -14468,7 +14468,22 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.snare_duration" : 2.0,
+      "game.snare_fire_damage" : 20.0,
+      "game.snare_slow_percent" : 0.5,
+      "player.max_mana" : 100.0,
+      "vine_spirit.attack_interval" : 0.8,
+      "vine_spirit.attack_range" : 3.0,
+      "vine_spirit.damage" : 100.0,
+      "vine_spirit.hp" : 1000.0,
+      "vine_spirit.mass" : 10.0,
+      "vine_spirit.quantity" : 3.0,
+      "vine_spirit.radius" : 0.4,
+      "vine_spirit.speed" : 2.0
+    }
   }, {
     "id" : "air",
     "labelKo" : "공중 공격",
@@ -28934,7 +28949,22 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "game.snare_duration" : 2.0,
+      "game.snare_fire_damage" : 20.0,
+      "game.snare_slow_percent" : 0.5,
+      "player.max_mana" : 100.0,
+      "vine_spirit.attack_interval" : 0.8,
+      "vine_spirit.attack_range" : 3.0,
+      "vine_spirit.damage" : 100.0,
+      "vine_spirit.hp" : 1000.0,
+      "vine_spirit.mass" : 10.0,
+      "vine_spirit.quantity" : 3.0,
+      "vine_spirit.radius" : 0.4,
+      "vine_spirit.speed" : 2.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -35035,6 +35065,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "leaf_field.duration" : 8.0,
+      "leaf_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "vine_spirit.attack_interval" : 0.8,
+      "vine_spirit.attack_range" : 3.0,
+      "vine_spirit.damage" : 100.0,
+      "vine_spirit.hp" : 1000.0,
+      "vine_spirit.mass" : 10.0,
+      "vine_spirit.quantity" : 3.0,
+      "vine_spirit.radius" : 0.4,
+      "vine_spirit.speed" : 2.0
+    }
   } ]
 }

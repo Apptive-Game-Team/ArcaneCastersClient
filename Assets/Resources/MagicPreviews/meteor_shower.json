@@ -14396,6 +14396,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "meteor_drop.damage" : 100.0,
+      "meteor_drop.radius" : 0.4,
+      "meteor_shower.attack_interval" : 0.8,
+      "meteor_shower.duration" : 8.0,
+      "meteor_shower.radius" : 2.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

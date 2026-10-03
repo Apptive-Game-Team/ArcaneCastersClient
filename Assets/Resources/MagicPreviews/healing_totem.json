@@ -3966,6 +3966,16 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "healing_totem.attack_interval" : 0.8,
+      "healing_totem.damage" : -80.0,
+      "healing_totem.duration" : 3.0,
+      "healing_totem.hp" : 1000.0,
+      "healing_totem.mass" : 10.0,
+      "healing_totem.radius" : 0.6,
+      "healing_totem.range" : 3.0
+    }
   } ]
 }

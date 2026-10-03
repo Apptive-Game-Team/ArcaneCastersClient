@@ -8819,6 +8819,14 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "razor_gale.attack_interval" : 0.8,
+      "razor_gale.damage" : 100.0,
+      "razor_gale.duration" : 8.0,
+      "razor_gale.radius" : 2.0
+    }
   } ]
 }

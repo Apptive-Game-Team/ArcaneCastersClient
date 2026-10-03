@@ -14724,7 +14724,26 @@
         } ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "evil_ent.attack_interval" : 0.8,
+      "evil_ent.attack_range" : 3.0,
+      "evil_ent.damage" : 100.0,
+      "evil_ent.hp" : 1000.0,
+      "evil_ent.mass" : 10.0,
+      "evil_ent.projectile_speed" : 8.0,
+      "evil_ent.pull_mass_limit" : 20.0,
+      "evil_ent.quantity" : 3.0,
+      "evil_ent.radius" : 0.4,
+      "evil_ent.speed" : 2.0,
+      "evil_ent.sub_attack_interval" : 0.8,
+      "evil_ent.sub_attack_range" : 6.0,
+      "evil_ent.sub_damage" : 80.0,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "air",
     "labelKo" : "공중 공격",
@@ -29434,7 +29453,26 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "evil_ent.attack_interval" : 0.8,
+      "evil_ent.attack_range" : 3.0,
+      "evil_ent.damage" : 100.0,
+      "evil_ent.hp" : 1000.0,
+      "evil_ent.mass" : 10.0,
+      "evil_ent.projectile_speed" : 8.0,
+      "evil_ent.pull_mass_limit" : 20.0,
+      "evil_ent.quantity" : 3.0,
+      "evil_ent.radius" : 0.4,
+      "evil_ent.speed" : 2.0,
+      "evil_ent.sub_attack_interval" : 0.8,
+      "evil_ent.sub_attack_range" : 6.0,
+      "evil_ent.sub_damage" : 80.0,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "pull",
     "labelKo" : "끌어오기·화염 주먹·화상",
@@ -42460,7 +42498,26 @@
         "actorId" : 5,
         "targetId" : 2
       } ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "evil_ent.attack_interval" : 0.8,
+      "evil_ent.attack_range" : 3.0,
+      "evil_ent.damage" : 100.0,
+      "evil_ent.hp" : 1000.0,
+      "evil_ent.mass" : 10.0,
+      "evil_ent.projectile_speed" : 8.0,
+      "evil_ent.pull_mass_limit" : 20.0,
+      "evil_ent.quantity" : 3.0,
+      "evil_ent.radius" : 0.4,
+      "evil_ent.speed" : 2.0,
+      "evil_ent.sub_attack_interval" : 0.8,
+      "evil_ent.sub_attack_range" : 6.0,
+      "evil_ent.sub_damage" : 80.0,
+      "game.burn_duration" : 2.0,
+      "game.burn_total_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "heavy_punch",
     "labelKo" : "무거운 적·일반 주먹",
@@ -55218,7 +55275,24 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "evil_ent.attack_interval" : 0.8,
+      "evil_ent.attack_range" : 3.0,
+      "evil_ent.damage" : 100.0,
+      "evil_ent.hp" : 1000.0,
+      "evil_ent.mass" : 10.0,
+      "evil_ent.projectile_speed" : 8.0,
+      "evil_ent.pull_mass_limit" : 20.0,
+      "evil_ent.quantity" : 3.0,
+      "evil_ent.radius" : 0.4,
+      "evil_ent.speed" : 2.0,
+      "evil_ent.sub_attack_interval" : 0.8,
+      "evil_ent.sub_attack_range" : 6.0,
+      "evil_ent.sub_damage" : 80.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -61319,6 +61393,25 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "evil_ent.attack_interval" : 0.8,
+      "evil_ent.attack_range" : 3.0,
+      "evil_ent.damage" : 100.0,
+      "evil_ent.hp" : 1000.0,
+      "evil_ent.mass" : 10.0,
+      "evil_ent.projectile_speed" : 8.0,
+      "evil_ent.pull_mass_limit" : 20.0,
+      "evil_ent.quantity" : 3.0,
+      "evil_ent.radius" : 0.4,
+      "evil_ent.speed" : 2.0,
+      "evil_ent.sub_attack_interval" : 0.8,
+      "evil_ent.sub_attack_range" : 6.0,
+      "evil_ent.sub_damage" : 80.0,
+      "fire_field.duration" : 8.0,
+      "fire_field.radius" : 0.4,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

@@ -5244,7 +5244,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "wind_totem.attack_interval" : 0.8,
+      "wind_totem.damage" : 100.0,
+      "wind_totem.hp" : 1000.0,
+      "wind_totem.mass" : 10.0,
+      "wind_totem.push_force" : 5.0,
+      "wind_totem.push_range_x" : 6.0,
+      "wind_totem.push_range_y" : 6.0,
+      "wind_totem.push_range_z" : 6.0,
+      "wind_totem.radius" : 0.4
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -7560,6 +7573,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "wind_totem.attack_interval" : 0.8,
+      "wind_totem.damage" : 100.0,
+      "wind_totem.hp" : 1000.0,
+      "wind_totem.mass" : 10.0,
+      "wind_totem.push_force" : 5.0,
+      "wind_totem.push_range_x" : 6.0,
+      "wind_totem.push_range_y" : 6.0,
+      "wind_totem.push_range_z" : 6.0,
+      "wind_totem.radius" : 0.4
+    }
   } ]
 }

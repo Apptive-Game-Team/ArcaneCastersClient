@@ -6558,7 +6558,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "chain_lightning.attack_range" : 3.0,
+      "chain_lightning.damage" : 100.0,
+      "chain_lightning.min_damage" : 20.0,
+      "chain_lightning.radius" : 0.4,
+      "chain_lightning.speed" : 6.0,
+      "game.shock_refresh_duration" : 1.0,
+      "game.shock_stun_duration" : 1.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "multiple",
     "labelKo" : "복수 대상·공격 방식",
@@ -12860,6 +12871,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "chain_lightning.attack_range" : 3.0,
+      "chain_lightning.damage" : 100.0,
+      "chain_lightning.min_damage" : 20.0,
+      "chain_lightning.radius" : 0.4,
+      "chain_lightning.speed" : 6.0,
+      "game.shock_refresh_duration" : 1.0,
+      "game.shock_stun_duration" : 1.0,
+      "player.max_mana" : 100.0
+    }
   } ]
 }

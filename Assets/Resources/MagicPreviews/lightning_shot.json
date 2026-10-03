@@ -5128,7 +5128,15 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2, 3 ],
+    "parameters" : {
+      "electric_shot.damage" : 100.0,
+      "electric_shot.radius" : 0.3,
+      "electric_shot.speed" : 8.0,
+      "game.shock_refresh_duration" : 1.0,
+      "game.shock_stun_duration" : 1.0
+    }
   }, {
     "id" : "overcharge",
     "labelKo" : "아군 전기 소환수 과충전·추가 번개",
@@ -16378,6 +16386,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 6 ],
+    "parameters" : {
+      "electric_shot.damage" : 100.0,
+      "electric_shot.radius" : 0.3,
+      "electric_shot.speed" : 8.0,
+      "thunder_bird.attack_interval" : 0.8,
+      "thunder_bird.attack_range" : 3.0,
+      "thunder_bird.damage" : 100.0,
+      "thunder_bird.hp" : 1000.0,
+      "thunder_bird.mass" : 10.0,
+      "thunder_bird.quantity" : 3.0,
+      "thunder_bird.radius" : 0.6,
+      "thunder_bird.speed" : 2.0
+    }
   } ]
 }

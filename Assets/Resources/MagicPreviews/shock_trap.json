@@ -3902,7 +3902,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "shock_trap.effect_radius" : 3.0,
+      "shock_trap.hp" : 1000.0,
+      "shock_trap.mass" : 10.0,
+      "shock_trap.radius" : 0.4,
+      "shock_trap.stun_duration" : 1.0,
+      "shock_trap.trigger_delay" : 1.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -7303,6 +7313,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "electric_field.duration" : 8.0,
+      "electric_field.radius" : 0.4,
+      "player.max_mana" : 100.0,
+      "shock_trap.effect_radius" : 3.0,
+      "shock_trap.hp" : 1000.0,
+      "shock_trap.mass" : 10.0,
+      "shock_trap.radius" : 0.4,
+      "shock_trap.stun_duration" : 1.0,
+      "shock_trap.trigger_delay" : 1.0
+    }
   } ]
 }

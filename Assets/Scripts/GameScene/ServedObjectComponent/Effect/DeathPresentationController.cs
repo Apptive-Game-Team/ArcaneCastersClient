@@ -166,6 +166,7 @@ namespace GameScene.ServedObjectComponent.Effect
             GameObject fragment = new GameObject($"{source.name}DeathFragment");
             fragment.transform.position = position;
             fragment.transform.localScale = source.transform.lossyScale;
+            GameScene.Object.PresentationWorld.For(source)?.Own(fragment);
 
             SpriteRenderer fragmentRenderer = fragment.AddComponent<SpriteRenderer>();
             fragmentRenderer.sprite = fragmentSprite;

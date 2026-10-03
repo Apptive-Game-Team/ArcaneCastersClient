@@ -6970,7 +6970,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "towerback.attack_interval" : 0.8,
+      "towerback.attack_range" : 3.0,
+      "towerback.damage" : 100.0,
+      "towerback.hp" : 1000.0,
+      "towerback.mass" : 10.0,
+      "towerback.radius" : 0.6,
+      "towerback.sub_attack_range" : 0.5,
+      "towerback.sub_damage" : 80.0,
+      "towerback.sub_speed" : 1.5
+    }
   }, {
     "id" : "rage",
     "labelKo" : "격분 · 진영 해제와 공격 가속 → 복귀",
@@ -14420,6 +14432,22 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "frenzy_totem.attack_range" : 3.0,
+      "frenzy_totem.buff_duration" : 2.0,
+      "frenzy_totem.radius" : 0.6,
+      "frenzy_totem.speed" : 5.0,
+      "towerback.attack_interval" : 0.8,
+      "towerback.attack_range" : 3.0,
+      "towerback.damage" : 100.0,
+      "towerback.hp" : 1000.0,
+      "towerback.mass" : 10.0,
+      "towerback.radius" : 0.6,
+      "towerback.sub_attack_range" : 0.5,
+      "towerback.sub_damage" : 80.0,
+      "towerback.sub_speed" : 1.5
+    }
   } ]
 }

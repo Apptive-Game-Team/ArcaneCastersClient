@@ -14456,7 +14456,20 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "bubble_spirit.attack_interval" : 0.8,
+      "bubble_spirit.attack_range" : 3.0,
+      "bubble_spirit.damage" : 100.0,
+      "bubble_spirit.hp" : 1000.0,
+      "bubble_spirit.mass" : 10.0,
+      "bubble_spirit.projectile_speed" : 8.0,
+      "bubble_spirit.quantity" : 3.0,
+      "bubble_spirit.radius" : 0.4,
+      "bubble_spirit.speed" : 2.0,
+      "player.max_mana" : 100.0
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -20557,6 +20570,21 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "bubble_spirit.attack_interval" : 0.8,
+      "bubble_spirit.attack_range" : 3.0,
+      "bubble_spirit.damage" : 100.0,
+      "bubble_spirit.hp" : 1000.0,
+      "bubble_spirit.mass" : 10.0,
+      "bubble_spirit.projectile_speed" : 8.0,
+      "bubble_spirit.quantity" : 3.0,
+      "bubble_spirit.radius" : 0.4,
+      "bubble_spirit.speed" : 2.0,
+      "player.max_mana" : 100.0,
+      "water_field.duration" : 8.0,
+      "water_field.radius" : 0.4
+    }
   } ]
 }

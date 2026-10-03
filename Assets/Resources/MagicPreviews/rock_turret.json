@@ -7594,7 +7594,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "rock_turret.attack_interval" : 0.8,
+      "rock_turret.attack_range" : 3.0,
+      "rock_turret.damage" : 100.0,
+      "rock_turret.duration" : 3.0,
+      "rock_turret.hp" : 1000.0,
+      "rock_turret.mass" : 10.0,
+      "rock_turret.radius" : 0.4
+    }
   }, {
     "id" : "combat_death",
     "labelKo" : "소환체 사망·서버 부가효과",
@@ -9906,6 +9917,17 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "player.max_mana" : 100.0,
+      "rock_turret.attack_interval" : 0.8,
+      "rock_turret.attack_range" : 3.0,
+      "rock_turret.damage" : 100.0,
+      "rock_turret.duration" : 3.0,
+      "rock_turret.hp" : 1000.0,
+      "rock_turret.mass" : 10.0,
+      "rock_turret.radius" : 0.4
+    }
   } ]
 }

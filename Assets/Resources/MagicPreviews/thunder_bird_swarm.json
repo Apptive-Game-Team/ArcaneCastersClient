@@ -9092,7 +9092,18 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ 2 ],
+    "parameters" : {
+      "thunder_bird.attack_interval" : 0.8,
+      "thunder_bird.attack_range" : 3.0,
+      "thunder_bird.damage" : 100.0,
+      "thunder_bird.hp" : 1000.0,
+      "thunder_bird.mass" : 10.0,
+      "thunder_bird.quantity" : 3.0,
+      "thunder_bird.radius" : 0.6,
+      "thunder_bird.speed" : 2.0
+    }
   }, {
     "id" : "death_energy",
     "labelKo" : "사망 낙하·전기 필드·아군 에너지 흡수",
@@ -17712,6 +17723,19 @@
         "projectile" : [ ]
       },
       "events" : [ ]
-    } ]
+    } ],
+    "fixtureTargetIds" : [ ],
+    "parameters" : {
+      "electric_field.duration" : 3.0,
+      "electric_field.radius" : 5.0,
+      "thunder_bird.attack_interval" : 0.8,
+      "thunder_bird.attack_range" : 3.0,
+      "thunder_bird.damage" : 100.0,
+      "thunder_bird.hp" : 1000.0,
+      "thunder_bird.mass" : 10.0,
+      "thunder_bird.quantity" : 3.0,
+      "thunder_bird.radius" : 0.6,
+      "thunder_bird.speed" : 2.0
+    }
   } ]
 }
