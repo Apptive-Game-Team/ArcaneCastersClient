@@ -17,6 +17,7 @@ namespace GameScene.ServedObjectComponent.Effect
             GameObject clone = new GameObject(name);
             clone.transform.SetPositionAndRotation(source.transform.position, source.transform.rotation);
             clone.transform.localScale = source.transform.lossyScale;
+            GameScene.Object.PresentationWorld.For(source)?.Own(clone);
 
             SpriteRenderer cloneRenderer = clone.AddComponent<SpriteRenderer>();
             CopyRendererState(source, cloneRenderer);

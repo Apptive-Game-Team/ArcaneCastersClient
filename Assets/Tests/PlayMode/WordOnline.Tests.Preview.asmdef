@@ -1,0 +1,11 @@
+{
+    "name": "WordOnline.Tests.Preview",
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "WordOnline.Serialization"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll", "Newtonsoft.Json.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "noEngineReferences": false
+}

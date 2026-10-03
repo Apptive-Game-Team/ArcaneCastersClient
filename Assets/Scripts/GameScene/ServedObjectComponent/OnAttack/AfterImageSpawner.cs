@@ -65,6 +65,7 @@ namespace GameScene.ServedObjectComponent.OnAttack
         private void CreatePoolRoot()
         {
             GameObject root = new GameObject($"{name}AfterImagePool");
+            GameScene.Object.PresentationWorld.For(this)?.Own(root);
             poolRoot = root.transform;
         }
 
@@ -80,6 +81,7 @@ namespace GameScene.ServedObjectComponent.OnAttack
 
         private void CreateAfterImage()
         {
+            if (isDestroyed) return;
             if (sourceRenderer == null || sourceRenderer.sprite == null)
             {
                 return;

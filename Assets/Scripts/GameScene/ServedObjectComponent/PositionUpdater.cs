@@ -3,6 +3,7 @@ using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using GameScene.Dto;
+using GameScene.Object;
 using UnityEngine;
 
 namespace GameScene.ServedObjectComponent
@@ -16,12 +17,14 @@ namespace GameScene.ServedObjectComponent
         private Vector3? nextPosition = null;
         private double lastX;
         private readonly Action onMoved;
+        private readonly Func<PresentationWorld> world;
         
-        public PositionUpdater(Transform transform, SpriteRenderer spriteRenderer, Action onMoved = null)
+        public PositionUpdater(Transform transform, SpriteRenderer spriteRenderer, Action onMoved = null, Func<PresentationWorld> world = null)
         {
             this.transform = transform;
             this.spriteRenderer = spriteRenderer;
             this.onMoved = onMoved;
+            this.world = world;
             lastX = this.transform.position.x;
         }
 
@@ -35,7 +38,8 @@ namespace GameScene.ServedObjectComponent
             {
                 transform.position = nextPosition.Value;
             }
-            nextPosition = updatedObjectDto.position;
+            PresentationWorld presentation = world?.Invoke();
+            nextPosition = presentation != null ? presentation.ToWorld(updatedObjectDto.position) : updatedObjectDto.position;
             if ((nextPosition.Value - transform.position).sqrMagnitude > 0.0001f)
             {
                 onMoved?.Invoke();

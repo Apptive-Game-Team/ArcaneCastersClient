@@ -60,6 +60,7 @@ namespace GameScene.ServedObjectComponent
             if (canvas != null)
             {
                 canvasRectTransform = canvas.GetComponent<RectTransform>();
+                canvas.worldCamera = GameScene.Object.PresentationWorld.CameraFor(this);
             }
 
             ApplyDataVisibility();
@@ -257,9 +258,9 @@ namespace GameScene.ServedObjectComponent
             return Mathf.Max(fallbackBounds.size.x, fallbackBounds.size.y);
         }
 
-        private static Quaternion GetFacingRotation()
+        private Quaternion GetFacingRotation()
         {
-            Camera camera = Camera.main;
+            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
             return camera != null ? camera.transform.rotation : Quaternion.identity;
         }
 

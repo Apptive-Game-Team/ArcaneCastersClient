@@ -99,14 +99,16 @@ namespace GameScene.Object.Projectile
         private Vector3 destination;
         private float length;
         private float progress;
+        private PresentationWorld world;
 
         public void Init(ProjectileDto projectileDto)
         {
+            world = PresentationWorld.For(this);
             startFollow = Follow(projectileDto.start);
             endObject = Resolve(projectileDto.end);
             endFollow = endObject != null ? endObject.transform : Follow(projectileDto.end);
-            origin = ProjectileUtil.GetPosition(projectileDto.start);
-            destination = ProjectileUtil.GetPosition(projectileDto.end);
+            origin = ProjectileUtil.GetPosition(projectileDto.start, world);
+            destination = ProjectileUtil.GetPosition(projectileDto.end, world);
 
             // A Simple renderer silently ignores size, which is the whole mechanism here.
             if (armRenderer != null && armRenderer.drawMode == SpriteDrawMode.Simple)
@@ -167,7 +169,7 @@ namespace GameScene.Object.Projectile
             // The lift runs along screen-up, not world up: the sprites these heights were measured
             // off are billboarded to the tilted camera, so world up would raise the point by only
             // its cosine on screen and push the rest into depth, dropping the arm toward the floor.
-            Vector3 screenUp = ProjectileUtil.GetScreenUp();
+            Vector3 screenUp = ProjectileUtil.GetScreenUp(world);
             Vector3 from = origin + screenUp * shoulderHeight;
 
             // Aim at the middle of the victim's sprite rather than a fixed height, so the arm
@@ -178,8 +180,8 @@ namespace GameScene.Object.Projectile
                 : destination + screenUp * aimHeight;
 
             transform.position = from;
-            transform.rotation = ProjectileUtil.GetRotation(from, to);
-            length = Mathf.Max(0f, ProjectileUtil.GetCameraPlaneLength(from, to) + overshoot);
+            transform.rotation = ProjectileUtil.GetRotation(from, to, world);
+            length = Mathf.Max(0f, ProjectileUtil.GetCameraPlaneLength(from, to, world) + overshoot);
         }
 
         private void ApplyProgress(float value)
@@ -219,20 +221,20 @@ namespace GameScene.Object.Projectile
             }
         }
 
-        private static Transform Follow(ProjectileTarget target)
+        private Transform Follow(ProjectileTarget target)
         {
             ServedObject servedObject = Resolve(target);
             return servedObject != null ? servedObject.transform : null;
         }
 
-        private static ServedObject Resolve(ProjectileTarget target)
+        private ServedObject Resolve(ProjectileTarget target)
         {
             if (!(target is ReferenceProjectileTarget reference))
             {
                 return null;
             }
 
-            return ObjectContainer.Instance.FindById(reference.id);
+            return PresentationWorld.Find(reference.id, world);
         }
     }
 }

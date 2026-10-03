@@ -65,7 +65,7 @@ namespace GameScene.ServedObjectComponent.Effect
             WDebug.Log($"Hit effect played for ServedObject ID: {servedObject.id}");
             DamagedObjectEffect.SetSelfDestroyEffect(
                 effectName,
-                servedObject.GetEdgeWorldPositionTowards(attackerWorldPosition, attackerSideBias));
+                servedObject.GetEdgeWorldPositionTowards(attackerWorldPosition, attackerSideBias), servedObject.PresentationWorld);
         }
 
         /// <summary>Used when the attacker is no longer on the client, so there is no side to favour.</summary>
@@ -76,7 +76,7 @@ namespace GameScene.ServedObjectComponent.Effect
 
         private void PlayHit(string effectName)
         {
-            DamagedObjectEffect.SetSelfDestroyEffect(effectName, transform.position);
+            DamagedObjectEffect.SetSelfDestroyEffect(effectName, transform.position, GameScene.Object.PresentationWorld.For(this));
         }
 
         private void PlayRecoil()
