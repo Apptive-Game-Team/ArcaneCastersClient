@@ -2,7 +2,7 @@
   "version" : 2,
   "magic" : "lightning_explosion",
   "frameDuration" : 0.05,
-  "source" : "MagicScenarioPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets",
+  "source" : "MagicScenarioPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; swarms staged deterministically within spawn range",
   "scenarios" : [ {
     "id" : "shock",
     "labelKo" : "범위 피해 · 감전",

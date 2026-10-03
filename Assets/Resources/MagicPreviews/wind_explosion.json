@@ -1,12 +1,12 @@
 {
   "version" : 2,
-  "magic" : "rock_golem",
+  "magic" : "wind_explosion",
   "frameDuration" : 0.05,
   "source" : "MagicScenarioPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; swarms staged deterministically within spawn range",
   "scenarios" : [ {
-    "id" : "ground",
-    "labelKo" : "지상 공격 · 밀치기",
-    "labelEn" : "Ground attack · knockback",
+    "id" : "area",
+    "labelKo" : "범위 피해·밀치기",
+    "labelEn" : "Area damage and knockback",
     "duration" : 4.0,
     "frames" : [ {
       "time" : 0.0,
@@ -26,6 +26,46 @@
           "type" : "ElectricSlime",
           "position" : {
             "x" : 6.5,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "master" : "RightPlayer",
+          "gizmos" : [ {
+            "relativePosition" : {
+              "x" : 0.0,
+              "y" : 0.0,
+              "z" : 0.0
+            },
+            "radius" : 0.35,
+            "boxSize" : null,
+            "type" : "Circle",
+            "category" : "Collider"
+          } ]
+        }, {
+          "id" : 3,
+          "type" : "ElectricSlime",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "master" : "RightPlayer",
+          "gizmos" : [ {
+            "relativePosition" : {
+              "x" : 0.0,
+              "y" : 0.0,
+              "z" : 0.0
+            },
+            "radius" : 0.35,
+            "boxSize" : null,
+            "type" : "Circle",
+            "category" : "Collider"
+          } ]
+        }, {
+          "id" : 4,
+          "type" : "ElectricSlime",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -68,6 +108,36 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
         } ],
         "projectile" : [ ]
       },
@@ -94,6 +164,36 @@
           "master" : "RightPlayer",
           "position" : {
             "x" : 6.5,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -136,6 +236,36 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
         } ],
         "projectile" : [ ]
       },
@@ -162,6 +292,36 @@
           "master" : "RightPlayer",
           "position" : {
             "x" : 6.5,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -204,6 +364,36 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
         } ],
         "projectile" : [ ]
       },
@@ -230,6 +420,36 @@
           "master" : "RightPlayer",
           "position" : {
             "x" : 6.5,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -272,6 +492,36 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
         } ],
         "projectile" : [ ]
       },
@@ -298,6 +548,36 @@
           "master" : "RightPlayer",
           "position" : {
             "x" : 6.5,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -340,6 +620,36 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
         } ],
         "projectile" : [ ]
       },
@@ -366,6 +676,36 @@
           "master" : "RightPlayer",
           "position" : {
             "x" : 6.5,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -408,6 +748,36 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
         } ],
         "projectile" : [ ]
       },
@@ -442,6 +812,36 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 3,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
         } ],
         "projectile" : [ ]
       },
@@ -450,21 +850,21 @@
       "time" : 0.6000000089406967,
       "objects" : {
         "create" : [ {
-          "id" : 3,
-          "type" : "RockGolem",
+          "id" : 5,
+          "type" : "WindExplode",
           "position" : {
-            "x" : 5.0,
+            "x" : 6.0,
             "y" : 0.0,
             "z" : 5.0
           },
-          "master" : "LeftPlayer",
+          "master" : "None",
           "gizmos" : [ {
             "relativePosition" : {
               "x" : 0.0,
               "y" : 0.0,
               "z" : 0.0
             },
-            "radius" : 0.6,
+            "radius" : 2.0,
             "boxSize" : null,
             "type" : "Circle",
             "category" : "Collider"
@@ -474,10 +874,10 @@
               "y" : 0.0,
               "z" : 0.0
             },
-            "radius" : 1.1,
+            "radius" : 2.0,
             "boxSize" : null,
             "type" : "Circle",
-            "category" : "AttackRange"
+            "category" : "AreaOfEffect"
           } ]
         } ],
         "update" : [ {
@@ -510,9 +910,9 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.0,
+            "x" : 7.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -521,6 +921,32 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -543,7 +969,7 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
             "x" : 6.5,
@@ -558,10 +984,10 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.0,
+            "x" : 7.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -570,6 +996,32 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -592,11 +1044,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
-            "y" : 0.0,
+            "x" : 6.5158114,
+            "y" : 0.029528473,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -607,10 +1059,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.1,
+            "x" : 7.031623,
+            "y" : 0.06905694,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -619,6 +1086,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -641,11 +1119,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
-            "y" : 0.0,
+            "x" : 6.531623,
+            "y" : 0.049056947,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -656,10 +1134,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.2,
+            "x" : 7.063246,
+            "y" : 0.12811388,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -668,6 +1161,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -690,11 +1194,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
-            "y" : 0.0,
+            "x" : 6.5474343,
+            "y" : 0.05858542,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -705,10 +1209,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.2999997,
+            "x" : 7.0948687,
+            "y" : 0.17717081,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -717,6 +1236,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -739,11 +1269,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
-            "y" : 0.0,
+            "x" : 6.563246,
+            "y" : 0.05811389,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -754,10 +1284,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.3999996,
+            "x" : 7.1264915,
+            "y" : 0.21622775,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -766,6 +1311,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -788,11 +1344,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
-            "y" : 0.0,
+            "x" : 6.579057,
+            "y" : 0.047642365,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -803,10 +1359,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.4999995,
+            "x" : 7.1581144,
+            "y" : 0.24528469,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -815,6 +1386,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -837,11 +1419,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
-            "y" : 0.0,
+            "x" : 6.5948687,
+            "y" : 0.027170837,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -852,10 +1434,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.1897373,
+            "y" : 0.26434162,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -864,6 +1461,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -886,10 +1494,10 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.61068,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -901,10 +1509,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.22136,
+            "y" : 0.27339855,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -913,6 +1536,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -935,10 +1569,10 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6264915,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -950,10 +1584,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.252983,
+            "y" : 0.27245548,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -962,6 +1611,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -984,10 +1644,10 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ ],
+          "effects" : [ "Knockback" ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.642303,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -999,10 +1659,25 @@
         }, {
           "id" : 3,
           "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.284606,
+            "y" : 0.26151243,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 1000.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1011,6 +1686,17 @@
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
+        }, {
+          "id" : 5,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "None",
+          "position" : {
+            "x" : 6.0,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
@@ -1032,11 +1718,41 @@
           "gauges" : [ ]
         }, {
           "id" : 2,
+          "status" : "Damaged",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 6.6581144,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 3,
+          "status" : "Damaged",
+          "effects" : [ "Knockback" ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 7.316229,
+            "y" : 0.24056937,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
           "status" : "Idle",
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1046,24 +1762,28 @@
             "category" : "HP"
           } ]
         }, {
-          "id" : 3,
-          "status" : "Idle",
+          "id" : 5,
+          "status" : "Destroyed",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "None",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 6.0,
             "y" : 0.0,
             "z" : 5.0
           },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
+          "gauges" : [ ]
         } ],
         "projectile" : [ ]
       },
-      "events" : [ ]
+      "events" : [ {
+        "type" : "hit",
+        "actorId" : 5,
+        "targetId" : 2
+      }, {
+        "type" : "hit",
+        "actorId" : 5,
+        "targetId" : 3
+      } ]
     }, {
       "time" : 1.2000000178813934,
       "objects" : {
@@ -1085,12 +1805,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1098,9 +1818,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.13056937,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1134,12 +1869,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1147,9 +1882,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.010569364,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1183,12 +1933,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1196,9 +1946,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1232,12 +1997,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1245,9 +2010,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1281,12 +2061,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1294,9 +2074,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1330,12 +2125,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1343,9 +2138,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1379,12 +2189,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1392,9 +2202,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1428,12 +2253,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1441,9 +2266,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1477,12 +2317,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1490,9 +2330,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1526,12 +2381,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1539,9 +2394,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1575,12 +2445,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1588,9 +2458,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1624,12 +2509,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 1000.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -1637,9 +2522,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1670,10 +2570,10 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1684,11 +2584,26 @@
           } ]
         }, {
           "id" : 3,
-          "status" : "Attack",
+          "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1719,11 +2634,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5158114,
-            "y" : 0.029528473,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -1735,9 +2650,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1768,11 +2698,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.531623,
-            "y" : 0.049056947,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -1784,9 +2714,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1817,11 +2762,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5474343,
-            "y" : 0.05858542,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -1833,9 +2778,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1866,11 +2826,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.563246,
-            "y" : 0.05811389,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -1882,9 +2842,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1915,11 +2890,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.579057,
-            "y" : 0.047642365,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -1931,9 +2906,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -1964,11 +2954,11 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.5948687,
-            "y" : 0.027170837,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
@@ -1980,9 +2970,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2013,10 +3018,10 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.61068,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2029,9 +3034,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2062,10 +3082,10 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.6264915,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2078,9 +3098,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2111,10 +3146,10 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.642303,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2127,9 +3162,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2160,7 +3210,7 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
             "x" : 6.6581144,
@@ -2176,9 +3226,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2225,9 +3290,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2274,9 +3354,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2323,9 +3418,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2372,9 +3482,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2421,9 +3546,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2454,7 +3594,7 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
             "x" : 6.6581144,
@@ -2462,17 +3602,32 @@
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
         }, {
           "id" : 3,
-          "status" : "Attack",
+          "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2503,15 +3658,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.673926,
-            "y" : 0.029528473,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2519,9 +3674,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2552,15 +3722,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.6897373,
-            "y" : 0.049056947,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2568,9 +3738,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2601,15 +3786,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.705549,
-            "y" : 0.05858542,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2617,9 +3802,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2650,15 +3850,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.72136,
-            "y" : 0.05811389,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2666,9 +3866,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.5999994,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2699,15 +3914,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.7371716,
-            "y" : 0.047642365,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2715,9 +3930,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.6999993,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2748,15 +3978,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.752983,
-            "y" : 0.027170837,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2764,9 +3994,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2797,15 +4042,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.7687945,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2813,9 +4058,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2846,15 +4106,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.784606,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2862,9 +4122,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2895,15 +4170,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.8004174,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2911,9 +4186,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2944,15 +4234,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -2960,9 +4250,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -2996,12 +4301,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3009,9 +4314,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3045,12 +4365,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3058,9 +4378,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3094,12 +4429,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3107,9 +4442,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3143,12 +4493,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3156,9 +4506,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3192,12 +4557,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3205,9 +4570,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3241,12 +4621,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3254,9 +4634,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3290,12 +4685,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3303,9 +4698,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3339,12 +4749,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3352,9 +4762,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3388,12 +4813,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3401,9 +4826,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3437,12 +4877,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3450,9 +4890,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3486,12 +4941,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3499,9 +4954,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3535,12 +5005,12 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 800.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3548,9 +5018,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3581,25 +5066,40 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.816229,
+            "x" : 6.6581144,
             "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 700.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
         }, {
           "id" : 3,
-          "status" : "Attack",
+          "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3630,15 +5130,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.8320403,
-            "y" : 0.029528473,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 700.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3646,9 +5146,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3679,15 +5194,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.8478518,
-            "y" : 0.049056947,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 700.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3695,9 +5210,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3728,15 +5258,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.863663,
-            "y" : 0.05858542,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 700.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3744,9 +5274,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3777,15 +5322,15 @@
         }, {
           "id" : 2,
           "status" : "Idle",
-          "effects" : [ "Knockback" ],
+          "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 6.8794746,
-            "y" : 0.05811389,
+            "x" : 6.6581144,
+            "y" : 0.0,
             "z" : 5.0
           },
           "gauges" : [ {
-            "value" : 700.0,
+            "value" : 900.0,
             "maxValue" : 1000.0,
             "category" : "HP"
           } ]
@@ -3793,9 +5338,24 @@
           "id" : 3,
           "status" : "Idle",
           "effects" : [ ],
-          "master" : "LeftPlayer",
+          "master" : "RightPlayer",
           "position" : {
-            "x" : 5.799999,
+            "x" : 7.316229,
+            "y" : 0.0,
+            "z" : 5.0
+          },
+          "gauges" : [ {
+            "value" : 900.0,
+            "maxValue" : 1000.0,
+            "category" : "HP"
+          } ]
+        }, {
+          "id" : 4,
+          "status" : "Idle",
+          "effects" : [ ],
+          "master" : "RightPlayer",
+          "position" : {
+            "x" : 10.0,
             "y" : 0.0,
             "z" : 5.0
           },
@@ -3803,2127 +5363,6 @@
             "value" : 1000.0,
             "maxValue" : 1000.0,
             "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    } ]
-  }, {
-    "id" : "death",
-    "labelKo" : "사망 후 바위 잔해",
-    "labelEn" : "Rock remnant on death",
-    "duration" : 3.0,
-    "frames" : [ {
-      "time" : 0.0,
-      "objects" : {
-        "create" : [ {
-          "id" : 1,
-          "type" : "Player",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "master" : "LeftPlayer",
-          "gizmos" : [ ]
-        }, {
-          "id" : 2,
-          "type" : "RockGolem",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "master" : "LeftPlayer",
-          "gizmos" : [ {
-            "relativePosition" : {
-              "x" : 0.0,
-              "y" : 0.0,
-              "z" : 0.0
-            },
-            "radius" : 0.6,
-            "boxSize" : null,
-            "type" : "Circle",
-            "category" : "Collider"
-          }, {
-            "relativePosition" : {
-              "x" : 0.0,
-              "y" : 0.0,
-              "z" : 0.0
-            },
-            "radius" : 1.1,
-            "boxSize" : null,
-            "type" : "Circle",
-            "category" : "AttackRange"
-          } ]
-        } ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.05000000074505806,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.10000000149011612,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.15000000223517418,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.20000000298023224,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.2500000037252903,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.30000000447034836,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.3500000052154064,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.4000000059604645,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.45000000670552254,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.5000000074505806,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.5500000081956387,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.6000000089406967,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.6500000096857548,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.7000000104308128,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.7500000111758709,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.800000011920929,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.850000012665987,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.9000000134110451,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 0.9500000141561031,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 1000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.0000000149011612,
-      "objects" : {
-        "create" : [ {
-          "id" : 3,
-          "type" : "RockRemnant",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "master" : "LeftPlayer",
-          "gizmos" : [ {
-            "relativePosition" : {
-              "x" : 0.0,
-              "y" : 0.0,
-              "z" : 0.0
-            },
-            "radius" : 0.6,
-            "boxSize" : null,
-            "type" : "Circle",
-            "category" : "Collider"
-          } ]
-        } ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 2,
-          "status" : "Destroyed",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : -9000.0,
-            "maxValue" : 1000.0,
-            "category" : "HP"
-          } ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 20.0,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.0500000156462193,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.95,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.1000000163912773,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.9,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.1500000171363354,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.85,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.2000000178813934,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.8,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.2500000186264515,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.75,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.3000000193715096,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.7,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.3500000201165676,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.65,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.4000000208616257,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.6,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.4500000216066837,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.55,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.5000000223517418,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.5,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.5500000230967999,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.45,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.600000023841858,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.4,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.650000024586916,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.35,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.700000025331974,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.3,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.750000026077032,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.25,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.8000000268220901,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.2,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.8500000275671482,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.15,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.9000000283122063,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.1,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 1.9500000290572643,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.05,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.0000000298023224,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 19.0,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.0500000305473804,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.95,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.1000000312924385,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.9,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.1500000320374966,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.85,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.2000000327825546,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.8,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.2500000335276127,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.75,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.3000000342726707,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.7,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.350000035017729,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.65,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.400000035762787,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.6,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.450000036507845,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.550001,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.500000037252903,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.5,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.550000037997961,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.45,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.600000038743019,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.4,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.650000039488077,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.35,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.7000000402331352,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.300001,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.7500000409781933,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.25,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.8000000417232513,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.2,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.8500000424683094,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.150002,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.9000000432133675,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.1,
-            "maxValue" : 20.0,
-            "category" : "TTL"
-          } ]
-        } ],
-        "projectile" : [ ]
-      },
-      "events" : [ ]
-    }, {
-      "time" : 2.9500000439584255,
-      "objects" : {
-        "create" : [ ],
-        "update" : [ {
-          "id" : 1,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 2.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ ]
-        }, {
-          "id" : 3,
-          "status" : "Idle",
-          "effects" : [ ],
-          "master" : "LeftPlayer",
-          "position" : {
-            "x" : 5.0,
-            "y" : 0.0,
-            "z" : 5.0
-          },
-          "gauges" : [ {
-            "value" : 18.050001,
-            "maxValue" : 20.0,
-            "category" : "TTL"
           } ]
         } ],
         "projectile" : [ ]

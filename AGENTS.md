@@ -128,6 +128,9 @@ For Unity Editor automation through MCP, use the project skill at
 `.agents/skills/unity-mcp-orchestrator/SKILL.md`.
 
 ## Configuration Notes
+
+Before changing magic preview playback or registrations, read
+`.agents/docs/magic-preview.md` for damage-status and recording validation traps.
 `DEV_BUILD` controls development server routing for WebGL builds. Avoid editing generated Unity metadata by hand unless the change is intentional, and keep `ProjectSettings/ProjectVersion.txt` in sync with the Unity version used for the change.
 
 ## Versioning

@@ -59,7 +59,9 @@ namespace DeckScene
             Hide();
             ClearItems();
             bool hasPreview = previewPrefab != null && magics != null && magics.Count == 1 && previewPrefab.Supports(magics[0]);
-            currentPanelHeight = hasPreview ? PanelHeight + 160f : PanelHeight;
+            currentPanelHeight = hasPreview
+                ? PanelHeight + previewPrefab.GetComponent<LayoutElement>().preferredHeight + DetailSpacing
+                : PanelHeight;
             ConfigureLayout();
             int version = ++renderVersion;
 
@@ -271,6 +273,12 @@ namespace DeckScene
             if (panelRoot != null && panelRoot.transform is RectTransform panelRect)
             {
                 panelRect.sizeDelta = new Vector2(PanelWidth, currentPanelHeight);
+                // Keep the taller preview popup within the canvas on short screens.
+                RectTransform canvasRect = panelRect.parent as RectTransform;
+                float scale = canvasRect != null
+                    ? Mathf.Min(1f, Mathf.Max(1f, canvasRect.rect.height - ContentPadding * 2f) / currentPanelHeight)
+                    : 1f;
+                panelRect.localScale = Vector3.one * scale;
             }
 
             if (itemRoot == null || !(itemRoot is RectTransform itemRect))
@@ -389,18 +397,20 @@ namespace DeckScene
             {
                 panelRect.position = worldPoint;
                 Vector3 local = panelRect.localPosition;
-                if (local.x + panelRect.rect.width > parentRect.rect.xMax)
+                float panelWidth = panelRect.rect.width * panelRect.localScale.x;
+                if (local.x + panelWidth > parentRect.rect.xMax)
                 {
                     RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect,
                         RectTransformUtility.WorldToScreenPoint(camera, (corners[0] + corners[1]) * 0.5f),
                         camera, out Vector3 left);
-                    local.x = parentRect.InverseTransformPoint(left).x - panelRect.rect.width - AnchorOffset;
+                    local.x = parentRect.InverseTransformPoint(left).x - panelWidth - AnchorOffset;
                 }
                 local.x = Mathf.Clamp(local.x, parentRect.rect.xMin,
-                    Mathf.Max(parentRect.rect.xMin, parentRect.rect.xMax - panelRect.rect.width));
-                float halfHeight = panelRect.rect.height * 0.5f;
-                local.y = Mathf.Clamp(local.y, parentRect.rect.yMin + halfHeight,
-                    Mathf.Max(parentRect.rect.yMin + halfHeight, parentRect.rect.yMax - halfHeight));
+                    Mathf.Max(parentRect.rect.xMin, parentRect.rect.xMax - panelWidth));
+                float halfHeight = panelRect.rect.height * panelRect.localScale.y * 0.5f;
+                local.y = Mathf.Clamp(local.y, parentRect.rect.yMin + ContentPadding + halfHeight,
+                    Mathf.Max(parentRect.rect.yMin + ContentPadding + halfHeight,
+                        parentRect.rect.yMax - ContentPadding - halfHeight));
                 panelRect.localPosition = local;
             }
         }

@@ -103,10 +103,11 @@ namespace MagicBookScene
             {
                 MagicPreview preview = Instantiate(previewPrefab, statRowsParent);
                 preview.Configure(data);
+                preview.SetViewZoom(1.35f);
                 preview.name = "MagicExplanationPreview";
                 LayoutElement layout = preview.GetComponent<LayoutElement>();
-                layout.minHeight = 260f;
-                layout.preferredHeight = 260f;
+                layout.minHeight = 420f;
+                layout.preferredHeight = 420f;
                 preview.transform.SetAsLastSibling();
                 preview.gameObject.SetActive(true);
                 spawned.Add(preview.gameObject);

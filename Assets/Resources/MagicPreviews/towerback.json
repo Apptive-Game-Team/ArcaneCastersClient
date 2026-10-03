@@ -2,7 +2,7 @@
   "version" : 2,
   "magic" : "towerback",
   "frameDuration" : 0.05,
-  "source" : "MagicScenarioPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets",
+  "source" : "MagicScenarioPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; swarms staged deterministically within spawn range",
   "scenarios" : [ {
     "id" : "ground",
     "labelKo" : "지상 공격",

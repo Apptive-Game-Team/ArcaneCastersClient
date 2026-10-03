@@ -42,6 +42,9 @@ namespace Global
         private readonly HashSet<string> missingVisuals = new();
         private readonly List<Transient> transients = new();
         private Sprite gaugeSprite;
+        private float viewZoom = 1f;
+
+        public void SetViewZoom(float zoom) => viewZoom = Mathf.Clamp(zoom, 1f, 2f);
 
         public bool Supports(CombinedMagicData magic) => FindClip(magic?.serverName) != null;
 
@@ -137,7 +140,7 @@ namespace Global
             previewCamera.allowMSAA = false;
             previewCamera.transform.localRotation = Quaternion.Euler(45f, 0f, 0f);
             previewCamera.transform.localPosition = new Vector3(6f, 12f, -6f);
-            texture = new RenderTexture(512, 288, 16) { name = "MagicPreview", hideFlags = HideFlags.DontSave };
+            texture = new RenderTexture(512, 420, 16) { name = "MagicPreview", hideFlags = HideFlags.DontSave };
             texture.Create();
             previewCamera.targetTexture = texture;
             output.texture = texture;
@@ -184,7 +187,7 @@ namespace Global
                 float t = Mathf.Clamp01((elapsed - visual.movedAt) / recording.frameDuration);
                 visual.renderer.transform.localPosition = Vector3.Lerp(visual.from, visual.to, t);
                 visual.renderer.sprite = visual.style.attackSprite != null && elapsed - visual.attackAt < 0.3f ? visual.style.attackSprite : visual.style.sprite;
-                visual.renderer.color = elapsed - visual.hitAt < 0.2f ? new Color(1f, 0.35f, 0.2f) : elapsed - visual.healAt < 0.3f ? Color.green : Color.white;
+                visual.renderer.color = elapsed - visual.hitAt < visual.hitFlashDuration ? new Color(1f, 0.35f, 0.2f) : elapsed - visual.healAt < 0.3f ? Color.green : Color.white;
                 foreach (var effect in visual.effects.Values)
                     effect.transform.localPosition = visual.renderer.transform.localPosition + previewCamera.transform.up * (visual.style.height * 0.65f);
                 if (visual.gauge != null)
@@ -217,7 +220,10 @@ namespace Global
             Rect rect = output.rectTransform.rect;
             float aspect = rect.height > 0 ? rect.width / rect.height : 16f / 9f;
             previewCamera.aspect = Mathf.Max(0.5f, aspect);
-            previewCamera.orthographicSize = Mathf.Max(3.5f, 5.5f / previewCamera.aspect);
+            previewCamera.orthographicSize = Mathf.Max(3.5f, 5.5f / previewCamera.aspect) / viewZoom;
+            // The book's closer view needs a little more headroom for flying units.
+            previewCamera.transform.localPosition = new Vector3(6f, 12f, -6f)
+                + previewCamera.transform.up * (viewZoom > 1f ? 0.55f : 0f);
             SetVisualsEnabled(true);
             float age = elapsed - impactStarted;
             if (impact != null)
@@ -250,7 +256,13 @@ namespace Global
             foreach (var item in frame.objects.create ?? Array.Empty<Created>())
             {
                 if (visuals.ContainsKey(item.id)) continue;
-                VisualStyle style = FindVisual(item.type);
+                // Bundled v2 recordings use passive ElectricSlime fixtures for both
+                // target categories. Their initial height distinguishes ground/air;
+                // this changes only the enemy target's presentation, not mechanics.
+                string visualType = item.type == "ElectricSlime" && item.master == "RightPlayer"
+                    ? (item.position.y > 0.5f ? "ThunderBird" : "MiniRock")
+                    : item.type;
+                VisualStyle style = FindVisual(visualType);
                 if (style == null)
                 {
                     if (missingVisuals.Add(item.type ?? string.Empty))
@@ -281,15 +293,15 @@ namespace Global
                 visual.from = visual.to;
                 visual.to = item.position;
                 visual.movedAt = frame.time;
-                if (item.status == "Damaged") visual.hitAt = frame.time;
                 if (item.status == "Attack") visual.attackAt = frame.time;
                 if (!string.IsNullOrEmpty(item.master)) visual.master = item.master;
                 visual.renderer.flipX = visual.style.flipForRight && visual.master == "RightPlayer";
                 if (item.effects != null) UpdateEffects(visual, item.effects);
+                if (item.status == "Damaged") FlashDamage(visual, frame.time);
                 foreach (Gauge gauge in item.gauges ?? Array.Empty<Gauge>())
                 {
                     if (gauge.category != "HP" || gauge.maxValue <= 0f) continue;
-                    if (visual.hp >= 0f && gauge.value < visual.hp) visual.hitAt = frame.time;
+                    if (visual.hp >= 0f && gauge.value < visual.hp) FlashDamage(visual, frame.time);
                     if (visual.hp >= 0f && gauge.value > visual.hp) visual.healAt = frame.time;
                     visual.hp = gauge.value;
                     if (visual.gauge == null) visual.gauge = CreateSprite("HP", gaugeSprite, 0.1f);
@@ -340,6 +352,16 @@ namespace Global
             renderer.sortingOrder = 30;
             renderer.transform.localPosition = from;
             transients.Add(new Transient { renderer = renderer, from = from, to = to, started = started, duration = duration });
+        }
+
+        private void FlashDamage(Visual visual, float time)
+        {
+            float interval = Mathf.Max(clip.damageFlashInterval, visual.effects.ContainsKey("Burn") ? 1f : 0f);
+            // Status and HP may report the same hit. DOT changes HP every tick,
+            // but starts a new visual pulse at most once per second.
+            if (time <= visual.hitAt || time - visual.hitAt < interval) return;
+            visual.hitFlashDuration = Mathf.Clamp((time - visual.hitAt) * 0.45f, 0.015f, 0.12f);
+            visual.hitAt = time;
         }
 
         private void UpdateEffects(Visual visual, string[] effects)
@@ -434,6 +456,7 @@ namespace Global
             public TextAsset recordingAsset;
             public Sprite impactSprite;
             public VisualStyle[] visuals;
+            [Min(0f)] public float damageFlashInterval;
         }
 
         [Serializable] private sealed class VisualStyle
@@ -459,6 +482,7 @@ namespace Global
             public Vector3 from, to;
             public float movedAt;
             public float hitAt = -10f;
+            public float hitFlashDuration = 0.12f;
             public float healAt = -10f, attackAt = -10f;
         }
 

@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 276, y: 152}
+  m_SizeDelta: {x: 276, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &22200001
 CanvasRenderer:
@@ -89,9 +89,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
   m_MinWidth: 0
-  m_MinHeight: 152
+  m_MinHeight: 220
   m_PreferredWidth: 276
-  m_PreferredHeight: 152
+  m_PreferredHeight: 220
   m_FlexibleWidth: 1
   m_FlexibleHeight: 0
   m_LayoutPriority: 1
@@ -135,6 +135,7 @@ MonoBehaviour:
     impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
     visuals: []
   - magicId: sand_storm
+    damageFlashInterval: 1
     recordingAsset: {fileID: 4900000, guid: 81d13f3bd06450c4fb20a390638e2445, type: 3}
     impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
     visuals: []
@@ -144,6 +145,54 @@ MonoBehaviour:
     visuals: []
   - magicId: earth_call
     recordingAsset: {fileID: 4900000, guid: be245b92af56e6542a439f82f0c0ecf9, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: water_shot
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000001, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: lightning_shot
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000002, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: wind_blade
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000003, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: rock_rolling
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000004, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: fire_drop
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000005, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: wind_drop
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000006, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: water_explosion
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000007, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: wind_explosion
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000008, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: rock_blast
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000009, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: mini_rock_swarm
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000010, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: thunder_bird_swarm
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000011, type: 3}
+    impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
+    visuals: []
+  - magicId: water_slime_swarm
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000012, type: 3}
     impactSprite: {fileID: 21300000, guid: c692fd8e6dd084d4eaa47ec0bb52853b, type: 3}
     visuals: []
   scenarioCaption: {fileID: 5424425187506454539}
@@ -158,6 +207,14 @@ MonoBehaviour:
     lingerOnDestroy: 0
   - prefabType: ElectricSlime
     sprite: {fileID: 21300000, guid: 68ea8c9eb531a4ccc8d2743138e8b0ff, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 1.1
+    sortingOrder: 2
+    flipForRight: 1
+    lingerOnDestroy: 0
+  - prefabType: ThunderBird
+    sprite: {fileID: 21300000, guid: df87da42603854463a161c38712fc3bd, type: 3}
     attackSprite: {fileID: 0}
     destroySprite: {fileID: 0}
     height: 1.1
@@ -260,6 +317,102 @@ MonoBehaviour:
     sortingOrder: 2
     flipForRight: 0
     lingerOnDestroy: 0
+  - prefabType: WaterShot
+    sprite: {fileID: 21300000, guid: 30bfbc0134cc544d7820b1699953b844, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 0.85
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: ElectricShot
+    sprite: {fileID: 21300000, guid: 990285f96735644a6badc25ce7aa0e4d, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 0.85
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: WindBlade
+    sprite: {fileID: 21300000, guid: 602435d1eecf34ec4bce97b873af8e7c, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 0.85
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: RockRolling
+    sprite: {fileID: 21300000, guid: c2450ad6666e14dea9bb6888e108855c, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 1.1
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: FireDrop
+    sprite: {fileID: 21300000, guid: 9add24571957e4f2ead78ce392a0262e, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 1.1
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: WindDrop
+    sprite: {fileID: 21300000, guid: 74e446e67f20c49e293999a16c0ae896, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 1.1
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: WaterExplosion
+    sprite: {fileID: 21300000, guid: 2b09394691f4244f4bee6a612ea2ca0e, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 3.5
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0.4
+  - prefabType: WindExplode
+    sprite: {fileID: 21300000, guid: 806bdd86383d542bfb807f5cc2027eb2, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 3.5
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0.4
+  - prefabType: RockExplode
+    sprite: {fileID: 21300000, guid: 0f5afd3ea7dc54dd896ebe11cf2c635f, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 3.5
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0.4
+  - prefabType: WaterSlime
+    sprite: {fileID: 21300000, guid: 435c2792effc437aa664443570ef3753, type: 3}
+    attackSprite: {fileID: 21300000, guid: e2d8f656d3a44bb19ff1fda64809f5f6, type: 3}
+    destroySprite: {fileID: 0}
+    height: 1.1
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: WaterField
+    sprite: {fileID: 21300000, guid: 76cf150b5f59140539e7d0238c1e3c96, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 1.5
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: ElectricField
+    sprite: {fileID: 21300000, guid: e727c0c800f5317488577621167ea1b4, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 1.5
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
   projectileVisuals:
   - prefabType: RockShot
     sprite: {fileID: 21300000, guid: c2450ad6666e14dea9bb6888e108855c, type: 3}
@@ -269,7 +422,39 @@ MonoBehaviour:
     sortingOrder: 0
     flipForRight: 0
     lingerOnDestroy: 0
+  - prefabType: WaterShot
+    sprite: {fileID: 21300000, guid: 30bfbc0134cc544d7820b1699953b844, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 0.45
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: ElectricShot
+    sprite: {fileID: 21300000, guid: 990285f96735644a6badc25ce7aa0e4d, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 0.45
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
+  - prefabType: ElectricAbsorb
+    sprite: {fileID: 21300000, guid: 990285f96735644a6badc25ce7aa0e4d, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 0.45
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
   effectVisuals:
+  - prefabType: Overcharge
+    sprite: {fileID: 21300000, guid: 07ce58ff6d0f450caf36f8129c31f6e9, type: 3}
+    attackSprite: {fileID: 0}
+    destroySprite: {fileID: 0}
+    height: 0.65
+    sortingOrder: 10
+    flipForRight: 0
+    lingerOnDestroy: 0
   - prefabType: Burn
     sprite: {fileID: 21300000, guid: c93cff3e424e7413d950932af0a4d755, type: 3}
     attackSprite: {fileID: 0}
@@ -327,7 +512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6428096707799330225
 RectTransform:
   m_ObjectHideFlags: 0
