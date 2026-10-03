@@ -164,7 +164,106 @@ namespace WordOnline.Tests
                 Assert.That(preview.GetComponent<RawImage>().texture, Is.Null);
                 yield return null;
             }
-            Assert.That(count, Is.EqualTo(164));
+            Assert.That(count, Is.EqualTo(129));
+        }
+
+        [UnityTest]
+        public IEnumerator SummonCountsMatchOneCastAndGenericDeathCasesAreAbsent()
+        {
+            Create();
+            foreach (object clip in (Array)Field("clips"))
+            {
+                var asset = (TextAsset)clip.GetType().GetField("recordingAsset").GetValue(clip);
+                foreach (JToken scenario in JObject.Parse(asset.text)["scenarios"])
+                    Assert.That((string)scenario["id"], Is.Not.EqualTo("combat_death"));
+            }
+            var names = new[] { "aqua_archer", "mini_rock_swarm", "ember_spirit_swarm", "seed_spirit_swarm", "vine_spirit", "zap_mouse" };
+            var types = new[] { "AquaArcher", "MiniRock", "EmberSpirit", "SeedSpirit", "VineSpirit", "ZapMouse" };
+            var quantities = new[] { 1, 2, 5, 4, 2, 2 };
+            for (int i = 0; i < names.Length; i++)
+            {
+                Configure(names[i]);
+                Scenario(0);
+                float moment = -1;
+                var batch = new System.Collections.Generic.List<int>();
+                foreach (JToken frame in Recording(names[i])["scenarios"][0]["frames"])
+                {
+                    foreach (JToken created in frame["objects"]["create"])
+                        if ((string)created["type"] == types[i]) batch.Add((int)created["id"]);
+                    if (batch.Count == 0) continue;
+                    moment = (float)frame["time"] + 0.05f;
+                    break;
+                }
+                Assert.That(batch.Count, Is.EqualTo(quantities[i]), names[i]);
+                yield return PlayUntil(moment);
+                foreach (int id in batch) Assert.That(Target(id), Is.Not.Null, names[i]);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator AreaAttacksReplayMultipleVictimsInBothViewports()
+        {
+            Create();
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Temp/AreaPreviewCaptures");
+            System.IO.Directory.CreateDirectory(directory);
+            foreach (string magic in new[] { "magma_spirit", "bubble_spirit", "sea_serpent", "dragon_tower", "bomb_sprite", "firework_tower",
+                         "tower", "towerback", "wind_spirit", "fire_spirit", "electric_tower", "titan_remnant" })
+            {
+                Configure(magic);
+                int index = magic == "towerback" ? 1 : 0; // Its ground attack is single-target.
+                Scenario(index);
+                JToken scenario = Recording(magic)["scenarios"][index];
+                var fixtureIds = scenario["fixtureTargetIds"].ToObject<System.Collections.Generic.HashSet<int>>();
+                float moment = -1;
+                System.Collections.Generic.HashSet<int> victims = null;
+                foreach (JToken frame in scenario["frames"])
+                {
+                    var hits = new System.Collections.Generic.Dictionary<int, System.Collections.Generic.HashSet<int>>();
+                    foreach (JToken hit in frame["events"])
+                    {
+                        if ((string)hit["type"] != "hit" || !fixtureIds.Contains((int)hit["targetId"])) continue;
+                        int actor = (int)hit["actorId"];
+                        if (!hits.ContainsKey(actor)) hits[actor] = new System.Collections.Generic.HashSet<int>();
+                        hits[actor].Add((int)hit["targetId"]);
+                    }
+                    foreach (var batch in hits.Values) if (batch.Count >= 2) { victims = batch; break; }
+                    if (victims == null) continue;
+                    moment = (float)frame["time"] + 0.03f;
+                    break;
+                }
+                Assert.That(victims, Is.Not.Null, magic + ": one attack must hit multiple enemies");
+                yield return PlayUntil(moment);
+                foreach (int id in victims)
+                {
+                    Component target = Target(id);
+                    Assert.That(target, Is.Not.Null, magic);
+                    var gauges = (IList)target.GetType().GetField("gauges").GetValue(target);
+                    Assert.That((float)gauges[0].GetType().GetField("value").GetValue(gauges[0]), Is.LessThan(10000f));
+                }
+                foreach (bool book in new[] { true, false }) SaveViewport(directory, magic, book);
+            }
+        }
+
+        private void SaveViewport(string directory, string magic, bool book)
+        {
+            int width = book ? 540 : 400, height = book ? 420 : 220;
+            var rect = preview.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = new Vector2(width, height);
+            previewType.GetMethod("SetViewZoom").Invoke(preview, new object[] { book ? 1.35f : 1f });
+            Invoke("LateUpdate");
+            var viewport = new RenderTexture(width, height, 0);
+            RenderTexture previous = RenderTexture.active;
+            Graphics.Blit(preview.GetComponent<RawImage>().texture, viewport);
+            RenderTexture.active = viewport;
+            var pixels = new Texture2D(width, height, TextureFormat.RGB24, false);
+            pixels.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            pixels.Apply();
+            System.IO.File.WriteAllBytes(System.IO.Path.Combine(directory, magic + (book ? "-book.png" : "-hover.png")), pixels.EncodeToPNG());
+            RenderTexture.active = previous;
+            viewport.Release();
+            UnityEngine.Object.Destroy(viewport);
+            UnityEngine.Object.Destroy(pixels);
         }
 
         [UnityTest]
@@ -194,27 +293,7 @@ namespace WordOnline.Tests
                 var stage = (GameObject)Field("stage");
                 string component = magic == "sea_serpent" ? "BeamProjectile" : magic == "evil_ent" ? "StretchProjectile" : magic == "spirit_bomb" ? "SpiritBombBeamProjectile" : "DefaultProjectile";
                 Assert.That(stage.GetComponentsInChildren(Runtime("GameScene.Object.Projectile." + component)).Length, Is.GreaterThan(0), magic);
-                foreach (bool book in new[] { true, false })
-                {
-                    int width = book ? 540 : 400, height = book ? 420 : 220;
-                    var rect = preview.GetComponent<RectTransform>();
-                    rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-                    rect.sizeDelta = new Vector2(width, height);
-                    previewType.GetMethod("SetViewZoom").Invoke(preview, new object[] { book ? 1.35f : 1f });
-                    Invoke("LateUpdate");
-                    var viewport = new RenderTexture(width, height, 0);
-                    RenderTexture previous = RenderTexture.active;
-                    Graphics.Blit(preview.GetComponent<RawImage>().texture, viewport);
-                    RenderTexture.active = viewport;
-                    var pixels = new Texture2D(width, height, TextureFormat.RGB24, false);
-                    pixels.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-                    pixels.Apply();
-                    System.IO.File.WriteAllBytes(System.IO.Path.Combine(directory, magic + (book ? "-book.png" : "-hover.png")), pixels.EncodeToPNG());
-                    RenderTexture.active = previous;
-                    viewport.Release();
-                    UnityEngine.Object.Destroy(viewport);
-                    UnityEngine.Object.Destroy(pixels);
-                }
+                foreach (bool book in new[] { true, false }) SaveViewport(directory, magic, book);
             }
         }
 

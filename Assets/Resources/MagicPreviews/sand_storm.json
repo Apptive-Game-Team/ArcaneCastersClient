@@ -2,7 +2,7 @@
   "version" : 2,
   "magic" : "sand_storm",
   "frameDuration" : 0.05,
-  "source" : "MagicScenarioPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; swarms staged deterministically within spawn range",
+  "source" : "MagicScenarioPreviewTest; production attacks; death fields omitted; quantity snapshot; illustrative combat parameters; passive targets; staged swarms",
   "scenarios" : [ {
     "id" : "area",
     "labelKo" : "지속 영역 · 지속 피해",

@@ -2,7 +2,7 @@
   "version" : 2,
   "magic" : "spirit_bomb",
   "frameDuration" : 0.05,
-  "source" : "RemainingMagicPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; seeded random draws and collision directions",
+  "source" : "RemainingMagicPreviewTest; production attacks; death fields omitted; quantity snapshot; illustrative combat parameters; passive targets; seeded draws",
   "scenarios" : [ {
     "id" : "channel",
     "labelKo" : "아군 체력 흡수·네 번 빔 피해",

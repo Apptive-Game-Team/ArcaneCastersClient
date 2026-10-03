@@ -2,7 +2,7 @@
   "version" : 2,
   "magic" : "towerback",
   "frameDuration" : 0.05,
-  "source" : "MagicScenarioPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; swarms staged deterministically within spawn range",
+  "source" : "MagicScenarioPreviewTest; production attacks; death fields omitted; quantity snapshot; illustrative combat parameters; passive targets; staged swarms",
   "scenarios" : [ {
     "id" : "ground",
     "labelKo" : "지상 공격",
@@ -3885,9 +3885,9 @@
           "id" : 3,
           "type" : "ElectricSlime",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "master" : "RightPlayer",
           "gizmos" : [ {
@@ -3934,9 +3934,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -3983,9 +3983,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4032,9 +4032,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4081,9 +4081,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4130,9 +4130,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4179,9 +4179,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4228,9 +4228,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4277,9 +4277,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4326,9 +4326,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4375,9 +4375,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4424,9 +4424,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4473,9 +4473,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4562,9 +4562,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4626,9 +4626,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4690,9 +4690,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4754,9 +4754,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4818,9 +4818,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4882,9 +4882,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -4946,9 +4946,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5010,9 +5010,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5074,9 +5074,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5138,9 +5138,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5202,9 +5202,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5266,9 +5266,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5330,9 +5330,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5394,9 +5394,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5458,9 +5458,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5522,9 +5522,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5586,9 +5586,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5662,9 +5662,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5726,9 +5726,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5790,9 +5790,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5854,9 +5854,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 1000.0,
@@ -5918,9 +5918,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -5990,9 +5990,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6054,9 +6054,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6118,9 +6118,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6182,9 +6182,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6246,9 +6246,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6310,9 +6310,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6374,9 +6374,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6438,9 +6438,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6502,9 +6502,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6566,9 +6566,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6630,9 +6630,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6706,9 +6706,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6770,9 +6770,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6834,9 +6834,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6898,9 +6898,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 900.0,
@@ -6962,9 +6962,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7034,9 +7034,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7098,9 +7098,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7162,9 +7162,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7226,9 +7226,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7290,9 +7290,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7354,9 +7354,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7418,9 +7418,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7482,9 +7482,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7546,9 +7546,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7610,9 +7610,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7674,9 +7674,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7750,9 +7750,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7814,9 +7814,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7878,9 +7878,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -7942,9 +7942,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 800.0,
@@ -8006,9 +8006,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8078,9 +8078,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8142,9 +8142,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8206,9 +8206,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8270,9 +8270,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8334,9 +8334,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8398,9 +8398,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8462,9 +8462,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8526,9 +8526,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8590,9 +8590,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8654,9 +8654,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8718,9 +8718,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8794,9 +8794,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8858,9 +8858,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,
@@ -8922,9 +8922,9 @@
           "effects" : [ ],
           "master" : "RightPlayer",
           "position" : {
-            "x" : 7.6,
+            "x" : 7.9,
             "y" : 2.0,
-            "z" : 5.0
+            "z" : 5.8
           },
           "gauges" : [ {
             "value" : 700.0,

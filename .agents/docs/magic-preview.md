@@ -28,7 +28,7 @@ a one-second minimum while every tick updates HP; ordinary hits remain separate.
 Projection position endpoints use flat x/y/z. Use native DTO converters, beam/arm
 components and reference tracking; inspect mid-animation captures.
 
-Coverage: 85 recordings / 164 cases. Regenerate with
+Coverage: 85 recordings / 129 cases. Regenerate with
 .agents/tools/expand-magic-previews.ps1 -CopyRecordings after server export.
 The script prints missing clip/meta registrations only, never old style mappings.
 Run MagicPreviewTests to verify both viewports and all native object initializations.
@@ -42,3 +42,13 @@ alias; ElectricAbsorb shares ElectricShot. Inspired has no runtime effect prefab
 its authoritative state/motion replay, without an invented RallyingTotem marker.
 Knockback is position motion, not a decal. StormStag tier listeners remain native.
 See docs/fire-shot-preview.md for architecture, coverage and limitations.
+
+Before changing preview scenarios, use the server PreviewSummonQuantities snapshot
+for actual one-cast counts. Neither a generic quantity=3 nor "all non-swarms=1" is
+correct (VineSpirit/ZapMouse are two; EmberSpirit is five). Count initial bodies
+separately from allies, evolution inputs and delayed children. Do not infer the
+parameter owner from prefab aliases. DeathField.spawn is omitted only in the server
+fixture; preserve water/leaf trails, Crater landing fields, remnants and energy.
+AOE fixtures require multiple same-attack victims, not just two final HP decreases.
+Inspect animated impact captures at both hover/book sizes: trigger-only fixture
+colliders don't extend body-edge CombatRange and close sprites can obscure hits.

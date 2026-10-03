@@ -2,7 +2,7 @@
   "version" : 2,
   "magic" : "earth_call",
   "frameDuration" : 0.05,
-  "source" : "MagicScenarioPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; swarms staged deterministically within spawn range",
+  "source" : "MagicScenarioPreviewTest; production attacks; death fields omitted; quantity snapshot; illustrative combat parameters; passive targets; staged swarms",
   "scenarios" : [ {
     "id" : "small",
     "labelKo" : "작은 잔해 → 미니 바위 · 공격",

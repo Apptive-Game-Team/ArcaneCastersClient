@@ -2,7 +2,7 @@
   "version" : 2,
   "magic" : "lightning_drop",
   "frameDuration" : 0.05,
-  "source" : "RemainingMagicPreviewTest; production mechanics; fixed illustrative parameters; passive fixture targets; seeded random draws and collision directions",
+  "source" : "RemainingMagicPreviewTest; production attacks; death fields omitted; quantity snapshot; illustrative combat parameters; passive targets; seeded draws",
   "scenarios" : [ {
     "id" : "ground",
     "labelKo" : "지상 공격",

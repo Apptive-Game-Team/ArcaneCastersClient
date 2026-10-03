@@ -26,10 +26,18 @@ Native cosmetic behaviors retain their authored clock settings.
 
 ## Recordings and extension
 
-85 magics / 164 ordered cases are exported by MagicScenarioPreviewTest and
+85 magics / 129 ordered cases are exported by MagicScenarioPreviewTest and
 RemainingMagicPreviewTest. Real server spells, attacks, effects, physics and
 lifecycle run in fixtures. Parameters are illustrative, not live database balance;
-coverage is not exhaustive for every elemental permutation.
+coverage is not exhaustive for every elemental permutation. One-cast quantities use
+the explicit V001 snapshot (MiniRock 2, EmberSpirit 5, SeedSpirit 4,
+ThunderBird/WaterSlime 3, VineSpirit/ZapMouse 2), not a universal three.
+
+Automatic death-created ground fields and 35 generic combat_death showcases are
+omitted in the recording fixture only. Remnants, energy absorption, movement trails,
+Crater landing fields and self-destruct attacks remain. Area-attacking units face
+several separated enemies; same-actor hit batches (or one chain ID) verify actual
+multi-victim damage. The native renderer and production gameplay are unchanged.
 
 Version 2 stores magic, frameDuration, ordered scenarios and real DTO frames.
 Each scenario adds fixtureTargetIds (passive enemies only) and parameters (the
@@ -67,10 +75,11 @@ recorded motion. StormStag tiers use actual native components, not invented mark
 
 PlayMode tests cover catalog preflight / first-frame initialization, explicit
 fixture identity, perspective zoom, native beam/arm/projectile animation, DOT flashes,
-concurrent worlds, cleanup, legacy/malformed input, every recorded object type
+one-cast quantities, multi-victim damage in both viewports, concurrent worlds,
+cleanup, legacy/malformed input, every recorded object type
 without match context, and same-DTO live/preview state plus actual hit dispatch.
 
-Real-time captures are saved to Temp/SharedPreviewCaptures. Committed examples in
+Real-time captures are saved to Temp/SharedPreviewCaptures and Temp/AreaPreviewCaptures. Committed examples in
 docs/pr-media/204 are isolated Unity preview-camera captures, not screenshots of
 authenticated full-scene pointer flow. Server suite: 728 tests passed after recording
 fixture IDs and parameter reads. Current Unity results are in the work plan/PR.
