@@ -498,19 +498,39 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11960000000000063
-    m_Localized: "The corrupted spirit draws power from the gates. Stop them!"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11960000000000064
-    m_Localized: "Every gate is shut. The shield is gone!"
+    m_Localized: "The corrupted spirit draws its power from the gates!"
     m_Metadata:
       m_Items: []
   - m_Id: 11960000000000065
-    m_Localized: "The final battle. Bring the spirit down!"
+    m_Localized: "The spirit has taken in more fire. Close the gates!"
     m_Metadata:
       m_Items: []
   - m_Id: 11960000000000066
-    m_Localized: "The gates open again! The spirit regains its power!"
+    m_Localized: "The gates open again!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000067
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000068
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000069
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000070
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000071
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000072
+    m_Localized: "A gate closes!"
     m_Metadata:
       m_Items: []
   references:

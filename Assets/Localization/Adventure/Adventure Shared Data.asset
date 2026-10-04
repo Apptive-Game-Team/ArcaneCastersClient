@@ -481,16 +481,36 @@ MonoBehaviour:
     m_Key: pve_17_intro
     m_Metadata:
       m_Items: []
-  - m_Id: 11960000000000064
-    m_Key: pve_17_shield_down
-    m_Metadata:
-      m_Items: []
   - m_Id: 11960000000000065
     m_Key: pve_18_intro
     m_Metadata:
       m_Items: []
   - m_Id: 11960000000000066
     m_Key: pve_18_phase_50
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000067
+    m_Key: pve_17_gate_a_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000068
+    m_Key: pve_17_gate_b_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000069
+    m_Key: pve_18_gate_a_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000070
+    m_Key: pve_18_gate_b_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000071
+    m_Key: pve_18_gate_c_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000072
+    m_Key: pve_18_gate_d_dead
     m_Metadata:
       m_Items: []
   m_Metadata:
