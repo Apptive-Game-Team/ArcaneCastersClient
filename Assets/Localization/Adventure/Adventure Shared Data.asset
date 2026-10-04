@@ -373,6 +373,78 @@ MonoBehaviour:
     m_Key: pve_objective_survive
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000037
+    m_Key: Gate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000038
+    m_Key: 5-1_pre_000_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000039
+    m_Key: 5-1_pre_001_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000040
+    m_Key: 5-1_pre_002_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000041
+    m_Key: 5-1_pre_003_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000042
+    m_Key: 5-2_pre_000_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000043
+    m_Key: 5-2_pre_001_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000044
+    m_Key: 5-2_pre_002_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000045
+    m_Key: 5-3_pre_000_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000046
+    m_Key: 5-3_pre_001_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000047
+    m_Key: 5-3_pre_002_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000048
+    m_Key: pve_14_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000049
+    m_Key: pve_15_gate_b_open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000050
+    m_Key: pve_15_gate_a_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000051
+    m_Key: pve_15_gate_b_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000052
+    m_Key: pve_16_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000053
+    m_Key: pve_16_gate_2_open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000054
+    m_Key: pve_16_warn_40
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

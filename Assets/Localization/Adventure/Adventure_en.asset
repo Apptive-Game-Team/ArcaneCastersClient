@@ -387,6 +387,81 @@ MonoBehaviour:
     m_Localized: "Survive {0}"
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000037
+    m_Localized: "Gate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000038
+    m_Localized: "A gate is hanging open in the air. Things keep crossing over from
+      the other side."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000039
+    m_Localized: "Whatever is holding it open doesn't look like it wants to fight."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000040
+    m_Localized: "I don't think it opened the gate by choice. Someone forced it to."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000041
+    m_Localized: "Still, as long as it stays open, they'll keep pouring out. Let's
+      stop the gate first."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000042
+    m_Localized: "It's not just one gate. Another is about to open further in."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000043
+    m_Localized: "When a gate bursts, everything inside rushes out at once."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000044
+    m_Localized: "One gate at a time."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000045
+    m_Localized: "The gates won't stop. They open faster than I can break them."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000046
+    m_Localized: "I don't need to break them all. I just have to hold out for 100
+      seconds."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000047
+    m_Localized: "For now, let's stop the gate in front of us."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000048
+    m_Localized: "A gate is open. Stop whoever is holding it!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000049
+    m_Localized: "A second gate opens!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000050
+    m_Localized: "The gate bursts!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000051
+    m_Localized: "The gate bursts!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000052
+    m_Localized: "The gates will not stop. Survive for 100 seconds!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000053
+    m_Localized: "Another gate opens!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000054
+    m_Localized: "Forty seconds left!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
