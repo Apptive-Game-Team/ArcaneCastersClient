@@ -421,6 +421,10 @@ MonoBehaviour:
     profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: PveEvilEnt
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: SeaSerpent
     profile: {fileID: 11400000, guid: 219592d24747077438ed6aacbdd9a776, type: 2}
     intentionalSilent: 0

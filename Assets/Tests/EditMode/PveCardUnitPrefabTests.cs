@@ -9,6 +9,7 @@ namespace WordOnline.Tests
         [TestCase("PveDimensionToad")]
         [TestCase("PveFireTadpole")]
         [TestCase("PveLightningTadpole")]
+        [TestCase("PveEvilEnt")]
         public void ServerTypeResolvesToPrefabOfTheSameName(string serverType)
         {
             GameObject prefab = Resources.Load<GameObject>("Prefabs/" + serverType);
@@ -32,6 +33,20 @@ namespace WordOnline.Tests
                 "A stationary gate keeper must not rock in place.");
             Assert.IsTrue(HasComponentNamed(card, "WaddleMotionController"),
                 "The card unit prefab must keep its waddle.");
+        }
+
+        [Test]
+        public void PveEvilEntDoesNotHopButThePvpUnitDoes()
+        {
+            GameObject pve = Resources.Load<GameObject>("Prefabs/PveEvilEnt");
+            GameObject pvp = Resources.Load<GameObject>("Prefabs/EvilEnt");
+
+            Assert.IsNotNull(pve);
+            Assert.IsNotNull(pvp);
+            Assert.IsFalse(HasComponentNamed(pve, "HoppingMotionController"),
+                "A stationary boss must not hop in place.");
+            Assert.IsTrue(HasComponentNamed(pvp, "HoppingMotionController"),
+                "The PVP unit prefab must keep its hop.");
         }
 
         private static bool HasComponentNamed(GameObject root, string typeName)
