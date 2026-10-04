@@ -400,6 +400,14 @@ MonoBehaviour:
     m_Localized: "\uc548 \ub3fc\u2026 \uc548 \ub3fc!"
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000035
+    m_Localized: "\ubaa9\ud45c\ub97c \ud30c\uad34\ud558\uc138\uc694 {0}/{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000036
+    m_Localized: "\ubc84\ud2f0\uc138\uc694 {0}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

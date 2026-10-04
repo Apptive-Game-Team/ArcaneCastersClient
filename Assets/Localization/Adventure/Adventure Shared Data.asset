@@ -365,6 +365,14 @@ MonoBehaviour:
     m_Key: pve_13_phase_15
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000035
+    m_Key: pve_objective_destroy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000036
+    m_Key: pve_objective_survive
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

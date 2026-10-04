@@ -379,6 +379,14 @@ MonoBehaviour:
     m_Localized: "No... NO!"
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000035
+    m_Localized: "Destroy the targets {0}/{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000036
+    m_Localized: "Survive {0}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
