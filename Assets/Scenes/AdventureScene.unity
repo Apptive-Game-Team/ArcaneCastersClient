@@ -2590,6 +2590,7 @@ MonoBehaviour:
   localAdventureData:
   - {fileID: 11400000, guid: d9572ad9070cf45cca74ce7a06b73e6f, type: 2}
   - {fileID: 11400000, guid: cde56eb328da04ba6add9ed12202db5e, type: 2}
+  - {fileID: 11400000, guid: a94e1ec9aee24c9384f0fc64a9593270, type: 2}
 
 --- !u!114 &2730770337761624098
 MonoBehaviour:
