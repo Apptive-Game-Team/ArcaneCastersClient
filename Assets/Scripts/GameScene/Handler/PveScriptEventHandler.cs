@@ -74,7 +74,7 @@ namespace GameScene.Handler
         // default LiberationSans has no Hangul and Korean lines render as boxes.
         private const string GameFontName = "LilitaOne SDF";
 
-        private static TMP_FontAsset FindGameFont()
+        internal static TMP_FontAsset FindGameFont()
         {
             foreach (TMP_FontAsset font in Resources.FindObjectsOfTypeAll<TMP_FontAsset>())
             {
@@ -115,8 +115,10 @@ namespace GameScene.Handler
                 return;
             }
 
+            // A line with no speaker has no one to anchor a bubble to, so it goes to the banner.
             if (speakerObjectId <= 0)
             {
+                PveObjectiveHud.ShowBanner(message);
                 return;
             }
 

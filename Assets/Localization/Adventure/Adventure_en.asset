@@ -379,6 +379,160 @@ MonoBehaviour:
     m_Localized: "No... NO!"
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000035
+    m_Localized: "Destroy the targets {0}/{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000036
+    m_Localized: "Survive {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000037
+    m_Localized: "Gate"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000038
+    m_Localized: "A gate is hanging open in the air. Things keep crossing over from
+      the other side."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000039
+    m_Localized: "Whatever is holding it open doesn't look like it wants to fight."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000040
+    m_Localized: "I don't think it opened the gate by choice. Someone forced it to."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000041
+    m_Localized: "Still, as long as it stays open, they'll keep pouring out. Let's
+      stop the gate first."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000042
+    m_Localized: "It's not just one gate. Another is about to open further in."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000043
+    m_Localized: "When a gate bursts, everything inside rushes out at once."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000044
+    m_Localized: "One gate at a time."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000045
+    m_Localized: "The gates won't stop. They open faster than I can break them."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000046
+    m_Localized: "I don't need to break them all. I just have to hold out for 100
+      seconds."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000047
+    m_Localized: "For now, let's stop the gate in front of us."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000048
+    m_Localized: "A gate is open. Stop whoever is holding it!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000049
+    m_Localized: "A second gate opens!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000050
+    m_Localized: "The gate bursts!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000051
+    m_Localized: "The gate bursts!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000052
+    m_Localized: "The gates will not stop. Survive for 100 seconds!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000053
+    m_Localized: "Another gate opens!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000054
+    m_Localized: "Forty seconds left!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000055
+    m_Localized: "The tree is charred like coal. Hellfire glows through every crack."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000056
+    m_Localized: "It must have been born from the world tree. It was exposed to hellfire
+      for too long."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000057
+    m_Localized: "It draws power from the open gates. While they stay open, I can't
+      hurt it."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000058
+    m_Localized: "Stop the gates first. Then its shield will fall."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000059
+    m_Localized: "Every gate is shut and it is still standing."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000060
+    m_Localized: "It seems to be holding on with its own strength now."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000061
+    m_Localized: "The gates might open again once it is half down. We'll stop them
+      again."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000062
+    m_Localized: "This is the last one. Let's see it through."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000063
+    m_Localized: "The corrupted spirit draws its power from the gates!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000065
+    m_Localized: "The spirit has taken in more fire. Close the gates!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000066
+    m_Localized: "The gates open again!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000067
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000068
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000069
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000070
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000071
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000072
+    m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
