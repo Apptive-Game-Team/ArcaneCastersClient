@@ -445,6 +445,54 @@ MonoBehaviour:
     m_Key: pve_16_warn_40
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000055
+    m_Key: 6-1_pre_000_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000056
+    m_Key: 6-1_pre_001_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000057
+    m_Key: 6-1_pre_002_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000058
+    m_Key: 6-1_pre_003_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000059
+    m_Key: 6-2_pre_000_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000060
+    m_Key: 6-2_pre_001_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000061
+    m_Key: 6-2_pre_002_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000062
+    m_Key: 6-2_pre_003_left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000063
+    m_Key: pve_17_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000064
+    m_Key: pve_17_shield_down
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000065
+    m_Key: pve_18_intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000066
+    m_Key: pve_18_phase_50
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

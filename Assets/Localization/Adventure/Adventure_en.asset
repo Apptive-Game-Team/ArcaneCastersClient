@@ -462,6 +462,57 @@ MonoBehaviour:
     m_Localized: "Forty seconds left!"
     m_Metadata:
       m_Items: []
+  - m_Id: 11960000000000055
+    m_Localized: "The tree is charred like coal. Hellfire glows through every crack."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000056
+    m_Localized: "It must have been born from the world tree. It was exposed to hellfire
+      for too long."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000057
+    m_Localized: "It draws power from the open gates. While they stay open, I can't
+      hurt it."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000058
+    m_Localized: "Stop the gates first. Then its shield will fall."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000059
+    m_Localized: "Every gate is shut and it is still standing."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000060
+    m_Localized: "It seems to be holding on with its own strength now."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000061
+    m_Localized: "The gates might open again once it is half down. We'll stop them
+      again."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000062
+    m_Localized: "This is the last one. Let's see it through."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000063
+    m_Localized: "The corrupted spirit draws power from the gates. Stop them!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000064
+    m_Localized: "Every gate is shut. The shield is gone!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000065
+    m_Localized: "The final battle. Bring the spirit down!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000066
+    m_Localized: "The gates open again! The spirit regains its power!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
