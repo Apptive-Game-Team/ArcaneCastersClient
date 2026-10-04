@@ -196,6 +196,9 @@
 | `pve/pve_nature_slime_nest.png` | 클라이언트 PR (이슈 #169) | 192x142 RGBA, 원본 캔버스 유지. `PveNatureSlimeNest` 모험 보스. 애니메이션풍 유광 렌더링을 다면체 cut-paper 로 다시 그렸다. v1 반려(둥근 실루엣 가로세로비 0.997, 옛 1.35 대비 지나치게 좁고 높음), v2 통과(비 1.54, 바닥 정렬 0px). alignment 7(bottom-center) 유지 |
 | `pve/pve_water_slime_nest.png` | 클라이언트 PR (이슈 #169) | 192x158 RGBA, 원본 캔버스 유지. `PveWaterSlimeNest` 모험 보스. 위와 같은 이유로 다시 그렸다. v1 반려(비 1.59, 옛 1.22 대비 지나치게 낮고 넓음), v2 통과(비 1.21, 폭 99.5%·세로 100%). alignment 7 유지 |
 | `pve/pve_vine_witch.png` | 클라이언트 PR (이슈 #169) | 192x155 RGBA, 원본 캔버스 유지. `PveVineWitch` 모험 보스, 숲의 마녀. 애니메이션풍 인물이라 화풍 자체가 달랐던 것을 다면체 cut-paper 로 다시 그렸다. v1 한 번에 통과 — 빨간 장발·잎 후드·지팡이 실루엣 유지, `facing.py` 기준 눈 중심이 몸통 중심보다 오른쪽(오른쪽 방향 확인). alignment 7 유지 |
+| `Adventure/gate_adventure_icon.png` | 클라이언트 PR (이슈 #232) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 아이콘, 새 파일이라 `stone_fortress.png` 는 그대로 두고 `GateAdventure.asset` 의 `iconImage` 만 옮겼다. 256x183 RGBA, `agy` 의 `generate_image` 로 초록(#00FF00) 배경에 그려 key 를 제거했다. v1 반려(룬 글자가 새겨졌고 고리 안쪽에 초록이 비쳐 번졌다), v2 통과(룬 없음, 안쪽을 어두운 보라 원판으로 채움). 내용은 세로 183px 전체를 쓰고 폭은 179px 로 옛 256px 보다 좁다 — 옛 아이콘은 가로로 넓은 성이라 비율이 다르다. 4배 확대에서 어두운·밝은 배경 모두 초록 테두리 없음, 불투명 픽셀의 초록 우세 0개 |
+| `Adventure/gate_adventure_map_stage5.png` | 클라이언트 PR (이슈 #232) | **검수 대기, 자리표시 아트.** 차원문 모험 5단계 지도, `Stage5.asset` 의 `backgroundImage` 만 옮겼다. 867x256 RGB 불투명. 생성물이 1376x768 정사각이 아니라 1.79:1 이라 세로 중간 띠 406px(y 170~576)를 잘라 Lanczos 로 867x256 에 맞췄다. 길 중심은 y 약 134(목표 135). 길 두께가 옛 요새 지도보다 두껍다(옛 약 16px, 새 약 80px) — 노드 위치를 Editor 에서 확인해야 한다. v1 반려(어두운 윤곽선이 있다). v2 는 `agy` 가 권한 오류로 끝났지만 그 사이 이미지 3장이 생성돼 있었고, 그중 윤곽선이 없고 색이 평면인 마지막 한 장을 채택했다(나머지 둘은 길이 중앙에서 벗어나거나 색이 번졌다). 윤곽선 없음, 길 위 물체 없음 |
+| `Adventure/gate_adventure_map_stage6.png` | 클라이언트 PR (이슈 #232) | **검수 대기, 자리표시 아트.** 차원문 모험 6단계(보스) 지도, `Stage6.asset` 의 `backgroundImage` 만 옮겼다. 867x256 RGB 불투명. 위와 같은 방식으로 잘랐다. v1 반려(윤곽선이 있고 줄기가 잘렸다), v2 통과(윤곽선 없음, 오른쪽 끝의 그을린 속 빈 그루터기와 균열의 주황 빛, 길 양옆 차원문 고리 둘) |
 
 ## 다음 교체 후보
 

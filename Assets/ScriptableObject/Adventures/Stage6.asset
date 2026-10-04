@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stage6
   m_EditorClassIdentifier: 
   stageId: 6
-  backgroundImage: {fileID: 21300000, guid: 3ca74a634d8f448a89da9d925c1e335e, type: 3}
+  backgroundImage: {fileID: 21300000, guid: c214875c881b4d02a75396f2709588bd, type: 3}
   stagePanelPrefab: {fileID: 1502816813844481242, guid: 9656813b0e0634ca1ad2019f33e9748b, type: 3}
   scenarioStories:
   - scenarioId: 17

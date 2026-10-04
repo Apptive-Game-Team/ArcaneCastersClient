@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GateAdventure
   m_EditorClassIdentifier: 
   adventureId: 3
-  iconImage: {fileID: 21300000, guid: b9322f20c555b4d75bcafccb4ea3cf2b, type: 3}
+  iconImage: {fileID: 21300000, guid: 577f1f5ee105485f9c57d4a3ff5291f9, type: 3}
   adventureName:
     m_TableReference:
       m_TableCollectionName: GUID:9bd520138d5494937a241566dc585065
