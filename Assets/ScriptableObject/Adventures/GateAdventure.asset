@@ -26,7 +26,7 @@ MonoBehaviour:
   stages:
   - {fileID: 11400000, guid: 61d0be72cf464b17b1c0dd94c148ef12, type: 2}
   - {fileID: 11400000, guid: 3217868c25ea4b7b91b1c9a6dca9746f, type: 2}
-  battleTheme: {fileID: 11400000, guid: 13bcbcaed1f9489abb1ddf8b4f5213da, type: 2}
+  battleTheme: {fileID: 11400000, guid: bd087dbdd86440ea979ff5eea57da807, type: 2}
   references:
     version: 2
     RefIds: []
