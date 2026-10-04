@@ -10,9 +10,14 @@ namespace GameScene.Handler
         private readonly SyncFrameHandler syncFrameHandler = new SyncFrameHandler();
         private readonly MagicValidHandler magicValidHandler = new MagicValidHandler();
         private readonly BotThoughtHandler botThoughtHandler = new BotThoughtHandler();
-        private readonly PveScriptEventHandler pveScriptEventHandler = new PveScriptEventHandler();
+        private readonly PveScriptEventHandler pveScriptEventHandler;
         private readonly PveObjectiveHandler pveObjectiveHandler = new PveObjectiveHandler();
         private readonly EmoteHandler emoteHandler = new EmoteHandler();
+
+        public GeneralHandler(PveSyncState pveSyncState)
+        {
+            pveScriptEventHandler = new PveScriptEventHandler(pveSyncState);
+        }
 
         public void Handler(string json)
         {

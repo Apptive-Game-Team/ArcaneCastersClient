@@ -20,9 +20,22 @@ namespace GameScene.Handler
         // for a key the table does not have yet.
         private const string DialogueTable = "Adventure";
 
+        private readonly PveSyncState syncState;
+
+        public PveScriptEventHandler(PveSyncState syncState)
+        {
+            this.syncState = syncState ?? new PveSyncState();
+        }
+
         public void Handler(PveScriptEventInfo pveScriptEvent)
         {
             if (pveScriptEvent == null)
+            {
+                return;
+            }
+
+            // The server replays recent events after a pveSync request; one already shown is dropped.
+            if (!syncState.ShouldShow(pveScriptEvent.seq))
             {
                 return;
             }

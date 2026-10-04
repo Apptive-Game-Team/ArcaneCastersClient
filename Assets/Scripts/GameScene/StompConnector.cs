@@ -54,7 +54,13 @@ namespace GameScene
         private StompSubscriptionRegistry _registry;
         private StompReconnectController _reconnect;
 
-        private readonly IFrameInfoHandler<string> _frameInfoHandler = new GeneralHandler();
+        /// <summary>화면에 보인 PVE 대사 번호. 재연결 때 pveSync 에 실어 보낸다.</summary>
+        private readonly PveSyncState _pveSync = new PveSyncState();
+
+        private readonly IFrameInfoHandler<string> _frameInfoHandler;
+
+        /// <summary>frame 구독을 걸었는지. 그 전에 연결되는 것은 최초 연결이라 pveSync 를 보내지 않는다.</summary>
+        private bool _frameSubscribed;
         private readonly FrameSilenceWatch _silence = new FrameSilenceWatch();
         private readonly ConnectAttemptSchedule _connectSchedule = new ConnectAttemptSchedule();
         private readonly StompConnectGate _connectGate = new StompConnectGate();
@@ -80,6 +86,8 @@ namespace GameScene
         {
             gameObject.name = "StompConnector";
             base.Awake();
+
+            _frameInfoHandler = new GeneralHandler(_pveSync);
 
             _registry = new StompSubscriptionRegistry();
             _reconnect = gameObject.AddComponent<StompReconnectController>();
@@ -223,7 +231,10 @@ namespace GameScene
 
             UnsubscribeFromTopic("match-sub");
             long userId = isSpectator ? 0 : SceneContext.UserID;
+            _pveSync.Reset();
             SubscribeToTopic($"/game/{sessionId}/frameInfos/{userId}", OnFrameInfoReceived, "frame-sub");
+            _frameSubscribed = true;
+            RequestPveSync();
 
             yield return WatchFrameSilence();
         }
@@ -315,6 +326,17 @@ namespace GameScene
             _connectGate.NoteSettled();
             _reconnect.ResetRetries();
             _registry.ResubscribeAll(_transport);
+            if (_frameSubscribed)
+            {
+                RequestPveSync();
+            }
+        }
+
+        /// <summary>서버가 목표와 놓친 대사를 다시 보내게 한다. 관전자와 PVE 가 아닌 판은 보내지 않는다.</summary>
+        private void RequestPveSync()
+        {
+            if (isSpectator) return;
+            PveSyncSender.Send(_pveSync.LastEventSeq);
         }
 
         /// <summary>
