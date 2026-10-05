@@ -78,9 +78,18 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void IsGuest_ReturnsFalse_WhenGuestClaimIsNotBoolean()
+        public void IsGuest_ReturnsTrue_WhenGuestClaimIsStringTrue()
         {
+            // Json.NET converts the string "true" to bool, so this reads as a guest.
             string jwt = CreateJwtToken("{\"sub\":\"user123\",\"guest\":\"true\"}");
+
+            Assert.IsTrue(JwtHelper.IsGuest(jwt));
+        }
+
+        [Test]
+        public void IsGuest_ReturnsFalse_WhenGuestClaimIsNotConvertibleToBoolean()
+        {
+            string jwt = CreateJwtToken("{\"sub\":\"user123\",\"guest\":\"yes\"}");
 
             Assert.IsFalse(JwtHelper.IsGuest(jwt));
         }
