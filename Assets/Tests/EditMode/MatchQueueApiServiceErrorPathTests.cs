@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Data;
 using LobbyScene;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -34,6 +36,45 @@ namespace WordOnline.Tests
             }
         }
 
+        /// <summary>
+        /// The EditMode test runner only accepts <c>yield return null</c>, so the service coroutine is
+        /// stepped by hand: nested enumerators are flattened and every <see cref="AsyncOperation"/>
+        /// is waited for one editor frame at a time, with a time limit so a hung request fails the test.
+        /// </summary>
+        private static IEnumerator Drive(IEnumerator routine)
+        {
+            var stack = new Stack<IEnumerator>();
+            stack.Push(routine);
+            double deadline = EditorApplication.timeSinceStartup + 15d;
+            while (stack.Count > 0)
+            {
+                IEnumerator top = stack.Peek();
+                if (!top.MoveNext())
+                {
+                    stack.Pop();
+                    continue;
+                }
+
+                if (top.Current is IEnumerator nested)
+                {
+                    stack.Push(nested);
+                    continue;
+                }
+
+                if (top.Current is AsyncOperation operation)
+                {
+                    while (!operation.isDone)
+                    {
+                        Assert.Less(EditorApplication.timeSinceStartup, deadline, "Web request did not finish in time.");
+                        yield return null;
+                    }
+                    continue;
+                }
+
+                yield return null;
+            }
+        }
+
         [UnityTest]
         public IEnumerator MatchPractice_WhenWebRequestFails_InvokesCallbackWithNull()
         {
@@ -41,11 +82,11 @@ namespace WordOnline.Tests
             bool callbackInvoked = false;
             MatchedInfoDto receivedDto = new MatchedInfoDto();
 
-            yield return _service.MatchPractice(dto =>
+            yield return Drive(_service.MatchPractice(dto =>
             {
                 callbackInvoked = true;
                 receivedDto = dto;
-            });
+            }));
 
             Assert.IsTrue(callbackInvoked, "Callback should have been invoked on error.");
             Assert.IsNull(receivedDto, "Callback should receive null when web request fails.");
@@ -59,12 +100,12 @@ namespace WordOnline.Tests
             bool successResult = true;
             MatchTicket receivedTicket = new MatchTicket();
 
-            yield return _service.GetActiveTicket((success, ticket) =>
+            yield return Drive(_service.GetActiveTicket((success, ticket) =>
             {
                 callbackInvoked = true;
                 successResult = success;
                 receivedTicket = ticket;
-            });
+            }));
 
             Assert.IsTrue(callbackInvoked);
             Assert.IsFalse(successResult);
@@ -78,11 +119,11 @@ namespace WordOnline.Tests
             bool callbackInvoked = false;
             MatchCancelResult receivedResult = new MatchCancelResult();
 
-            yield return _service.CancelTicket("ticket-123", result =>
+            yield return Drive(_service.CancelTicket("ticket-123", result =>
             {
                 callbackInvoked = true;
                 receivedResult = result;
-            });
+            }));
 
             Assert.IsTrue(callbackInvoked);
             Assert.IsNull(receivedResult);
@@ -95,11 +136,11 @@ namespace WordOnline.Tests
             bool callbackInvoked = false;
             MatchTicket receivedTicket = new MatchTicket();
 
-            yield return _service.CreateTicket("standard", ticket =>
+            yield return Drive(_service.CreateTicket("standard", ticket =>
             {
                 callbackInvoked = true;
                 receivedTicket = ticket;
-            });
+            }));
 
             Assert.IsTrue(callbackInvoked);
             Assert.IsNull(receivedTicket);
