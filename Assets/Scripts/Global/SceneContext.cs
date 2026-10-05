@@ -1,11 +1,16 @@
 using Data;
+using Data.BattleThemes;
 using GameScene.Dto;
 
 namespace Global
 {
     public class SceneContext : SingletonObject<SceneContext>
     {
-    
+        static SceneContext()
+        {
+            Server.JwtTokenProvider = () => JwtToken;
+        }
+
         public static string JwtToken
         {
             get; set;
@@ -61,7 +66,54 @@ namespace Global
         {
             get; set;
         }
-    
+
+        /// <summary>
+        /// Battle scene environment art for the PVE match about to start, read by
+        /// `BattleThemeApplier` when GameScene loads. Set right before that load for an
+        /// adventure match; null (the default, and the value on every non-adventure entry
+        /// point) keeps GameScene's forest look.
+        /// </summary>
+        public static BattleThemeScriptableObject BattleTheme
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Adventure being played, carried the same way as <see cref="BattleTheme"/>:
+        /// `Data.Adventures.CurrentAdventure` is destroyed when GameScene loads (it is
+        /// bound to AdventureScene / AdventuresScene), so `AdventureMapController`
+        /// stamps these fields right before starting the match and `ResultScene`
+        /// reads them to route back to the right adventure and stage instead of the
+        /// lobby. Null on every non-adventure match.
+        /// </summary>
+        public static long? AdventureId
+        {
+            get; set;
+        }
+
+        /// <summary>Scenario the player just started; used by the result screen's Retry button.</summary>
+        public static long? AdventureScenarioId
+        {
+            get; set;
+        }
+
+        public static string AdventureName
+        {
+            get; set;
+        }
+
+        /// <summary>1-based stage index within <see cref="AdventureName"/>, for the result caption.</summary>
+        public static int AdventureStageNumber
+        {
+            get; set;
+        }
+
+        /// <summary>1-based position of the scenario inside its stage, for the "1-2" caption.</summary>
+        public static int AdventureScenarioNumber
+        {
+            get; set;
+        }
+
         public static void ClearContext()
         {
             JwtToken = null;
@@ -70,7 +122,24 @@ namespace Global
             MatchResult = null;
             SelectedDeck = null;
             OwnedCards = null;
+            ClearAdventureMatch();
             GuestContext.ClearGuestInfo();
+            Data.Quests.ClaimedQuestLedger.Session.Clear();
+        }
+
+        /// <summary>
+        /// Forgets the adventure match: call it on every non-adventure entry into GameScene,
+        /// or a PVP match after an adventure would still get the adventure's battle theme and
+        /// its result screen would route back to the adventure map.
+        /// </summary>
+        public static void ClearAdventureMatch()
+        {
+            BattleTheme = null;
+            AdventureId = null;
+            AdventureScenarioId = null;
+            AdventureName = null;
+            AdventureStageNumber = 0;
+            AdventureScenarioNumber = 0;
         }
     }
 }

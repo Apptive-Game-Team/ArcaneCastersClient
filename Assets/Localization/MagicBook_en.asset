@@ -350,6 +350,44 @@ MonoBehaviour:
     m_Localized: Back to list
     m_Metadata:
       m_Items: []
+  - m_Id: 1000064
+    m_Localized: All Types
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000065
+    m_Localized: Unit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000066
+    m_Localized: Building
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000067
+    m_Localized: Drop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000068
+    m_Localized: Explosion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000069
+    m_Localized: Shot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000070
+    m_Localized: All Mana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000071
+    m_Localized: Shakes a circular area, turning medium rock remnants into Rock Golems
+      and small remnants into MiniRocks.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000072
+    m_Localized: Detonates every rock remnant in a circular area, creating an explosion
+      centered on each remnant.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

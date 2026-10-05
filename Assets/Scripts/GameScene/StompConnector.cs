@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Data;
 using Data.Net;
+using GameScene.Dto;
 using GameScene.Handler;
 using Global;
 using Global.Stomp;
@@ -54,7 +55,13 @@ namespace GameScene
         private StompSubscriptionRegistry _registry;
         private StompReconnectController _reconnect;
 
-        private readonly IFrameInfoHandler<string> _frameInfoHandler = new GeneralHandler();
+        /// <summary>화면에 보인 PVE 대사 번호. 재연결 때 pveSync 에 실어 보낸다.</summary>
+        private readonly PveSyncState _pveSync = new PveSyncState();
+
+        private IFrameInfoHandler<string> _frameInfoHandler;
+
+        /// <summary>frame 구독을 걸었는지. 그 전에 연결되는 것은 최초 연결이라 pveSync 를 보내지 않는다.</summary>
+        private bool _frameSubscribed;
         private readonly FrameSilenceWatch _silence = new FrameSilenceWatch();
         private readonly ConnectAttemptSchedule _connectSchedule = new ConnectAttemptSchedule();
         private readonly StompConnectGate _connectGate = new StompConnectGate();
@@ -68,12 +75,20 @@ namespace GameScene
         /// </summary>
         private bool _intentionalDisconnect;
 
+        /// <summary>
+        /// 경기 결과를 받았는지. 서버는 결과를 보낸 뒤 FrameInfo를 더 보내지 않으므로
+        /// 결과 화면으로 넘어가기 전까지의 무음과 끊김은 연결 문제가 아니다.
+        /// </summary>
+        private bool _matchEnded;
+
         // ─── 생명주기 ────────────────────────────────────────────────────────
 
         protected override void Awake()
         {
             gameObject.name = "StompConnector";
             base.Awake();
+
+            _frameInfoHandler = new GeneralHandler(_pveSync);
 
             _registry = new StompSubscriptionRegistry();
             _reconnect = gameObject.AddComponent<StompReconnectController>();
@@ -136,7 +151,7 @@ namespace GameScene
 
         public void ConnectToServer()
         {
-            if (_intentionalDisconnect) return;
+            if (_intentionalDisconnect || _matchEnded) return;
 
             float now = Time.unscaledTime;
             switch (_connectGate.Decide(_transport.IsConnected, now))
@@ -198,6 +213,16 @@ namespace GameScene
                 _transport.Unsubscribe(subscriptionId);
         }
 
+        /// <summary>
+        /// 결과를 받았다고 알린다. 무음 감시와 재연결을 멈춰, 결과 화면으로 넘어가기 전
+        /// 대기 시간에 재연결 문구가 뜨거나 이탈 신고가 나가지 않게 한다.
+        /// </summary>
+        public void NotifyMatchEnded()
+        {
+            _matchEnded = true;
+            _reconnect.ResetRetries();
+        }
+
         // ─── 게임 플로우 ─────────────────────────────────────────────────────
 
         private IEnumerator GameFlowCoroutine(string sessionId)
@@ -207,7 +232,10 @@ namespace GameScene
 
             UnsubscribeFromTopic("match-sub");
             long userId = isSpectator ? 0 : SceneContext.UserID;
+            _pveSync.Reset();
             SubscribeToTopic($"/game/{sessionId}/frameInfos/{userId}", OnFrameInfoReceived, "frame-sub");
+            _frameSubscribed = true;
+            RequestPveSync();
 
             yield return WatchFrameSilence();
         }
@@ -259,6 +287,8 @@ namespace GameScene
             {
                 yield return null;
 
+                if (_matchEnded) yield break;
+
                 SilenceEscalation escalation = _silence.Tick(Time.unscaledTime, Time.unscaledDeltaTime);
                 if (escalation == SilenceEscalation.None) continue;
 
@@ -297,6 +327,17 @@ namespace GameScene
             _connectGate.NoteSettled();
             _reconnect.ResetRetries();
             _registry.ResubscribeAll(_transport);
+            if (_frameSubscribed)
+            {
+                RequestPveSync();
+            }
+        }
+
+        /// <summary>서버가 목표와 놓친 대사를 다시 보내게 한다. 관전자와 PVE 가 아닌 판은 보내지 않는다.</summary>
+        private void RequestPveSync()
+        {
+            if (isSpectator) return;
+            PveSyncSender.Send(_pveSync.LastEventSeq);
         }
 
         /// <summary>
@@ -309,10 +350,10 @@ namespace GameScene
             WDebug.Log("[STOMP] 연결 종료: " + message);
             _connectGate.NoteSettled();
 
-            if (_intentionalDisconnect)
+            if (_intentionalDisconnect || _matchEnded)
             {
-                // OnDestroy에서 우리가 닫은 소켓이다. 씬을 떠나는 중에 사다리를 걸면
-                // 의도한 종료가 재연결 루프로 바뀐다.
+                // OnDestroy에서 우리가 닫은 소켓이거나 경기가 이미 끝났다. 씬을 떠나는 중에
+                // 사다리를 걸면 의도한 종료가 재연결 루프로 바뀐다.
                 return;
             }
 
@@ -325,7 +366,7 @@ namespace GameScene
             WDebug.LogError("[STOMP] 에러: " + error);
             _connectGate.NoteSettled();
 
-            if (_intentionalDisconnect) return;
+            if (_intentionalDisconnect || _matchEnded) return;
 
             SystemMessageUI.Instance.ShowMessage(connectionDelayed);
             _reconnect.NotifyConnectionLost();
@@ -333,6 +374,8 @@ namespace GameScene
 
         private void HandleMaxRetriesExceeded()
         {
+            if (_matchEnded) return;
+
             WDebug.LogError("[STOMP] 재연결 불가 – 최대 횟수 초과");
             StartCoroutine(AbandonSession(SessionLossReason.ReconnectAttemptsExhausted, RetryFromScratch));
         }

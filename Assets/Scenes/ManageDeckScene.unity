@@ -1145,8 +1145,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -388, y: 70.5}
-  m_SizeDelta: {x: 420.5, y: 283}
+  m_AnchoredPosition: {x: -388, y: 26.5}
+  m_SizeDelta: {x: 420.5, y: 239}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &282030231
 MonoBehaviour:
@@ -1768,6 +1768,7 @@ MonoBehaviour:
   itemRoot: {fileID: 489897595}
   detailFont: {fileID: 11400000, guid: 27eb6710ab8b4024989693d7f57479f3, type: 2}
   descriptionFont: {fileID: 11400000, guid: b15c5506cbcd44b48b4a55fb77fea659, type: 2}
+  previewPrefab: {fileID: 11400001, guid: aa570083ce364c4485dd61ac12ca4301, type: 3}
 --- !u!114 &560790886
 MonoBehaviour:
   m_ObjectHideFlags: 0

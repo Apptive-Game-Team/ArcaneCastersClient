@@ -4,6 +4,8 @@ using GameScene.Dto;
 using Global;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization.Components;
+using UnityEngine.Localization.Tables;
 
 namespace ResultScene
 {
@@ -19,6 +21,21 @@ namespace ResultScene
         [SerializeField] GameObject drawTitle;
         [SerializeField] Color mmrGainColor = new Color(0.35686f, 0.81569f, 0.29804f, 1f);
         [SerializeField] Color mmrLossColor = new Color(0.94118f, 0.26667f, 0.22745f, 1f);
+
+        // Adventure matches replace the MMR result with cleared/failed and a stage
+        // caption instead. AdventureMapController stamps the adventure/stage context
+        // onto SceneContext right before starting the match (that scene and
+        // CurrentAdventure are both gone by the time the match ends), so this reads
+        // it back rather than re-fetching anything.
+        [SerializeField] private LocalizeStringEvent winTitleLabel;
+        [SerializeField] private LocalizeStringEvent loseTitleLabel;
+        [SerializeField] private GameObject mmrLabel;
+        [SerializeField] private GameObject retryButton;
+
+        // LobbyUI table keys. TableEntryReference has no public constructor; it converts
+        // implicitly from a key string or an entry id.
+        private static readonly TableEntryReference AdventureClearedEntry = "AdventureCleared";
+        private static readonly TableEntryReference AdventureFailedEntry = "AdventureFailed";
 
         private void Awake()
         {
@@ -68,9 +85,46 @@ namespace ResultScene
         // outcome 은 서버 ResultType 의 이름(Win, Lose, Draw)이다.
         private void ShowResult(string outcome, short lastMmr, short newMmr)
         {
+            if (SceneContext.AdventureId.HasValue)
+            {
+                ShowAdventureResult(outcome);
+                return;
+            }
+
             ShowTitle(outcome);
             SetResultText(newMmr.ToString());
             SetMmrDelta(newMmr - lastMmr);
+        }
+
+        /// <summary>
+        /// Adventure result: cleared/failed instead of an MMR delta, plus the
+        /// adventure caption (e.g. "Forest · 2-3": stage 2, its third match).
+        /// </summary>
+        private void ShowAdventureResult(string outcome)
+        {
+            bool cleared = string.Equals(outcome, "Win", StringComparison.OrdinalIgnoreCase);
+
+            SetActive(winTitle, cleared);
+            SetActive(loseTitle, !cleared);
+            SetActive(drawTitle, false);
+            SwapLabel(winTitleLabel, AdventureClearedEntry);
+            SwapLabel(loseTitleLabel, AdventureFailedEntry);
+
+            SetActive(mmrLabel, false);
+            if (mmrDeltaText != null) mmrDeltaText.gameObject.SetActive(false);
+
+            // "Forest · 1-2", the same label the map node shows.
+            string caption = $"{SceneContext.AdventureName} · {SceneContext.AdventureStageNumber}-{SceneContext.AdventureScenarioNumber}";
+            SetResultText(caption);
+
+            SetActive(retryButton, true);
+        }
+
+        private static void SwapLabel(LocalizeStringEvent label, TableEntryReference entry)
+        {
+            if (label == null) return;
+            label.StringReference.TableEntryReference = entry;
+            label.RefreshString();
         }
 
         private void ShowTitle(string outcome)

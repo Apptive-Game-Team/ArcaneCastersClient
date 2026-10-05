@@ -180,3 +180,166 @@ field with the text rect inset 10 top and bottom (14 left) and size 13 (a line
 of about 16): typed text and the placeholder were both invisible while the
 field still took focus. Give input text rects at least 1.3x the font size in
 height, or set `m_VerticalOverflow: 1`.
+
+## A checked-in count of hand-placed instances can be stale — recount before trusting it
+
+A task brief said `GameScene.unity`'s `Map` GameObject parents "~76" `tree_1`..
+`tree_4`/`rock` `SpriteRenderer` children. The actual count, read from the
+scene's own `m_Children` list under the `Map` `Transform` (fileID `1756437240`),
+is 271 (`tree_1` 65, `tree_2` 69, `tree_3` 59, `tree_4` 77, `rock` 1); no
+`grass_1`/`grass_2` instances exist in this scene yet. A prefix-matching approach (`BattleThemeApplier` walks `foreach (Transform
+child in transform)` and matches each child's name against `tree_1`,
+`tree_2`, … rather than holding 76 or 271 individual references) survives this
+kind of drift; a fixed list or count written into a script or a doc does not. When a brief states a count of
+hand-placed scene instances, recount from the `.unity` file's own children list
+before designing around it — do not carry the number forward unchecked.
+
+## Validating C# compiles here without the Editor or a generated `Assembly-CSharp.csproj`
+
+`dotnet build Assembly-CSharp.csproj` (see the root `AGENTS.md`) assumes the
+Editor has generated that project file at least once. In a fresh worktree in
+this environment the Editor never runs, so the `.csproj` (gitignored) does not
+exist and cannot be generated. `dotnet` itself is also not on `PATH` inside
+WSL, but `/mnt/c/Program Files/dotnet/dotnet.exe` is, and WSL runs `.exe`
+transparently — the same binfmt_misc path the `unity-cli` skill documents for
+`unity.exe`. The same path-translation trap applies: a Linux-style absolute
+path handed to the Windows `dotnet.exe` is misparsed as a compiler switch
+(`error CS2007: Unrecognized option: '/home\...'`). Copy the sources to a
+`/mnt/c/...` working directory (or run `wslpath -w` on every path argument)
+before invoking it.
+
+## `StagePanel` caps scenarios at the prefab's button count, silently
+
+`Assets/Scripts/Adventures/Scenarios/StagePanal.cs`'s `StagePanel.PropagateSetup`
+loops `for (var i = 0; i < buttons.Count; i++)` and only ever reads
+`stage.Scenarios[i]` for `i < buttons.Count`. A stage with more scenarios than
+its `stagePanelPrefab` has `ScenarioButton` slots does not throw and does not
+show a fifth button — the extra scenarios are simply never displayed, and there
+is no error to notice. `Assets/Prefabs/UI/Adventures/StagePanel/Stage.prefab`
+carries exactly 4 slots (built for Stage 1's 4 scenarios); it happens to be
+enough for every stage introduced with the adventure rework (each new stage has
+3 scenarios), so all of Stage2–Stage4 reuse it unchanged with the trailing slot
+left inactive. Before wiring a new `AdventureStageScriptableObject.stagePanelPrefab`,
+count that stage's scenarios against the target prefab's `buttons` list
+(`Stage.prefab`'s `StagePanel` component lists 4 `fileID`s) rather than assuming
+the existing prefab scales.
+
+## A stub stage asset can carry a placeholder wiring and a field the class no longer has
+
+`Stage2.asset` existed before this content pass as a placeholder: its
+`stagePanelPrefab` pointed at `EmptyStage.prefab` (a `StagePanel` with
+`buttons: []`, guid `c5e33552230124a83a36a0d1ed9d9fea`) instead of the real
+`Stage.prefab`, and it carried a `stageName:` `LocalizedString` block that
+`AdventureStageScriptableObject` (`Assets/Scripts/Data/Adventures/Local/AdventureStageScriptableObject.cs`)
+no longer declares as a field — Unity's serializer keeps unknown keys in a
+`.asset` file instead of erroring, so the stale block sat there silently until
+someone diffed the class against the asset. When filling in a stub
+`AdventureStageScriptableObject` asset that predates the class's current shape,
+diff every field the `.asset` declares against the script's current
+`[SerializeField]` list and delete anything the script no longer has, in the
+same pass that fills in the real content.
+
+## `stone_fortress.png` is the adventure icon, not a story backdrop
+
+`Assets/Art/Images/Adventure/stone_fortress.png` (guid
+`b9322f20c555b4d75bcafccb4ea3cf2b`) is already wired as `FortressAdventure.asset`'s
+`iconImage` and is 256×183 — a thumbnail. `forest_adventure_stage_1.png` (guid
+`2d4e57a2719ef429aa4d24882eca8f28`), the `backgroundImage` both existing forest
+stages use for the pre-match story overlay, is 867×256. Stretching the icon to
+that overlay's size would visibly pixelate it, so `Stage3.asset` and
+`Stage4.asset` reuse `forest_adventure_stage_1.png` for `backgroundImage`
+instead of the fortress icon. A new fortress-specific story background, sized
+to match the forest one, is still open work.
+
+A hand-built throwaway `.csproj` referencing `UnityEngine*.dll` from any
+locally available Unity player build's `Managed/` folder (even one from an
+unrelated project — the module DLLs are stable enough for `MonoBehaviour`,
+`ScriptableObject`, `SerializeField`, and other core-engine types) compiles
+enough of `Assets/Scripts` to catch namespace, symbol and signature errors in
+new or edited files. It will not compile cleanly end to end: a Managed folder
+from a different project's build will be missing whatever packages that
+project didn't use (this repository's `com.unity.localization` and
+`com.unity.addressables` are common gaps — stub the handful of types actually
+referenced, such as `LocalizedString.GetLocalizedString()`, rather than
+chasing the whole package) and may carry a different `DOTween`/`Newtonsoft.Json`
+version than this project pins, which shows up as errors in unrelated files
+(`SpriteRenderer.DOFade`, a `JsonSubtypeConverter` overload). Confirm those
+errors are confined to files you did not touch — grep the error log for your
+changed file names — rather than treating a nonzero error count as a failed
+check.
+
+## The Windows checkout's `ScriptAssemblies` make a real compile check
+
+`/mnt/c/Users/jys09/Projects/ArcaneCasters/Client/Library/ScriptAssemblies` holds
+the DLLs the Editor last built for this project: `Assembly-CSharp.dll`,
+`WordOnline.*.dll`, `Unity.TextMeshPro.dll`, `Unity.Localization.dll` and the
+rest. Compiling changed files with the Roslyn `csc.dll` from
+`/mnt/c/Program Files/dotnet/sdk/<version>/Roslyn/bincore/` against those DLLs,
+the 2022.3.34f1 Editor's `Managed/UnityEngine/*.dll`, its
+`NetStandard/ref/2.1.0/netstandard.dll` and
+`NetStandard/compat/2.1.0/shims/netfx/mscorlib.dll` checks the new code against
+the project's real types instead of stubs. Two things make it work:
+
+- Pass every argument through a response file (`@args.rsp`) with quoted Windows
+  paths. `Program Files` split on the command line becomes a missing source file
+  for every reference.
+- Compile a changed asmdef assembly under its real name (`-out:WordOnline.Contracts.dll`).
+  Under any other name, `Assembly-CSharp.dll` still asks for `WordOnline.Contracts`
+  and every type it exposes from there fails with CS0012.
+
+Unity's NUnit (`com.unity.ext.nunit`) throws `TypeLoadException` for
+`System.Runtime.Remoting.Messaging.CallContext` on .NET 8, so it cannot run the
+EditMode tests outside the Editor. Running test sources that only touch plain C#
+needs a small stand-in for `Assert`, `[Test]` and `[TestCase]`; that checks the
+logic, not NUnit's own behavior.
+### A full compile, Localization included, from a Windows checkout's generated projects
+
+When a Windows checkout of this project has been opened in the Editor (on the
+profile quests work it was `C:\dev\ac-client`), its generated `*.csproj` files and
+`Library\ScriptAssemblies` / `Library\PackageCache` give a real compile of a WSL
+worktree, `com.unity.localization` and Addressables included. Copy the worktree's
+`Assets/Scripts` and `Assets/Tests` under `C:\temp\<name>`, copy the generated
+`Assembly-CSharp.csproj` and `WordOnline.*.csproj` next to them, replace every
+`<Compile Include>` with the worktree's own file list (one list per `.asmdef`
+folder, everything else under `Assets/Scripts` minus `Editor` folders for
+Assembly-CSharp), and point the `Assembly-CSharp-firstpass` and `MCPForUnity.*`
+project references at the DLLs in that checkout's `Library\ScriptAssemblies`.
+`dotnet.exe build` on `Assembly-CSharp.csproj` then reports 0 errors only when the
+new code really compiles; the remaining warnings are reference-version conflicts.
+The checkout's packages are whatever it last imported, so compare its
+`Packages/packages-lock.json` with yours before trusting a package API.
+
+An earlier compile workspace (`C:\temp\claude-pq`) is a tempting shortcut: copy
+its `*.csproj` and only swap the `<Compile Include>` lists. Its project files are
+a snapshot of the asmdefs at the time, not of yours. When the chest work added
+`WordOnline.Serialization` to `WordOnline.Contracts.asmdef`, the copied
+`WordOnline.Contracts.csproj` still lacked that `ProjectReference`, and the build
+failed with `CS0234: 'Serialization' does not exist in the namespace 'Global'`
+in three contract files nobody had touched. Compare each copied project's
+`ProjectReference` list with the `references` of the matching `.asmdef` before
+reading the error list.
+
+The EditMode test DLL built this way cannot be run outside Unity: Unity's
+`nunit.framework.dll` needs .NET Framework remoting (`CallContext`). Tests that
+touch only `WordOnline.Contracts` and `JsonCodec` run under `dotnet test` in a
+`net8.0` project that compiles those sources directly with the NuGet `NUnit`,
+`NUnit3TestAdapter` and `Newtonsoft.Json` packages; drop the two converters in
+`JsonCodec.CreateSettings()` that need UnityEngine types.
+
+## ProfileScene had no SystemMessage overlay
+
+`SystemMessageUI.Instance` is a scene-local singleton set in `Awake`, and the
+`SystemMessage` prefab is instanced per scene. Every scene had it except
+`ProfileScene`, so a `SystemMessageUI.Instance.ShowMessage` there was a
+`NullReferenceException`. Before calling it from a scene, grep the scene for the
+prefab guid `c3bf6386364e64872904c6d1fa77d05d`.
+
+## Everything under the adventure map's `Nodes` is destroyed on every rebuild
+
+`AdventureMapController.Show` deletes every child of `nodesContainer` (`Nodes` in
+`AdventureScene.unity`) before it draws the stage nodes again, except the objects
+it names: `currentMarker` and `endOfRoadSlot`. A scene object placed under `Nodes`
+without its own field in that skip list loads, renders in the Editor, and is gone
+the first time the map draws. The end-of-adventure chest lives there for that
+reason as `endOfRoadSlot`; anything else that has to sit on the road needs the
+same treatment.

@@ -58,6 +58,21 @@ namespace WordOnline.Tests
                 $"so {ScalerTypeName} belongs on the three blast prefabs only.");
         }
 
+        [Test]
+        public void GroundSpawnedExplodeSpriteUsesBottomCenterPivot()
+        {
+            GameObject prefab = Resources.Load<GameObject>("Prefabs/Effects/Explode");
+            Assert.IsNotNull(prefab, "Resources/Prefabs/Effects/Explode.prefab must be loadable.");
+
+            SpriteRenderer renderer = prefab.GetComponentInChildren<SpriteRenderer>();
+            Assert.IsNotNull(renderer, "Effects/Explode must carry a SpriteRenderer.");
+            Assert.IsNotNull(renderer.sprite, "Effects/Explode must carry a sprite.");
+
+            Assert.AreEqual(0f, renderer.sprite.pivot.y, 0.01f,
+                "Effects/Explode is instantiated at a ground position. A centered pivot puts the " +
+                "lower half below the battlefield, so the sprite must rise from a bottom-center pivot.");
+        }
+
         private static MonoBehaviour FindScaler(GameObject prefab)
         {
             return prefab.GetComponents<MonoBehaviour>()

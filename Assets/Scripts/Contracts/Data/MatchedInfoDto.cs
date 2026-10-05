@@ -39,6 +39,22 @@ namespace Data
             return true;
         }
 
+        /// <summary>
+        /// The user a player object belongs to, from its master name. Null for any other master.
+        /// </summary>
+        public User FindUserByMaster(string master)
+        {
+            switch (master)
+            {
+                case "LeftPlayer":
+                    return leftUser;
+                case "RightPlayer":
+                    return rightUser;
+                default:
+                    return null;
+            }
+        }
+
         public static MatchedInfoDto CreateDebugSession(string sessionId, string userSide, long userId)
         {
             long userIdLeft = userSide == "left" ? userId : -1;

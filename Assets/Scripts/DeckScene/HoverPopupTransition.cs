@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DeckScene
 {
@@ -8,6 +9,7 @@ namespace DeckScene
     {
         public const float DefaultShowDelaySeconds = 1f;
         public const float DefaultFadeSeconds = 0.25f;
+        public const int PopupSortingOrder = 100;
 
         private readonly MonoBehaviour owner;
         private Coroutine delayCoroutine;
@@ -56,6 +58,7 @@ namespace DeckScene
             }
 
             root.SetActive(true);
+            BringToFront(root, PopupSortingOrder + 1);
             SetAlpha(root, 0f);
             beforeShow?.Invoke();
             MonoBehaviour runner = GetRunner();
@@ -81,6 +84,33 @@ namespace DeckScene
 
             SetAlpha(root, 0f);
             root.SetActive(false);
+        }
+
+        // Popups are plain children in the scene hierarchy, so other UI that comes
+        // later in sibling order draws over them. A nested Canvas with override
+        // sorting lifts the popup above that UI; the raycaster keeps its items hoverable.
+        public static void BringToFront(GameObject root, int sortingOrder)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            root.transform.SetAsLastSibling();
+
+            Canvas canvas = root.GetComponent<Canvas>();
+            if (canvas == null)
+            {
+                canvas = root.AddComponent<Canvas>();
+            }
+
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = sortingOrder;
+
+            if (root.GetComponent<GraphicRaycaster>() == null)
+            {
+                root.AddComponent<GraphicRaycaster>();
+            }
         }
 
         private IEnumerator DelayRoutine(Action action, float delaySeconds)

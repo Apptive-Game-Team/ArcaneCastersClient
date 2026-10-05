@@ -25,6 +25,15 @@ overwritten in the same frame and the button stays grey. A button that has to
 stay pressable after a click — one that asks the user to press again to
 confirm, for example — must wait a frame before calling `ResetButton()`.
 
+Before changing what an existing button component does, find every scene and
+prefab that uses it: `git grep <guid from its .cs.meta> -- '*.unity' '*.prefab'`.
+The folder a script sits in does not tell you. `ResultScene.GotoLobbyButton` is
+also the back button of `AdventuresScene`, `MagicBookScene` and
+`ManageDeckScene`. #170 made it load `AdventureScene` after an adventure match,
+and that left players unable to leave `AdventuresScene` for the lobby (#172).
+When only one scene needs the new behavior, write a new component for that
+scene, as `ResultContinueButton` does.
+
 Follow [scene-space.md](.agents/docs/scene-space.md) before writing gameplay code that positions anything in the world or animates a `ServedObject`. The camera is tilted and sprites are billboarded to it, so `Vector3.up` and `Vector3.Distance` are the wrong tools for offsets and lengths measured off a sprite. That file also records that this project has no `Animator`.
 
 Follow [json-payloads.md](.agents/docs/json-payloads.md) before adding a field to a server DTO, writing a `JsonConverter`, or typing a DTO field as an enum. `JsonCodec` registers `StringEnumConverter` for the whole client, so one unknown enum name from the server throws and the caller discards the entire response; Json.NET also serializes getter-only properties, so a cached property lands in the `PlayerPrefs` cache unless it is `[JsonIgnore]`.
@@ -119,6 +128,9 @@ For Unity Editor automation through MCP, use the project skill at
 `.agents/skills/unity-mcp-orchestrator/SKILL.md`.
 
 ## Configuration Notes
+
+Before changing magic preview playback or registrations, read
+`.agents/docs/magic-preview.md` for damage-status and recording validation traps.
 `DEV_BUILD` controls development server routing for WebGL builds. Avoid editing generated Unity metadata by hand unless the change is intentional, and keep `ProjectSettings/ProjectVersion.txt` in sync with the Unity version used for the change.
 
 ## Versioning

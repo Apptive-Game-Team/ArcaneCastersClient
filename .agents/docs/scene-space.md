@@ -23,6 +23,13 @@ places `LeftPlayer` at `x = 1` and `RightPlayer` at `x = 17`, so **`LeftPlayer`
 faces `+X` and `RightPlayer` faces `-X`**, and `Z` is the width of the field, not
 a heading. `SceneContext.Me` is the string that says which side you are.
 
+For a runtime XZ ground made with Unity's built-in `PrimitiveType.Quad`, check
+its mesh normal before choosing the rotation. This project's Unity 2022 Quad
+normal is local `-Z`, so `Quaternion.Euler(90f, 0f, 0f)` faces it upward; `-90f`
+faces it into the ground. The first magic-preview grass quad had the right
+texture and camera position but remained invisible because it was back-facing.
+Check the Game View or RenderTexture pixels, not only `MeshRenderer.isVisible`.
+
 `MagicIndicatorResolver.GetForwardDirection()` is that convention written down;
 use it rather than hard-coding `Vector3.right`. Code that forgets the right side
 looks correct in every left-side test and points backwards in half of all matches.
@@ -177,6 +184,28 @@ three mechanisms:
 - **DOTween.** `DOTweenAction` holds the shared motions; the
   `ServedObjectComponent/Motion` controllers start an idle tween in `Awake`.
 - **Spawned effect prefabs**, for hits, deaths and spawns.
+
+### A ground-spawned effect also needs a bottom pivot
+
+`OnDestroySpawner` instantiates its effect at the destroyed object's world position, which is the
+ground contact point. A sprite imported with the default centred pivot therefore puts its lower
+half below the battlefield. `Effects/Explode` rendered only its upper half this way even though the
+PNG itself was complete. Import ground-spawned effect sprites with `Bottom Center` alignment, or
+explicitly offset them along screen-up when their visual is intentionally centred on the spawn
+point. Check the importer pivot before changing the PNG or scaling the prefab.
+
+For persistent status effects, `ServedObjectEffectRenderer.SpawnEffect` resets
+the effect root's local position and rotation to zero, then applies the unit's
+effect scale. Put a visual offset on a child transform; moving the prefab root
+is overwritten at spawn. `StormStagCharge4` originally placed the centred
+lightning ring at the stag's feet, burying its lower half. Its `AuraVisual` child
+now holds both the renderer and pulse/rotation component at local Y `0.67`.
+The 512x469 sprite at 400 pixels per unit needs at most
+`1.08 * (469/800 * cos(3 degrees) + 512/800 * sin(3 degrees)) = 0.6685`
+units below its centre, so that offset keeps the whole animated ring above the
+root even during its pulse and tilt. Recompute this clearance if the sprite,
+pixels per unit or animation limits change. Keep the centred pivot on the
+shared lightning aura texture: the player's staff effects also use it.
 
 ### Replacing a hit visual may also require suppressing a projectile
 

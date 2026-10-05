@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Data;
 using Data.Localization;
+using Data.Magic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -17,6 +18,8 @@ namespace DeckScene
         [SerializeField] private UnityEngine.UI.InputField searchInput;
         [SerializeField] private TMP_Dropdown sortDropdown;
         [SerializeField] private TMP_Dropdown attributeDropdown;
+        [SerializeField] private TMP_Dropdown typeDropdown;
+        [SerializeField] private TMP_Dropdown manaDropdown;
 
         private readonly DeckOwnedCardSortMode[] sortOptions =
         {
@@ -44,6 +47,8 @@ namespace DeckScene
             searchInput ??= transform.Find("SearchInput")?.GetComponent<UnityEngine.UI.InputField>();
             sortDropdown ??= transform.Find("SortDropdown")?.GetComponent<TMP_Dropdown>();
             attributeDropdown ??= transform.Find("AttributeDropdown")?.GetComponent<TMP_Dropdown>();
+            typeDropdown ??= transform.Find("TypeDropdown")?.GetComponent<TMP_Dropdown>();
+            manaDropdown ??= transform.Find("ManaDropdown")?.GetComponent<TMP_Dropdown>();
 
             BindControls();
             RefreshLocalizedText();
@@ -69,6 +74,8 @@ namespace DeckScene
             searchInput?.onValueChanged.AddListener(OnSearchChanged);
             sortDropdown?.onValueChanged.AddListener(OnSortChanged);
             attributeDropdown?.onValueChanged.AddListener(OnAttributeChanged);
+            typeDropdown?.onValueChanged.AddListener(OnTypeChanged);
+            manaDropdown?.onValueChanged.AddListener(OnManaChanged);
         }
 
         private void UnbindControls()
@@ -76,6 +83,8 @@ namespace DeckScene
             searchInput?.onValueChanged.RemoveListener(OnSearchChanged);
             sortDropdown?.onValueChanged.RemoveListener(OnSortChanged);
             attributeDropdown?.onValueChanged.RemoveListener(OnAttributeChanged);
+            typeDropdown?.onValueChanged.RemoveListener(OnTypeChanged);
+            manaDropdown?.onValueChanged.RemoveListener(OnManaChanged);
         }
 
         private void OnSelectedLocaleChanged(Locale locale)
@@ -101,6 +110,22 @@ namespace DeckScene
             if (index >= 0 && index < attributeOptions.Length)
             {
                 deckManagementController?.SetOwnedCardAttributeFilter(attributeOptions[index]);
+            }
+        }
+
+        private void OnTypeChanged(int index)
+        {
+            if (index >= 0 && index < MagicCastKinds.FilterOptions.Length)
+            {
+                deckManagementController?.SetOwnedCardCastKindFilter(MagicCastKinds.FilterOptions[index]);
+            }
+        }
+
+        private void OnManaChanged(int index)
+        {
+            if (index >= 0 && index < ManaBands.FilterOptions.Length)
+            {
+                deckManagementController?.SetOwnedCardManaBandFilter(ManaBands.FilterOptions[index]);
             }
         }
 
@@ -132,8 +157,18 @@ namespace DeckScene
                 return;
             }
 
+            List<string> typeLabels = await MagicFilterLabels.CastKindLabels();
+            List<string> manaLabels = await MagicFilterLabels.ManaBandLabels();
+
+            if (refreshVersion != localizationRefreshVersion)
+            {
+                return;
+            }
+
             SetOptions(sortDropdown, sortLabels);
             SetOptions(attributeDropdown, attributeLabels);
+            SetOptions(typeDropdown, typeLabels);
+            SetOptions(manaDropdown, manaLabels);
 
             if (searchInput?.placeholder is UnityEngine.UI.Text placeholder)
             {

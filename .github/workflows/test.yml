@@ -1,0 +1,101 @@
+name: Unity Tests
+
+# Assets/Tests 아래 테스트를 Unity Test Runner 로 돌린다. 현재는 EditMode
+# 테스트(WordOnline.Tests.EditMode)만 있으므로 EditMode 만 실행한다.
+# PlayMode 테스트가 생기면 testMode 를 all 로 바꾸면 된다.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+      - deploy
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+
+# 같은 브랜치/PR 에 새 커밋이 오면 이전 실행은 취소한다.
+concurrency:
+  group: unity-tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  # ProjectSettings/ProjectVersion.txt 기준
+  UNITY_VERSION: 2022.3.34f1
+
+jobs:
+  editmode:
+    name: EditMode tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      # 빌드 워크플로와 캐시 키를 나눠 서로의 Library 를 덮어쓰지 않게 한다.
+      # 테스트는 Linux 에디터 기본 타깃으로 임포트하므로 standalone 캐시를 폴백으로 쓴다.
+      - name: Cache Library folder
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-Test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-Test-
+            Library-StandaloneLinux64-
+            Library-
+
+      # unity-test-runner 는 UNITY_LICENSE 를 받으면 .ulf 파일을 그대로 활성화하는데,
+      # 이 저장소의 라이선스는 그 방식에서 "TimeStamp validation failed" 로 거절된다.
+      # unity-builder 는 시리얼이 없으면 .ulf 의 DeveloperData 에서 시리얼을 꺼내
+      # 이메일/비밀번호와 함께 활성화하므로, 같은 방식으로 시리얼을 넘겨준다.
+      - name: Extract Unity serial from license
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          SERIAL=$(python3 - <<'EOF'
+          import base64, os, re
+          m = re.search(r'<DeveloperData Value="([^"]+)"', os.environ.get("UNITY_LICENSE", ""))
+          print(base64.b64decode(m.group(1)).decode("latin-1")[4:] if m else "")
+          EOF
+          )
+          if [ -z "$SERIAL" ]; then
+            echo "::error::UNITY_LICENSE 에서 시리얼을 찾지 못했습니다."
+            exit 1
+          fi
+          echo "::add-mask::$SERIAL"
+          echo "UNITY_SERIAL=$SERIAL" >> "$GITHUB_ENV"
+
+      - name: Run EditMode tests
+        id: tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: ${{ env.UNITY_VERSION }}
+          testMode: editmode
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: EditMode Test Results
+          customParameters: -logFile -
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: editmode-test-results
+          path: ${{ steps.tests.outputs.artifactsPath || 'test-results' }}
+          retention-days: 14

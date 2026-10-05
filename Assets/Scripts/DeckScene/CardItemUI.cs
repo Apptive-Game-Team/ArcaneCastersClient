@@ -32,9 +32,14 @@ namespace DeckScene
         [SerializeField] private GameObject inDeckMarker;
 
         private static readonly Color LockedColor = new Color(0f, 0f, 0f, 0.85f);
+        // 덱에 다 넣어 더 넣을 수 없는 카드의 아트 색.
+        private static readonly Color ExhaustedColor = new Color(1f, 1f, 1f, 0.4f);
         private System.Action<CardItemUI> onPointerEnter;
         private System.Action onPointerExit;
         private Color? tileBaseColor;
+        private int ownedCount;
+        private int? remainingCount;
+        private bool countVisible;
 
         public void Init(string cName, int count)
         {
@@ -43,6 +48,8 @@ namespace DeckScene
 
         public async void Init(string cName, int count, bool unlocked, string unlockText, string progressText)
         {
+            ownedCount = count;
+            countVisible = false;
             if (cardArtImage == null)
                 cardArtImage = transform.GetChild(2).GetComponent<Image>();
 
@@ -76,11 +83,11 @@ namespace DeckScene
 
             if (unlocked)
             {
-                if (cardCountText != null) cardCountText.text = $"×{count}";
                 if (lockRoot != null) lockRoot.SetActive(false);
                 if (unlockConditionText != null) unlockConditionText.text = "";
                 if (unlockProgressText != null) unlockProgressText.text = "";
-                cardArtImage.color = Color.white;
+                countVisible = true;
+                RefreshCount();
                 if (bg != null) bg.color = tileBaseColor ?? Color.white;
             }
             else
@@ -92,6 +99,28 @@ namespace DeckScene
                 cardArtImage.color = LockedColor;
                 if (bg != null) bg.color = LockedColor;
             }
+        }
+
+        /// <summary>
+        /// 덱에 넣고 남은 장수를 보인다. 이름을 읽어 오는 동안 Init 이 끝나지 않았어도 값을 기억해 두었다가
+        /// Init 이 마저 그릴 때 쓴다.
+        /// </summary>
+        public void SetRemaining(int remaining)
+        {
+            remainingCount = remaining;
+            RefreshCount();
+        }
+
+        private void RefreshCount()
+        {
+            if (!countVisible)
+            {
+                return;
+            }
+
+            int shown = remainingCount ?? ownedCount;
+            if (cardCountText != null) cardCountText.text = $"×{shown}";
+            if (cardArtImage != null) cardArtImage.color = shown > 0 ? Color.white : ExhaustedColor;
         }
 
         public void SetInDeck(bool isInDeck)

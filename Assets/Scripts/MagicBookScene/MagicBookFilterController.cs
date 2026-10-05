@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Data;
 using Data.Localization;
+using Data.Magic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -24,6 +25,8 @@ namespace MagicBookScene
         // TODO(#578): 시전 종류 필터는 없어진다. 씬에서 지울 때까지 참조만 남겨 두고 감춘다.
         [SerializeField] private TMP_Text actionTypeLabel;
         [SerializeField] private TMP_Dropdown actionTypeDropdown;
+        [SerializeField] private TMP_Dropdown typeDropdown;
+        [SerializeField] private TMP_Dropdown manaDropdown;
         [SerializeField] private SortButtonBinding[] sortButtons;
         [SerializeField] private FilterButtonBinding[] attributeButtons;
         [SerializeField] private Color selectedColor = new(0.78f, 0.78f, 0.78f, 1f);
@@ -32,7 +35,7 @@ namespace MagicBookScene
         {
             MagicBookSortMode.Name,
             MagicBookSortMode.Attribute,
-            MagicBookSortMode.CardCount,
+            MagicBookSortMode.ManaCost,
         };
 
         private readonly ElementType?[] attributeOptions =
@@ -96,6 +99,8 @@ namespace MagicBookScene
                 attributeDropdown.onValueChanged.AddListener(OnAttributeChanged);
             }
 
+            typeDropdown?.onValueChanged.AddListener(OnTypeChanged);
+            manaDropdown?.onValueChanged.AddListener(OnManaChanged);
         }
 
         /// <summary>
@@ -219,6 +224,8 @@ namespace MagicBookScene
                 attributeDropdown.onValueChanged.RemoveListener(OnAttributeChanged);
             }
 
+            typeDropdown?.onValueChanged.RemoveListener(OnTypeChanged);
+            manaDropdown?.onValueChanged.RemoveListener(OnManaChanged);
         }
 
         private async void RefreshLocalizedText()
@@ -247,6 +254,23 @@ namespace MagicBookScene
 
             await PopulateSortDropdown(refreshVersion);
             await PopulateElementDropdown(attributeDropdown, attributeOptions, refreshVersion);
+
+            List<string> typeLabels = await MagicFilterLabels.CastKindLabels();
+            List<string> manaLabels = await MagicFilterLabels.ManaBandLabels();
+            if (refreshVersion != localizationRefreshVersion)
+            {
+                return;
+            }
+
+            if (typeDropdown != null)
+            {
+                SetOptions(typeDropdown, typeLabels, typeDropdown.value);
+            }
+
+            if (manaDropdown != null)
+            {
+                SetOptions(manaDropdown, manaLabels, manaDropdown.value);
+            }
         }
 
         private async System.Threading.Tasks.Task PopulateSortDropdown(int refreshVersion)
@@ -260,7 +284,7 @@ namespace MagicBookScene
             {
                 await GetMagicBookText("filter.name", "이름"),
                 await GetMagicBookText("filter.attributeSort", "속성"),
-                await GetMagicBookText("filter.cardCount", "카드 수"),
+                await GetMagicBookText("filter.manaCost", "마나"),
             };
 
             if (refreshVersion == localizationRefreshVersion)
@@ -307,6 +331,22 @@ namespace MagicBookScene
 
             selectedSortMode = sortOptions[index];
             magicInfoFactory?.SetSortMode(selectedSortMode);
+        }
+
+        private void OnTypeChanged(int index)
+        {
+            if (index >= 0 && index < MagicCastKinds.FilterOptions.Length)
+            {
+                magicInfoFactory?.SetCastKindFilter(MagicCastKinds.FilterOptions[index]);
+            }
+        }
+
+        private void OnManaChanged(int index)
+        {
+            if (index >= 0 && index < ManaBands.FilterOptions.Length)
+            {
+                magicInfoFactory?.SetManaBandFilter(ManaBands.FilterOptions[index]);
+            }
         }
 
         private void SelectSortMode(MagicBookSortMode mode)

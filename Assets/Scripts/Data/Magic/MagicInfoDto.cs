@@ -32,5 +32,11 @@ namespace Data.Magic
         /// 옛 서버나 이 필드가 없는 마법에서는 null 이다.
         /// </summary>
         public MagicIndicatorDocument indicator;
+
+        /// <summary>
+        /// <c>magics.cast_kind</c>. Spawn(유닛), Summon(건물), Drop, Explosion, Shot 중 하나.
+        /// 옛 lobby 는 보내지 않아 null 이다.
+        /// </summary>
+        public string castKind;
     }
 }

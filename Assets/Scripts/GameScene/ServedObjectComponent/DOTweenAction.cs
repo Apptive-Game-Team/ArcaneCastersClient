@@ -128,13 +128,14 @@ namespace GameScene.ServedObjectComponent
                 .SetLink(tr.gameObject);
         }
     
-        public static void Bounce(Transform tr, Vector3 originScale, float squashScale, float bounceScale, float duration)
+        public static Sequence Bounce(Transform tr, Vector3 originScale, float squashScale, float bounceScale, float duration)
         {
             Sequence seq = DOTween.Sequence();
             seq.SetLink(tr.gameObject);
             seq.Append(tr.DOScale(new Vector3(originScale.x * squashScale, originScale.y * bounceScale, originScale.z),
                     duration / 2).SetEase(Ease.OutQuad))
                 .Append(tr.DOScale(originScale, duration / 2).SetEase(Ease.InQuad));
+            return seq;
         }
 
         public static void Crawl(Transform tr, Vector3 originScale, float stretchScale, float squashScale, float duration)
@@ -248,9 +249,9 @@ namespace GameScene.ServedObjectComponent
             Hop(tr, _mobHopParam.jumpHeight, _mobHopParam.duration);
         }
 
-        public static void BounceMob(Transform tr)
+        public static Sequence BounceMob(Transform tr)
         {
-            Bounce(tr, _mobBounceParam.originScale, _mobBounceParam.squashScale,_mobBounceParam.bounceScale, _mobBounceParam.duration);
+            return Bounce(tr, _mobBounceParam.originScale, _mobBounceParam.squashScale,_mobBounceParam.bounceScale, _mobBounceParam.duration);
         }
 
         public static void HoverMob(Transform tr)

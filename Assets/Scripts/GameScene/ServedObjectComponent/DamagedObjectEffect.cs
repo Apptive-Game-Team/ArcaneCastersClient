@@ -7,10 +7,10 @@ namespace GameScene.ServedObjectComponent
     {
         public static void SetSelfDestroyEffect(string effect, Transform tr)
         {
-            SetSelfDestroyEffect(effect, tr.position);
+            SetSelfDestroyEffect(effect, tr.position, GameScene.Object.PresentationWorld.For(tr));
         }
 
-        public static void SetSelfDestroyEffect(string effect, Vector3 worldPosition)
+        public static void SetSelfDestroyEffect(string effect, Vector3 worldPosition, GameScene.Object.PresentationWorld world = null)
         {
             GameObject effectPrefab = (GameObject) Resources.Load($"Prefabs/Effects/{effect}");
 
@@ -20,7 +20,8 @@ namespace GameScene.ServedObjectComponent
                 return;
             }
 
-            UnityEngine.Object.Instantiate(effectPrefab, worldPosition, Quaternion.identity);
+            if (world != null) world.SpawnEffect(effectPrefab, worldPosition, Quaternion.identity);
+            else UnityEngine.Object.Instantiate(effectPrefab, worldPosition, Quaternion.identity);
         }
     }
 }

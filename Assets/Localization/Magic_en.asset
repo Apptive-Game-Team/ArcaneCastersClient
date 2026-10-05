@@ -434,6 +434,14 @@ MonoBehaviour:
     m_Localized: Bomb Sprite
     m_Metadata:
       m_Items: []
+  - m_Id: 78337000000000000
+    m_Localized: Earth Call
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78337100000000000
+    m_Localized: Rock Blast
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -129,15 +129,40 @@ namespace GameScene
             LogMagicParametersIfChanged(magicData, range, radius);
 
             Vector3 casterPosition = GetCasterPosition();
-            rangeShapeRenderer.SetCircle(casterPosition, range, true, RangeIndicatorSortingOrder, 0f);
 
             if (!TryGetGroundPosition(Input.mousePosition, out Vector3 mouseWorldPos))
             {
+                rangeShapeRenderer.SetCircle(casterPosition, range, true, RangeIndicatorSortingOrder, 0f);
                 return;
             }
 
-            Vector3 previewPosition = ClampToRange(mouseWorldPos, casterPosition, range);
-            aimShapeRenderer.SetCircle(previewPosition, AimIndicatorRadius, true, AimIndicatorSortingOrder, 0f);
+            Vector3 aimPosition = ClampToRange(mouseWorldPos, casterPosition, range);
+
+            // 유닛과 건물은 땅 위 다른 몸과 겹치는 자리에 놓을 수 없다. 조준점이 막혔으면 가까운 빈자리로 옮겨
+            // 인디케이터 전부를 그 자리에 그리고 그 자리로 보낸다. 빈자리가 없으면 전부 빨갛게 그리고 보내지 않는다.
+            // 공중에 나타나는 소환은 겹쳐도 되므로 검사하지 않는다.
+            Vector3 previewPosition = aimPosition;
+            bool noFreeSpot = false;
+            if (PlacementPreview.ChecksOverlap(magicData) && !PlacementPreview.SummonsAirborne(magicData))
+            {
+                // 건물은 indicator 의 첫 원이 몸이라 그 반지름을, 유닛은 object 의 radius parameter 를 쓴다.
+                // indicator 는 조준점 기준으로 먼저 풀어 반지름만 얻는다. 반지름은 위치와 무관하다.
+                float bodyRadius;
+                if (magicData.castKind == MagicCastKind.Building)
+                {
+                    MagicIndicatorResolver.Resolve(
+                        magicData, casterPosition, aimPosition, MagicIndicatorResolver.GetForwardDirection(),
+                        range, resolvedShapes);
+                    bodyRadius = GetFootprintRadius(radius);
+                }
+                else
+                {
+                    bodyRadius = PlacementPreview.GetUnitBodyRadius(magicData);
+                }
+
+                noFreeSpot = !PlacementPreview.TryResolveSpot(
+                    aimPosition, casterPosition, range, bodyRadius, out previewPosition);
+            }
 
             MagicIndicatorResolver.Resolve(
                 magicData,
@@ -146,7 +171,14 @@ namespace GameScene
                 MagicIndicatorResolver.GetForwardDirection(),
                 range,
                 resolvedShapes);
-            DrawSkillIndicatorLayers(resolvedShapes);
+
+            Color? blockedColor = noFreeSpot ? PlacementPreview.NoSpotFillColor : (Color?)null;
+            Color? blockedEdgeColor = noFreeSpot ? PlacementPreview.NoSpotEdgeColor : (Color?)null;
+            rangeShapeRenderer.SetCircle(casterPosition, range, true, RangeIndicatorSortingOrder, 0f, blockedColor,
+                blockedEdgeColor);
+            aimShapeRenderer.SetCircle(previewPosition, AimIndicatorRadius, true, AimIndicatorSortingOrder, 0f,
+                blockedColor, blockedEdgeColor);
+            DrawSkillIndicatorLayers(resolvedShapes, blockedColor, blockedEdgeColor);
 
             // UI 레이캐스트는 클릭을 걸러내는 용도뿐이므로, 실제로 버튼을 뗀 프레임에만 수행한다.
             if (!Input.GetMouseButtonUp(0))
@@ -159,7 +191,18 @@ namespace GameScene
             // 시작한 끌기가 필드 위에서 끝났을 때 마법이 시전된다.
             if (PointerInputUtility.IsPointerCapturedByUi) return;
 
-            if (PointerInputUtility.IsPointerOverUiOrSelectable()) return;
+            // 유닛과 건물은 누른 유닛 자리로 끌려가지 않고 마우스가 가리키는 바닥에 놓인다. 그 밖의 마법은
+            // 유닛을 누르면 Selectable 이 그 유닛 자리로 보낸다.
+            bool leavesBody = MagicCastKinds.LeavesBody(magicData.castKind);
+            if (leavesBody ? PointerInputUtility.IsPointerOverUi() : PointerInputUtility.IsPointerOverUiOrSelectable())
+            {
+                return;
+            }
+
+            if (noFreeSpot)
+            {
+                return;
+            }
 
             if (!CardInputSender.Instance.TrySendInput(previewPosition))
             {
@@ -408,11 +451,29 @@ namespace GameScene
         }
 
         /// <summary>
+        /// 건물이 차지할 땅의 반경. indicator 의 첫 원이 건물 몸이므로 그것을 쓰고, 없으면 마법의 radius 파라미터로 떨어진다.
+        /// </summary>
+        private float GetFootprintRadius(float fallbackRadius)
+        {
+            foreach (ResolvedIndicatorShape shape in resolvedShapes)
+            {
+                if (shape.kind == ResolvedIndicatorShape.Kind.Circle && shape.radius > 0f)
+                {
+                    return shape.radius;
+                }
+            }
+
+            return Mathf.Max(fallbackRadius, 0f);
+        }
+
+        /// <summary>
         /// 푼 도형을 순서대로 그린다. pool 이 모자라면 그때만 GameObject 를 만들고, 남으면 비활성화만 한다.
         /// 여기서는 list 도 문자열도 새로 만들지 않으므로 프레임마다 GC 가 생기지 않는다.
         /// </summary>
-        private void DrawSkillIndicatorLayers(List<ResolvedIndicatorShape> shapes)
+        private void DrawSkillIndicatorLayers(
+            List<ResolvedIndicatorShape> shapes, Color? overrideColor = null, Color? overrideEdgeColor = null)
         {
+            Color layerColor = overrideColor ?? SkillIndicatorShapeRenderer.LayerFillColor;
             for (int i = 0; i < shapes.Count; i++)
             {
                 SkillIndicatorShapeRenderer layerRenderer = GetOrCreateSkillIndicatorLayer(i);
@@ -437,14 +498,14 @@ namespace GameScene
                     float edgeWidth = hasDocumentEdgeWidth ? shape.edgeWidth : DefaultSkillIndicatorLayerEdgeWidth;
                     layerRenderer.SetCircle(
                         shape.origin, shape.radius, !hasDocumentEdgeWidth, sortingOrder, edgeWidth,
-                        SkillIndicatorShapeRenderer.LayerFillColor);
+                        layerColor, overrideEdgeColor);
                 }
                 else
                 {
                     // SetLine 의 width 는 전체 폭이라 다시 반으로 나눈다.
                     layerRenderer.SetLine(
                         shape.origin, shape.target, shape.length, sortingOrder, shape.halfWidth * 2f,
-                        SkillIndicatorShapeRenderer.LayerFillColor);
+                        layerColor);
                 }
             }
 

@@ -12,6 +12,7 @@ namespace LobbyScene
         [SerializeField] private MatchQueueApiService _matchQueueApi;
         private MatchmakingCoordinator coordinator;
         private bool enteringGameScene;
+        public string DeckMode { get; set; } = MatchDeckMode.Selected;
 
         public enum LobbyState
         {
@@ -50,7 +51,7 @@ namespace LobbyScene
         {
             Debug.Log("Enqueue button clicked: Enqueueing player.");
             StartMatching();
-            coordinator.Enqueue();
+            coordinator.Enqueue(DeckMode);
         }
 
         public void PlayPracticeMatch()
@@ -69,6 +70,9 @@ namespace LobbyScene
         private void OnMatched(MatchedInfoDto matchedInfoDto)
         {
             SceneContext.MatchInfo = matchedInfoDto;
+            // PVP/practice matches from the lobby are never an adventure match; guarantee the
+            // forest default in case a previous adventure match left a theme set.
+            SceneContext.ClearAdventureMatch();
             const string targetSceneName = "GameScene";
             if (SceneManager.GetActiveScene().name.Contains(targetSceneName)) return;
 

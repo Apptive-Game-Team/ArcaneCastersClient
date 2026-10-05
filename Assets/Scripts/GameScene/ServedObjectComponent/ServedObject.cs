@@ -49,6 +49,11 @@ namespace GameScene.ServedObjectComponent
         [SerializeField] private float _effectScaleMin = 0.8f;
         [SerializeField] private float _effectScaleMax = 1.8f;
         public int id;
+        public PresentationWorld PresentationWorld { get; set; }
+        private SpriteRenderer damageRenderer;
+        private float lastDamageFlash = float.NegativeInfinity;
+        private float damageFlashUntil;
+        private bool damageFlashing;
         
         public List<Gauge> gauges = new List<Gauge>();
         private readonly HashSet<string> activeEffects = new HashSet<string>(StringComparer.Ordinal);
@@ -110,7 +115,7 @@ namespace GameScene.ServedObjectComponent
                 return;
             }
 
-            _positionUpdater = new PositionUpdater(transform, _spriteRenderer, () => OnMoved?.Invoke());
+            _positionUpdater = new PositionUpdater(transform, _spriteRenderer, () => OnMoved?.Invoke(), () => PresentationWorld);
             UpdateTeamIndicator();
 
             if (master.Equals(RightPlayer))
@@ -157,6 +162,11 @@ namespace GameScene.ServedObjectComponent
         private void LateUpdate()
         {
             UpdateTeamIndicatorPosition();
+            if (damageFlashing && Time.time >= damageFlashUntil)
+            {
+                if (damageRenderer != null) damageRenderer.color = Color.white;
+                damageFlashing = false;
+            }
         }
         
         public string GetMaster()
@@ -169,10 +179,10 @@ namespace GameScene.ServedObjectComponent
             UpdateMasterIfNeeded(updatedObjectDto.master);
             _positionUpdater?.UpdatePosition(updatedObjectDto);
 
+            UpdateActiveEffects(updatedObjectDto.effects);
             HandleGaugeUpdate(updatedObjectDto.gauges);
 
             HandleStatus(updatedObjectDto.status);
-            UpdateActiveEffects(updatedObjectDto.effects);
             EnsureEffectRenderer();
             _effectRenderer.SetEffects(updatedObjectDto.effects);
         }
@@ -227,6 +237,8 @@ namespace GameScene.ServedObjectComponent
             }
 
 #if UNITY_EDITOR
+            // Keep DTO geometry for real visual listeners, without editor-only debug lines.
+            if (PresentationWorld != null) return;
             if (_gizmoRenderer == null)
             {
                 _gizmoRenderer = GetComponent<ServedObjectGizmoRenderer>();
@@ -285,6 +297,7 @@ namespace GameScene.ServedObjectComponent
 
                 case "Damaged":
                     OnDamaged?.Invoke();
+                    FlashDamage();
                     break;
 
                 default:
@@ -395,9 +408,9 @@ namespace GameScene.ServedObjectComponent
             return centerWorldPosition + _spriteRenderer.transform.TransformVector(localOffset);
         }
 
-        private static Vector2 GetScreenDirection(Vector3 fromWorldPosition, Vector3 toWorldPosition)
+        private Vector2 GetScreenDirection(Vector3 fromWorldPosition, Vector3 toWorldPosition)
         {
-            Camera camera = Camera.main;
+            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
             Vector3 delta = camera != null
                 ? camera.WorldToScreenPoint(toWorldPosition) - camera.WorldToScreenPoint(fromWorldPosition)
                 : toWorldPosition - fromWorldPosition;
@@ -426,9 +439,9 @@ namespace GameScene.ServedObjectComponent
         }
 
         /// <summary>Screen-up in world space, so anchors sit above the sprite from the player's view.</summary>
-        private static Vector3 GetAnchorUpDirection()
+        private Vector3 GetAnchorUpDirection()
         {
-            Camera camera = Camera.main;
+            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
             return camera != null ? camera.transform.up : Vector3.up;
         }
 
@@ -450,6 +463,7 @@ namespace GameScene.ServedObjectComponent
 
         private void HandleGaugeUpdate(List<Gauge> gauges)
         {
+            if (gauges == null) return;
             foreach (Gauge gauge in gauges)
             {
                 Gauge temp = this.gauges.Find(existedGauge => existedGauge.category.Equals(gauge.category));
@@ -480,6 +494,7 @@ namespace GameScene.ServedObjectComponent
             if (gauge.value < lastHp)
             {
                 OnHpDecreased?.Invoke();
+                FlashDamage();
             }
             if (gauge.value > lastHp && !Mathf.Approximately(gauge.value, gauge.maxValue))
             {
@@ -503,7 +518,7 @@ namespace GameScene.ServedObjectComponent
         {
             if (_spriteRenderer == null)
             {
-                _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+                _spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
             }
         }
 
@@ -664,7 +679,22 @@ namespace GameScene.ServedObjectComponent
         private void DestroySelf()
         {
             OnDestroyed?.Invoke();
-            ObjectContainer.Instance.UnregisterObject(id);
+            if (PresentationWorld != null) PresentationWorld.Unregister(id);
+            else ObjectContainer.Instance?.UnregisterObject(id);
+        }
+
+        private void FlashDamage()
+        {
+            float interval = HasEffect("Burn") || HasEffect("SandStorm") ? 1f : 0.05f;
+            if (PresentationWorld != null) interval = Mathf.Max(interval, PresentationWorld.DamageFlashInterval);
+            if (Time.time - lastDamageFlash < interval) return;
+            EnsureSpriteRenderer();
+            damageRenderer = _spriteRenderer;
+            if (damageRenderer == null) return;
+            lastDamageFlash = Time.time;
+            damageFlashUntil = Time.time + 0.12f;
+            damageRenderer.color = new Color(1f, 0.35f, 0.2f);
+            damageFlashing = true;
         }
         
         private void DestroySelf(float delay)

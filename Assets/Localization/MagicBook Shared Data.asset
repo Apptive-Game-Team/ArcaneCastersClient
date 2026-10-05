@@ -339,6 +339,42 @@ MonoBehaviour:
     m_Key: detail.backToList
     m_Metadata:
       m_Items: []
+  - m_Id: 1000064
+    m_Key: filter.kind.all
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000065
+    m_Key: filter.kind.unit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000066
+    m_Key: filter.kind.building
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000067
+    m_Key: filter.kind.drop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000068
+    m_Key: filter.kind.explosion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000069
+    m_Key: filter.kind.shot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000070
+    m_Key: filter.mana.all
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000071
+    m_Key: earth_call
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000072
+    m_Key: rock_blast
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

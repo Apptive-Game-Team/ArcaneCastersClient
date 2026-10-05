@@ -1,8 +1,10 @@
 using Data;
+using Data.Adventures;
 using GameScene.Dto;
 using Global;
 using LobbyScene.Debugger;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using Global.Serialization;
 
@@ -17,6 +19,9 @@ namespace Adventures
             Idle,
             Requesting,
         }
+
+        private static readonly LocalizedString serverDown = new LocalizedString
+            { TableReference = "SystemMessageUI", TableEntryReference = "serverDown" };
 
         public StateEvent<AdventureState> CurrentState = new StateEvent<AdventureState>(AdventureState.Idle);
 
@@ -36,11 +41,15 @@ namespace Adventures
 
         private void HandleCallback(MatchedInfoDto dto)
         {
-            WDebug.Log("Adventure session matched: transitioning to game scene.");
             if (dto == null)
             {
+                WDebug.LogWarning("Adventure session request failed: staying on the adventure screen.");
                 CurrentState.UpdateData(AdventureState.Idle);
+                SystemMessageUI.Instance.ShowMessage(serverDown);
+                return;
             }
+
+            WDebug.Log("Adventure session matched: transitioning to game scene.");
             OnMatched(dto);
         }
 
@@ -72,6 +81,13 @@ namespace Adventures
             {
                 return;
             }
+
+            // CurrentAdventure is destroyed on this load (it is bound to AdventureScene /
+            // AdventuresScene), so the theme has to be copied into SceneContext now or it is
+            // gone by the time BattleThemeApplier reads it in GameScene.
+            SceneContext.BattleTheme = CurrentAdventure.Instance != null
+                ? CurrentAdventure.Instance.Adventure?.BattleTheme
+                : null;
 
             SceneManager.LoadScene(targetSceneName);
         }
