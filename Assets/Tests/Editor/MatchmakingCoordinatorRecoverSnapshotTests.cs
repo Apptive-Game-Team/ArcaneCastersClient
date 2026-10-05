@@ -126,7 +126,7 @@ namespace WordOnline.Tests
         public void RecoverSnapshot_WhenRequestSucceeds_WithMatchedTicket_FiresMatchedEvent()
         {
             // Arrange
-            var matchInfo = new MatchedInfoDto { roomId = "room-abc-123" };
+            var matchInfo = new MatchedInfoDto { sessionId = "room-abc-123" };
             fakeApi.RequestSucceeded = true;
             fakeApi.ReturnTicket = new MatchTicket
             {
@@ -145,7 +145,7 @@ namespace WordOnline.Tests
             // Assert
             Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Matched));
             Assert.That(receivedMatchInfo, Is.Not.Null);
-            Assert.That(receivedMatchInfo.roomId, Is.EqualTo("room-abc-123"));
+            Assert.That(receivedMatchInfo.sessionId, Is.EqualTo("room-abc-123"));
         }
 
         [Test]
