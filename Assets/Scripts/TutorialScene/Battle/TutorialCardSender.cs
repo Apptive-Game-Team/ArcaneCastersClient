@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Data;
 using Data.Magic;
+using GameScene;
 using GameScene.Card;
 using GameScene.PopupBook;
 using GameScene.ServedObjectComponent;
@@ -41,7 +42,7 @@ namespace TutorialScene
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) || GamepadInput.CancelDown)
             {
                 Cancel();
             }
@@ -50,6 +51,45 @@ namespace TutorialScene
             {
                 ToggleCardBySlot(slotIndex);
             }
+
+            if (GamepadHandNavigation.TryGetPressedStep(out int step))
+            {
+                StepCardSelection(step);
+            }
+        }
+
+        /// <summary>LB / RB 로 고른 카드를 이전 · 다음 슬롯으로 옮긴다. 숫자 키와 같은 경로로 고른다.</summary>
+        private void StepCardSelection(int step)
+        {
+            if (TutorialSceneUIController.Instance == null)
+            {
+                return;
+            }
+
+            int selectedSlot = -1;
+            for (int slot = 0; slot < CardHotkey.SlotCount; slot++)
+            {
+                TutorialCardUI card = TutorialSceneUIController.Instance.GetCardAt(slot);
+                if (card != null && card.IsSelected)
+                {
+                    selectedSlot = slot;
+                    break;
+                }
+            }
+
+            int target = GamepadHandNavigation.PickSlot(
+                step, selectedSlot, slot => TutorialSceneUIController.Instance.GetCardAt(slot) != null);
+            if (target < 0)
+            {
+                return;
+            }
+
+            if (!isFieldSelectMode)
+            {
+                AimPointerSource.BeginGamepadAim();
+            }
+
+            ToggleCardBySlot(target);
         }
 
         private void ToggleCardBySlot(int slotIndex)
