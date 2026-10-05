@@ -127,7 +127,7 @@ namespace LobbyScene
 
         private void ConnectAndRecover()
         {
-            eventStream.Connect();
+            eventStream.Connect(ServerList.MatchingServer.Api, SceneContext.JwtToken);
             RecoverSnapshot();
         }
 
