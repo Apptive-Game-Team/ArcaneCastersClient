@@ -194,6 +194,19 @@ PNG itself was complete. Import ground-spawned effect sprites with `Bottom Cente
 explicitly offset them along screen-up when their visual is intentionally centred on the spawn
 point. Check the importer pivot before changing the PNG or scaling the prefab.
 
+For persistent status effects, `ServedObjectEffectRenderer.SpawnEffect` resets
+the effect root's local position and rotation to zero, then applies the unit's
+effect scale. Put a visual offset on a child transform; moving the prefab root
+is overwritten at spawn. `StormStagCharge4` originally placed the centred
+lightning ring at the stag's feet, burying its lower half. Its `AuraVisual` child
+now holds both the renderer and pulse/rotation component at local Y `0.67`.
+The 512x469 sprite at 400 pixels per unit needs at most
+`1.08 * (469/800 * cos(3 degrees) + 512/800 * sin(3 degrees)) = 0.6685`
+units below its centre, so that offset keeps the whole animated ring above the
+root even during its pulse and tilt. Recompute this clearance if the sprite,
+pixels per unit or animation limits change. Keep the centred pivot on the
+shared lightning aura texture: the player's staff effects also use it.
+
 ### Replacing a hit visual may also require suppressing a projectile
 
 Do not assume that changing `HitEffectController` replaces every visual attached

@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using Data;
 using Data.Deck;
+using Data.Localization;
 using Data.Magic;
 using DeckScene;
 using GameScene.Card;
 using Global;
 using Global.Util;
+using RewardChest;
+using RewardChest.Renderers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -26,6 +29,7 @@ namespace LobbyScene
         [SerializeField] private TMP_Dropdown deckDropdown;
         [SerializeField] private UnityEngine.UI.Button arrowButton;
         [SerializeField] private GameObject rewardUiPrefab;
+        [SerializeField] private RewardTileView rewardTilePrefab;
         [SerializeField] private LobbySummonShowcase summonShowcase;
         [SerializeField] private Image avatarHeadImage;
         [SerializeField] private BattleHoverPresenter battleHoverPresenter;
@@ -66,7 +70,7 @@ namespace LobbyScene
         
             lobbyUserNameUI.SetUserName(SceneContext.User.name);
             ApplyOwnAppearance(SceneContext.User.appearance);
-            yield return QuestRewardTracker.CheckAndShowRewards(rewardUiPrefab);
+            yield return QuestRewardTracker.CheckAndShowRewards(rewardUiPrefab, rewardTilePrefab);
             yield return FetchDecks();
         }
 
@@ -242,62 +246,28 @@ namespace LobbyScene
 
     public static class QuestRewardTracker
     {
-        private const string RewardTypeCard = "CARD";
-        private const string RewardTypeDecoration = "DECORATION";
-        private const string RewardTypeMagic = "MAGIC";
+        private const string ChestHintObjectName = "ChestHint";
 
 #if UNITY_EDITOR
         private const string RewardUiPrefabEditorPath = "Assets/Prefabs/UI/RewardUI.prefab";
-        private const string DecorationDbEditorPath = "Assets/Scripts/CustomizeScene/New Decoration Database.asset";
 #endif
 
-        private sealed class RewardVisual
-        {
-            public string RewardType { get; }
-            public long RewardId { get; }
-            public int Amount { get; }
-            public Sprite Sprite { get; }
-
-            public RewardVisual(string rewardType, long rewardId, int amount, Sprite sprite)
-            {
-                RewardType = rewardType;
-                RewardId = rewardId;
-                Amount = amount;
-                Sprite = sprite;
-            }
-        }
-
-        [Serializable]
-        public class QuestRewardDto
-        {
-            public string rewardType;
-            public long rewardId;
-            public int amount;
-            public long questId;
-
-            // Compatibility fields for temporary backend naming differences.
-            public string type;
-            public long id;
-            public int value;
-        }
-
-        [Serializable]
-        private class QuestRewardResponseDto
-        {
-            public QuestRewardDto[] rewards;
-        }
-
-        public static IEnumerator CheckAndShowRewards(GameObject rewardUiPrefab)
+        public static IEnumerator CheckAndShowRewards(GameObject rewardUiPrefab, RewardTileView rewardTilePrefab)
         {
             QuestRewardDto[] rewards = Array.Empty<QuestRewardDto>();
             yield return CheckRewards(result => rewards = result ?? Array.Empty<QuestRewardDto>());
+
+            // A quest claimed by hand (the chest at the end of an adventure) already showed its rewards
+            // on the claim screen. If the check ever reports it as well, do not show the same chest twice.
+            rewards = Data.Quests.ClaimedQuestLedger.Session.WithoutClaimed(rewards);
 
             if (rewards.Length == 0)
             {
                 yield break;
             }
 
-            if (!TryShowRewardUI(rewards, rewardUiPrefab))
+            List<RewardView> views = QuestRewardPayload.ToRewardViews(rewards);
+            if (!TryShowRewardUI(views, rewardUiPrefab, rewardTilePrefab))
             {
                 ShowRewardMessage(rewards);
             }
@@ -338,7 +308,7 @@ namespace LobbyScene
 
             try
             {
-                onSuccess?.Invoke(ParseRewards(request.downloadHandler.text));
+                onSuccess?.Invoke(QuestRewardPayload.Parse(request.downloadHandler.text));
             }
             catch (Exception e)
             {
@@ -347,36 +317,16 @@ namespace LobbyScene
             }
         }
 
-        private static QuestRewardDto[] ParseRewards(string json)
-        {
-            var trimmed = json.TrimStart();
-            if (trimmed.StartsWith("["))
-            {
-                return JsonCodec.Deserialize<QuestRewardDto[]>(json) ?? Array.Empty<QuestRewardDto>();
-            }
-
-            var response = JsonCodec.Deserialize<QuestRewardResponseDto>(json);
-            return response?.rewards ?? Array.Empty<QuestRewardDto>();
-        }
-
+        /// <summary>
+        /// Every reward gets a tile drawn by its <see cref="IRewardTileRenderer"/>, including types this client
+        /// does not know. A <c>CHEST</c> reward also adds a line pointing at the chest screen.
+        /// </summary>
         private static bool TryShowRewardUI(
-            QuestRewardDto[] rewards,
-            GameObject rewardUiPrefab)
+            IReadOnlyList<RewardView> rewards,
+            GameObject rewardUiPrefab,
+            RewardTileView rewardTilePrefab)
         {
-            var visuals = new List<RewardVisual>();
-            foreach (var reward in rewards)
-            {
-                var rewardType = GetRewardType(reward).ToUpperInvariant();
-                var rewardId = GetRewardId(reward);
-                var amount = Mathf.Max(1, GetAmount(reward));
-
-                if (TryResolveSprite(rewardType, rewardId, out var sprite))
-                {
-                    visuals.Add(new RewardVisual(rewardType, rewardId, amount, sprite));
-                }
-            }
-
-            if (visuals.Count == 0)
+            if (rewards.Count == 0)
             {
                 return false;
             }
@@ -390,34 +340,8 @@ namespace LobbyScene
 
             rewardUiInstance.transform.localScale = Vector3.one;
             rewardUiInstance.SetActive(true);
-            PopulateRewardUI(rewardUiInstance, visuals);
+            PopulateRewardUI(rewardUiInstance, rewards, rewardTilePrefab, RewardTileRenderers.CreateDefaultSelector());
             return true;
-        }
-
-        private static bool TryResolveSprite(
-            string rewardType,
-            long rewardId,
-            out Sprite sprite)
-        {
-            sprite = null;
-
-            // 카드 한 장이 마법 하나이므로 CARD 와 MAGIC 은 둘 다 magics.id 를 가리킨다.
-            switch (rewardType)
-            {
-                case RewardTypeCard:
-                case RewardTypeMagic:
-                    return TryResolveMagicSprite(rewardId, out sprite);
-                default:
-                    return false;
-            }
-        }
-
-        private static bool TryResolveMagicSprite(long rewardId, out Sprite sprite)
-        {
-            sprite = LocalCombinedMagicData.GetEffectiveDataList()
-                .FirstOrDefault(magicData => magicData.id == rewardId)
-                ?.GetSprite();
-            return sprite != null;
         }
 
         private static GameObject ResolveRewardUIInstance(GameObject rewardUiPrefab)
@@ -450,21 +374,36 @@ namespace LobbyScene
             return null;
         }
 
-        private static void PopulateRewardUI(GameObject rewardUI, IReadOnlyList<RewardVisual> visuals)
+        private static void PopulateRewardUI(
+            GameObject rewardUI,
+            IReadOnlyList<RewardView> rewards,
+            RewardTileView rewardTilePrefab,
+            RewardTileRendererSelector selector)
         {
-            var panel = rewardUI.transform.Find("Panal");
-            if (panel == null)
-            {
-                panel = rewardUI.transform;
-            }
+            var panel = RewardUiPanelLookup.FindRewardPanel(rewardUI.transform);
 
             var contentRoot = EnsureContentRoot(panel);
             ClearContent(contentRoot);
 
-            for (var i = 0; i < visuals.Count; i++)
+            bool hasChest = false;
+            for (var i = 0; i < rewards.Count; i++)
             {
-                CreateRewardItem(contentRoot, visuals[i], i);
+                RewardView reward = rewards[i];
+                RewardTileContent content = selector.Build(reward);
+                hasChest |= reward.Type == RewardTypes.Chest;
+
+                if (rewardTilePrefab != null)
+                {
+                    RewardTileView tile = UnityEngine.Object.Instantiate(rewardTilePrefab, contentRoot);
+                    tile.gameObject.SetActive(true);
+                    tile.Render(reward, content);
+                    continue;
+                }
+
+                CreateRewardItem(contentRoot, reward, content, i);
             }
+
+            ShowChestHint(panel, hasChest);
         }
 
         private static RectTransform EnsureContentRoot(Transform panel)
@@ -504,10 +443,11 @@ namespace LobbyScene
             }
         }
 
-        private static void CreateRewardItem(Transform contentRoot, RewardVisual visual, int index)
+        /// <summary>Used only when the scene has no RewardTile prefab wired: icon and amount, built in code.</summary>
+        private static void CreateRewardItem(Transform contentRoot, RewardView reward, RewardTileContent content, int index)
         {
             var itemObject = new GameObject(
-                $"{visual.RewardType}_{visual.RewardId}_{index}",
+                $"{reward.Type}_{reward.Id}_{index}",
                 typeof(RectTransform),
                 typeof(LayoutElement));
 
@@ -529,7 +469,7 @@ namespace LobbyScene
             imageRect.sizeDelta = new Vector2(104f, 104f);
 
             var image = imageObject.GetComponent<Image>();
-            image.sprite = visual.Sprite;
+            image.sprite = content?.Icon;
             image.preserveAspect = true;
 
             var amountObject = new GameObject("Amount", typeof(RectTransform), typeof(TextMeshProUGUI));
@@ -542,10 +482,76 @@ namespace LobbyScene
             amountRect.sizeDelta = new Vector2(0f, 42f);
 
             var amountText = amountObject.GetComponent<TextMeshProUGUI>();
-            amountText.text = $"x{visual.Amount}";
+            amountText.text = $"x{reward.Amount}";
             amountText.alignment = TextAlignmentOptions.Center;
             amountText.fontSize = 30f;
             amountText.color = Color.black;
+        }
+
+        /// <summary>
+        /// A chest is not usable from the lobby, so the popup says where to open it. The line copies the
+        /// popup title's font, which carries the Hangul fallback.
+        /// </summary>
+        private static void ShowChestHint(Transform panel, bool visible)
+        {
+            var hint = panel.Find(ChestHintObjectName);
+            if (hint == null)
+            {
+                if (!visible)
+                {
+                    return;
+                }
+
+                hint = CreateChestHint(panel);
+            }
+
+            hint.gameObject.SetActive(visible);
+            if (visible)
+            {
+                ApplyChestHintText(hint.GetComponent<TMP_Text>());
+            }
+        }
+
+        private static Transform CreateChestHint(Transform panel)
+        {
+            var hintObject = new GameObject(ChestHintObjectName, typeof(RectTransform), typeof(TextMeshProUGUI));
+            var hintRect = hintObject.GetComponent<RectTransform>();
+            hintRect.SetParent(panel, false);
+            hintRect.anchorMin = new Vector2(0.5f, 0.5f);
+            hintRect.anchorMax = new Vector2(0.5f, 0.5f);
+            hintRect.pivot = new Vector2(0.5f, 0.5f);
+            hintRect.anchoredPosition = new Vector2(0f, -140f);
+            hintRect.sizeDelta = new Vector2(440f, 26f);
+
+            var hintText = hintObject.GetComponent<TextMeshProUGUI>();
+            var title = panel.Find("Title")?.GetComponent<TMP_Text>();
+            if (title != null)
+            {
+                hintText.font = title.font;
+            }
+
+            hintText.alignment = TextAlignmentOptions.Center;
+            hintText.enableAutoSizing = true;
+            hintText.fontSizeMin = 9f;
+            hintText.fontSizeMax = 16f;
+            hintText.color = new Color32(0x1C, 0x1A, 0x2B, 0xFF);
+            hintText.raycastTarget = false;
+            return hintRect;
+        }
+
+        private static async void ApplyChestHintText(TMP_Text hintText)
+        {
+            if (hintText == null)
+            {
+                return;
+            }
+
+            hintText.text = "You got a chest! Open it on the chest screen.";
+            string localized = await LocaleUtils.GetStringAsync(RewardNameKeys.Table, "ChestGotChest");
+            if (hintText != null && !string.IsNullOrEmpty(localized))
+            {
+                hintText.text = localized;
+            }
         }
 
         private static void ShowRewardMessage(QuestRewardDto[] rewards)
@@ -555,9 +561,9 @@ namespace LobbyScene
 
             foreach (var reward in rewards)
             {
-                var rewardType = GetRewardType(reward);
-                var rewardId = GetRewardId(reward);
-                var amount = GetAmount(reward);
+                var rewardType = QuestRewardPayload.GetRewardType(reward);
+                var rewardId = QuestRewardPayload.GetRewardId(reward);
+                var amount = QuestRewardPayload.GetAmount(reward);
                 builder.Append("- ").Append(rewardType).Append(" #").Append(rewardId).Append(" x").Append(amount);
                 if (reward.questId > 0)
                 {
@@ -573,46 +579,6 @@ namespace LobbyScene
             }
 
             WDebug.Log(builder.ToString());
-        }
-
-        private static string GetRewardType(QuestRewardDto reward)
-        {
-            if (!string.IsNullOrEmpty(reward.rewardType))
-            {
-                return reward.rewardType;
-            }
-
-            if (!string.IsNullOrEmpty(reward.type))
-            {
-                return reward.type;
-            }
-
-            return "UNKNOWN";
-        }
-
-        private static long GetRewardId(QuestRewardDto reward)
-        {
-            if (reward.rewardId > 0)
-            {
-                return reward.rewardId;
-            }
-
-            return reward.id;
-        }
-
-        private static int GetAmount(QuestRewardDto reward)
-        {
-            if (reward.amount > 0)
-            {
-                return reward.amount;
-            }
-
-            if (reward.value > 0)
-            {
-                return reward.value;
-            }
-
-            return 1;
         }
     }
 }

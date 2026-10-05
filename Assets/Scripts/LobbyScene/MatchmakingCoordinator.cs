@@ -25,18 +25,14 @@ namespace LobbyScene
         public event Action<MatchTicketState, MatchTicket> StateChanged;
         public event Action<MatchedInfoDto> Matched;
 
-        public void Initialize(MatchQueueApiService apiService, bool connectStream = true)
+        public void Initialize(MatchQueueApiService apiService)
         {
             if (api != null) return;
             api = apiService;
-            if (connectStream)
-            {
-                eventStream = gameObject.AddComponent<MatchEventStream>();
-                eventStream.TicketReceived += HandleStreamTicket;
-                eventStream.Disconnected += HandleStreamDisconnected;
-                eventStream.Connect();
-            }
-            RecoverSnapshot();
+            eventStream = gameObject.AddComponent<MatchEventStream>();
+            eventStream.TicketReceived += HandleStreamTicket;
+            eventStream.Disconnected += HandleStreamDisconnected;
+            ConnectAndRecover();
         }
 
         public void Enqueue(string deckMode)
@@ -131,7 +127,7 @@ namespace LobbyScene
 
         private void ConnectAndRecover()
         {
-            eventStream.Connect();
+            eventStream.Connect(ServerList.MatchingServer.Api, SceneContext.JwtToken);
             RecoverSnapshot();
         }
 

@@ -45,6 +45,10 @@ MonoBehaviour:
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: PveFireTadpole
+    profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: MagmaSpirit
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
     intentionalSilent: 0
@@ -93,6 +97,10 @@ MonoBehaviour:
     profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: PveLightningTadpole
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: StormRider
     profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
     intentionalSilent: 0
@@ -110,6 +118,10 @@ MonoBehaviour:
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: DimensionToad
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveDimensionToad
     profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
     intentionalSilent: 0
     serverAlias: 0
@@ -406,6 +418,10 @@ MonoBehaviour:
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: EvilEnt
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveEvilEnt
     profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
     intentionalSilent: 0
     serverAlias: 0
