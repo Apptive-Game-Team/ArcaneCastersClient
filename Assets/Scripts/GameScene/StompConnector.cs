@@ -58,7 +58,7 @@ namespace GameScene
         /// <summary>화면에 보인 PVE 대사 번호. 재연결 때 pveSync 에 실어 보낸다.</summary>
         private readonly PveSyncState _pveSync = new PveSyncState();
 
-        private readonly IFrameInfoHandler<string> _frameInfoHandler;
+        private IFrameInfoHandler<string> _frameInfoHandler;
 
         /// <summary>frame 구독을 걸었는지. 그 전에 연결되는 것은 최초 연결이라 pveSync 를 보내지 않는다.</summary>
         private bool _frameSubscribed;
