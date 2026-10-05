@@ -156,14 +156,19 @@ namespace LobbyScene
                 .ToList()
                 .IndexOf(SceneContext.User.selectedDeckId);
 
+            // The dropdown is repopulated on every click. Random play is not stored on the server, so a
+            // refetch must keep it instead of falling back to the saved deck.
+            bool keepRandom = !initializing && LobbySceneViewModel.Instance.DeckMode == MatchDeckMode.Random;
+
             int dropdownIndex;
-            if (savedDeckIndex == -1 && userDecks.Length > 0)
+            if (savedDeckIndex == -1 && !keepRandom && userDecks.Length > 0)
             {
+                SceneContext.User.selectedDeckId = userDecks[0].id;
                 StartCoroutine(SelectDeckCoroutine(userDecks[0].id));
                 savedDeckIndex = 0;
             }
 
-            if (savedDeckIndex >= 0)
+            if (savedDeckIndex >= 0 && !keepRandom)
             {
                 dropdownIndex = savedDeckIndex + 1;
                 LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Selected;
@@ -200,6 +205,8 @@ namespace LobbyScene
 
             var selected = userDecks[newIndex - 1];
             LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Selected;
+            // PopulateDropdown reads this to place the dropdown, so a stale value moves it back to the old deck.
+            SceneContext.User.selectedDeckId = selected.id;
             DeckSceneContext.CurrentDeck = selected;     // 컨텍스트 갱신
             WDebug.Log($"index: {newIndex} 선택된 덱: {selected.name} (ID: {selected.id})");
             UpdateCaption(selected.name);                // 상단 텍스트 갱신
