@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Data;
 using Data.Net;
 using Global;
@@ -16,8 +17,12 @@ namespace LobbyScene
 
         public virtual IEnumerator CreateTicket(string deckMode, Action<MatchTicket> callback)
         {
+            // 핑 측정은 매칭을 막지 않는다. 실패하면 빈 목록으로 큐에 들어간다.
+            List<ServerPing> pings = null;
+            yield return GameServerPinger.Measure(result => pings = result);
+
             using var webRequest = new UnityWebRequest(MatchTickets, "POST");
-            string json = JsonCodec.Serialize(new MatchTicketRequest { deckMode = deckMode });
+            string json = JsonCodec.Serialize(new MatchTicketRequest { deckMode = deckMode, serverPings = pings });
             webRequest.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             webRequest.SetRequestHeader("Content-Type", "application/json");

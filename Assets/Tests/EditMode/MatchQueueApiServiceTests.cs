@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Global.Serialization;
 using LobbyScene;
 using NUnit.Framework;
@@ -6,6 +7,28 @@ namespace WordOnline.Tests
 {
     public class MatchQueueApiServiceTests
     {
+        [Test]
+        public void CreateTicket_ServerPings_SerializesServerIdAndRttMs()
+        {
+            var request = new MatchTicketRequest
+            {
+                deckMode = MatchDeckMode.Selected,
+                serverPings = new List<ServerPing> { new ServerPing { serverId = 3, rttMs = 42 } }
+            };
+
+            string json = JsonCodec.Serialize(request);
+
+            StringAssert.Contains("\"serverPings\":[{\"serverId\":3,\"rttMs\":42}]", json);
+        }
+
+        [Test]
+        public void CreateTicket_NullServerPings_OmitsServerPingsField()
+        {
+            string json = JsonCodec.Serialize(new MatchTicketRequest { deckMode = MatchDeckMode.Selected });
+
+            StringAssert.DoesNotContain("serverPings", json);
+        }
+
         [Test]
         public void CreateTicket_SelectedDeckMode_SerializesWithSelectedDeckModeValue()
         {
