@@ -79,6 +79,7 @@ namespace GameScene
         private int lastSortingOrder;
         private bool lastIncludeFill;
         private Color lastFillColor;
+        private Color lastEdgeColor = DefaultEdgeColor;
         private bool hasBuiltShape;
 
         private void Awake()
@@ -100,16 +101,24 @@ namespace GameScene
         /// 채움 색. 생략하면(<c>null</c>) 사거리 원/조준 원이 쓰던 <see cref="DefaultFillColor"/> 그대로다.
         /// indicator document layer 는 <see cref="LayerFillColor"/> 를 넘겨 두 원과 색으로 구분된다.
         /// </param>
+        /// <param name="edgeColor">
+        /// 테두리 색. 생략하면 <see cref="DefaultEdgeColor"/>(청록)다. 자리를 못 찾았을 때 테두리만 있는
+        /// layer 도 빨갛게 보이도록 넘긴다.
+        /// </param>
         public void SetCircle(
             Vector3 position, float radius, bool includeFill, int sortingOrder, float edgeWidth,
-            Color? fillColor = null)
+            Color? fillColor = null, Color? edgeColor = null)
         {
             Color resolvedFillColor = fillColor ?? DefaultFillColor;
-            if (IsUnchanged(ShapeMode.Circle, position, Vector3.zero, radius, edgeWidth, sortingOrder, includeFill,
+            Color resolvedEdgeColor = edgeColor ?? DefaultEdgeColor;
+            if (lastEdgeColor == resolvedEdgeColor &&
+                IsUnchanged(ShapeMode.Circle, position, Vector3.zero, radius, edgeWidth, sortingOrder, includeFill,
                     resolvedFillColor))
             {
                 return;
             }
+
+            lastEdgeColor = resolvedEdgeColor;
 
             RecordShapeState(ShapeMode.Circle, position, Vector3.zero, radius, edgeWidth, sortingOrder, includeFill,
                 resolvedFillColor);
@@ -133,7 +142,7 @@ namespace GameScene
             BuildCircleMesh(safeRadius, includeFill, resolvedFillColor);
             if (edgeWidth > 0f)
             {
-                BuildCircleEdge(safeRadius, edgeWidth);
+                BuildCircleEdge(safeRadius, edgeWidth, resolvedEdgeColor);
             }
             else
             {
@@ -379,14 +388,14 @@ namespace GameScene
             ApplyPolygonToMesh(ClipPolygonToFieldInWorldSpace(polygonBuffer), fillColor);
         }
 
-        private void BuildCircleEdge(float radius, float edgeWidth)
+        private void BuildCircleEdge(float radius, float edgeWidth, Color edgeColor)
         {
             edgeRenderer.loop = true;
             edgeRenderer.positionCount = CircleSegments;
             edgeRenderer.startWidth = edgeWidth;
             edgeRenderer.endWidth = edgeWidth;
-            edgeRenderer.startColor = DefaultEdgeColor;
-            edgeRenderer.endColor = DefaultEdgeColor;
+            edgeRenderer.startColor = edgeColor;
+            edgeRenderer.endColor = edgeColor;
 
             for (int i = 0; i < CircleSegments; i++)
             {
