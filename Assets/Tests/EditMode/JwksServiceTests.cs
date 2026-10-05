@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Global.Util;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace WordOnline.Tests
 {
@@ -117,6 +120,20 @@ namespace WordOnline.Tests
 
             List<JwksKey> allKeys = JwksService.GetAllKeys().ToList();
             Assert.AreEqual(2, allKeys.Count);
+        }
+
+        [UnityTest]
+        public IEnumerator FetchJwks_RequestFailure_LogsWarningAndStopsExecution()
+        {
+            LogAssert.Expect(LogType.Warning, new Regex(@"\[JwksService\] Failed to fetch JWKS:"));
+
+            // No WebRequestOverride: an unreachable address makes the real UnityWebRequest fail
+            JwksService.AccountServerUrl = "http://127.0.0.1:1";
+            yield return JwksService.FetchJwks();
+
+            Assert.IsFalse(JwksService.IsFetched);
+            Assert.IsNull(JwksService.GetFirstKey());
+            Assert.IsEmpty(JwksService.GetAllKeys());
         }
 
         [Test]
