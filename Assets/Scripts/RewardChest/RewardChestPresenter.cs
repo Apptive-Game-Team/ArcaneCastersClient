@@ -15,8 +15,8 @@ namespace RewardChest
     /// <see cref="closedChestSprite"/> and <see cref="openChestSprite"/> hold the default chest art; a chest
     /// key (passed to <see cref="Play"/>, or the first CHEST reward in the list) swaps in that chest's own art
     /// through <see cref="RewardSpriteResolver"/>. While a closed sprite exists the placeholder lid stays hidden;
-    /// with an open sprite, the body swaps to it on open. The rays turn behind the chest and the sparkles
-    /// twinkle once it is open.
+    /// with an open sprite, the body swaps to it on open. The rays spread out and turn behind the chest and
+    /// the sparkles twinkle once it is open.
     /// </para>
     /// </summary>
     public class RewardChestPresenter : MonoBehaviour
@@ -26,7 +26,6 @@ namespace RewardChest
         [SerializeField] private Image chestBodyImage;
         [SerializeField] private RectTransform chestLid;
         [SerializeField] private Image chestLidImage;
-        [SerializeField] private Image glowImage;
         [SerializeField] private Sprite closedChestSprite;
         [SerializeField] private Sprite openChestSprite;
 
@@ -34,7 +33,7 @@ namespace RewardChest
         [SerializeField] private Image rayImage;
         [SerializeField] private Image[] sparkleImages;
         [SerializeField] private float rayAlpha = 0.8f;
-        [SerializeField] private float raySecondsPerTurn = 24f;
+        [SerializeField] private float raySecondsPerTurn = 40f;
         [SerializeField] private float sparkleSeconds = 0.6f;
         [SerializeField] private float sparkleStaggerSeconds = 0.17f;
 
@@ -182,7 +181,6 @@ namespace RewardChest
             }
 
             SetAlpha(chestLidImage, 1f);
-            SetAlpha(glowImage, 0f);
             SetAlpha(rayImage, 0f);
             if (sparkleImages != null)
             {
@@ -192,9 +190,10 @@ namespace RewardChest
                 }
             }
 
-            if (glowImage != null)
+            if (rayImage != null)
             {
-                glowImage.rectTransform.localScale = Vector3.one * 0.3f;
+                rayImage.rectTransform.localScale = Vector3.one * 0.55f;
+                rayImage.rectTransform.localRotation = Quaternion.identity;
             }
 
             if (chestRoot != null)
@@ -253,10 +252,9 @@ namespace RewardChest
                 sequence.Join(rayImage.DOFade(rayAlpha, openSeconds));
             }
 
-            if (glowImage != null)
+            if (rayImage != null)
             {
-                sequence.Join(glowImage.rectTransform.DOScale(1.3f, openSeconds).SetEase(Ease.OutBack));
-                sequence.Join(glowImage.DOFade(0.85f, openSeconds));
+                sequence.Join(rayImage.rectTransform.DOScale(1f, openSeconds * 1.6f).SetEase(Ease.OutCubic));
             }
 
             yield return WaitOrSkip(sequence);
