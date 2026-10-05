@@ -10,15 +10,15 @@ namespace WordOnline.Tests
     public class MatchmakingCoordinatorTests
     {
         private GameObject testObject;
-        private FakeMatchQueueApiService apiStub;
         private MatchmakingCoordinator coordinator;
+        private FakeMatchQueueApiService fakeApi;
 
         [SetUp]
         public void SetUp()
         {
-            testObject = new GameObject("MatchmakingCoordinatorTests_GameObject");
-            apiStub = testObject.AddComponent<FakeMatchQueueApiService>();
+            testObject = new GameObject("TestMatchmakingCoordinator");
             coordinator = testObject.AddComponent<MatchmakingCoordinator>();
+            fakeApi = testObject.AddComponent<FakeMatchQueueApiService>();
         }
 
         [TearDown]
@@ -31,17 +31,77 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void Enqueue_WhenApiReturnsTicket_AppliesTicketAndSetsQueuedState()
+        public void RecoverSnapshot_WhenApiIsNull_DoesNothing()
         {
-            coordinator.Initialize(apiStub);
-            var expectedTicket = new MatchTicket
-            {
-                ticketId = "ticket-101",
-                version = 1,
-                state = "QUEUED"
-            };
-            apiStub.TicketToReturnOnCreate = expectedTicket;
+            // Act
+            coordinator.RecoverSnapshot();
 
+            // Assert
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Idle));
+            Assert.That(coordinator.CurrentTicket, Is.Null);
+        }
+
+        [Test]
+        public void RecoverSnapshot_WhenRequestInFlight_PreventsDuplicateRequest()
+        {
+            // Arrange
+            fakeApi.ImmediateCallback = false;
+            coordinator.Initialize(fakeApi, connectStream: false);
+            Assert.That(fakeApi.GetActiveTicketCallCount, Is.EqualTo(1));
+
+            // Act - second call while snapshot request is in flight
+            coordinator.RecoverSnapshot();
+
+            // Assert
+            Assert.That(fakeApi.GetActiveTicketCallCount, Is.EqualTo(1));
+
+            // Complete first request
+            fakeApi.CompleteLastCallback(true, null);
+
+            // Act - subsequent call after request completed
+            coordinator.RecoverSnapshot();
+
+            // Assert
+            Assert.That(fakeApi.GetActiveTicketCallCount, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void RecoverSnapshot_WhenRequestFails_SetsStateToReconnecting()
+        {
+            // Arrange
+            fakeApi.RequestSucceeded = false;
+            MatchTicketState? reportedState = null;
+            coordinator.StateChanged += (state, ticket) => reportedState = state;
+
+            // Act
+            coordinator.Initialize(fakeApi, connectStream: false);
+
+            // Assert
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Reconnecting));
+            Assert.That(reportedState, Is.EqualTo(MatchTicketState.Reconnecting));
+        }
+
+        [Test]
+        public void RecoverSnapshot_WhenRequestSucceeds_WithNoTicket_SetsStateToIdle()
+        {
+            // Arrange
+            fakeApi.RequestSucceeded = true;
+            fakeApi.ReturnTicket = null;
+
+            // Act
+            coordinator.Initialize(fakeApi, connectStream: false);
+
+            // Assert
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Idle));
+            Assert.That(coordinator.CurrentTicket, Is.Null);
+        }
+
+        [Test]
+        public void RecoverSnapshot_WhenRequestSucceeds_WithNewActiveTicket_AppliesTicketAndSetsState()
+        {
+            // Arrange
+            fakeApi.RequestSucceeded = true;
+            fakeApi.ReturnTicket = new MatchTicket { ticketId = "ticket-1", version = 1, state = "QUEUED" };
             MatchTicketState? reportedState = null;
             MatchTicket reportedTicket = null;
             coordinator.StateChanged += (state, ticket) =>
@@ -50,92 +110,94 @@ namespace WordOnline.Tests
                 reportedTicket = ticket;
             };
 
-            coordinator.Enqueue("normal_deck");
+            // Act
+            coordinator.Initialize(fakeApi, connectStream: false);
 
-            Assert.That(apiStub.LastRequestedDeckMode, Is.EqualTo("normal_deck"));
+            // Assert
             Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Queued));
             Assert.That(coordinator.CurrentTicket, Is.Not.Null);
-            Assert.That(coordinator.CurrentTicket.ticketId, Is.EqualTo("ticket-101"));
+            Assert.That(coordinator.CurrentTicket.ticketId, Is.EqualTo("ticket-1"));
             Assert.That(reportedState, Is.EqualTo(MatchTicketState.Queued));
             Assert.That(reportedTicket, Is.Not.Null);
-            Assert.That(reportedTicket.ticketId, Is.EqualTo("ticket-101"));
+            Assert.That(reportedTicket.ticketId, Is.EqualTo("ticket-1"));
         }
 
         [Test]
-        public void Enqueue_WhenApiReturnsNull_SetsFailedState()
+        public void RecoverSnapshot_WhenRequestSucceeds_WithMatchedTicket_FiresMatchedEvent()
         {
-            coordinator.Initialize(apiStub);
-            apiStub.TicketToReturnOnCreate = null;
-
-            MatchTicketState? reportedState = null;
-            coordinator.StateChanged += (state, _) => reportedState = state;
-
-            coordinator.Enqueue("normal_deck");
-
-            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Failed));
-            Assert.That(reportedState, Is.EqualTo(MatchTicketState.Failed));
-        }
-
-        [Test]
-        public void Enqueue_PassesDeckModeToApiService()
-        {
-            coordinator.Initialize(apiStub);
-            apiStub.TicketToReturnOnCreate = new MatchTicket
+            // Arrange
+            var matchInfo = new MatchedInfoDto { sessionId = "session-abc-123" };
+            fakeApi.RequestSucceeded = true;
+            fakeApi.ReturnTicket = new MatchTicket
             {
-                ticketId = "ticket-102",
-                version = 1,
-                state = "QUEUED"
-            };
-
-            coordinator.Enqueue("special_deck_mode");
-
-            Assert.That(apiStub.LastRequestedDeckMode, Is.EqualTo("special_deck_mode"));
-        }
-
-        [Test]
-        public void Enqueue_WhenApiReturnsMatchedTicket_TriggersMatchedEvent()
-        {
-            coordinator.Initialize(apiStub);
-            MatchedInfoDto matchedDto = null;
-            coordinator.Matched += info => matchedDto = info;
-
-            apiStub.TicketToReturnOnCreate = new MatchTicket
-            {
-                ticketId = "ticket-103",
-                version = 1,
+                ticketId = "ticket-2",
+                version = 2,
                 state = "MATCHED",
-                matchInfo = new MatchedInfoDto { sessionId = "session-777" }
+                matchInfo = matchInfo
             };
 
-            coordinator.Enqueue("normal_deck");
+            MatchedInfoDto receivedMatchInfo = null;
+            coordinator.Matched += info => receivedMatchInfo = info;
 
+            // Act
+            coordinator.Initialize(fakeApi, connectStream: false);
+
+            // Assert
             Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Matched));
-            Assert.That(matchedDto, Is.Not.Null);
-            Assert.That(matchedDto.sessionId, Is.EqualTo("session-777"));
+            Assert.That(receivedMatchInfo, Is.Not.Null);
+            Assert.That(receivedMatchInfo.sessionId, Is.EqualTo("session-abc-123"));
+        }
+
+        [Test]
+        public void RecoverSnapshot_WhenRequestSucceeds_WithOutdatedTicketInReconnectingState_RestoresServerState()
+        {
+            // Arrange
+            // 1) Initialize with ticket version 5 in ALLOCATING state
+            fakeApi.RequestSucceeded = true;
+            fakeApi.ReturnTicket = new MatchTicket { ticketId = "ticket-3", version = 5, state = "ALLOCATING" };
+            coordinator.Initialize(fakeApi, connectStream: false);
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Allocating));
+
+            // 2) Simulate snapshot failure -> moves state to Reconnecting
+            fakeApi.RequestSucceeded = false;
+            coordinator.RecoverSnapshot();
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Reconnecting));
+
+            // 3) Snapshot succeeds but returns an outdated ticket version 3
+            fakeApi.RequestSucceeded = true;
+            fakeApi.ReturnTicket = new MatchTicket { ticketId = "ticket-3", version = 3, state = "QUEUED" };
+
+            // Act
+            coordinator.RecoverSnapshot();
+
+            // Assert: Outdated ticket rejected by reducer, restoring state back to ALLOCATING (current ticket parsed state)
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Allocating));
+            Assert.That(coordinator.CurrentTicket.version, Is.EqualTo(5));
         }
 
         private class FakeMatchQueueApiService : MatchQueueApiService
         {
-            public string LastRequestedDeckMode { get; private set; }
-            public MatchTicket TicketToReturnOnCreate { get; set; }
-
-            public override IEnumerator CreateTicket(string deckMode, Action<MatchTicket> callback)
-            {
-                LastRequestedDeckMode = deckMode;
-                callback?.Invoke(TicketToReturnOnCreate);
-                yield break;
-            }
+            public bool ImmediateCallback = true;
+            public bool RequestSucceeded = true;
+            public MatchTicket ReturnTicket = null;
+            public int GetActiveTicketCallCount = 0;
+            private Action<bool, MatchTicket> pendingCallback;
 
             public override IEnumerator GetActiveTicket(Action<bool, MatchTicket> callback)
             {
-                callback?.Invoke(true, null);
+                GetActiveTicketCallCount++;
+                pendingCallback = callback;
+                if (ImmediateCallback)
+                {
+                    callback?.Invoke(RequestSucceeded, ReturnTicket);
+                }
                 yield break;
             }
 
-            public override IEnumerator CancelTicket(string ticketId, Action<MatchCancelResult> callback)
+            public void CompleteLastCallback(bool success, MatchTicket ticket)
             {
-                callback?.Invoke(null);
-                yield break;
+                pendingCallback?.Invoke(success, ticket);
+                pendingCallback = null;
             }
         }
     }

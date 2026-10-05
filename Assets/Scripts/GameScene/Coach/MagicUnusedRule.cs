@@ -50,7 +50,7 @@ namespace GameScene.Coach
         /// </summary>
         public override Transform[] ResolveTargets()
         {
-            CardUI[] cards = UnityEngine.Object.FindObjectsByType<CardUI>(FindObjectsSortMode.None);
+            CardUI[] cards = UnityEngine.Object.FindObjectsOfType<CardUI>();
             if (cards.Length == 0)
             {
                 return null;

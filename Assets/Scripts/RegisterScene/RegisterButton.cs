@@ -36,12 +36,14 @@ namespace RegisterScene
 
                 if (webRequest.result != UnityWebRequest.Result.Success)
                 {
-                    WDebug.LogError("Error: " + webRequest.error);
+                    WDebug.LogError("Error: " + webRequest.downloadHandler.text);
                     SystemMessageUI.Instance.ShowMessage(webRequest.downloadHandler.text);
                     ResetButton();
                     yield break;
                 }
             
+                WDebug.Log("Response: " + webRequest.downloadHandler.text);
+
                 string body = webRequest.downloadHandler.text;
                 if (!JsonCodec.TryDeserialize(body, out AuthResponseDto authResponseDto, out string error))
                 {

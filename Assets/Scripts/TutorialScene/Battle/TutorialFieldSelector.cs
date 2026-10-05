@@ -18,8 +18,6 @@ namespace TutorialScene
         private GameObject currentAimObj;
         private GameObject currentRangeObj;
         private GameObject currentSkillIndicator;
-        private LineSkillIndicator currentLineIndicator;
-        private CircleSkillIndicator currentCircleIndicator;
         private bool currentSkillIndicatorIsLine;
 
         void Start()
@@ -30,8 +28,7 @@ namespace TutorialScene
             currentAimObj.SetActive(false);
             currentRangeObj.SetActive(false);
         
-            currentSkillIndicator = CreateCircleSkillIndicator(out currentCircleIndicator);
-            currentLineIndicator = null;
+            currentSkillIndicator = CreateCircleSkillIndicator();
             currentSkillIndicatorIsLine = false;
             currentSkillIndicator.SetActive(false);
         }
@@ -79,16 +76,7 @@ namespace TutorialScene
             if (currentSkillIndicator == null || currentSkillIndicatorIsLine != wantLine)
             {
                 if (currentSkillIndicator != null) Destroy(currentSkillIndicator);
-                if (wantLine)
-                {
-                    currentSkillIndicator = CreateLineSkillIndicator(out currentLineIndicator);
-                    currentCircleIndicator = null;
-                }
-                else
-                {
-                    currentSkillIndicator = CreateCircleSkillIndicator(out currentCircleIndicator);
-                    currentLineIndicator = null;
-                }
+                currentSkillIndicator = wantLine ? CreateLineSkillIndicator() : CreateCircleSkillIndicator();
                 currentSkillIndicatorIsLine = wantLine;
             }
 
@@ -186,16 +174,18 @@ namespace TutorialScene
         {
             if (isLine)
             {
-                if (currentLineIndicator != null)
+                LineSkillIndicator lineIndicator = currentSkillIndicator.GetComponent<LineSkillIndicator>();
+                if (lineIndicator != null)
                 {
-                    currentLineIndicator.SetIndicator(casterPosition, previewPosition, range, radius);
+                    lineIndicator.SetIndicator(casterPosition, previewPosition, range, radius);
                 }
                 return;
             }
 
-            if (currentCircleIndicator != null)
+            CircleSkillIndicator circleIndicator = currentSkillIndicator.GetComponent<CircleSkillIndicator>();
+            if (circleIndicator != null)
             {
-                currentCircleIndicator.SetIndicator(previewPosition, radius);
+                circleIndicator.SetIndicator(previewPosition, radius);
             }
         }
 
@@ -214,17 +204,17 @@ namespace TutorialScene
             return indicator;
         }
 
-        private static GameObject CreateLineSkillIndicator(out LineSkillIndicator lineIndicator)
+        private static GameObject CreateLineSkillIndicator()
         {
             GameObject indicator = new GameObject("LineSkillIndicator");
-            lineIndicator = indicator.AddComponent<LineSkillIndicator>();
+            indicator.AddComponent<LineSkillIndicator>();
             return indicator;
         }
 
-        private static GameObject CreateCircleSkillIndicator(out CircleSkillIndicator circleIndicator)
+        private static GameObject CreateCircleSkillIndicator()
         {
             GameObject indicator = new GameObject("CircleSkillIndicator");
-            circleIndicator = indicator.AddComponent<CircleSkillIndicator>();
+            indicator.AddComponent<CircleSkillIndicator>();
             return indicator;
         }
     }

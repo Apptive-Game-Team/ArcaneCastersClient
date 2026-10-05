@@ -120,7 +120,6 @@ namespace Global
             OwnedCards = null;
             ClearAdventureMatch();
             GuestContext.ClearGuestInfo();
-            Data.Quests.ClaimedQuestLedger.Session.Clear();
         }
 
         /// <summary>

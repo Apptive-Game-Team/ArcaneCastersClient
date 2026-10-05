@@ -15,8 +15,7 @@ namespace GameScene.Dto
             { "botThought", typeof(BotThoughtInfo) },
             { "emote", typeof(EmoteInfo) },
             { "pveScript", typeof(PveScriptEventInfo) },
-            { "pveScriptEvent", typeof(PveScriptEventInfo) },
-            { "pveObjective", typeof(PveObjectiveInfo) }
+            { "pveScriptEvent", typeof(PveScriptEventInfo) }
         };
 
         public ServerMessageConverter() : base("type", Subtypes)

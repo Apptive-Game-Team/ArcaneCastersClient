@@ -34,8 +34,7 @@ namespace LobbyScene
                 eventStream = gameObject.AddComponent<MatchEventStream>();
                 eventStream.TicketReceived += HandleStreamTicket;
                 eventStream.Disconnected += HandleStreamDisconnected;
-                ConnectAndRecover();
-                return;
+                eventStream.Connect();
             }
             RecoverSnapshot();
         }
@@ -132,7 +131,7 @@ namespace LobbyScene
 
         private void ConnectAndRecover()
         {
-            eventStream.Connect(ServerList.MatchingServer.Api, SceneContext.JwtToken);
+            eventStream.Connect();
             RecoverSnapshot();
         }
 

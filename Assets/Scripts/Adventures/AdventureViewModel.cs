@@ -4,7 +4,6 @@ using GameScene.Dto;
 using Global;
 using LobbyScene.Debugger;
 using UnityEngine;
-using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using Global.Serialization;
 
@@ -19,9 +18,6 @@ namespace Adventures
             Idle,
             Requesting,
         }
-
-        private static readonly LocalizedString serverDown = new LocalizedString
-            { TableReference = "SystemMessageUI", TableEntryReference = "serverDown" };
 
         public StateEvent<AdventureState> CurrentState = new StateEvent<AdventureState>(AdventureState.Idle);
 
@@ -41,15 +37,11 @@ namespace Adventures
 
         private void HandleCallback(MatchedInfoDto dto)
         {
+            WDebug.Log("Adventure session matched: transitioning to game scene.");
             if (dto == null)
             {
-                WDebug.LogWarning("Adventure session request failed: staying on the adventure screen.");
                 CurrentState.UpdateData(AdventureState.Idle);
-                SystemMessageUI.Instance.ShowMessage(serverDown);
-                return;
             }
-
-            WDebug.Log("Adventure session matched: transitioning to game scene.");
             OnMatched(dto);
         }
 

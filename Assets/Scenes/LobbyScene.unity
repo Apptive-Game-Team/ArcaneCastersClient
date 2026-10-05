@@ -4392,8 +4392,7 @@ MonoBehaviour:
   battleHoverPresenter: {fileID: 887010901}
   deckDropdown: {fileID: 191327567}
   arrowButton: {fileID: 1362459989}
-  rewardUiPrefab: {fileID: 5608648098483424027, guid: dad03a048c389cf49921a14c0eddd72a, type: 3}
-  rewardTilePrefab: {fileID: 7601010000000000006, guid: 1487ab9e5f8cf734353f19480de2411f, type: 3}
+  rewardUiPrefab: {fileID: 0}
   cardImageMapper: {fileID: 0}
   deckLoadFailed:
     m_TableReference:
