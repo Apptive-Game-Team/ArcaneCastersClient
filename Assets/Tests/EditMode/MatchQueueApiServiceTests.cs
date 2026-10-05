@@ -8,6 +8,25 @@ namespace WordOnline.Tests
     public class MatchQueueApiServiceTests
     {
         [Test]
+        public void GameServerPinger_AppendQuery_JoinsPingsAsServerIdAndRtt()
+        {
+            var pings = new List<ServerPing>
+            {
+                new ServerPing { serverId = 1, rttMs = 42 },
+                new ServerPing { serverId = 2, rttMs = 80 }
+            };
+
+            Assert.AreEqual("http://lobby/api/x?pings=1%3A42%2C2%3A80", GameServerPinger.AppendQuery("http://lobby/api/x", pings));
+        }
+
+        [Test]
+        public void GameServerPinger_AppendQuery_WithoutPings_LeavesPathUntouched()
+        {
+            Assert.AreEqual("http://lobby/api/x", GameServerPinger.AppendQuery("http://lobby/api/x", null));
+            Assert.AreEqual("http://lobby/api/x", GameServerPinger.AppendQuery("http://lobby/api/x", new List<ServerPing>()));
+        }
+
+        [Test]
         public void CreateTicket_ServerPings_SerializesServerIdAndRttMs()
         {
             var request = new MatchTicketRequest

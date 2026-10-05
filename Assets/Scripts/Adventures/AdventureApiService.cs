@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using LobbyScene;
 using Data;
 using Global;
 using UnityEngine;
@@ -14,7 +16,11 @@ namespace Adventures
 
         public IEnumerator RequestPVE(long scenarioId, Action<MatchedInfoDto> callback)
         {
-            using var www = UnityWebRequest.Get($"{ServerList.MatchingServer.url}/api/scenarios/{scenarioId}/play");
+            List<ServerPing> pings = null;
+            yield return GameServerPinger.Measure(result => pings = result);
+
+            using var www = UnityWebRequest.Get(
+                GameServerPinger.AppendQuery($"{ServerList.MatchingServer.url}/api/scenarios/{scenarioId}/play", pings));
             
             Server.SetAcceptLanguage(www);
             Server.SetAuthorization(www);

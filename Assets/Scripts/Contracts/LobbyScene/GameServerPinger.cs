@@ -48,6 +48,28 @@ namespace LobbyScene
             callback(pings);
         }
 
+        /// <summary>
+        /// 본문이 없는 GET 매칭(봇전, 모험)용 쿼리 값. <c>serverId:rttMs</c> 를 쉼표로 잇는다. 비어 있으면 null.
+        /// </summary>
+        public static string ToQuery(List<ServerPing> pings)
+        {
+            if (pings == null || pings.Count == 0) return null;
+
+            var parts = new List<string>(pings.Count);
+            foreach (ServerPing ping in pings)
+            {
+                parts.Add($"{ping.serverId}:{ping.rttMs}");
+            }
+            return string.Join(",", parts);
+        }
+
+        /// <summary><paramref name="path"/> 뒤에 핑 쿼리를 붙인다. 핑이 없으면 그대로 돌려준다.</summary>
+        public static string AppendQuery(string path, List<ServerPing> pings)
+        {
+            string query = ToQuery(pings);
+            return query == null ? path : $"{path}?pings={Uri.EscapeDataString(query)}";
+        }
+
         private static IEnumerator FetchTargets(Action<List<GameServerEndpoint>> callback)
         {
             using var webRequest = UnityWebRequest.Get(PingTargets);

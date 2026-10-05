@@ -115,7 +115,11 @@ namespace LobbyScene
 
         public IEnumerator MatchPractice(Action<MatchedInfoDto> callback)
         {
-            using var webRequest = UnityWebRequest.Get(ServerList.MatchingServer.Api.Path("api", "match", "practice", "me"));
+            List<ServerPing> pings = null;
+            yield return GameServerPinger.Measure(result => pings = result);
+
+            using var webRequest = UnityWebRequest.Get(
+                GameServerPinger.AppendQuery(ServerList.MatchingServer.Api.Path("api", "match", "practice", "me"), pings));
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
             yield return webRequest.SendWebRequest();
