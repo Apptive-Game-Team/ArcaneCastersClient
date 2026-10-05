@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Data;
 using Data.Net;
+using GameScene.Dto;
 using GameScene.Handler;
 using Global;
 using Global.Stomp;
