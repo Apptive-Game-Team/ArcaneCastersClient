@@ -25,14 +25,19 @@ namespace LobbyScene
         public event Action<MatchTicketState, MatchTicket> StateChanged;
         public event Action<MatchedInfoDto> Matched;
 
-        public void Initialize(MatchQueueApiService apiService)
+        public void Initialize(MatchQueueApiService apiService, bool connectStream = true)
         {
             if (api != null) return;
             api = apiService;
-            eventStream = gameObject.AddComponent<MatchEventStream>();
-            eventStream.TicketReceived += HandleStreamTicket;
-            eventStream.Disconnected += HandleStreamDisconnected;
-            ConnectAndRecover();
+            if (connectStream)
+            {
+                eventStream = gameObject.AddComponent<MatchEventStream>();
+                eventStream.TicketReceived += HandleStreamTicket;
+                eventStream.Disconnected += HandleStreamDisconnected;
+                ConnectAndRecover();
+                return;
+            }
+            RecoverSnapshot();
         }
 
         public void Enqueue(string deckMode)
