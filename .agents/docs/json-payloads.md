@@ -1,5 +1,12 @@
 # Server JSON Payloads
 
+## Do not use JsonUtility for optional reference-valued frame fields
+
+`JsonUtility.FromJson` populated an absent `impact` object in every frame of the
+FireShot preview with an all-zero instance (60 impacts instead of one). Use
+`JsonCodec` for recorded server frames too, and verify missing impact remains
+null in the actual Unity runtime. A C# compile check cannot catch this.
+
 `Assets/Scripts/Global/Serialization/JsonCodec.cs` is the only place the client
 configures Json.NET, and every payload and every `PlayerPrefs` cache goes through
 it. Read this before adding a field to a server DTO, writing a `JsonConverter`,

@@ -6,12 +6,15 @@ namespace GameScene.ServedObjectComponent
     {
         
         public GameObject prefab;
+        public bool SuppressPresentation { get; set; }
 
         private void OnDestroy()
         {
-            if (prefab != null)
+            if (prefab != null && !SuppressPresentation)
             {
-                Instantiate(prefab, transform.position, Quaternion.identity);
+                var world = GameScene.Object.PresentationWorld.For(this);
+                if (world != null) world.SpawnEffect(prefab, transform.position, Quaternion.identity);
+                else Instantiate(prefab, transform.position, Quaternion.identity);
             }
         }
     }

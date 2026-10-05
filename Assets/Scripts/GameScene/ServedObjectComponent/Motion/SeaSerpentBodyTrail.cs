@@ -266,7 +266,7 @@ namespace GameScene.ServedObjectComponent.Motion
 
         private void PlaceSegments(Vector3 headPosition)
         {
-            Camera camera = Camera.main;
+            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
 
             for (int i = 0; i < segmentCount; i++)
             {
@@ -308,9 +308,9 @@ namespace GameScene.ServedObjectComponent.Motion
         /// <c>ProjectileUtil.GetRotation</c> reads it. The camera is tilted, so a world delta is not
         /// the direction the player sees.
         /// </summary>
-        private static Vector2 GetScreenDirection(Vector3 from, Vector3 to)
+        private Vector2 GetScreenDirection(Vector3 from, Vector3 to)
         {
-            Camera camera = Camera.main;
+            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
             Vector3 delta = camera != null
                 ? camera.WorldToScreenPoint(to) - camera.WorldToScreenPoint(from)
                 : to - from;

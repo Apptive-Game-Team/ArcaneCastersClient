@@ -85,6 +85,9 @@ namespace GameScene.ServedObjectComponent.Effect
 
         private float ResolveRadius()
         {
+            var world = GameScene.Object.PresentationWorld.For(this);
+            if (world != null)
+                return world.TryParameter(gameObjectName, parameterName, out float recorded) ? recorded : fallbackRadius;
             IReadOnlyList<GameParameterData> parameters = ParametersDataSource.GetCachedParameters();
             if (parameters != null)
             {

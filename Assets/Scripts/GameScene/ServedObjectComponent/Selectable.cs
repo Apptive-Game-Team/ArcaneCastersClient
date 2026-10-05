@@ -22,6 +22,7 @@ namespace GameScene.ServedObjectComponent
 
         void Awake()
         {
+            if (GameScene.Object.PresentationWorld.For(this) != null) { enabled = false; return; }
             if (!worldCamera) worldCamera = Camera.main;
 
             _spriteRenderer = GetComponent<SpriteRenderer>() ?? GetComponentInChildren<SpriteRenderer>();

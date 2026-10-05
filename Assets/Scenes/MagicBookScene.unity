@@ -8970,6 +8970,7 @@ MonoBehaviour:
   elementChipTemplate: {fileID: 7133000000000000089}
   statRowsParent: {fileID: 2742560933438793194}
   statRowTemplate: {fileID: 7133000000000000104}
+  previewPrefab: {fileID: 11400001, guid: aa570083ce364c4485dd61ac12ca4301, type: 3}
 --- !u!114 &5970574067173908825
 MonoBehaviour:
   m_ObjectHideFlags: 0

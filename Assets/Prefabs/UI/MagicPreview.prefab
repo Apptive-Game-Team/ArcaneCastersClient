@@ -1,0 +1,417 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 22400001}
+  - component: {fileID: 22200001}
+  - component: {fileID: 11400002}
+  - component: {fileID: 11400003}
+  - component: {fileID: 11400001}
+  m_Layer: 5
+  m_Name: MagicPreview
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &22400001
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6428096707799330225}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 276, y: 220}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &22200001
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100001}
+  m_CullTransparentMesh: 1
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+--- !u!114 &11400003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: 0
+  m_MinHeight: 220
+  m_PreferredWidth: 276
+  m_PreferredHeight: 220
+  m_FlexibleWidth: 1
+  m_FlexibleHeight: 0
+  m_LayoutPriority: 1
+--- !u!114 &11400001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e5ad4a51be945499fe8d08c8e1e8401, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  output: {fileID: 11400002}
+  groundMaterial: {fileID: 2100000, guid: bc0db388a89fe054fa2136ae7f68c793, type: 2}
+  clips:
+  - magicId: fire_shot
+    recordingAsset: {fileID: 4900000, guid: 91ad7aaf56cd41b5bc8754a4c3b37b02, type: 3}
+  - magicId: rock_golem
+    recordingAsset: {fileID: 4900000, guid: 1a2616a659fb074448fbbef606b85604, type: 3}
+  - magicId: wind_spirit
+    recordingAsset: {fileID: 4900000, guid: 65138454fff67d543aec0097605d4183, type: 3}
+  - magicId: towerback
+    recordingAsset: {fileID: 4900000, guid: 974877e1824c14b4ba6934f4a99e57f7, type: 3}
+  - magicId: healing_totem
+    recordingAsset: {fileID: 4900000, guid: 647cd66e4651d35449731772bc5fa0ad, type: 3}
+  - magicId: lightning_explosion
+    recordingAsset: {fileID: 4900000, guid: 571c13a8a07b7384aaf754666a6f99af, type: 3}
+  - magicId: sand_storm
+    recordingAsset: {fileID: 4900000, guid: 81d13f3bd06450c4fb20a390638e2445, type: 3}
+  - magicId: frenzy_totem
+    recordingAsset: {fileID: 4900000, guid: d332c5c6785ac1b4eb6933cb23c5fa93, type: 3}
+  - magicId: earth_call
+    recordingAsset: {fileID: 4900000, guid: be245b92af56e6542a439f82f0c0ecf9, type: 3}
+  - magicId: water_shot
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000001, type: 3}
+  - magicId: lightning_shot
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000002, type: 3}
+  - magicId: wind_blade
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000003, type: 3}
+  - magicId: rock_rolling
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000004, type: 3}
+  - magicId: fire_drop
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000005, type: 3}
+  - magicId: wind_drop
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000006, type: 3}
+  - magicId: water_explosion
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000007, type: 3}
+  - magicId: wind_explosion
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000008, type: 3}
+  - magicId: rock_blast
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000009, type: 3}
+  - magicId: mini_rock_swarm
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000010, type: 3}
+  - magicId: thunder_bird_swarm
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000011, type: 3}
+  - magicId: water_slime_swarm
+    recordingAsset: {fileID: 4900000, guid: ac204202610040000000000000000012, type: 3}
+  - magicId: aqua_archer
+    recordingAsset: {fileID: 4900000, guid: e31a6ec6ef9b4221ceb82e557214300b, type: 3}
+  - magicId: bomb_sprite
+    recordingAsset: {fileID: 4900000, guid: 075aa431e4841186c8c61f709f5c4667, type: 3}
+  - magicId: boulder_strike
+    recordingAsset: {fileID: 4900000, guid: 21b29d4cad484dc52cb76dc9cf026113, type: 3}
+  - magicId: bubble_generator
+    recordingAsset: {fileID: 4900000, guid: 2ddbf58cb3065f0d83bdfcbcb6a1f211, type: 3}
+  - magicId: bubble_spirit
+    recordingAsset: {fileID: 4900000, guid: b10054dfebafbd47ecf6d998e4a2b49d, type: 3}
+  - magicId: cannon
+    recordingAsset: {fileID: 4900000, guid: 64ec53b4942591ad18cfcb09e885ed08, type: 3}
+  - magicId: chain_lightning
+    recordingAsset: {fileID: 4900000, guid: ae2a3918711d1f74dc6b40d050fb1bfc, type: 3}
+  - magicId: chicken_commando
+    recordingAsset: {fileID: 4900000, guid: e35d4acc40470363747b9cb398928446, type: 3}
+  - magicId: cloud_dragon
+    recordingAsset: {fileID: 4900000, guid: 41c084e05997c5593b1f3690a67c6d66, type: 3}
+  - magicId: crater
+    recordingAsset: {fileID: 4900000, guid: e437ce1030df0035368fb9820e8a1e04, type: 3}
+  - magicId: dimension_toad
+    recordingAsset: {fileID: 4900000, guid: 83d62e22c3f7749da2b228913cb1b7d3, type: 3}
+  - magicId: dragon_tower
+    recordingAsset: {fileID: 4900000, guid: 77700c13accc0984c5bc0b311f0d7c50, type: 3}
+  - magicId: electric_tower
+    recordingAsset: {fileID: 4900000, guid: 480836849726dec31e52eb617b06dc4c, type: 3}
+  - magicId: ember_spirit_swarm
+    recordingAsset: {fileID: 4900000, guid: 929dd1c6a816c5b2c5f3f2b6e0c8fe58, type: 3}
+  - magicId: evil_ent
+    recordingAsset: {fileID: 4900000, guid: 2a50a95b10ffb2e2176946019b0e69be, type: 3}
+  - magicId: fire_lord_spirit
+    recordingAsset: {fileID: 4900000, guid: e7cd8faf52a8734b3cc5ac82babee4f9, type: 3}
+  - magicId: fire_slime_nest
+    recordingAsset: {fileID: 4900000, guid: 0913c3192cdd0a4f32592784c5f2a5ea, type: 3}
+  - magicId: fire_spirit
+    recordingAsset: {fileID: 4900000, guid: 5f283c6cd0eceb0edd58525581abc3a8, type: 3}
+  - magicId: firework_tower
+    recordingAsset: {fileID: 4900000, guid: 217e9e047383b7ae394677eb30e133ba, type: 3}
+  - magicId: grass_generator
+    recordingAsset: {fileID: 4900000, guid: d1f44703ba55e9dc09312e4345b86fe3, type: 3}
+  - magicId: leafair
+    recordingAsset: {fileID: 4900000, guid: adf3cf8097e8c1860ca8364a8065bc6b, type: 3}
+  - magicId: life_tree
+    recordingAsset: {fileID: 4900000, guid: a79f4ece84304e0f1c3b98977126636e, type: 3}
+  - magicId: lightning_drop
+    recordingAsset: {fileID: 4900000, guid: 4ae510d470496c77d6cf6d6f2ee782be, type: 3}
+  - magicId: lightning_slime_nest
+    recordingAsset: {fileID: 4900000, guid: 89c7d6cd39d5c4554d110f1dae3f6890, type: 3}
+  - magicId: magma_explosion
+    recordingAsset: {fileID: 4900000, guid: b1e92d8ba66329906cde509ecdb6a61e, type: 3}
+  - magicId: magma_spirit
+    recordingAsset: {fileID: 4900000, guid: dbef399175027aae6a173d34d422459c, type: 3}
+  - magicId: mana_well
+    recordingAsset: {fileID: 4900000, guid: f6aa7cd66d2e0b07e2e46053bc74e177, type: 3}
+  - magicId: meteor_shower
+    recordingAsset: {fileID: 4900000, guid: 1b4764b562b67e02a87a29bf124775d0, type: 3}
+  - magicId: nature_drop
+    recordingAsset: {fileID: 4900000, guid: 908dc2ba8b3907392e7ae8531cd525c8, type: 3}
+  - magicId: nature_slime_nest
+    recordingAsset: {fileID: 4900000, guid: 929441e63bd1d78066f17f7717c582aa, type: 3}
+  - magicId: overgrowth
+    recordingAsset: {fileID: 4900000, guid: 4749cdfc05143cdf241763acf53ba0d0, type: 3}
+  - magicId: pve_water_slime_nest
+    recordingAsset: {fileID: 4900000, guid: b1f921fc338cf231a39de612035a89b2, type: 3}
+  - magicId: rallying_totem
+    recordingAsset: {fileID: 4900000, guid: c19edce20106eb129e81a1407354692f, type: 3}
+  - magicId: razor_gale
+    recordingAsset: {fileID: 4900000, guid: 838b26c9904e137fe1b532a74b4bbca9, type: 3}
+  - magicId: repair_totem
+    recordingAsset: {fileID: 4900000, guid: 2933658c83c8faf1be90375853d32d5a, type: 3}
+  - magicId: rock_drop
+    recordingAsset: {fileID: 4900000, guid: 2dcb54a355c267895cd73b777121da29, type: 3}
+  - magicId: rock_mage
+    recordingAsset: {fileID: 4900000, guid: 0c2ba24c9da14532aa3a91c96c0ac888, type: 3}
+  - magicId: rock_slime_nest
+    recordingAsset: {fileID: 4900000, guid: efacf340c09490585c4bb7546ae17bcc, type: 3}
+  - magicId: rock_turret
+    recordingAsset: {fileID: 4900000, guid: f9907b2fade388a44e72ad2bd1046753, type: 3}
+  - magicId: sea_serpent
+    recordingAsset: {fileID: 4900000, guid: 83fd3c98f25a7afbf40b2724d243440e, type: 3}
+  - magicId: seed_nest
+    recordingAsset: {fileID: 4900000, guid: 130fa8475ec2a0e9d9ba1966aa2a6000, type: 3}
+  - magicId: seed_spirit_swarm
+    recordingAsset: {fileID: 4900000, guid: 694bdc489461fd439b6a3956fd25be30, type: 3}
+  - magicId: shock_overload
+    recordingAsset: {fileID: 4900000, guid: a6ed1571e1a0d4bb678c0e74d6eb5724, type: 3}
+  - magicId: shock_trap
+    recordingAsset: {fileID: 4900000, guid: 954952459f5ca495ec9fc2fecc88dcc9, type: 3}
+  - magicId: spirit_bomb
+    recordingAsset: {fileID: 4900000, guid: b799ab32fa9c23bd9cf98ecb6119ecc9, type: 3}
+  - magicId: storm_rider
+    recordingAsset: {fileID: 4900000, guid: 05ffcb8a6965ec5a9e40060893dfcf94, type: 3}
+  - magicId: storm_stag
+    recordingAsset: {fileID: 4900000, guid: d0d4bbf691c2f17e32a2987e491aaa0b, type: 3}
+  - magicId: thunder_spirit
+    recordingAsset: {fileID: 4900000, guid: 9472bd3488822e0dbe850ba5cb5b80ab, type: 3}
+  - magicId: tidal_warhead
+    recordingAsset: {fileID: 4900000, guid: ef3ea47d73d060292c6c7bae7fd2eb22, type: 3}
+  - magicId: tide_call
+    recordingAsset: {fileID: 4900000, guid: 9852c84227589e3314292f387e793b98, type: 3}
+  - magicId: titan_remnant
+    recordingAsset: {fileID: 4900000, guid: 15065fabf5196efc6b2741ea86a405bf, type: 3}
+  - magicId: tornado_strike
+    recordingAsset: {fileID: 4900000, guid: d6f26b0f16ad53b61d93ebff2cce513e, type: 3}
+  - magicId: tower
+    recordingAsset: {fileID: 4900000, guid: d02d7b9e93833d4afa2753fc15b772f5, type: 3}
+  - magicId: tree_golem
+    recordingAsset: {fileID: 4900000, guid: 40dbf885bcef23a69d79548290e1e7c4, type: 3}
+  - magicId: vine_colony
+    recordingAsset: {fileID: 4900000, guid: 9e9a7113bc3311185eb3a9378eab048d, type: 3}
+  - magicId: vine_fan
+    recordingAsset: {fileID: 4900000, guid: 13e306f18d12c3c550cf85d0ffcd6c37, type: 3}
+  - magicId: vine_spirit
+    recordingAsset: {fileID: 4900000, guid: 97ab0d92885eb8511608f6697f536824, type: 3}
+  - magicId: vine_toss
+    recordingAsset: {fileID: 4900000, guid: d8722323fa646cf254d06ec9b79cff00, type: 3}
+  - magicId: vine_world
+    recordingAsset: {fileID: 4900000, guid: c50b4acb52ada26d152c22385f13179f, type: 3}
+  - magicId: wall_golem
+    recordingAsset: {fileID: 4900000, guid: 3f2415e1233fc276c70d0337571e3290, type: 3}
+  - magicId: will_o_wisp
+    recordingAsset: {fileID: 4900000, guid: 8b5f0fb195ec25d1865d1cf3aa47d4ec, type: 3}
+  - magicId: wind_slime_nest
+    recordingAsset: {fileID: 4900000, guid: 6829081665f3205b0544ebf576127a3c, type: 3}
+  - magicId: wind_totem
+    recordingAsset: {fileID: 4900000, guid: 826e6c759daecc023b851e1c87d0ffc7, type: 3}
+  - magicId: zap_mouse
+    recordingAsset: {fileID: 4900000, guid: e0fe89d52c0836d31448a69b0de4e75f, type: 3}
+  scenarioCaption: {fileID: 5424425187506454539}
+--- !u!1 &1704370577018710923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6428096707799330225}
+  - component: {fileID: 6671239248659425130}
+  - component: {fileID: 5424425187506454539}
+  m_Layer: 5
+  m_Name: ScenarioCaption
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &6428096707799330225
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704370577018710923}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 22400001}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 2}
+  m_SizeDelta: {x: -8, y: 28}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!222 &6671239248659425130
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704370577018710923}
+  m_CullTransparentMesh: 1
+--- !u!114 &5424425187506454539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704370577018710923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 27eb6710ab8b4024989693d7f57479f3, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: af8a3c93a6bf4ba08894f839cc6276fa, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281015836
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 16
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 11
+  m_fontSizeMax: 16
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 0
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}

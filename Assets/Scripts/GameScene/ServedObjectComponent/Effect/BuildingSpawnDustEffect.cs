@@ -23,6 +23,7 @@ namespace GameScene.ServedObjectComponent.Effect
         {
             GameObject effectObject = new GameObject(nameof(BuildingSpawnDustEffect));
             effectObject.transform.SetPositionAndRotation(worldPosition, cameraRotation);
+            GameScene.Object.PresentationWorld.For(referenceRenderer)?.Own(effectObject);
 
             BuildingSpawnDustEffect effect = effectObject.AddComponent<BuildingSpawnDustEffect>();
             effect.Play(referenceRenderer);

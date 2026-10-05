@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Data;
 using Data.Localization;
 using Data.Magic;
+using Global;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,8 @@ namespace DeckScene
         [SerializeField] private Transform itemRoot;
         [SerializeField] private TMP_FontAsset detailFont;
         [SerializeField] private TMP_FontAsset descriptionFont;
+        [SerializeField] private MagicPreview previewPrefab;
+        private float currentPanelHeight = PanelHeight;
 
         private HoverPopupTransition hoverTransition;
         private int renderVersion;
@@ -34,6 +37,15 @@ namespace DeckScene
             panelRoot ??= gameObject;
             hoverTransition = new HoverPopupTransition(this);
             Hide();
+            Canvas canvas = panelRoot.GetComponentInParent<Canvas>(true);
+            if (canvas != null)
+            {
+                // The popup is taller than its original scroll-view parent.
+                // Use the full canvas for both drawing and edge placement.
+                panelRoot.transform.SetParent(canvas.rootCanvas.transform, true);
+                panelRoot.transform.SetAsLastSibling();
+            }
+            panelRoot.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
         public void Show(IReadOnlyList<CombinedMagicData> magics)
@@ -44,7 +56,12 @@ namespace DeckScene
         public void Show(IReadOnlyList<CombinedMagicData> magics, RectTransform anchor)
         {
             panelRoot ??= gameObject;
+            Hide();
             ClearItems();
+            bool hasPreview = previewPrefab != null && magics != null && magics.Count == 1 && previewPrefab.Supports(magics[0]);
+            currentPanelHeight = hasPreview
+                ? PanelHeight + previewPrefab.GetComponent<LayoutElement>().preferredHeight + DetailSpacing
+                : PanelHeight;
             ConfigureLayout();
             int version = ++renderVersion;
 
@@ -61,7 +78,7 @@ namespace DeckScene
             }
 
             hoverTransition ??= new HoverPopupTransition(this);
-            hoverTransition.ShowAfterDelay(panelRoot, () =>
+            void BeforeShow()
             {
                 if (panelRoot.transform is RectTransform panelRect)
                 {
@@ -69,7 +86,11 @@ namespace DeckScene
                 }
 
                 PlaceNextTo(anchor);
-            });
+            }
+
+            // A preview should appear while the card is still under the pointer.
+            if (hasPreview) hoverTransition.ShowNow(panelRoot, BeforeShow);
+            else hoverTransition.ShowAfterDelay(panelRoot, BeforeShow);
         }
 
         public void Hide()
@@ -103,7 +124,7 @@ namespace DeckScene
 
             var detailElement = detailObject.AddComponent<LayoutElement>();
             detailElement.preferredWidth = PanelWidth - 24f;
-            detailElement.preferredHeight = PanelHeight - 24f;
+            detailElement.preferredHeight = currentPanelHeight - 24f;
 
             TMP_Text nameText = CreateHeader(detailObject.transform, magic);
 
@@ -123,6 +144,13 @@ namespace DeckScene
             bodyElement.minHeight = bodyHeight;
             bodyElement.preferredHeight = bodyHeight;
             bodyElement.flexibleHeight = 0f;
+
+            if (currentPanelHeight > PanelHeight && previewPrefab != null && previewPrefab.Supports(magic))
+            {
+                MagicPreview preview = Instantiate(previewPrefab, detailObject.transform);
+                preview.Configure(magic);
+                preview.gameObject.SetActive(true);
+            }
 
             string localizedName = await GetLocalizedNameAsync(magic);
             string detailText = await MagicBookDetailText.BuildAsync(magic, compactStats: true);
@@ -244,7 +272,13 @@ namespace DeckScene
         {
             if (panelRoot != null && panelRoot.transform is RectTransform panelRect)
             {
-                panelRect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
+                panelRect.sizeDelta = new Vector2(PanelWidth, currentPanelHeight);
+                // Keep the taller preview popup within the canvas on short screens.
+                RectTransform canvasRect = panelRect.parent as RectTransform;
+                float scale = canvasRect != null
+                    ? Mathf.Min(1f, Mathf.Max(1f, canvasRect.rect.height - ContentPadding * 2f) / currentPanelHeight)
+                    : 1f;
+                panelRect.localScale = Vector3.one * scale;
             }
 
             if (itemRoot == null || !(itemRoot is RectTransform itemRect))
@@ -264,7 +298,7 @@ namespace DeckScene
                     (int)ContentPadding,
                     (int)ContentPadding);
                 grid.childAlignment = TextAnchor.UpperLeft;
-                grid.cellSize = new Vector2(PanelWidth - 24f, PanelHeight - 24f);
+                grid.cellSize = new Vector2(PanelWidth - 24f, currentPanelHeight - 24f);
                 grid.spacing = Vector2.zero;
                 grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
                 grid.startAxis = GridLayoutGroup.Axis.Horizontal;
@@ -326,6 +360,7 @@ namespace DeckScene
 
             foreach (Transform child in itemRoot)
             {
+                child.gameObject.SetActive(false);
                 Destroy(child.gameObject);
             }
         }
@@ -361,6 +396,22 @@ namespace DeckScene
             if (RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect, screenPoint, camera, out Vector3 worldPoint))
             {
                 panelRect.position = worldPoint;
+                Vector3 local = panelRect.localPosition;
+                float panelWidth = panelRect.rect.width * panelRect.localScale.x;
+                if (local.x + panelWidth > parentRect.rect.xMax)
+                {
+                    RectTransformUtility.ScreenPointToWorldPointInRectangle(parentRect,
+                        RectTransformUtility.WorldToScreenPoint(camera, (corners[0] + corners[1]) * 0.5f),
+                        camera, out Vector3 left);
+                    local.x = parentRect.InverseTransformPoint(left).x - panelWidth - AnchorOffset;
+                }
+                local.x = Mathf.Clamp(local.x, parentRect.rect.xMin,
+                    Mathf.Max(parentRect.rect.xMin, parentRect.rect.xMax - panelWidth));
+                float halfHeight = panelRect.rect.height * panelRect.localScale.y * 0.5f;
+                local.y = Mathf.Clamp(local.y, parentRect.rect.yMin + ContentPadding + halfHeight,
+                    Mathf.Max(parentRect.rect.yMin + ContentPadding + halfHeight,
+                        parentRect.rect.yMax - ContentPadding - halfHeight));
+                panelRect.localPosition = local;
             }
         }
 
