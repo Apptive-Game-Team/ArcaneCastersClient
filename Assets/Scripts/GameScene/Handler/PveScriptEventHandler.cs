@@ -20,22 +20,9 @@ namespace GameScene.Handler
         // for a key the table does not have yet.
         private const string DialogueTable = "Adventure";
 
-        private readonly PveSyncState syncState;
-
-        public PveScriptEventHandler(PveSyncState syncState)
-        {
-            this.syncState = syncState ?? new PveSyncState();
-        }
-
         public void Handler(PveScriptEventInfo pveScriptEvent)
         {
             if (pveScriptEvent == null)
-            {
-                return;
-            }
-
-            // The server replays recent events after a pveSync request; one already shown is dropped.
-            if (!syncState.ShouldShow(pveScriptEvent.seq))
             {
                 return;
             }
@@ -87,7 +74,7 @@ namespace GameScene.Handler
         // default LiberationSans has no Hangul and Korean lines render as boxes.
         private const string GameFontName = "LilitaOne SDF";
 
-        internal static TMP_FontAsset FindGameFont()
+        private static TMP_FontAsset FindGameFont()
         {
             foreach (TMP_FontAsset font in Resources.FindObjectsOfTypeAll<TMP_FontAsset>())
             {
@@ -128,10 +115,8 @@ namespace GameScene.Handler
                 return;
             }
 
-            // A line with no speaker has no one to anchor a bubble to, so it goes to the banner.
             if (speakerObjectId <= 0)
             {
-                PveObjectiveHud.ShowBanner(message);
                 return;
             }
 

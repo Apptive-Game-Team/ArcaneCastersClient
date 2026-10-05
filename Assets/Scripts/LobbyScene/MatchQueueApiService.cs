@@ -108,7 +108,7 @@ namespace LobbyScene
             callback(ticket);
         }
 
-        public IEnumerator MatchPractice(Action<MatchedInfoDto> callback)
+        public virtual IEnumerator MatchPractice(Action<MatchedInfoDto> callback)
         {
             using var webRequest = UnityWebRequest.Get(ServerList.MatchingServer.Api.Path("api", "match", "practice", "me"));
             Server.SetAcceptLanguage(webRequest);

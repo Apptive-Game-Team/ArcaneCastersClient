@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Data.Adventures;
 using Data.Adventures.Domain;
@@ -15,11 +14,6 @@ namespace Adventures
     /// (one match), spread evenly along the road inside the map card, plus the bottom
     /// info card and its Play button. A stage groups several scenarios on the server
     /// and in rewards, but the player sees and picks individual matches.
-    /// <para>
-    /// When <see cref="endOfRoadSlot"/> is set, the road keeps one more slot after the last
-    /// match for the adventure's reward chest (<see cref="AdventureEndChest"/>), so the chest
-    /// sits where the path ends whether it is hidden, claimable or claimed.
-    /// </para>
     /// </summary>
     public class AdventureMapController : MonoBehaviour
     {
@@ -67,10 +61,6 @@ namespace Adventures
         [SerializeField] private Button playButton;
         [SerializeField] private RectTransform currentMarker;
 
-        // The end-of-adventure chest. Lives under nodesContainer like currentMarker, survives
-        // the rebuild sweep, and is moved to the slot after the last match on every Show.
-        [SerializeField] private RectTransform endOfRoadSlot;
-
         // Used only to restore CurrentAdventure when this scene is reached straight
         // from ResultScene's "back to adventure" button; see Start().
         [SerializeField] private AdventureDataSource dataSource;
@@ -79,18 +69,6 @@ namespace Adventures
         private readonly List<MapNode> nodes = new List<MapNode>();
         private MapNode selectedNode;
         private Material defaultCaptionMaterial;
-
-        /// <summary>
-        /// Raised at the end of every <see cref="Show"/>, with the adventure shown or null when
-        /// there is none. <see cref="AdventureEndChestController"/> reads the chest state from it.
-        /// </summary>
-        public event Action<Adventure> AdventureShown;
-
-        /// <summary>True once <see cref="Show"/> ran at least once.</summary>
-        public bool HasShown { get; private set; }
-
-        /// <summary>The adventure the last <see cref="Show"/> drew, or null.</summary>
-        public Adventure ShownAdventure => currentAdventure;
 
         private void Awake()
         {
@@ -145,13 +123,6 @@ namespace Adventures
         /// <summary>Rebuilds the whole map for <paramref name="adventure"/>.</summary>
         public void Show(Adventure adventure)
         {
-            Build(adventure);
-            HasShown = true;
-            AdventureShown?.Invoke(currentAdventure);
-        }
-
-        private void Build(Adventure adventure)
-        {
             currentAdventure = adventure;
             selectedNode = null;
             nodes.Clear();
@@ -161,8 +132,7 @@ namespace Adventures
                 // The "you are here" marker lives under the same container so it shares
                 // the node road's coordinate space, but it is repositioned in place
                 // rather than rebuilt every time, so it must survive this sweep.
-                if ((currentMarker != null && child == currentMarker)
-                    || (endOfRoadSlot != null && child == endOfRoadSlot))
+                if (currentMarker != null && child == currentMarker)
                 {
                     continue;
                 }
@@ -205,8 +175,6 @@ namespace Adventures
             {
                 CreateNode(nodes[i], i);
             }
-
-            PlaceEndOfRoadSlot();
 
             if (nodes.Count == 0)
             {
@@ -317,35 +285,15 @@ namespace Adventures
             }
         }
 
-        /// <summary>
-        /// Slot <paramref name="index"/> on the road. Matches take slots 0 to nodes.Count - 1;
-        /// with an end-of-road slot the road has one more, so the last match moves left to
-        /// leave room for the chest at <see cref="NodeLastX"/>.
-        /// </summary>
         private Vector2 GetNodeWaypoint(int index)
         {
-            int slotCount = nodes.Count + (endOfRoadSlot != null ? 1 : 0);
-            if (slotCount <= 1)
+            if (nodes.Count <= 1)
             {
                 return new Vector2((NodeFirstX + NodeLastX) / 2f, NodeRoadY);
             }
 
-            float t = index / (float)(slotCount - 1);
+            float t = index / (float)(nodes.Count - 1);
             return new Vector2(Mathf.Lerp(NodeFirstX, NodeLastX, t), NodeRoadY);
-        }
-
-        private void PlaceEndOfRoadSlot()
-        {
-            if (endOfRoadSlot == null)
-            {
-                return;
-            }
-
-            Vector2 waypoint = GetNodeWaypoint(nodes.Count);
-            Vector2 anchor = new Vector2(waypoint.x, 1f - waypoint.y);
-            endOfRoadSlot.anchorMin = anchor;
-            endOfRoadSlot.anchorMax = anchor;
-            endOfRoadSlot.anchoredPosition = Vector2.zero;
         }
 
         private void SelectNode(MapNode node)
