@@ -35,7 +35,7 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void CreateTicket_NullDeckMode_SerializesWithoutDeckModeError()
+        public void CreateTicket_NullDeckMode_OmitsDeckModeField()
         {
             var request = new MatchTicketRequest
             {
@@ -45,7 +45,7 @@ namespace WordOnline.Tests
             string json = JsonCodec.Serialize(request);
 
             Assert.IsNotNull(json, "Serialized JSON should not be null");
-            StringAssert.Contains("\"deckMode\":null", json);
+            StringAssert.DoesNotContain("deckMode", json);
         }
 
         [Test]
