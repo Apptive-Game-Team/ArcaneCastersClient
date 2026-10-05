@@ -129,6 +129,12 @@ For Unity Editor automation through MCP, use the project skill at
 
 ## Configuration Notes
 
+Read [developer-playground.md](.agents/docs/developer-playground.md) before changing
+the editor playground or build scene/asset selection. UNITY_EDITOR only removes
+code; even its MonoScript asset entered a real player build. Use the constrained
+host assembly plus Editor bridge described there, and verify packed assets as
+well as scene/Resources/Addressables dependencies.
+
 Before changing magic preview playback or registrations, read
 `.agents/docs/magic-preview.md` for damage-status and recording validation traps.
 `DEV_BUILD` controls development server routing for WebGL builds. Avoid editing generated Unity metadata by hand unless the change is intentional, and keep `ProjectSettings/ProjectVersion.txt` in sync with the Unity version used for the change.
