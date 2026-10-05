@@ -380,11 +380,7 @@ namespace LobbyScene
             RewardTileView rewardTilePrefab,
             RewardTileRendererSelector selector)
         {
-            var panel = rewardUI.transform.Find("Panal");
-            if (panel == null)
-            {
-                panel = rewardUI.transform;
-            }
+            var panel = RewardUiPanelLookup.FindRewardPanel(rewardUI.transform);
 
             var contentRoot = EnsureContentRoot(panel);
             ClearContent(contentRoot);
