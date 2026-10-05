@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using Global.Util;
@@ -16,7 +18,7 @@ namespace WordOnline.Tests
         [SetUp]
         public void SetUp()
         {
-            JwksService.ResetForTesting();
+            ResetForTesting();
 
             _rsaKey = RSA.Create(2048);
             RSAParameters rsaParams = _rsaKey.ExportParameters(false);
@@ -35,12 +37,30 @@ namespace WordOnline.Tests
         [TearDown]
         public void TearDown()
         {
-            JwksService.ResetForTesting();
+            ResetForTesting();
             _rsaKey?.Dispose();
             _rsaKey = null;
         }
 
         #region Helper Methods
+
+        private static void ResetForTesting() => SetJwksKeys(null, false);
+
+        private static void InjectKeysForTesting(IEnumerable<JwksKey> keys) => SetJwksKeys(keys, true);
+
+        private static void SetJwksKeys(IEnumerable<JwksKey> keys, bool isFetched)
+        {
+            var keysField = typeof(JwksService).GetField("_cachedKeys", BindingFlags.NonPublic | BindingFlags.Static);
+            var dict = (Dictionary<string, JwksKey>)keysField.GetValue(null);
+            dict.Clear();
+            if (keys != null)
+            {
+                foreach (JwksKey key in keys)
+                    dict[string.IsNullOrEmpty(key.kid) ? Guid.NewGuid().ToString() : key.kid] = key;
+            }
+
+            typeof(JwksService).GetField("_isFetched", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, isFetched);
+        }
 
         private static string Base64UrlEncode(byte[] input)
         {
@@ -101,7 +121,7 @@ namespace WordOnline.Tests
         [TestCase("SUPER_ADMIN WORDONLINE_USER")]
         public void IsAdmin_WithValidSignatureAndAdminRole_ReturnsTrue(string scope)
         {
-            JwksService.InjectKeysForTesting(new[] { _jwksKey });
+            InjectKeysForTesting(new[] { _jwksKey });
             string jwt = CreateJwt(TestKid, scope);
 
             Assert.IsTrue(JwtHelper.IsAdmin(jwt));
@@ -114,7 +134,7 @@ namespace WordOnline.Tests
         [TestCase(null)]
         public void IsAdmin_WithValidSignatureAndNonAdminRole_ReturnsFalse(string scope)
         {
-            JwksService.InjectKeysForTesting(new[] { _jwksKey });
+            InjectKeysForTesting(new[] { _jwksKey });
             string jwt = CreateJwt(TestKid, scope);
 
             Assert.IsFalse(JwtHelper.IsAdmin(jwt));
@@ -123,7 +143,7 @@ namespace WordOnline.Tests
         [Test]
         public void IsAdmin_WithNoKidInHeader_MatchesAgainstAllKeys()
         {
-            JwksService.InjectKeysForTesting(new[] { _jwksKey });
+            InjectKeysForTesting(new[] { _jwksKey });
             string jwt = CreateJwt(kid: null, scope: "WORDONLINE_ADMIN");
 
             Assert.IsTrue(JwtHelper.IsAdmin(jwt));
@@ -136,7 +156,7 @@ namespace WordOnline.Tests
         [Test]
         public void IsAdmin_WithSignatureCreatedByDifferentKey_ReturnsFalse()
         {
-            JwksService.InjectKeysForTesting(new[] { _jwksKey });
+            InjectKeysForTesting(new[] { _jwksKey });
 
             using RSA otherKey = RSA.Create(2048);
             string jwtSignedByOtherKey = CreateJwt(TestKid, "WORDONLINE_ADMIN", customRsa: otherKey);
@@ -147,7 +167,7 @@ namespace WordOnline.Tests
         [Test]
         public void IsAdmin_WithModifiedPayload_ReturnsFalse()
         {
-            JwksService.InjectKeysForTesting(new[] { _jwksKey });
+            InjectKeysForTesting(new[] { _jwksKey });
             string validJwt = CreateJwt(TestKid, "WORDONLINE_ADMIN");
 
             string[] parts = validJwt.Split('.');
@@ -160,7 +180,7 @@ namespace WordOnline.Tests
         [Test]
         public void IsAdmin_WithUnknownKidInHeader_ReturnsFalse()
         {
-            JwksService.InjectKeysForTesting(new[] { _jwksKey });
+            InjectKeysForTesting(new[] { _jwksKey });
             string jwt = CreateJwt("unknown-kid", "WORDONLINE_ADMIN");
 
             Assert.IsFalse(JwtHelper.IsAdmin(jwt));
@@ -179,7 +199,7 @@ namespace WordOnline.Tests
                 e = _jwksKey.e
             };
 
-            JwksService.InjectKeysForTesting(new[] { nonSigningKey });
+            InjectKeysForTesting(new[] { nonSigningKey });
             string jwt = CreateJwt(TestKid, "WORDONLINE_ADMIN");
 
             Assert.IsFalse(JwtHelper.IsAdmin(jwt));
@@ -198,7 +218,7 @@ namespace WordOnline.Tests
                 e = _jwksKey.e
             };
 
-            JwksService.InjectKeysForTesting(new[] { nonRsaKey });
+            InjectKeysForTesting(new[] { nonRsaKey });
             string jwt = CreateJwt(TestKid, "WORDONLINE_ADMIN");
 
             Assert.IsFalse(JwtHelper.IsAdmin(jwt));
@@ -215,7 +235,7 @@ namespace WordOnline.Tests
         [TestCase("invalidbase64header.invalidpayload.invalidsig")]
         public void IsAdmin_WithMalformedToken_ReturnsFalse(string malformedToken)
         {
-            JwksService.InjectKeysForTesting(new[] { _jwksKey });
+            InjectKeysForTesting(new[] { _jwksKey });
 
             Assert.IsFalse(JwtHelper.IsAdmin(malformedToken));
         }
