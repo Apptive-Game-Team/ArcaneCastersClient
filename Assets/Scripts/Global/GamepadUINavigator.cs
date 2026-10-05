@@ -70,6 +70,7 @@ namespace Global
                     moveVector = ToVector(direction)
                 };
                 ExecuteEvents.Execute(selected, axisData, ExecuteEvents.moveHandler);
+                ScrollSelectionIntoView(eventSystem.currentSelectedGameObject);
             }
 
             if (submit)
@@ -80,6 +81,42 @@ namespace Global
             {
                 ExecuteEvents.Execute(selected, new BaseEventData(eventSystem), ExecuteEvents.cancelHandler);
             }
+        }
+
+        /// <summary>
+        /// 선택이 ScrollRect 안의 칸으로 옮겨 갔으면 그 칸이 viewport 에 들어오도록 content 를 민다.
+        /// Selectable 의 이동은 스크롤을 모르므로 이것이 없으면 덱·마법책 목록의 화면 밖 카드로 선택이 사라진다.
+        /// </summary>
+        private static void ScrollSelectionIntoView(GameObject selected)
+        {
+            if (selected == null) return;
+
+            ScrollRect scrollRect = selected.GetComponentInParent<ScrollRect>();
+            if (scrollRect == null || scrollRect.content == null || scrollRect.viewport == null) return;
+            if (!selected.transform.IsChildOf(scrollRect.content)) return;
+
+            RectTransform viewport = scrollRect.viewport;
+            RectTransform content = scrollRect.content;
+            Bounds item = RectTransformUtility.CalculateRelativeRectTransformBounds(content, (RectTransform)selected.transform);
+            Bounds view = RectTransformUtility.CalculateRelativeRectTransformBounds(content, viewport);
+
+            Vector2 shift = Vector2.zero;
+            if (scrollRect.vertical)
+            {
+                if (item.max.y > view.max.y) shift.y = view.max.y - item.max.y;
+                else if (item.min.y < view.min.y) shift.y = view.min.y - item.min.y;
+            }
+
+            if (scrollRect.horizontal)
+            {
+                if (item.min.x < view.min.x) shift.x = view.min.x - item.min.x;
+                else if (item.max.x > view.max.x) shift.x = view.max.x - item.max.x;
+            }
+
+            if (shift == Vector2.zero) return;
+
+            content.anchoredPosition += shift;
+            scrollRect.velocity = Vector2.zero;
         }
 
         /// <summary>왼쪽 스틱이 우선이고, 없으면 D-pad. 두 축 중 큰 쪽 하나만 방향으로 삼는다.</summary>
