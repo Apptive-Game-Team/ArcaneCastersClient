@@ -32,6 +32,7 @@ namespace Adventures
         [SerializeField] private float bobHeight = 12f;
         [SerializeField] private float bobSeconds = 0.8f;
         [SerializeField] private float glowAlpha = 0.7f;
+        [SerializeField] private float glowSecondsPerTurn = 40f;
 
         [Header("Claimed")]
         [SerializeField] private float openLidLift = 28f;
@@ -128,6 +129,12 @@ namespace Adventures
                 glowImage.DOFade(glowAlpha, bobSeconds)
                     .SetEase(Ease.InOutSine)
                     .SetLoops(-1, LoopType.Yoyo)
+                    .SetTarget(this);
+                glowImage.rectTransform.localRotation = Quaternion.identity;
+                glowImage.rectTransform
+                    .DOLocalRotate(new Vector3(0f, 0f, -360f), glowSecondsPerTurn, RotateMode.FastBeyond360)
+                    .SetEase(Ease.Linear)
+                    .SetLoops(-1, LoopType.Restart)
                     .SetTarget(this);
             }
         }
