@@ -174,7 +174,7 @@ namespace LobbyScene
         private void OnDeleteFriend(FriendSummary friend)
         {
             if (apiClient == null) return;
-            StartCoroutine(apiClient.DeleteFriend(friend.userId, (success, _) =>
+            StartCoroutine(apiClient.DeleteFriend(friend.userId, success =>
             {
                 if (success)
                 {
@@ -299,7 +299,7 @@ namespace LobbyScene
         private void OnCancelRequest(FriendRequestItem req)
         {
             if (apiClient == null) return;
-            StartCoroutine(apiClient.CancelFriendRequest(req.id, (success, _) =>
+            StartCoroutine(apiClient.CancelFriendRequest(req.id, success =>
             {
                 if (success)
                 {

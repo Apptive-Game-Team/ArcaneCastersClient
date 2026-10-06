@@ -29,6 +29,11 @@ namespace LobbyScene
             yield return SendRequest<List<FriendSearchResult>>(webRequest, callback, "SearchUsers");
         }
 
+        public IEnumerator SearchMembers(string query, Action<bool, List<FriendSearchResult>> callback)
+        {
+            return SearchUsers(query, callback);
+        }
+
         public IEnumerator GetReceivedRequests(Action<bool, List<FriendRequestItem>> callback)
         {
             using var webRequest = UnityWebRequest.Get(FriendsEndpoint.Path("requests", "received"));
@@ -80,6 +85,11 @@ namespace LobbyScene
             using var webRequest = UnityWebRequest.Delete(FriendsEndpoint.Path(friendId.ToString()));
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             yield return SendEmptyRequest(webRequest, callback, "RemoveFriend");
+        }
+
+        public IEnumerator DeleteFriend(long friendId, Action<bool> callback)
+        {
+            return RemoveFriend(friendId, callback);
         }
 
         public IEnumerator InviteFriend(long friendId, Action<bool, FriendInviteItem> callback)
