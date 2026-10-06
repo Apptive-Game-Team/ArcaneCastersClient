@@ -289,8 +289,17 @@ namespace LobbyScene
             inputImg.pixelsPerUnitMultiplier = 4f;
             inputImg.color = new Color(0.16f, 0.2f, 0.3f, 1f);
 
+            // Text Area (Viewport with RectMask2D for clipping and drag handling)
+            GameObject textAreaGo = new GameObject("Text Area", typeof(RectTransform), typeof(RectMask2D));
+            textAreaGo.transform.SetParent(inputGo.transform, false);
+            RectTransform textAreaRect = textAreaGo.GetComponent<RectTransform>();
+            textAreaRect.anchorMin = Vector2.zero;
+            textAreaRect.anchorMax = Vector2.one;
+            textAreaRect.sizeDelta = new Vector2(-24f, -10f);
+            textAreaRect.anchoredPosition = Vector2.zero;
+
             GameObject textGo = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
-            textGo.transform.SetParent(inputGo.transform, false);
+            textGo.transform.SetParent(textAreaGo.transform, false);
             TextMeshProUGUI inputText = textGo.GetComponent<TextMeshProUGUI>();
             if (defaultFont != null) inputText.font = defaultFont;
             inputText.fontSize = 18;
@@ -298,13 +307,11 @@ namespace LobbyScene
             RectTransform textRect = textGo.GetComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
-            textRect.sizeDelta = new Vector2(-24f, 0f);
-
-            searchInput = inputGo.GetComponent<TMP_InputField>();
-            searchInput.textComponent = inputText;
+            textRect.sizeDelta = Vector2.zero;
+            textRect.anchoredPosition = Vector2.zero;
 
             GameObject placeholderGo = new GameObject("Placeholder", typeof(RectTransform), typeof(TextMeshProUGUI));
-            placeholderGo.transform.SetParent(inputGo.transform, false);
+            placeholderGo.transform.SetParent(textAreaGo.transform, false);
             TextMeshProUGUI placeholderText = placeholderGo.GetComponent<TextMeshProUGUI>();
             if (defaultFont != null) placeholderText.font = defaultFont;
             placeholderText.text = "닉네임 또는 이메일로 검색...";
@@ -313,8 +320,15 @@ namespace LobbyScene
             RectTransform phRect = placeholderGo.GetComponent<RectTransform>();
             phRect.anchorMin = Vector2.zero;
             phRect.anchorMax = Vector2.one;
-            phRect.sizeDelta = new Vector2(-24f, 0f);
+            phRect.sizeDelta = Vector2.zero;
+            phRect.anchoredPosition = Vector2.zero;
+
+            searchInput = inputGo.GetComponent<TMP_InputField>();
+            searchInput.textViewport = textAreaRect;
+            searchInput.textComponent = inputText;
             searchInput.placeholder = placeholderText;
+            searchInput.lineType = TMP_InputField.LineType.SingleLine;
+            searchInput.onSubmit.AddListener(_ => OnClickSearch());
 
             CreateStyledButton(searchBar.transform, "검색", Vector2.zero, new Vector2(120f, 48f), OnClickSearch, new Color(0.2f, 0.6f, 0.45f), 18);
 
