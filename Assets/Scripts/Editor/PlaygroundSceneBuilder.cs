@@ -42,9 +42,9 @@ public static class PlaygroundSceneBuilder {
                     else UnityEngine.Object.DestroyImmediate(behaviour);
                 }
             }
-            // Reserve sidebars while the existing aspect fitter keeps the whole normal world visible.
+            // Keep the ordinary GameScene framing; developer panels overlay the full field.
             var worldCamera = source.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<Camera>(true)).First();
-            worldCamera.rect = new Rect(0.2f, 0, 0.635f, 1);
+            worldCamera.rect = new Rect(0, 0, 1, 1);
 
             var controlRoot = new GameObject("Developer Playground");
             var controller = controlRoot.AddComponent<PlaygroundHost>();
@@ -65,6 +65,8 @@ public static class PlaygroundSceneBuilder {
             var right = InstantiateUi(PanelPrefab, canvasObject.transform, "Control Panel");
             Rect(right.GetComponent<RectTransform>(), new Vector2(1, 0.5f), new Vector2(1, 0.5f),
                 new Vector2(1, 0.5f), new Vector2(-12, 0), new Vector2(300, 530));
+            controller.magicPanel = left;
+            controller.controlPanel = right;
 
             var dropdown = InstantiateUi(DropdownPrefab, left.transform, "Caster Side");
             Rect(dropdown.GetComponent<RectTransform>(), new Vector2(0.5f, 1), new Vector2(0.5f, 1),
@@ -123,10 +125,14 @@ public static class PlaygroundSceneBuilder {
             controller.closeButton = ControlButton(right.transform, "Close playground", -425);
             controller.timerText = LabelFrom(template, right.transform, "Remaining Time", "05:00",
                 new Vector2(0, -18), new Vector2(270, 42), 26);
-            controller.targetText = LabelFrom(template, left.transform, "Test Target", "Target: X 9, Z 5",
+            controller.targetText = LabelFrom(template, left.transform, "Test Target", "Select a magic to aim",
                 new Vector2(0, -81), new Vector2(320, 25), 16);
             controller.statusText = LabelFrom(template, canvasObject.transform, "Status",
-                "Click the field to set a target.", new Vector2(0, -15), new Vector2(1100, 54), 18);
+                "Select magic, then click field · Esc/right-click: cancel · Tab: panels",
+                new Vector2(0, -15), new Vector2(1100, 54), 18);
+            controller.statusText.color = Color.white;
+            controller.statusText.fontSharedMaterial = AssetDatabase.LoadAssetAtPath<Material>(
+                "Assets/Art/Fonts/LilitaOne SDF Outline.mat");
 
             Directory.CreateDirectory("Assets/DevPlayground/Generated");
             if (!EditorSceneManager.SaveScene(source, ScenePath))
@@ -169,8 +175,12 @@ public static class PlaygroundSceneBuilder {
                 controller.clearEnemyButton == null || controller.clearAllButton == null ||
                 controller.immuneAllyButton == null || controller.immuneEnemyButton == null ||
                 controller.closeButton == null || controller.statusText == null ||
-                controller.timerText == null || controller.targetText == null)
+                controller.timerText == null || controller.targetText == null ||
+                controller.magicPanel == null || controller.controlPanel == null)
                 throw new InvalidOperationException("Playground UI is not wired.");
+            var camera = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<Camera>(true)).First();
+            if (camera.rect != new Rect(0, 0, 1, 1))
+                throw new InvalidOperationException("Playground field does not use the full viewport.");
             foreach (var root in scene.GetRootGameObjects())
                 foreach (var behaviour in root.GetComponentsInChildren<MonoBehaviour>(true))
                     if (behaviour != null && MatchBehaviours.Contains(behaviour.GetType().Name) &&

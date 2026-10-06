@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DevPlayground;
+using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEditor.Build;
@@ -87,6 +91,12 @@ public static class PlaygroundValidation {
         }
     }
     private const string PlayModeCheck = "PlaygroundValidation.PlayMode";
+    private static readonly List<JObject> casts = new();
+    private static int targetingPhase;
+    private static int phaseFrame;
+    private static PlaygroundController targeting;
+    private static PlaygroundHost targetingHost;
+    private static Vector3 fieldPointer;
     public static void ValidatePlayMode() {
         PlaygroundSceneBuilder.Generate();
         EditorSceneManager.OpenScene(PlaygroundSceneBuilder.ScenePath, OpenSceneMode.Single);
@@ -109,9 +119,94 @@ public static class PlaygroundValidation {
             return;
         }
         if (!EditorApplication.isPlaying || EditorApplication.isCompiling) return;
+        if (targetingPhase > 0) {
+            try { CheckTargeting(); }
+            catch (Exception exception) {
+                Debug.LogException(exception);
+                SessionState.EraseString(PlayModeCheck);
+                EditorApplication.Exit(1);
+            }
+            return;
+        }
         var host = UnityEngine.Object.FindObjectOfType<PlaygroundHost>();
         if (host == null || host.OnStart == null || host.OnUpdate == null || host.OnDestroyed == null ||
             !host.statusText.text.StartsWith("Log in as a developer")) return;
+        targetingHost = host;
+        targeting = (PlaygroundController)host.OnUpdate.Target;
+        typeof(PlaygroundController).GetField("connected", BindingFlags.Instance | BindingFlags.NonPublic)
+            .SetValue(targeting, true);
+        casts.Clear();
+        targeting.CastCommandOverride = RecordCast;
+        targeting.PopulateIcons(new[] { new PlaygroundController.MagicEntry { id = 701, name = "fire_shot" } });
+        host.iconContent.GetComponentsInChildren<Button>().Single().onClick.Invoke();
+        Require(casts.Count == 0, "Icon selection sent a cast.");
+        fieldPointer = Camera.main.WorldToScreenPoint(new Vector3(9, 0, 5));
+        targeting.ProcessPointer(fieldPointer, false);
+        Require(host.transform.Find("Playground Aim").gameObject.activeSelf, "Aim marker is not visible.");
+        Require(casts.Count == 0, "Hover or UI drag release sent a cast.");
+        targeting.ProcessPointer(new Vector3(-10, -10), true);
+        Require(!host.transform.Find("Playground Aim").gameObject.activeSelf, "Off-screen aim remains visible.");
+        targeting.ProcessPointer(Camera.main.WorldToScreenPoint(new Vector3(9, 0, 11)), true);
+        Canvas.ForceUpdateCanvases();
+        var icon = host.iconContent.GetComponentsInChildren<Button>().Single();
+        targeting.ProcessPointer(RectTransformUtility.WorldToScreenPoint(null, icon.transform.position), true);
+        Require(casts.Count == 0, "UI or off-field input sent a cast.");
+        GameScene.PointerInputUtility.BeginPointerCapture();
+        targeting.ProcessPointer(fieldPointer, true);
+        Require(casts.Count == 0, "Captured UI press sent a cast.");
+        GameScene.PointerInputUtility.EndPointerCapture();
+        targetingPhase = 1;
+        phaseFrame = Time.frameCount;
+    }
+
+    private static IEnumerator RecordCast(object payload) {
+        casts.Add(JObject.FromObject(payload));
+        yield return new WaitForSeconds(0.2f);
+        // A failed command coroutine must still release the pending guard.
+        targetingHost.statusText.text = "Request failed (fixture)";
+    }
+
+    private static void CheckTargeting() {
+        if (Time.frameCount <= phaseFrame) return;
+        if (targetingPhase == 1) {
+            targeting.ProcessPointer(fieldPointer, true);
+            targeting.ProcessPointer(fieldPointer, true);
+            targetingHost.sideDropdown.value = 1;
+            targetingPhase = 2;
+        } else if (targetingPhase == 2 && casts.Count == 1) {
+            Require(casts[0].Value<long>("magicId") == 701 && casts[0].Value<string>("master") == "LeftPlayer",
+                "Cast did not capture the selected spell/faction.");
+            var position = casts[0]["position"];
+            Require(Mathf.Abs(position.Value<float>("x") - 9) < .01f && position.Value<float>("y") == 0 &&
+                Mathf.Abs(position.Value<float>("z") - 5) < .01f, "Cast position does not match the ground aim.");
+            Require(targetingHost.statusText.text != "Request failed (fixture)", "Pending cast fixture completed too early.");
+            targeting.ProcessPointer(fieldPointer, true);
+            Require(casts.Count == 1, "Overlapping cast was accepted.");
+            targetingPhase = 3;
+        } else if (targetingPhase == 3 && targetingHost.statusText.text == "Request failed (fixture)") {
+            targeting.ProcessPointer(fieldPointer, true);
+            targetingPhase = 4;
+        } else if (targetingPhase == 4 && casts.Count == 2) {
+            Require(casts[1].Value<string>("master") == "RightPlayer", "Repeated cast did not use Right faction.");
+            targeting.TogglePanels();
+            Require(!targetingHost.magicPanel.activeSelf && !targetingHost.controlPanel.activeSelf &&
+                Camera.main.rect == new Rect(0, 0, 1, 1), "Hidden panels changed fullscreen world rendering.");
+            targeting.TogglePanels();
+            Require(targetingHost.magicPanel.activeSelf && targetingHost.controlPanel.activeSelf, "Panels did not return.");
+            targeting.CancelSelection();
+            targeting.ProcessPointer(fieldPointer, true);
+            Require(casts.Count == 2 && !targetingHost.transform.Find("Playground Aim").gameObject.activeSelf,
+                "Cancelled selection still aims or casts.");
+            Debug.Log("PLAYGROUND_TARGETING_PASS: icon selection, camera raycast/payload, UI/capture/bounds, pending failure recovery, Right faction, panels and cancellation verified.");
+            FinishPlayMode();
+        }
+    }
+
+    private static void Require(bool condition, string message) {
+        if (!condition) throw new InvalidOperationException(message);
+    }
+
+    private static void FinishPlayMode() {
         Debug.Log("PLAYGROUND_PLAY_MODE_PASS: host callbacks and unauthenticated start verified.");
         SessionState.EraseString(PlayModeCheck);
         EditorApplication.update -= CheckPlayMode;
@@ -171,13 +266,18 @@ public static class PlaygroundValidation {
         try {
             var roots = scene.GetRootGameObjects();
             var controller = roots.SelectMany(root => root.GetComponentsInChildren<PlaygroundHost>(true)).Single();
-            controller.statusText.text = "Editor layout preview — no server connection";
+            controller.statusText.text = "fire_shot: click field to cast · Esc/right-click: cancel · Tab: panels";
+            controller.targetText.text = "Target: X 9.0, Z 5.0";
+            var aimObject = new GameObject("Fixture Aim", typeof(GameScene.SkillIndicatorShapeRenderer));
+            SceneManager.MoveGameObjectToScene(aimObject, scene);
+            aimObject.GetComponent<GameScene.SkillIndicatorShapeRenderer>().SetCircle(new Vector3(9, 0, 5), .18f, true, 16, 0);
             foreach (var sprite in Resources.LoadAll<Sprite>("Game/sprites").OrderBy(sprite => sprite.name).Take(30)) {
                 var button = UnityEngine.Object.Instantiate(controller.iconTemplate, controller.iconContent);
                 button.gameObject.SetActive(true);
                 var icon = button.transform.Find("Icon").GetComponent<Image>();
                 icon.sprite = sprite;
                 button.GetComponentInChildren<TMP_Text>(true).text = sprite.name;
+                if (sprite.name == "FireShot") button.image.color = new Color(1f, .82f, .25f);
             }
             var camera = roots.SelectMany(root => root.GetComponentsInChildren<Camera>(true)).First();
             render = new RenderTexture(1920, 1080, 24);
@@ -205,7 +305,7 @@ public static class PlaygroundValidation {
             pixels.ReadPixels(new Rect(0, 0, 1920, 1080), 0, 0);
             pixels.Apply();
             Directory.CreateDirectory("docs/pr-media/252");
-            File.WriteAllBytes("docs/pr-media/252/playground-editor-layout.png", pixels.EncodeToPNG());
+            File.WriteAllBytes("docs/pr-media/252/playground-fullscreen-targeting.jpg", pixels.EncodeToJPG(90));
             camera.targetTexture = null;
             Debug.Log("PLAYGROUND_LAYOUT_CAPTURED");
         } finally {

@@ -76,11 +76,22 @@ namespace DevPlayground {
         private bool connected;
         private int frame = -1;
         private bool immunityPending;
+        private bool castPending;
+        private MagicEntry selectedMagic;
+        private Button selectedButton;
+        private Color unselectedColor;
+        private FieldSelector field;
+        private Camera worldCamera;
+        private SkillIndicatorShapeRenderer aim;
+        // One Editor-only command seam lets Play Mode verify inputs without a live session.
+        internal Func<object, IEnumerator> CastCommandOverride;
 
         private string Side => sideDropdown.value == 0 ? "LeftPlayer" : "RightPlayer";
         private string OtherSide => sideDropdown.value == 0 ? "RightPlayer" : "LeftPlayer";
 
         private IEnumerator Start() {
+            field = UnityEngine.Object.FindObjectOfType<FieldSelector>();
+            worldCamera = Camera.main;
             SetControls(false);
             sideDropdown.onValueChanged.AddListener(_ => RefreshImmunityLabels());
             clearAllyButton.onClick.AddListener(() => Clear(Side));
@@ -141,7 +152,7 @@ namespace DevPlayground {
                 frame = snapshot.frame;
                 ObjectSyncer.Instance.Sync(snapshot.objects ?? Array.Empty<SnapshotObjectDto>());
             }));
-            statusText.text = "Click the field to set a target, then click a magic icon to cast.";
+            statusText.text = "Select magic, then click field · Esc/right-click: cancel · Tab: panels";
             SetControls(true);
         }
 
@@ -172,21 +183,55 @@ namespace DevPlayground {
         }
 
         private void Update() {
-            targetText.text = $"Target: X {target.x:0.0}, Z {target.z:0.0}";
+            if (Input.GetKeyDown(KeyCode.Tab) && !sideDropdown.IsExpanded) TogglePanels();
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1)) CancelSelection();
             if (session != null && DateTimeOffset.TryParse(session.expiresAt, out var expiry)) {
                 int seconds = Mathf.Max(0, (int)Math.Ceiling((expiry - DateTimeOffset.UtcNow).TotalSeconds));
                 timerText.text = $"{seconds / 60:00}:{seconds % 60:00}";
                 if (seconds == 0 && !closing) StartCoroutine(Leave());
             }
-            if (!connected || closing || !Input.GetMouseButtonDown(0) ||
-                (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())) return;
-            // Use the game's ground raycast, independent of ordinary card/cast input.
-            var field = UnityEngine.Object.FindObjectOfType<FieldSelector>();
-            if (field != null && field.TryGetGroundPosition(Input.mousePosition, out Vector3 point))
-                target = new Vector3(Mathf.Clamp(point.x, 0, 18), 0, Mathf.Clamp(point.z, 0, 10));
+            ProcessPointer(Input.mousePosition, Input.GetMouseButtonDown(0));
         }
 
-        private void PopulateIcons(MagicEntry[] magics) {
+        internal void ProcessPointer(Vector3 screenPosition, bool pressed) {
+            // FieldSelector falls back to an infinite ground plane: explicitly reject missed field hits.
+            bool valid = connected && !closing && selectedMagic != null && field != null && worldCamera != null &&
+                worldCamera.pixelRect.Contains(screenPosition) && !PointerInputUtility.IsPointerCapturedByUi &&
+                PointerInputUtility.FindUnderPointer<Graphic>(screenPosition) == null;
+            Vector3 point = default;
+            valid = valid && field.TryGetGroundPosition(screenPosition, out point) &&
+                point.x >= 0 && point.x <= 18 && point.z >= 0 && point.z <= 10;
+            if (aim != null) aim.gameObject.SetActive(valid);
+            if (!valid) return;
+            target = new Vector3(point.x, 0, point.z);
+            aim.SetCircle(target, 0.18f, true, 16, 0f);
+            targetText.text = $"Target: X {target.x:0.0}, Z {target.z:0.0}";
+            if (pressed && !castPending) {
+                // Capture the spell, faction and location before starting the asynchronous request.
+                var payload = new { magicId = selectedMagic.id, master = Side,
+                    position = new { x = target.x, y = target.y, z = target.z } };
+                castPending = true;
+                StartCoroutine(Cast(payload));
+            }
+        }
+
+        internal void TogglePanels() {
+            bool visible = !host.magicPanel.activeSelf;
+            host.magicPanel.SetActive(visible);
+            host.controlPanel.SetActive(visible);
+        }
+
+        internal void CancelSelection() {
+            if (selectedMagic != null && connected && !closing)
+                statusText.text = "Select magic, then click field · Esc/right-click: cancel · Tab: panels";
+            if (selectedButton != null) selectedButton.image.color = unselectedColor;
+            selectedButton = null;
+            selectedMagic = null;
+            if (aim != null) aim.gameObject.SetActive(false);
+            targetText.text = "Select a magic to aim";
+        }
+
+        internal void PopulateIcons(MagicEntry[] magics) {
             foreach (var magic in magics ?? Array.Empty<MagicEntry>()) {
                 Button button = UnityEngine.Object.Instantiate(iconTemplate, iconContent);
                 button.gameObject.SetActive(true);
@@ -196,16 +241,31 @@ namespace DevPlayground {
                 icon.enabled = icon.sprite != null;
                 button.GetComponentInChildren<TMP_Text>(true).text = magic.name;
                 button.onClick.RemoveAllListeners();
-                long id = magic.id;
-                button.onClick.AddListener(() => Cast(id));
+                button.onClick.AddListener(() => SelectMagic(magic, button));
                 button.interactable = connected;
             }
         }
 
-        private void Cast(long id) {
+        private void SelectMagic(MagicEntry magic, Button button) {
             if (!connected || closing) return;
-            StartCoroutine(Command("cast", new { magicId = id, master = Side,
-                position = new { x = target.x, y = target.y, z = target.z } }));
+            CancelSelection();
+            selectedMagic = magic;
+            selectedButton = button;
+            unselectedColor = button.image.color;
+            button.image.color = new Color(1f, 0.82f, 0.25f);
+            if (aim == null) {
+                var marker = new GameObject("Playground Aim");
+                marker.transform.SetParent(host.transform, false);
+                aim = marker.AddComponent<SkillIndicatorShapeRenderer>();
+                marker.SetActive(false);
+            }
+            statusText.text = $"{magic.name}: click field to cast · Esc/right-click: cancel · Tab: panels";
+        }
+
+        private IEnumerator Cast(object payload) {
+            try {
+                yield return CastCommandOverride != null ? CastCommandOverride(payload) : Command("cast", payload);
+            } finally { castPending = false; }
         }
         private void Clear(string master) {
             if (!connected || closing) return;
@@ -264,6 +324,7 @@ namespace DevPlayground {
         }
 
         private void SetControls(bool enabled) {
+            if (!enabled) CancelSelection();
             foreach (var button in iconContent.GetComponentsInChildren<Button>(true)) button.interactable = enabled;
             clearAllyButton.interactable = enabled;
             clearEnemyButton.interactable = enabled;
@@ -304,7 +365,7 @@ namespace DevPlayground {
             public long ownerId;
             public string expiresAt;
         }
-        [Serializable] private sealed class MagicEntry { public long id; public string name; }
+        [Serializable] internal sealed class MagicEntry { public long id; public string name; }
         [Serializable] private sealed class CommandReply {
             public bool success; public string message; public bool leftImmune; public bool rightImmune;
         }

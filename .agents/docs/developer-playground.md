@@ -9,8 +9,14 @@ buttons instantiated from the existing UI prefabs. The generated scene is ignore
 regenerate it after GameScene changes rather than maintaining a copied battle scene.
 
 Both servers must explicitly enable
-PLAYGROUND_ENABLED=true. Select Left/Right, click the field to set the target,
-then click a magic icon to cast immediately. The server catalog includes every
+PLAYGROUND_ENABLED=true. Select Left/Right and click a magic icon to select it.
+Move the pointer to aim using the ordinary ground circle, then left-click the field
+to cast at that location. Selection stays active for repeated casts; Escape or
+right-click cancels it. Tab hides/shows both overlay panels to reach the whole field.
+The camera retains GameScene's fullscreen viewport and aspect fitting. UI clicks,
+captured UI presses and points outside the field/screen cannot cast. There is no
+range restriction, and overlapping HTTP casts are blocked until the request finishes.
+The server catalog includes every
 registered magic, including rows omitted from the player-facing lobby catalog.
 Missing art uses a named button. No hand, mana, ownership or deck gate is applied.
 
@@ -40,6 +46,9 @@ scene and tests intentional build-scene and Resources dependency leaks. Run both
 normal WebGL build methods to check packed assets; static compilation is insufficient.
 ValidateAdminEntry checks the actual admin-button click, playground transition and
 return flow in Play Mode using a local identity fixture, with HTTP requests suppressed.
+ValidatePlayMode also verifies icon selection, actual camera/ground projection,
+captured coordinates/faction, UI and field bounds, pending-command recovery, repeated
+casts, cancellation and panel visibility using a no-HTTP command fixture.
 The AdminScene button is an EditorOnly prefab instance with no playground script
 reference; its listener is installed by the Editor bridge. Scene processing also
 removes it during builds, so the entry UI cannot ship in ordinary players.

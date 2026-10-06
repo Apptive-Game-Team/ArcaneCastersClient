@@ -20,6 +20,8 @@ namespace DevPlayground {
         public Button immuneAllyButton;
         public Button immuneEnemyButton;
         public Button closeButton;
+        public GameObject magicPanel;
+        public GameObject controlPanel;
 
         public static Action<PlaygroundHost> Configure;
         public Func<IEnumerator> OnStart;
