@@ -16,6 +16,24 @@ namespace LobbyScene
         private TMP_InputField searchInput;
         private string currentTab = "search";
 
+        // Tab Buttons
+        private GameObject searchTabBtn;
+        private GameObject friendsTabBtn;
+        private GameObject requestsTabBtn;
+
+        // Core Palette (Matches Lobby/SettingPage Theme)
+        private static readonly Color InkColor = new Color32(0x1C, 0x1A, 0x2B, 0xFF);          // #1C1A2B - 메인 텍스트
+        private static readonly Color SlateTextColor = new Color32(0x5B, 0x62, 0x75, 0xFF);     // #5B6275 - 보조 텍스트
+        private static readonly Color MutedTextColor = new Color32(0x8E, 0x95, 0xA5, 0xFF);     // #8E95A5 - 플레이스홀더 / 안내
+        private static readonly Color PrimaryOrange = new Color32(0xFF, 0x9A, 0x1F, 0xFF);      // #FF9A1F - 시그니처 앰버 오렌지
+        private static readonly Color TabInactiveBg = new Color32(0xEE, 0xF3, 0xF8, 0xFF);      // #EEF3F8 - 비선택 탭 배경
+        private static readonly Color CardBg = Color.white;                                     // 순백색 카드/윈도우 배경
+        private static readonly Color ChipBg = new Color32(0xF4, 0xF7, 0xFA, 0xFF);             // #F4F7FA - 목록 아이템 카드 배경
+        private static readonly Color InputBg = new Color32(0xEE, 0xF2, 0xF6, 0xFF);            // #EEF2F6 - 검색창 배경
+        private static readonly Color TealColor = new Color32(0x2F, 0xB8, 0xA8, 0xFF);          // #2FB8A8 - 친선전 초대 / 온라인
+        private static readonly Color DangerRed = new Color32(0xF0, 0x44, 0x3A, 0xFF);          // #F0443A - 삭제 / 거절
+        private static readonly Color DimOverlay = new Color(0.04f, 0.07f, 0.12f, 0.62f);       // 모달 배경 딤
+
         // Cached UI Sprites
         private static Sprite flatCardSprite;
         private static Sprite flatButtonSprite;
@@ -104,7 +122,7 @@ namespace LobbyScene
             img.sprite = flatPillSprite ?? pill.GetComponent<Image>()?.sprite;
             img.type = Image.Type.Sliced;
             img.pixelsPerUnitMultiplier = 4f;
-            img.color = new Color(0.18f, 0.22f, 0.35f, 1f);
+            img.color = CardBg;
 
             GameObject textObj = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
             textObj.transform.SetParent(friendBtnObj.transform, false);
@@ -112,8 +130,9 @@ namespace LobbyScene
             if (defaultFont != null) label.font = defaultFont;
             label.text = "친구 (F)";
             label.fontSize = 16;
+            label.fontStyle = FontStyles.Bold;
             label.alignment = TextAlignmentOptions.Center;
-            label.color = Color.white;
+            label.color = InkColor;
 
             RectTransform textRect = textObj.GetComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;
@@ -160,7 +179,7 @@ namespace LobbyScene
             overlayRect.anchorMin = Vector2.zero;
             overlayRect.anchorMax = Vector2.one;
             overlayRect.sizeDelta = Vector2.zero;
-            modalRoot.GetComponent<Image>().color = new Color(0.04f, 0.06f, 0.1f, 0.75f);
+            modalRoot.GetComponent<Image>().color = DimOverlay;
 
             // Modal Card Window
             GameObject window = new GameObject("Window", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
@@ -175,7 +194,7 @@ namespace LobbyScene
             winImg.sprite = flatCardSprite;
             winImg.type = Image.Type.Sliced;
             winImg.pixelsPerUnitMultiplier = 4f;
-            winImg.color = new Color(0.12f, 0.14f, 0.22f, 0.98f);
+            winImg.color = CardBg;
 
             // Header Bar
             GameObject header = new GameObject("Header", typeof(RectTransform));
@@ -195,7 +214,7 @@ namespace LobbyScene
             titleText.text = "친구 관리";
             titleText.fontSize = 24;
             titleText.fontStyle = FontStyles.Bold;
-            titleText.color = new Color(0.95f, 0.96f, 1f);
+            titleText.color = InkColor;
             titleText.alignment = TextAlignmentOptions.MidlineLeft;
             RectTransform titleRect = titleObj.GetComponent<RectTransform>();
             titleRect.anchorMin = new Vector2(0f, 0f);
@@ -203,7 +222,7 @@ namespace LobbyScene
             titleRect.anchoredPosition = new Vector2(30f, 0f);
 
             // Close Button [X]
-            CreateStyledButton(header.transform, "X", new Vector2(320f, -5f), new Vector2(36f, 36f), () => modalRoot.SetActive(false), new Color(0.7f, 0.2f, 0.25f), 16, iconCloseSprite);
+            CreateStyledButton(header.transform, "X", new Vector2(330f, -5f), new Vector2(36f, 36f), () => modalRoot.SetActive(false), TabInactiveBg, 16, iconCloseSprite, SlateTextColor);
 
             // Tabs Row
             GameObject tabsRow = new GameObject("TabsRow", typeof(RectTransform));
@@ -215,9 +234,9 @@ namespace LobbyScene
             tabsRect.sizeDelta = new Vector2(-60f, 44f);
             tabsRect.anchoredPosition = new Vector2(0f, -60f);
 
-            CreateStyledButton(tabsRow.transform, "친구 검색", new Vector2(-220f, 0f), new Vector2(180f, 42f), ShowSearchTab, new Color(0.28f, 0.42f, 0.85f), 17);
-            CreateStyledButton(tabsRow.transform, "친구 목록", new Vector2(0f, 0f), new Vector2(180f, 42f), ShowFriendsTab, new Color(0.18f, 0.23f, 0.35f), 17);
-            CreateStyledButton(tabsRow.transform, "친구 요청", new Vector2(220f, 0f), new Vector2(180f, 42f), ShowRequestsTab, new Color(0.18f, 0.23f, 0.35f), 17);
+            searchTabBtn = CreateStyledButton(tabsRow.transform, "친구 검색", new Vector2(-220f, 0f), new Vector2(180f, 42f), ShowSearchTab, PrimaryOrange, 16, null, Color.white);
+            friendsTabBtn = CreateStyledButton(tabsRow.transform, "친구 목록", new Vector2(0f, 0f), new Vector2(180f, 42f), ShowFriendsTab, TabInactiveBg, 16, null, SlateTextColor);
+            requestsTabBtn = CreateStyledButton(tabsRow.transform, "친구 요청", new Vector2(220f, 0f), new Vector2(180f, 42f), ShowRequestsTab, TabInactiveBg, 16, null, SlateTextColor);
 
             // Scrollable Content
             GameObject scrollObj = new GameObject("ScrollView", typeof(RectTransform), typeof(ScrollRect), typeof(Image));
@@ -232,7 +251,7 @@ namespace LobbyScene
             scrollBg.sprite = flatCardSprite;
             scrollBg.type = Image.Type.Sliced;
             scrollBg.pixelsPerUnitMultiplier = 4f;
-            scrollBg.color = new Color(0.08f, 0.1f, 0.16f, 0.95f);
+            scrollBg.color = new Color32(0xFA, 0xFB, 0xFC, 0xFF);
 
             GameObject contentObj = new GameObject("Content", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
             contentObj.transform.SetParent(scrollObj.transform, false);
@@ -260,11 +279,38 @@ namespace LobbyScene
             contentContainer = contentObj.transform;
         }
 
+        #region Tab Helpers
+
+        private void UpdateTabStyles()
+        {
+            SetTabBtnStyle(searchTabBtn, currentTab == "search");
+            SetTabBtnStyle(friendsTabBtn, currentTab == "friends");
+            SetTabBtnStyle(requestsTabBtn, currentTab == "requests");
+        }
+
+        private static void SetTabBtnStyle(GameObject btnObj, bool isSelected)
+        {
+            if (btnObj == null) return;
+            Image img = btnObj.GetComponent<Image>();
+            if (img != null)
+            {
+                img.color = isSelected ? PrimaryOrange : TabInactiveBg;
+            }
+            TextMeshProUGUI txt = btnObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (txt != null)
+            {
+                txt.color = isSelected ? Color.white : SlateTextColor;
+            }
+        }
+
+        #endregion
+
         #region Search Tab
 
         public void ShowSearchTab()
         {
             currentTab = "search";
+            UpdateTabStyles();
             if (titleText != null) titleText.text = "친구 검색 및 추가";
             ClearContent();
 
@@ -277,7 +323,7 @@ namespace LobbyScene
             hlg.spacing = 10;
             hlg.childControlWidth = false;
 
-            // Input Field with FlatCard Background
+            // Input Field
             GameObject inputGo = new GameObject("InputField", typeof(RectTransform), typeof(Image), typeof(TMP_InputField));
             inputGo.transform.SetParent(searchBar.transform, false);
             RectTransform inputRect = inputGo.GetComponent<RectTransform>();
@@ -287,7 +333,7 @@ namespace LobbyScene
             inputImg.sprite = flatButtonSprite ?? flatCardSprite;
             inputImg.type = Image.Type.Sliced;
             inputImg.pixelsPerUnitMultiplier = 4f;
-            inputImg.color = new Color(0.16f, 0.2f, 0.3f, 1f);
+            inputImg.color = InputBg;
 
             // Text Area (Viewport with RectMask2D for clipping and drag handling)
             GameObject textAreaGo = new GameObject("Text Area", typeof(RectTransform), typeof(RectMask2D));
@@ -303,7 +349,7 @@ namespace LobbyScene
             TextMeshProUGUI inputText = textGo.GetComponent<TextMeshProUGUI>();
             if (defaultFont != null) inputText.font = defaultFont;
             inputText.fontSize = 18;
-            inputText.color = Color.white;
+            inputText.color = InkColor;
             RectTransform textRect = textGo.GetComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
@@ -316,7 +362,7 @@ namespace LobbyScene
             if (defaultFont != null) placeholderText.font = defaultFont;
             placeholderText.text = "닉네임 또는 이메일로 검색...";
             placeholderText.fontSize = 17;
-            placeholderText.color = new Color(0.6f, 0.65f, 0.75f, 0.6f);
+            placeholderText.color = MutedTextColor;
             RectTransform phRect = placeholderGo.GetComponent<RectTransform>();
             phRect.anchorMin = Vector2.zero;
             phRect.anchorMax = Vector2.one;
@@ -330,9 +376,9 @@ namespace LobbyScene
             searchInput.lineType = TMP_InputField.LineType.SingleLine;
             searchInput.onSubmit.AddListener(_ => OnClickSearch());
 
-            CreateStyledButton(searchBar.transform, "검색", Vector2.zero, new Vector2(120f, 48f), OnClickSearch, new Color(0.2f, 0.6f, 0.45f), 18);
+            CreateStyledButton(searchBar.transform, "검색", Vector2.zero, new Vector2(110f, 48f), OnClickSearch, PrimaryOrange, 17, null, Color.white);
 
-            CreateLabel(contentContainer, "친구의 닉네임이나 이메일을 입력한 뒤 [검색]을 눌러 요청을 보내보세요.", 15, new Color(0.65f, 0.7f, 0.8f));
+            CreateLabel(contentContainer, "친구의 닉네임이나 이메일을 입력한 뒤 [검색]을 눌러 요청을 보내보세요.", 15, SlateTextColor);
         }
 
         private void OnClickSearch()
@@ -342,7 +388,7 @@ namespace LobbyScene
             if (string.IsNullOrEmpty(query)) return;
 
             ClearSearchResultsOnly();
-            CreateLabel(contentContainer, $"'{query}' 검색 중...", 17, new Color(0.9f, 0.75f, 0.3f), "SearchStatus");
+            CreateLabel(contentContainer, $"'{query}' 검색 중...", 16, PrimaryOrange, "SearchStatus");
 
             StartCoroutine(FriendManager.Instance.ApiClient.SearchMembers(query, (success, results) =>
             {
@@ -350,7 +396,7 @@ namespace LobbyScene
 
                 if (!success || results == null || results.Count == 0)
                 {
-                    CreateLabel(contentContainer, "검색 결과가 없습니다.", 17, new Color(0.7f, 0.75f, 0.85f), "SearchResultRow");
+                    CreateLabel(contentContainer, "검색 결과가 없습니다.", 16, SlateTextColor, "SearchResultRow");
                     return;
                 }
 
@@ -369,15 +415,15 @@ namespace LobbyScene
             hlg.spacing = 15;
             hlg.childControlWidth = false;
 
-            CreateLabel(row.transform, $"{user.name}  ({user.email})", 18, Color.white);
+            CreateLabel(row.transform, $"{user.name}  ({user.email})", 17, InkColor);
 
             if (user.isFriend)
             {
-                CreateLabel(row.transform, "이미 친구입니다", 15, new Color(0.4f, 0.85f, 0.5f));
+                CreateLabel(row.transform, "이미 친구입니다", 15, TealColor);
             }
             else if (user.hasPendingRequest)
             {
-                CreateLabel(row.transform, "요청 대기중", 15, new Color(0.95f, 0.8f, 0.3f));
+                CreateLabel(row.transform, "요청 대기중", 15, PrimaryOrange);
             }
             else
             {
@@ -387,7 +433,7 @@ namespace LobbyScene
                     {
                         if (ok) OnClickSearch();
                     }));
-                }, new Color(0.28f, 0.45f, 0.9f), 15);
+                }, PrimaryOrange, 15, null, Color.white);
             }
         }
 
@@ -398,10 +444,11 @@ namespace LobbyScene
         public void ShowFriendsTab()
         {
             currentTab = "friends";
+            UpdateTabStyles();
             if (titleText != null) titleText.text = "친구 목록";
             ClearContent();
 
-            CreateLabel(contentContainer, "친구 목록 불러오는 중...", 17, new Color(0.9f, 0.75f, 0.3f), "LoadingFriends");
+            CreateLabel(contentContainer, "친구 목록 불러오는 중...", 16, PrimaryOrange, "LoadingFriends");
 
             if (FriendManager.Instance == null) return;
             StartCoroutine(FriendManager.Instance.ApiClient.GetFriends((success, friends) =>
@@ -410,7 +457,7 @@ namespace LobbyScene
 
                 if (!success || friends == null || friends.Count == 0)
                 {
-                    CreateLabel(contentContainer, "등록된 친구가 없습니다. [친구 검색]에서 친구를 추가해보세요!", 16, new Color(0.65f, 0.7f, 0.8f));
+                    CreateLabel(contentContainer, "등록된 친구가 없습니다. [친구 검색]에서 친구를 추가해보세요!", 16, SlateTextColor);
                     return;
                 }
 
@@ -430,16 +477,18 @@ namespace LobbyScene
             hlg.childControlWidth = false;
 
             bool isOnline = friend.status != null && friend.status.Equals("Online", StringComparison.OrdinalIgnoreCase);
-            Color statusColor = isOnline ? new Color(0.3f, 0.9f, 0.45f) : new Color(0.55f, 0.6f, 0.7f);
+            bool isBusy = friend.status != null && (friend.status.Equals("OnMatching", StringComparison.OrdinalIgnoreCase) || friend.status.Equals("OnPlaying", StringComparison.OrdinalIgnoreCase));
+            Color statusColor = isOnline ? TealColor : (isBusy ? PrimaryOrange : MutedTextColor);
 
-            CreateLabel(row.transform, $"{friend.name}  [{FormatStatus(friend.status)}]  MMR {friend.mmr}", 18, statusColor);
+            CreateLabel(row.transform, $"{friend.name}  MMR {friend.mmr}", 17, InkColor);
+            CreateLabel(row.transform, $"[{FormatStatus(friend.status)}]", 15, statusColor);
 
             if (isOnline)
             {
                 CreateStyledButton(row.transform, "친선전 초대", Vector2.zero, new Vector2(110f, 38f), () =>
                 {
                     StartCoroutine(FriendManager.Instance.ApiClient.InviteFriend(friend.userId, (ok, _) => { }));
-                }, new Color(0.2f, 0.65f, 0.4f), 15);
+                }, TealColor, 15, null, Color.white);
             }
 
             CreateStyledButton(row.transform, "삭제", Vector2.zero, new Vector2(70f, 38f), () =>
@@ -448,7 +497,7 @@ namespace LobbyScene
                 {
                     if (ok) ShowFriendsTab();
                 }));
-            }, new Color(0.7f, 0.25f, 0.25f), 15);
+            }, DangerRed, 15, null, Color.white);
         }
 
         #endregion
@@ -458,10 +507,11 @@ namespace LobbyScene
         public void ShowRequestsTab()
         {
             currentTab = "requests";
+            UpdateTabStyles();
             if (titleText != null) titleText.text = "친구 요청 관리";
             ClearContent();
 
-            CreateLabel(contentContainer, "받은 친구 요청", 20, new Color(0.4f, 0.75f, 1f));
+            CreateLabel(contentContainer, "받은 친구 요청", 19, InkColor);
 
             if (FriendManager.Instance == null) return;
             StartCoroutine(FriendManager.Instance.ApiClient.GetReceivedRequests((success, reqs) =>
@@ -475,10 +525,10 @@ namespace LobbyScene
                 }
                 else
                 {
-                    CreateLabel(contentContainer, "받은 친구 요청이 없습니다.", 15, new Color(0.6f, 0.65f, 0.75f));
+                    CreateLabel(contentContainer, "받은 친구 요청이 없습니다.", 15, SlateTextColor);
                 }
 
-                CreateLabel(contentContainer, "\n보낸 친구 요청", 20, new Color(0.4f, 0.75f, 1f));
+                CreateLabel(contentContainer, "\n보낸 친구 요청", 19, InkColor);
                 StartCoroutine(FriendManager.Instance.ApiClient.GetSentRequests((sentOk, sentReqs) =>
                 {
                     if (sentOk && sentReqs != null && sentReqs.Count > 0)
@@ -490,7 +540,7 @@ namespace LobbyScene
                     }
                     else
                     {
-                        CreateLabel(contentContainer, "보낸 친구 요청이 없습니다.", 15, new Color(0.6f, 0.65f, 0.75f));
+                        CreateLabel(contentContainer, "보낸 친구 요청이 없습니다.", 15, SlateTextColor);
                     }
                 }));
             }));
@@ -504,7 +554,7 @@ namespace LobbyScene
             hlg.spacing = 15;
             hlg.childControlWidth = false;
 
-            CreateLabel(row.transform, $"{req.senderName} 님의 친구 요청", 17, Color.white);
+            CreateLabel(row.transform, $"{req.senderName} 님의 친구 요청", 17, InkColor);
 
             CreateStyledButton(row.transform, "수락", Vector2.zero, new Vector2(80f, 36f), () =>
             {
@@ -512,7 +562,7 @@ namespace LobbyScene
                 {
                     if (ok) ShowRequestsTab();
                 }));
-            }, new Color(0.2f, 0.65f, 0.4f), 15);
+            }, PrimaryOrange, 15, null, Color.white);
 
             CreateStyledButton(row.transform, "거절", Vector2.zero, new Vector2(80f, 36f), () =>
             {
@@ -520,7 +570,7 @@ namespace LobbyScene
                 {
                     if (ok) ShowRequestsTab();
                 }));
-            }, new Color(0.7f, 0.25f, 0.25f), 15);
+            }, DangerRed, 15, null, Color.white);
         }
 
         private void BuildSentRequestRow(FriendRequestItem req)
@@ -531,7 +581,7 @@ namespace LobbyScene
             hlg.spacing = 15;
             hlg.childControlWidth = false;
 
-            CreateLabel(row.transform, $"{req.receiverName} 님에게 보낸 요청 (대기중)", 17, new Color(0.85f, 0.88f, 0.95f));
+            CreateLabel(row.transform, $"{req.receiverName} 님에게 보낸 요청 (대기중)", 17, SlateTextColor);
 
             CreateStyledButton(row.transform, "취소", Vector2.zero, new Vector2(80f, 36f), () =>
             {
@@ -539,7 +589,7 @@ namespace LobbyScene
                 {
                     if (ok) ShowRequestsTab();
                 }));
-            }, new Color(0.45f, 0.5f, 0.6f), 15);
+            }, TabInactiveBg, 15, null, SlateTextColor);
         }
 
         #endregion
@@ -554,7 +604,7 @@ namespace LobbyScene
             img.sprite = flatChipSprite ?? flatCardSprite;
             img.type = Image.Type.Sliced;
             img.pixelsPerUnitMultiplier = 4f;
-            img.color = new Color(0.16f, 0.19f, 0.28f, 0.95f);
+            img.color = ChipBg;
             return card;
         }
 
@@ -566,7 +616,8 @@ namespace LobbyScene
             Action onClick,
             Color bgColor,
             int fontSize = 16,
-            Sprite icon = null)
+            Sprite icon = null,
+            Color? textColor = null)
         {
             GameObject btnObj = new GameObject(text + "Button", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(UnityEngine.UI.Button));
             btnObj.transform.SetParent(parent, false);
@@ -589,7 +640,7 @@ namespace LobbyScene
             lbl.fontSize = fontSize;
             lbl.fontStyle = FontStyles.Bold;
             lbl.alignment = TextAlignmentOptions.Center;
-            lbl.color = Color.white;
+            lbl.color = textColor ?? Color.white;
 
             RectTransform tRt = tObj.GetComponent<RectTransform>();
             tRt.anchorMin = Vector2.zero;
@@ -610,6 +661,7 @@ namespace LobbyScene
             if (defaultFont != null) lbl.font = defaultFont;
             lbl.text = text;
             lbl.fontSize = fontSize;
+            lbl.fontStyle = FontStyles.Bold;
             lbl.color = color;
             lbl.alignment = TextAlignmentOptions.MidlineLeft;
             return lblObj;
