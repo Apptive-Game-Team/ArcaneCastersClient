@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using GameScene.ServedObjectComponent.OnAttack;
 using Sound.Config;
 using UnityEditor;
 using UnityEngine;
@@ -83,26 +82,33 @@ public static class ObjectSfxCatalogValidator
         {
             errors.Add($"Catalog row has no top-level prefab and is not a server alias: {entry.RuntimeType}.");
         }
+        if (hasPrefab) ValidatePrefabSoundOwners(prefab, entry.RuntimeType, errors);
 
         if (entry.IntentionalSilent)
         {
-            if (entry.Profile != null)
+            if (entry.Profile != null || entry.AttackProfile != null)
             {
                 errors.Add($"Intentional-silence row must not reference a profile: {entry.RuntimeType}.");
             }
             return;
         }
 
-        if (entry.Profile == null)
+        if (entry.Profile == null && entry.AttackProfile == null)
         {
             errors.Add($"Audible catalog row has no profile: {entry.RuntimeType}.");
             return;
         }
 
-        ValidateProfile(entry.Profile, entry.RuntimeType, errors);
-        if (hasPrefab)
+        if (entry.Profile != null) ValidateProfile(entry.Profile, entry.RuntimeType, errors);
+        if (entry.AttackProfile != null)
         {
-            ValidateEffectiveAttackOwner(prefab, entry.Profile, entry.RuntimeType, errors);
+            ObjectSfxProfile attack = entry.AttackProfile;
+            ValidateSlot(entry.EffectiveAttack, "attack", attack.ProfileId, entry.RuntimeType, errors);
+            if (attack.Spawn.Enabled || attack.Movement.Enabled || attack.Hit.Enabled ||
+                attack.Heal.Enabled || attack.Death.Enabled)
+            {
+                errors.Add($"Attack override '{attack.ProfileId}' enables non-attack slots for {entry.RuntimeType}.");
+            }
         }
     }
 
@@ -147,20 +153,24 @@ public static class ObjectSfxCatalogValidator
         }
     }
 
-    private static void ValidateEffectiveAttackOwner(
+    private static void ValidatePrefabSoundOwners(
         GameObject prefab,
-        ObjectSfxProfile profile,
         string runtimeType,
         ICollection<string> errors)
     {
-        bool profileOwnsAttack = profile.Attack.Enabled && profile.Attack.Clip != null;
-        int legacyOwnerCount =
-            prefab.GetComponentsInChildren<OnAttackSoundPlayer>(true).Length;
-        int effectiveOwnerCount = profileOwnsAttack ? 1 : legacyOwnerCount;
-        if (effectiveOwnerCount > 1)
+        if (prefab == null)
         {
-            errors.Add(
-                $"Runtime type '{runtimeType}' has {effectiveOwnerCount} effective attack owners.");
+            errors.Add($"Runtime prefab could not be loaded: {runtimeType}.");
+            return;
+        }
+        if (prefab.GetComponentsInChildren<AudioSource>(true).Length > 0)
+        {
+            errors.Add($"Runtime prefab '{runtimeType}' contains an AudioSource outside GameSfxPlayer.");
+        }
+        foreach (Transform child in prefab.GetComponentsInChildren<Transform>(true))
+        {
+            if (GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(child.gameObject) > 0)
+                errors.Add($"Runtime prefab '{runtimeType}' has a missing script on {child.name}.");
         }
     }
 
