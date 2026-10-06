@@ -21,6 +21,18 @@ select their element sound; remaining attackers select small or medium/large
 size sounds. Unsupported projectile elements currently use the size fallback.
 Non-attacking producers and support structures have no attack override.
 
+Cosmetic effects bypass ObjectSpawner. OnDestroySpawner must explicitly play its
+optional spawnSfxProfile after creating a live effect; its six Explode owners use
+CosmeticImpact with the original light_explode.wav. BoulderStrikeImpact and
+ShockOverloadSecondary resolve their catalog spawn slots explicitly. Never infer
+audibility from an enabled catalog profile alone: #256 initially deleted the
+cosmetic effect's autoplay source without connecting these direct Instantiate
+paths, so ordinary catalog validation passed while the explosion was silent.
+Validate actual dispatch through each creation path and count active clip-specific
+voices, not AudioSource components retained by the pool. Previews and
+SuppressPresentation destruction remain silent. Scene-unload/sync destruction
+still follows the existing OnDestroySpawner presentation behavior.
+
 Unit-produced projectile spawn profiles are silent: their attacker already owns
 the release. Standalone ChainLightning, TideCall and WindBlade retain TransientShot
 release playback; explosion objects retain TransientExplode. Inspect both attack

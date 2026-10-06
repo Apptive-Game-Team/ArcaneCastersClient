@@ -45,3 +45,10 @@ Five shared attack profiles override only Attack on the existing lifecycle
 profiles. UnitShot is silent on projectile spawn; independent spell releases and
 explosion spawn sounds keep their existing profiles. No live blanket muter or
 prefab-local legacy attack owner remains.
+
+Cosmetic destruction effects use CosmeticImpact with the original
+`Sound/Game/light_explode.wav` (volume/pitch 1). They are created outside
+ObjectSpawner, so OnDestroySpawner dispatches their spawn profile explicitly.
+BoulderStrikeImpact and ShockOverloadSecondary also dispatch their existing
+catalog explosion slots when created as live projectile effects. These paths
+use the shared player; previews and suppressed effects remain silent.

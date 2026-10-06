@@ -85,6 +85,19 @@ namespace GameScene.ServedObjectComponent.Sound
                 PlaySlot(attack, GameSfxCategory.Attack, GameSfxPriority.Attack);
         }
 
+        public static void PlaySpawnForType(string runtimeType)
+        {
+            if (TryResolveProfile(runtimeType, out ObjectSfxProfile resolvedProfile, out _))
+                PlaySpawn(resolvedProfile);
+        }
+
+        // Cosmetic effects do not have a server object to own a lifecycle controller.
+        public static void PlaySpawn(ObjectSfxProfile spawnProfile)
+        {
+            if (spawnProfile != null)
+                PlaySlot(spawnProfile.Spawn, GameSfxCategory.SpawnDeath, GameSfxPriority.Spawn);
+        }
+
         private static void WarnOnce(string key, string message)
         {
             string normalizedKey = string.IsNullOrEmpty(key) ? "__EmptyRuntimeType__" : key;
@@ -138,10 +151,7 @@ namespace GameScene.ServedObjectComponent.Sound
 
             if (playSpawn && profile != null)
             {
-                PlaySlot(
-                    profile.Spawn,
-                    GameSfxCategory.SpawnDeath,
-                    GameSfxPriority.Spawn);
+                PlaySpawn(profile);
             }
         }
 

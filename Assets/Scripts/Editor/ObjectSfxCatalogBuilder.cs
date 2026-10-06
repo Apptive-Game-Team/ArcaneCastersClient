@@ -27,6 +27,7 @@ public static class ObjectSfxCatalogBuilder
         new("TransientShot", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
         new("TransientExplode", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
         new("UnitShot", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
+        new("CosmeticImpact", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
         new("WaterLaunch", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
         new("FireLaunch", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
         new("SmallAttack", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),

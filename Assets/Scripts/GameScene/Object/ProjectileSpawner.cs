@@ -2,6 +2,7 @@ using GameScene.Dto;
 using GameScene.Dto.Projectile;
 using GameScene.Object.Projectile;
 using GameScene.ServedObjectComponent;
+using GameScene.ServedObjectComponent.Sound;
 using Global;
 using UnityEngine;
 
@@ -72,6 +73,8 @@ namespace GameScene.Object
                 impactPrefab,
                 ProjectileUtil.GetPosition(dto.start),
                 impactPrefab.transform.rotation);
+            if (impact == null) return;
+            if (world == null) ServedObjectSfxController.PlaySpawnForType("RockExplode");
             impact.transform.localScale *= 0.65f;
             Destroy(impact, dto.duration);
         }
@@ -101,6 +104,8 @@ namespace GameScene.Object
 
             Vector3 position = ProjectileUtil.GetPosition(dto.start, world);
             GameObject effect = world != null ? world.SpawnEffect(prefab, position, prefab.transform.rotation) : Instantiate(prefab, position, prefab.transform.rotation);
+            if (effect == null) return true;
+            if (world == null) ServedObjectSfxController.PlaySpawnForType("ShockOverload");
             SpriteRenderer renderer = effect.GetComponentInChildren<SpriteRenderer>();
             if (renderer != null)
             {

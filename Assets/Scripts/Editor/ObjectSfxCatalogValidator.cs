@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using GameScene.ServedObjectComponent;
 using Sound.Config;
 using UnityEditor;
 using UnityEngine;
@@ -171,6 +172,11 @@ public static class ObjectSfxCatalogValidator
         {
             if (GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(child.gameObject) > 0)
                 errors.Add($"Runtime prefab '{runtimeType}' has a missing script on {child.name}.");
+        }
+        foreach (OnDestroySpawner spawner in prefab.GetComponentsInChildren<OnDestroySpawner>(true))
+        {
+            ObjectSfxProfile profile = spawner.SpawnSfxProfile;
+            if (profile != null) ValidateSlot(profile.Spawn, "spawn", profile.ProfileId, runtimeType, errors);
         }
     }
 

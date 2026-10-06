@@ -210,6 +210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 6630687504928479194, guid: 8d2ff5932544147bab8e9fb89bdb9269, type: 3}
+  spawnSfxProfile: {fileID: 11400000, guid: 9ca96da8d80d4d1fa32e4ac7fedac70d, type: 2}
 --- !u!114 &1088561502640704175
 MonoBehaviour:
   m_ObjectHideFlags: 0

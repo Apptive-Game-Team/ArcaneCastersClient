@@ -2,7 +2,7 @@
 
 - Date: 2026-10-07
 - GitHub Issue: https://github.com/Apptive-Game-Team/ArcaneCastersClient/issues/256
-- Status: Implemented; ready for pull request
+- Status: Implemented; PR #257
 
 ## Goal
 
@@ -25,7 +25,7 @@ Unit-produced FireShot/WaterShot/ElectricShot/LeafShot/MagmaFist and newer unit 
 - [x] **Step 0: Recon** — Read client instructions and audio, asset, preview and planning skills/docs. Identify real attack implementations, size tags, legacy components, nested HitSoundPlayer instances and variant overrides. Isolate feature/256 from unrelated changes.
 - [x] **Step 1: Implementation** — Import five mono 44.1 kHz processed copies, preserving originals and recording provenance. Add five shared attack-only profile assets and one entry-level EffectiveAttack resolver. Update controller, catalog, builder and validator. Builder keeps explicit mapping in one table, preserves existing customized attack assignments and aliases while setting defaults for new rows. Remove LegacySfxMuter/OnAttackSoundPlayer and obsolete game-prefab AudioSources plus all dependent YAML documents, component/child links and variant overrides. Preserve BGM and preview-specific suppression.
 - [x] **Step 2: Tests** — Validate catalog coverage, one effective slot, fallback/disabled/silent semantics, regeneration preservation, attack-only profile validity, absence of prefab AudioSources and missing references, source/processed audio properties, C# compilation and focused Unity tests where available. Manual acceptance: tower, small melee, large melee, water/fire shooter attacks each dispatch once; projectile spawn adds no second release; independent spell releases and explosion playback remain; previews stay silent; tutorial casts use central playback.
-- [ ] **Step 3: Rollout / Rollback** — Commit/push client branch, open labeled assigned PR against feature/252, attach PR. Do not update root pointer before client merge. Roll back with one feature commit revert.
+- [x] **Step 3: Rollout / Rollback** — Commit/push client branch, open labeled assigned PR against feature/252, attach PR. Do not update root pointer before client merge. Roll back with one feature commit revert.
 
 ## Validation
 
@@ -47,4 +47,27 @@ Fast NONPASS findings addressed: effective-slot validation, explicit fallback/no
 
 ## Verification results
 
+### Cosmetic explosion regression follow-up
+
+The first validation checked profile configuration but missed direct effect creation.
+Removing Effects/Explode's autoplay source silenced its original light_explode.wav:
+six OnDestroySpawner configurations instantiate it outside ObjectSpawner. BoulderStrikeImpact
+and ShockOverloadSecondary also create explosion bodies outside the lifecycle controller.
+
+Fix these paths using the existing shared player. Add an optional spawnSfxProfile to
+OnDestroySpawner, assign CosmeticImpact (original light_explode, volume/pitch 1) to
+all six configurations, and play only after a real live effect is created. Reuse one
+profile-based spawn dispatch helper for controller initialization, destruction effects
+and catalog-resolved standalone projectile effects. Leave previews and explicitly
+suppressed destruction silent. Preserve existing scene-unload/sync cleanup behavior.
+Verify actual Play Mode dispatch and clip-specific active voice counts for normal
+object explosions, destruction effects, both projectile effect paths, suppression,
+preview destruction and preview clearing. Validate all six prefab assignments.
+
+Fast and medium reviews passed. Accepted feedback: shared dispatch, active voice
+checks, null-effect guard, explicit original clip settings and normal-spawn duplicate
+check. Heavy verification passed before implementation.
+
 Heavy review: PASS. Unity 2022.3.34f1 imported the worktree and compiled the runtime/editor/test assemblies. All 31 ObjectSfxTests passed, including a real Play Mode entry/exit for controller destruction. Catalog validation and regeneration passed for 128 rows; 45 types select approved attack overrides. The 19 changed prefabs have no newly dangling local fileID references. Five runtime WAVs probe as mono PCM16 44.1 kHz at -3 dBFS; source files were not modified. `git diff --check` passed. Graphify update was attempted from the monorepo root but its CLI is not installed. Final in-game listening/mix review was not performed in headless tests.
+
+Regression verification: Unity 2022.3.34f1 compiled the fix and all 43 ObjectSfxTests / ExplosionSfxTests passed. These exercise real Play Mode destruction, normal server explosion creation, both direct projectile explosion paths, suppression, preview destruction and preview clearing. Clip-specific active voices confirm the original cosmetic clip plays once and the existing server explosion clip remains distinct. All six serialized owners and representative inherited variants resolve CosmeticImpact.
