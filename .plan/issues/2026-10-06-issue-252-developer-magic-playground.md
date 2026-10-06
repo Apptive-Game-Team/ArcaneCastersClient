@@ -51,3 +51,4 @@ Worktrees branch from origin/dev; existing dirty checkouts remain untouched. Exi
 - Replace menu entry with a prefab-backed Magic Playground button in AdminScene. Prepare the ignored scene automatically before Play Mode; return to AdminScene on close/expiry.
 - Keep the entry EditorOnly and bind its listener exclusively from Editor. Scene-build processing must distinguish player builds from Editor Play Mode (Unity passes a null BuildReport in Play Mode).
 - Actual Editor Play Mode click/scene/return flow passed with HTTP suppressed; build-scene stripping and keeping the entry in Play Mode passed. Update client PR #253 with the new admin layout render.
+- Final Admin entry state: both BuildDevWebGL and BuildWebGL succeeded after the entry change, including build stripping and packed-asset checks.
