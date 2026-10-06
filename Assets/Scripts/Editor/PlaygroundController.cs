@@ -91,7 +91,7 @@ namespace DevPlayground {
             closeButton.onClick.AddListener(Close);
             RefreshImmunityLabels();
             if (SceneContext.User == null || string.IsNullOrEmpty(SceneContext.JwtToken)) {
-                statusText.text = "Log in as a developer administrator, then use Tools > ArcaneCasters > Enter Playground.";
+                statusText.text = "Log in as a developer administrator, then enter from AdminScene.";
                 yield break;
             }
 
@@ -288,7 +288,7 @@ namespace DevPlayground {
             SceneContext.MatchInfo = null;
             SceneContext.MatchResult = null;
             yield return null;
-            SceneManager.LoadScene("LobbyScene");
+            SceneManager.LoadScene("AdminScene");
         }
         private void OnDestroy() {
             closing = true;

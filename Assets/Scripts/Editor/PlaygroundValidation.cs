@@ -12,6 +12,80 @@ using UnityEngine.UI;
 
 /// <summary>Batch verification and a render of the generated editor layout, without a server.</summary>
 public static class PlaygroundValidation {
+    private const string AdminCheck = "PlaygroundValidation.Admin";
+    public static void ValidateAdminEntry() {
+        Validate();
+        var scene = EditorSceneManager.OpenScene("Assets/Scenes/AdminScene.unity", OpenSceneMode.Single);
+        if (PlaygroundAdminEntry.FindButton(scene) == null) throw new InvalidOperationException("Missing admin button.");
+        SuppressAdminRequests(scene, LoadSceneMode.Single);
+        SessionState.SetString(AdminCheck, "entry");
+        SessionState.SetString(AdminCheck + ".deadline", DateTime.UtcNow.AddSeconds(60).ToString("O"));
+        InstallAdminCheck();
+        EditorApplication.isPlaying = true;
+    }
+    [InitializeOnLoadMethod]
+    private static void ResumeAdminCheck() {
+        if (!string.IsNullOrEmpty(SessionState.GetString(AdminCheck, ""))) InstallAdminCheck();
+    }
+    private static void InstallAdminCheck() {
+        EditorApplication.update -= CheckAdminEntry;
+        EditorApplication.update += CheckAdminEntry;
+        SceneManager.sceneLoaded -= SuppressAdminRequests;
+        SceneManager.sceneLoaded += SuppressAdminRequests;
+    }
+    private static void SuppressAdminRequests(Scene scene, LoadSceneMode mode) {
+        if (scene.name == "Playground") {
+            // The entry gate gets a local identity fixture, cleared before Start can send HTTP.
+            Global.SceneContext.User = null;
+            Global.SceneContext.JwtToken = null;
+        }
+        if (scene.name != "AdminScene") return;
+        var cancelTogglers = scene.GetRootGameObjects().SelectMany(root =>
+            root.GetComponentsInChildren<LobbyScene.Button.CancelMatchingButtonActiveToggler>(true)).ToArray();
+        GameObject stateFixture = null;
+        if (EditorApplication.isPlaying && cancelTogglers.Length > 0 && LobbyScene.LobbySceneViewModel.Instance == null)
+            stateFixture = new GameObject("Admin validation state", typeof(LobbyScene.LobbySceneViewModel));
+        // This isolated Admin test has no lobby singleton. Remove its unrelated subscription teardown.
+        foreach (var component in cancelTogglers) UnityEngine.Object.DestroyImmediate(component);
+        if (stateFixture != null) UnityEngine.Object.DestroyImmediate(stateFixture);
+        foreach (var root in scene.GetRootGameObjects())
+            foreach (var behaviour in root.GetComponentsInChildren<MonoBehaviour>(true)) {
+                var ns = behaviour == null ? "" : behaviour.GetType().Namespace ?? "";
+                if (behaviour != null && !ns.StartsWith("UnityEngine.UI") && !ns.StartsWith("TMPro")) behaviour.enabled = false;
+            }
+    }
+    private static void CheckAdminEntry() {
+        if (DateTimeOffset.UtcNow > DateTimeOffset.Parse(SessionState.GetString(AdminCheck + ".deadline", ""))) {
+            Debug.LogError("Admin playground entry/return timed out.");
+            SessionState.EraseString(AdminCheck);
+            EditorApplication.Exit(1);
+            return;
+        }
+        if (!EditorApplication.isPlaying || EditorApplication.isCompiling) return;
+        var scene = SceneManager.GetActiveScene();
+        var phase = SessionState.GetString(AdminCheck, "");
+        if (phase == "entry" && scene.name == "AdminScene") {
+            var button = PlaygroundAdminEntry.FindButton(scene);
+            if (button == null || !button.CompareTag("EditorOnly") || !button.isActiveAndEnabled) return;
+            Global.SceneContext.User = new Data.User(501, "Editor fixture", "", -1);
+            Global.SceneContext.JwtToken = "editor-validation-fixture";
+            SessionState.SetString(AdminCheck, "playground");
+            button.onClick.Invoke();
+        } else if (phase == "playground" && scene.name == "Playground") {
+            var host = UnityEngine.Object.FindObjectOfType<PlaygroundHost>();
+            if (host == null || !host.statusText.text.StartsWith("Log in as a developer")) return;
+            SessionState.SetString(AdminCheck, "return");
+            host.closeButton.onClick.Invoke();
+        } else if (phase == "return" && scene.name == "AdminScene") {
+            if (PlaygroundAdminEntry.FindButton(scene) == null) throw new InvalidOperationException("Missing return button.");
+            Debug.Log("PLAYGROUND_ADMIN_ENTRY_PASS: clicked Admin button, entered playground and returned to Admin.");
+            SessionState.EraseString(AdminCheck);
+            EditorApplication.update -= CheckAdminEntry;
+            SceneManager.sceneLoaded -= SuppressAdminRequests;
+            EditorApplication.isPlaying = false;
+            EditorApplication.delayCall += () => EditorApplication.Exit(0);
+        }
+    }
     private const string PlayModeCheck = "PlaygroundValidation.PlayMode";
     public static void ValidatePlayMode() {
         PlaygroundSceneBuilder.Generate();
@@ -28,7 +102,7 @@ public static class PlaygroundValidation {
     private static void CheckPlayMode() {
         var deadline = SessionState.GetString(PlayModeCheck, "");
         if (string.IsNullOrEmpty(deadline)) return;
-        if (DateTime.UtcNow > DateTime.Parse(deadline)) {
+        if (DateTimeOffset.UtcNow > DateTimeOffset.Parse(deadline)) {
             Debug.LogError("Playground Play Mode bootstrap did not start.");
             SessionState.EraseString(PlayModeCheck);
             EditorApplication.Exit(1);
@@ -70,6 +144,15 @@ public static class PlaygroundValidation {
             AssetDatabase.DeleteAsset(texturePath);
         }
         PlaygroundBuildGuard.Validate();
+        var admin = EditorSceneManager.OpenScene("Assets/Scenes/AdminScene.unity", OpenSceneMode.Additive);
+        try {
+            var button = PlaygroundAdminEntry.FindButton(admin);
+            if (button == null || !button.CompareTag("EditorOnly")) throw new InvalidOperationException("Missing EditorOnly admin entry.");
+            new PlaygroundBuildGuard().OnProcessScene(admin, null);
+            if (PlaygroundAdminEntry.FindButton(admin) == null) throw new InvalidOperationException("Admin entry stripped in Play Mode.");
+            PlaygroundBuildGuard.StripAdminEntry(admin);
+            if (PlaygroundAdminEntry.FindButton(admin) != null) throw new InvalidOperationException("Admin entry survived build stripping.");
+        } finally { EditorSceneManager.CloseScene(admin, true); }
         Debug.Log("PLAYGROUND_BUILD_GUARD_PASS: ordinary roots accepted, scene and Resources leaks rejected.");
     }
 
@@ -128,6 +211,39 @@ public static class PlaygroundValidation {
         } finally {
             RenderTexture.active = null;
             if (uiCameraObject != null) UnityEngine.Object.DestroyImmediate(uiCameraObject);
+            if (render != null) UnityEngine.Object.DestroyImmediate(render);
+            if (pixels != null) UnityEngine.Object.DestroyImmediate(pixels);
+            EditorSceneManager.CloseScene(scene, true);
+        }
+    }
+
+    public static void CaptureAdminLayout() {
+        var scene = EditorSceneManager.OpenScene("Assets/Scenes/AdminScene.unity", OpenSceneMode.Additive);
+        RenderTexture render = null;
+        Texture2D pixels = null;
+        try {
+            var button = PlaygroundAdminEntry.FindButton(scene);
+            if (button == null || !button.CompareTag("EditorOnly")) throw new InvalidOperationException("Missing admin entry.");
+            var camera = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<Camera>(true)).First();
+            render = new RenderTexture(1280, 720, 24);
+            camera.targetTexture = render;
+            foreach (var canvas in scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<Canvas>(true))) {
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.worldCamera = camera;
+                canvas.planeDistance = camera.nearClipPlane + 1;
+            }
+            Canvas.ForceUpdateCanvases();
+            camera.Render();
+            RenderTexture.active = render;
+            pixels = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+            pixels.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0);
+            pixels.Apply();
+            Directory.CreateDirectory("docs/pr-media/252");
+            File.WriteAllBytes("docs/pr-media/252/admin-playground-entry.png", pixels.EncodeToPNG());
+            camera.targetTexture = null;
+            Debug.Log("PLAYGROUND_ADMIN_LAYOUT_CAPTURED");
+        } finally {
+            RenderTexture.active = null;
             if (render != null) UnityEngine.Object.DestroyImmediate(render);
             if (pixels != null) UnityEngine.Object.DestroyImmediate(pixels);
             EditorSceneManager.CloseScene(scene, true);

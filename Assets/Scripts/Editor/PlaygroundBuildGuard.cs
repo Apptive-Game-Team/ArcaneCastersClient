@@ -6,11 +6,28 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.AddressableAssets.Settings;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public sealed class PlaygroundBuildGuard : IPreprocessBuildWithReport, IPostprocessBuildWithReport {
+public sealed class PlaygroundBuildGuard : IPreprocessBuildWithReport, IPostprocessBuildWithReport, IProcessSceneWithReport {
     public const string Root = "Assets/DevPlayground/";
     public int callbackOrder => 1000;
     public void OnPreprocessBuild(BuildReport report) => Validate();
+    public void OnProcessScene(Scene scene, BuildReport report) {
+        // Unity also invokes this callback during Editor Play Mode with no build report.
+        if (report == null) return;
+        StripAdminEntry(scene);
+    }
+    internal static void StripAdminEntry(Scene scene) {
+        if (scene.name != "AdminScene") return;
+        foreach (var root in scene.GetRootGameObjects())
+            foreach (var child in root.GetComponentsInChildren<Transform>(true)) {
+                if (child == null || child.name != PlaygroundAdminEntry.ButtonName) continue;
+                if (!child.CompareTag("EditorOnly"))
+                    throw new BuildFailedException("The admin playground button must remain EditorOnly.");
+                UnityEngine.Object.DestroyImmediate(child.gameObject);
+            }
+    }
     public void OnPostprocessBuild(BuildReport report) {
         foreach (var packed in report.packedAssets)
             foreach (var item in packed.contents)

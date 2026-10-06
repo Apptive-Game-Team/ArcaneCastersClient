@@ -133,27 +133,26 @@ public static class PlaygroundSceneBuilder {
                 throw new InvalidOperationException("Cannot save generated playground scene.");
             AssetDatabase.Refresh();
             PlaygroundBuildGuard.Validate();
-            Debug.Log("Playground prepared. Log in during Play Mode, then use Tools > ArcaneCasters > Enter Playground.");
+            Debug.Log("Playground prepared. Enter from the Magic Playground button in AdminScene.");
         } finally {
             if (previous.IsValid()) SceneManager.SetActiveScene(previous);
             EditorSceneManager.CloseScene(source, true);
         }
     }
 
-    [MenuItem("Tools/ArcaneCasters/Enter Playground")]
-    public static void Enter() {
+    public static void EnterFromAdmin() {
         if (!EditorApplication.isPlaying || Global.SceneContext.User == null ||
             string.IsNullOrEmpty(Global.SceneContext.JwtToken)) {
             EditorUtility.DisplayDialog("Developer playground",
-                "Prepare the playground first, enter Play Mode in LoginScene and log in as an administrator. Then select Enter Playground.", "OK");
+                "Log in as an administrator before entering the playground.", "OK");
             return;
         }
-        if (SceneManager.GetActiveScene().name != "LobbyScene") {
-            Debug.LogWarning("Enter the playground from the lobby.");
+        if (SceneManager.GetActiveScene().name != "AdminScene") {
+            Debug.LogWarning("Enter the playground from AdminScene.");
             return;
         }
         if (!File.Exists(ScenePath)) {
-            Debug.LogError("Stop Play Mode and select Prepare Playground Scene first.");
+            Debug.LogError("Playground preparation failed. Stop and restart Play Mode.");
             return;
         }
         EditorSceneManager.LoadSceneInPlayMode(ScenePath, new LoadSceneParameters(LoadSceneMode.Single));
@@ -196,7 +195,7 @@ public static class PlaygroundSceneBuilder {
         return instance;
     }
 
-    private static Button MakeButton(Transform parent, string name, string text) {
+    internal static Button MakeButton(Transform parent, string name, string text) {
         var instance = InstantiateUi(ButtonPrefab, parent, name);
         var button = instance.GetComponent<Button>();
         button.onClick = new Button.ButtonClickedEvent();
