@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Button = UnityEngine.UI.Button;
 
 namespace LobbyScene
 {
@@ -12,10 +11,10 @@ namespace LobbyScene
     {
         [Header("Root & Navigation")]
         [SerializeField] private GameObject root;
-        [SerializeField] private Button closeButton;
-        [SerializeField] private Button friendListTabButton;
-        [SerializeField] private Button requestsTabButton;
-        [SerializeField] private Button searchTabButton;
+        [SerializeField] private UnityEngine.UI.Button closeButton;
+        [SerializeField] private UnityEngine.UI.Button friendListTabButton;
+        [SerializeField] private UnityEngine.UI.Button requestsTabButton;
+        [SerializeField] private UnityEngine.UI.Button searchTabButton;
 
         [Header("Tab Panels")]
         [SerializeField] private GameObject friendListPanel;
@@ -26,7 +25,7 @@ namespace LobbyScene
         [SerializeField] private Transform friendListContainer;
         [SerializeField] private FriendItemView friendItemPrefab;
         [SerializeField] private TMP_Text emptyFriendListText;
-        [SerializeField] private Button refreshFriendListButton;
+        [SerializeField] private UnityEngine.UI.Button refreshFriendListButton;
 
         [Header("Requests Tab")]
         [SerializeField] private Transform receivedRequestsContainer;
@@ -34,11 +33,11 @@ namespace LobbyScene
         [SerializeField] private FriendRequestItemView requestItemPrefab;
         [SerializeField] private TMP_Text emptyReceivedRequestsText;
         [SerializeField] private TMP_Text emptySentRequestsText;
-        [SerializeField] private Button refreshRequestsButton;
+        [SerializeField] private UnityEngine.UI.Button refreshRequestsButton;
 
         [Header("Search Tab")]
         [SerializeField] private TMP_InputField searchInputField;
-        [SerializeField] private Button searchButton;
+        [SerializeField] private UnityEngine.UI.Button searchButton;
         [SerializeField] private Transform searchResultContainer;
         [SerializeField] private FriendSearchResultItemView searchResultItemPrefab;
         [SerializeField] private TMP_Text searchStatusText;

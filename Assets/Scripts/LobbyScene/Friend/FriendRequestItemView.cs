@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Button = UnityEngine.UI.Button;
 
 namespace LobbyScene
 {
@@ -10,9 +9,9 @@ namespace LobbyScene
     {
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text timeText;
-        [SerializeField] private Button acceptButton;
-        [SerializeField] private Button rejectButton;
-        [SerializeField] private Button cancelButton;
+        [SerializeField] private UnityEngine.UI.Button acceptButton;
+        [SerializeField] private UnityEngine.UI.Button rejectButton;
+        [SerializeField] private UnityEngine.UI.Button cancelButton;
 
         private FriendRequestItem data;
         private Action<FriendRequestItem> onAcceptClicked;

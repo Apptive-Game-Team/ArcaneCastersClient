@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Button = UnityEngine.UI.Button;
 
 namespace LobbyScene
 {
@@ -11,8 +10,8 @@ namespace LobbyScene
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text statusText;
         [SerializeField] private TMP_Text mmrText;
-        [SerializeField] private Button inviteButton;
-        [SerializeField] private Button deleteButton;
+        [SerializeField] private UnityEngine.UI.Button inviteButton;
+        [SerializeField] private UnityEngine.UI.Button deleteButton;
 
         private FriendSummary data;
         private Action<FriendSummary> onInviteClicked;

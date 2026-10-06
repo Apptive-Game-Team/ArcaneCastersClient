@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Button = UnityEngine.UI.Button;
 
 namespace LobbyScene
 {
-    [RequireComponent(typeof(Button))]
+    [RequireComponent(typeof(UnityEngine.UI.Button))]
     public class FriendEntryButton : MonoBehaviour
     {
-        private Button button;
+        private UnityEngine.UI.Button button;
 
         private void Awake()
         {
-            button = GetComponent<Button>();
+            button = GetComponent<UnityEngine.UI.Button>();
             if (button != null)
             {
                 button.onClick.AddListener(OnClick);

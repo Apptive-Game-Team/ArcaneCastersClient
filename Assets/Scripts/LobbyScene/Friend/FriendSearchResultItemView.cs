@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Button = UnityEngine.UI.Button;
 
 namespace LobbyScene
 {
@@ -11,7 +10,7 @@ namespace LobbyScene
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text emailText;
         [SerializeField] private TMP_Text statusBadgeText;
-        [SerializeField] private Button addFriendButton;
+        [SerializeField] private UnityEngine.UI.Button addFriendButton;
 
         private FriendSearchResult data;
         private Action<FriendSearchResult> onSendRequestClicked;

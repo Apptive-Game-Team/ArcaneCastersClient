@@ -3,7 +3,6 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Button = UnityEngine.UI.Button;
 using Data;
 
 namespace LobbyScene
@@ -13,8 +12,8 @@ namespace LobbyScene
         [SerializeField] private GameObject root;
         [SerializeField] private TMP_Text messageText;
         [SerializeField] private TMP_Text timerText;
-        [SerializeField] private Button acceptButton;
-        [SerializeField] private Button rejectButton;
+        [SerializeField] private UnityEngine.UI.Button acceptButton;
+        [SerializeField] private UnityEngine.UI.Button rejectButton;
 
         private FriendInviteItem currentInvite;
         private FriendApiClient apiClient;
