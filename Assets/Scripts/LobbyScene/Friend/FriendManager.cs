@@ -51,6 +51,13 @@ namespace LobbyScene
 
         private void OnDestroy()
         {
+            isStopping = true;
+            if (reconnectCoroutine != null)
+            {
+                StopCoroutine(reconnectCoroutine);
+                reconnectCoroutine = null;
+            }
+
             if (Instance == this)
             {
                 Instance = null;
@@ -167,9 +174,70 @@ namespace LobbyScene
             }
         }
 
+        private Coroutine reconnectCoroutine;
+        private bool isStopping;
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus)
+            {
+                RecoverSnapshot();
+            }
+        }
+
+        private void OnApplicationPause(bool isPaused)
+        {
+            if (!isPaused)
+            {
+                RecoverSnapshot();
+            }
+        }
+
+        public void RecoverSnapshot()
+        {
+            if (apiClient == null) return;
+
+            // 1. 대기 중인 친선전 초대 복구
+            StartCoroutine(apiClient.GetPendingInvites((success, invites) =>
+            {
+                if (!success || invites == null || invites.Count == 0) return;
+
+                // 유효한 첫 번째 대기 초대를 다이얼로그로 복구
+                FriendInviteItem firstPending = invites[0];
+                if (inviteDialog != null && !inviteDialog.IsShowing)
+                {
+                    Debug.Log($"[FriendManager] Recovered pending invite: {firstPending.inviteId} from {firstPending.inviterName}");
+                    HandleInviteReceived(firstPending);
+                }
+            }));
+
+            // 2. 친구 모달이 열려 있는 상태라면 현재 탭 갱신
+            if (friendModal != null && friendModal.IsOpen)
+            {
+                friendModal.RefreshCurrentTab();
+            }
+        }
+
         private void HandleStreamDisconnected()
         {
-            Debug.Log("[FriendManager] FriendEventStream disconnected.");
+            Debug.Log("[FriendManager] FriendEventStream disconnected. Scheduling reconnect...");
+            if (isStopping) return;
+
+            if (reconnectCoroutine == null)
+            {
+                reconnectCoroutine = StartCoroutine(ReconnectRoutine());
+            }
+        }
+
+        private System.Collections.IEnumerator ReconnectRoutine()
+        {
+            yield return new WaitForSecondsRealtime(3f);
+            reconnectCoroutine = null;
+            if (isStopping) yield break;
+
+            Debug.Log("[FriendManager] Reconnecting FriendEventStream...");
+            ConnectEventStream();
+            RecoverSnapshot();
         }
     }
 }
