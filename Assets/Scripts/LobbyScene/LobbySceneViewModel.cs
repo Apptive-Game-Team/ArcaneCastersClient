@@ -67,6 +67,12 @@ namespace LobbyScene
             }));
         }
 
+        public void EnterFriendMatch(MatchedInfoDto matchedInfoDto)
+        {
+            if (matchedInfoDto == null) return;
+            OnMatched(matchedInfoDto);
+        }
+
         private void OnMatched(MatchedInfoDto matchedInfoDto)
         {
             SceneContext.MatchInfo = matchedInfoDto;
