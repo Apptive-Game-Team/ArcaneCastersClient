@@ -15,417 +15,641 @@ MonoBehaviour:
   entries:
   - runtimeType: ChickenCommando
     profile: {fileID: 11400000, guid: 8dcd36e83b082b54f86c6a8bf19fd807, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: Player
     profile: {fileID: 11400000, guid: 8dcd36e83b082b54f86c6a8bf19fd807, type: 2}
+    attackProfile: {fileID: 0}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: EmberSpirit
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: FireChildSpirit
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 11400000, guid: e02075cea483447281d5fd1665692517, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: FireLordSpirit
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 0}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: FireSlime
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: FireSpirit
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 11400000, guid: e02075cea483447281d5fd1665692517, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: FireTadpole
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: PveFireTadpole
-    profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: MagmaSpirit
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveFireTadpole
+    profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: AquaArcher
     profile: {fileID: 11400000, guid: 219592d24747077438ed6aacbdd9a776, type: 2}
+    attackProfile: {fileID: 11400000, guid: dc55df079e0e4844a51ddf79e2849dea, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: BubbleSpirit
     profile: {fileID: 11400000, guid: 219592d24747077438ed6aacbdd9a776, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WaterSlime
-    profile: {fileID: 11400000, guid: 219592d24747077438ed6aacbdd9a776, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: LeafSlime
-    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: PveVineWitch
-    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: SeedSpirit
-    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: TreeGolem
-    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: VineSpirit
-    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WillOWisp
-    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ElectricSlime
-    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: LightningTadpole
-    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: PveLightningTadpole
-    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: StormRider
-    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ThunderBird
-    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ThunderSpirit
-    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ZapMouse
-    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: DimensionToad
-    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: PveDimensionToad
-    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockGolem
-    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockMage
-    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockSlime
-    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: CloudDragon
-    profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WindSlime
-    profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WindSpirit
-    profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: LifeTree
-    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: PveNatureSlimeNest
-    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: PveVineColony
-    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: PveWaterSlimeNest
-    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: Vine
-    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: VineColony
-    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: Crater
-    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: FireworkTower
-    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: GroundCannon
-    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: GroundTower
-    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockTurret
-    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: BubbleGenerator
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ElectricTower
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: FireRune
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: FrenzyTotem
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: HealingTotem
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: LightningRune
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ManaWell
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: NatureRune
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RallyingTotem
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockRune
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WaterRune
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WindRune
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WindTotem
-    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ChainLightning
-    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: CraterEmber
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ElectricExplode
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ElectricField
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ElectricShot
-    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: FireDrop
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: FireExplode
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: FireField
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: FireShot
-    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: FireworkShell
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: LeafExplode
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: LeafField
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: LeafShot
-    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: Leafair
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: LightningDrop
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: MagmaExplosion
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: MagmaFist
-    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: MeteorDrop
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: MeteorShower
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: MiniRock
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: NatureDrop
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: Overgrowth
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RainCloud
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RazorGale
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockDrop
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockExplode
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockRemnant
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: RockRolling
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: SandStorm
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ShockOverload
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: TideCall
-    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: TornadoStrike
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WaterExplode
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WaterExplosion
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WaterField
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WaterShot
-    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WindBlade
-    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WindDrop
-    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: WindExplode
-    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: ServedObjectHpBar
-    profile: {fileID: 0}
-    intentionalSilent: 1
-    serverAlias: 0
-  - runtimeType: Towerback
-    profile: {fileID: 0}
-    intentionalSilent: 1
-    serverAlias: 0
-  - runtimeType: GiantVine
-    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: SeedNest
-    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: EvilEnt
-    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
-    intentionalSilent: 0
-    serverAlias: 0
-  - runtimeType: PveEvilEnt
-    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: dc55df079e0e4844a51ddf79e2849dea, type: 2}
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: SeaSerpent
     profile: {fileID: 11400000, guid: 219592d24747077438ed6aacbdd9a776, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: WaterSlime
+    profile: {fileID: 11400000, guid: 219592d24747077438ed6aacbdd9a776, type: 2}
+    attackProfile: {fileID: 11400000, guid: dc55df079e0e4844a51ddf79e2849dea, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: EvilEnt
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LeafSlime
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveEvilEnt
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveVineWitch
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: SeedSpirit
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: TreeGolem
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: VineSpirit
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WillOWisp
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ElectricSlime
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LightningTadpole
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveLightningTadpole
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: StormRider
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: StormStag
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ThunderBird
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ThunderSpirit
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ZapMouse
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: DimensionToad
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveDimensionToad
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockGolem
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockMage
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockSlime
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: MiniRock
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WallGolem
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: CloudDragon
+    profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
+    attackProfile: {fileID: 11400000, guid: dc55df079e0e4844a51ddf79e2849dea, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WindSlime
+    profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WindSpirit
+    profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: BombSprite
+    profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: GiantVine
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LifeTree
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveNatureSlimeNest
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveVineColony
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveWaterSlimeNest
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: SeedNest
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: Vine
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: VineColony
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: Crater
+    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: FireworkTower
+    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
+    attackProfile: {fileID: 11400000, guid: 73d858f41f14446ba1a3037a0b6f8838, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: GroundCannon
+    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
+    attackProfile: {fileID: 11400000, guid: 73d858f41f14446ba1a3037a0b6f8838, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: GroundTower
+    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
+    attackProfile: {fileID: 11400000, guid: 73d858f41f14446ba1a3037a0b6f8838, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockTurret
+    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
+    attackProfile: {fileID: 11400000, guid: 73d858f41f14446ba1a3037a0b6f8838, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: Towerback
+    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
+    attackProfile: {fileID: 11400000, guid: 73d858f41f14446ba1a3037a0b6f8838, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: DragonTower
+    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
+    attackProfile: {fileID: 11400000, guid: 73d858f41f14446ba1a3037a0b6f8838, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: TitanRemnant
+    profile: {fileID: 11400000, guid: ffa686dfe2b460941ae1852510f8aada, type: 2}
+    attackProfile: {fileID: 11400000, guid: 73d858f41f14446ba1a3037a0b6f8838, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: BubbleGenerator
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 11400000, guid: dc55df079e0e4844a51ddf79e2849dea, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ElectricTower
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 11400000, guid: 73d858f41f14446ba1a3037a0b6f8838, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: FireRune
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: FrenzyTotem
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: HealingTotem
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LightningRune
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ManaWell
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: NatureRune
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RallyingTotem
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockRune
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WaterRune
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WindRune
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WindTotem
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: GrassGenerator
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RepairTotem
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ShockTrap
+    profile: {fileID: 11400000, guid: 576fb59254718684193a46c59d8db75a, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: CraterEmber
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ElectricField
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: FireDrop
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: FireField
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LeafField
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: Leafair
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LightningDrop
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 1
+  - runtimeType: MeteorDrop
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: MeteorShower
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: NatureDrop
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: Overgrowth
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RainCloud
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RazorGale
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockDrop
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockRemnant
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockRolling
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: SandStorm
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: TornadoStrike
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WaterField
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WindDrop
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LightningCloud
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: MediumRockRemnant
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: EarthCall
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: BoulderStrike
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: TitanFist
+    profile: {fileID: 11400000, guid: 3df609b4fdb630e49ba7e27f7d96d03c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ChainLightning
+    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: TideCall
+    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WindBlade
+    profile: {fileID: 11400000, guid: cbed0e485f9f48ce92cfd23220fc97a4, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ElectricShot
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: FireShot
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LeafShot
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WaterShot
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: MagmaFist
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: DragonFlame
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: BombSpriteBomb
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: GroundTidalWarhead
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: TidalWarhead
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ElectricExplode
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: FireExplode
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: FireworkShell
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: LeafExplode
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: MagmaExplosion
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: RockExplode
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ShockOverload
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WaterExplode
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WaterExplosion
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: WindExplode
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: BombSpriteExplosion
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: TidalWarheadExplosion
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: ServedObjectHpBar
+    profile: {fileID: 0}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 1
+    serverAlias: 0
+  - runtimeType: ElectricSummon
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 1
+  - runtimeType: FireSummon
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 1
+  - runtimeType: RockSummon
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 1
+  - runtimeType: WindSummon
+    profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 1
+  - runtimeType: ElectricAbsorb
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 1

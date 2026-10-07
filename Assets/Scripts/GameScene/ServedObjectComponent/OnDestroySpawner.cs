@@ -1,4 +1,6 @@
 using UnityEngine;
+using GameScene.ServedObjectComponent.Sound;
+using Sound.Config;
 
 namespace GameScene.ServedObjectComponent
 {
@@ -6,6 +8,8 @@ namespace GameScene.ServedObjectComponent
     {
         
         public GameObject prefab;
+        [SerializeField] private ObjectSfxProfile spawnSfxProfile;
+        public ObjectSfxProfile SpawnSfxProfile => spawnSfxProfile;
         public bool SuppressPresentation { get; set; }
 
         private void OnDestroy()
@@ -14,7 +18,11 @@ namespace GameScene.ServedObjectComponent
             {
                 var world = GameScene.Object.PresentationWorld.For(this);
                 if (world != null) world.SpawnEffect(prefab, transform.position, Quaternion.identity);
-                else Instantiate(prefab, transform.position, Quaternion.identity);
+                else
+                {
+                    GameObject effect = Instantiate(prefab, transform.position, Quaternion.identity);
+                    if (effect != null) ServedObjectSfxController.PlaySpawn(spawnSfxProfile);
+                }
             }
         }
     }
