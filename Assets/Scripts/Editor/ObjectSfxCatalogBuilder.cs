@@ -25,7 +25,14 @@ public static class ObjectSfxCatalogBuilder
         new("ArcaneDevice", ObjectSfxElement.Neutral, ObjectSfxArchetype.Building),
         new("TransientLegacy", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
         new("TransientShot", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
-        new("TransientExplode", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell)
+        new("TransientExplode", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
+        new("UnitShot", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
+        new("CosmeticImpact", ObjectSfxElement.Neutral, ObjectSfxArchetype.TransientSpell),
+        new("WaterLaunch", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
+        new("FireLaunch", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
+        new("SmallAttack", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
+        new("SwingAttack", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
+        new("TowerAttack", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature)
     };
 
     private static readonly CatalogGroup[] CatalogGroups =
@@ -42,39 +49,57 @@ public static class ObjectSfxCatalogBuilder
             "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "StormRider",
             "StormStag", "ThunderBird", "ThunderSpirit", "ZapMouse"),
         new("RockCreature",
-            "DimensionToad", "PveDimensionToad", "RockGolem", "RockMage", "RockSlime"),
-        new("WindCreature", "CloudDragon", "WindSlime", "WindSpirit"),
+            "DimensionToad", "PveDimensionToad", "RockGolem", "RockMage", "RockSlime", "MiniRock", "WallGolem"),
+        new("WindCreature", "CloudDragon", "WindSlime", "WindSpirit", "BombSprite"),
         new("OrganicBuilding",
             "GiantVine", "LifeTree", "PveNatureSlimeNest", "PveVineColony",
             "PveWaterSlimeNest", "SeedNest", "Vine", "VineColony"),
         new("StoneBuilding",
-            "Crater", "FireworkTower", "GroundCannon", "GroundTower", "RockTurret"),
+            "Crater", "FireworkTower", "GroundCannon", "GroundTower", "RockTurret",
+            "Towerback", "DragonTower", "TitanRemnant"),
         new("ArcaneDevice",
             "BubbleGenerator", "ElectricTower", "FireRune", "FrenzyTotem",
             "HealingTotem", "LightningRune", "ManaWell", "NatureRune",
-            "RallyingTotem", "RockRune", "WaterRune", "WindRune", "WindTotem"),
-        // Fields and falls stay silent by concept-doc rule; only the release and
-        // the impact are audible, and each is one shared sound for every element.
+            "RallyingTotem", "RockRune", "WaterRune", "WindRune", "WindTotem",
+            "GrassGenerator", "RepairTotem", "ShockTrap"),
+        // Fields and falls remain silent. Unit launches belong to the attacker;
+        // standalone spell releases and impacts retain their own spawn profiles.
         new("TransientLegacy",
             "CraterEmber", "ElectricField", "FireDrop", "FireField", "LeafField",
-            "Leafair", "LightningDrop", "MeteorDrop", "MeteorShower", "MiniRock",
+            "Leafair", "LightningDrop", "MeteorDrop", "MeteorShower",
             "NatureDrop", "Overgrowth", "RainCloud", "RazorGale", "RockDrop",
             "RockRemnant", "RockRolling", "SandStorm", "TornadoStrike", "WaterField",
-            "WindDrop"),
+            "WindDrop", "LightningCloud", "MediumRockRemnant", "EarthCall",
+            "BoulderStrike", "TitanFist"),
         new("TransientShot",
-            "ChainLightning", "ElectricShot", "FireShot", "LeafShot", "MagmaFist",
-            "TideCall", "WaterShot", "WindBlade"),
+            "ChainLightning", "TideCall", "WindBlade"),
+        new("UnitShot", "ElectricShot", "FireShot", "LeafShot", "WaterShot",
+            "MagmaFist", "DragonFlame", "BombSpriteBomb", "GroundTidalWarhead", "TidalWarhead"),
         new("TransientExplode",
             "ElectricExplode", "FireExplode", "FireworkShell", "LeafExplode",
             "MagmaExplosion", "RockExplode", "ShockOverload", "WaterExplode",
-            "WaterExplosion", "WindExplode")
+            "WaterExplosion", "WindExplode", "BombSpriteExplosion", "TidalWarheadExplosion")
     };
 
     private static readonly string[] IntentionalSilentRuntimeTypes =
     {
         "ServedObjectHpBar",
-        "Towerback",
         "RockObstacle"
+    };
+
+    // Defaults follow server attack implementations and database size tags.
+    private static readonly CatalogGroup[] AttackGroups =
+    {
+        new("TowerAttack", "GroundCannon", "GroundTower", "RockTurret", "ElectricTower", "FireworkTower", "DragonTower", "Towerback", "TitanRemnant"),
+        new("WaterLaunch", "AquaArcher", "WaterSlime", "BubbleSpirit", "CloudDragon", "BubbleGenerator"),
+        new("FireLaunch", "FireChildSpirit", "FireSpirit"),
+        new("SmallAttack", "ChickenCommando", "EmberSpirit", "FireSlime", "FireTadpole", "PveFireTadpole", "LeafSlime", "SeedSpirit", "VineSpirit", "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "ThunderBird", "ThunderSpirit", "ZapMouse", "RockMage", "RockSlime", "MiniRock", "WindSlime", "WindSpirit", "BombSprite"),
+        new("SwingAttack", "SeaSerpent", "TreeGolem", "EvilEnt", "PveEvilEnt", "PveVineWitch", "StormRider", "StormStag", "RockGolem", "WallGolem", "MagmaSpirit"),
+    };
+
+    private static readonly string[] ServerAliases =
+    {
+        "ElectricSummon", "FireSummon", "RockSummon", "WindSummon", "ElectricAbsorb", "LightningDrop"
     };
 
     [MenuItem("Tools/Sound/Create or Update Baseline Object SFX Catalog")]
@@ -91,6 +116,19 @@ public static class ObjectSfxCatalogBuilder
             AssetDatabase.CreateAsset(catalog, CatalogPath);
         }
 
+        // Keep Inspector tuning, including disabled overrides, when rebuilding.
+        var existingAttacks = new Dictionary<string, ObjectSfxProfile>(StringComparer.Ordinal);
+        var existingAliases = new HashSet<string>(StringComparer.Ordinal);
+        foreach (ObjectSfxCatalogEntry row in catalog.Entries)
+        {
+            if (row.AttackProfile != null) existingAttacks[row.RuntimeType] = row.AttackProfile;
+            if (row.ServerAlias) existingAliases.Add(row.RuntimeType);
+        }
+        var defaultAttacks = new Dictionary<string, ObjectSfxProfile>(StringComparer.Ordinal);
+        foreach (CatalogGroup group in AttackGroups)
+            foreach (string runtimeType in group.RuntimeTypes)
+                defaultAttacks.Add(runtimeType, profiles[group.ProfileId]);
+
         SerializedObject serializedCatalog = new(catalog);
         SerializedProperty entries = serializedCatalog.FindProperty("entries");
         int entryCount = CountRuntimeTypes();
@@ -105,13 +143,23 @@ public static class ObjectSfxCatalogBuilder
                     entries.GetArrayElementAtIndex(index++),
                     runtimeType,
                     profiles[group.ProfileId],
-                    false);
+                    false,
+                    existingAttacks.TryGetValue(runtimeType, out var attack) ? attack :
+                        defaultAttacks.TryGetValue(runtimeType, out var baseline) ? baseline : null,
+                    existingAliases.Contains(runtimeType) || Array.IndexOf(ServerAliases, runtimeType) >= 0);
             }
         }
 
         foreach (string runtimeType in IntentionalSilentRuntimeTypes)
         {
             WriteEntry(entries.GetArrayElementAtIndex(index++), runtimeType, null, true);
+        }
+
+        foreach (string runtimeType in ServerAliases)
+        {
+            if (runtimeType == "LightningDrop") continue; // Already in TransientLegacy.
+            ObjectSfxProfile aliasProfile = profiles[runtimeType == "ElectricAbsorb" ? "UnitShot" : "OrganicBuilding"];
+            WriteEntry(entries.GetArrayElementAtIndex(index++), runtimeType, aliasProfile, false, null, true);
         }
 
         serializedCatalog.ApplyModifiedPropertiesWithoutUndo();
@@ -159,17 +207,20 @@ public static class ObjectSfxCatalogBuilder
         SerializedProperty entry,
         string runtimeType,
         ObjectSfxProfile profile,
-        bool intentionalSilent)
+        bool intentionalSilent,
+        ObjectSfxProfile attackProfile = null,
+        bool serverAlias = false)
     {
         entry.FindPropertyRelative("runtimeType").stringValue = runtimeType;
         entry.FindPropertyRelative("profile").objectReferenceValue = profile;
+        entry.FindPropertyRelative("attackProfile").objectReferenceValue = attackProfile;
         entry.FindPropertyRelative("intentionalSilent").boolValue = intentionalSilent;
-        entry.FindPropertyRelative("serverAlias").boolValue = false;
+        entry.FindPropertyRelative("serverAlias").boolValue = serverAlias;
     }
 
     private static int CountRuntimeTypes()
     {
-        int count = IntentionalSilentRuntimeTypes.Length;
+        int count = IntentionalSilentRuntimeTypes.Length + ServerAliases.Length - 1;
         foreach (CatalogGroup group in CatalogGroups)
         {
             count += group.RuntimeTypes.Length;
