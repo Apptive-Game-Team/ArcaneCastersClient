@@ -59,6 +59,7 @@ namespace LobbyScene
             // A recovered session is never an adventure match; guarantee the forest default
             // in case a previous adventure match left a theme set.
             SceneContext.ClearAdventureMatch();
+            SceneContext.PrepareMap(matchedInfoDto.mapType, null);
             yield return GameDataRefresh.Refresh();
             SceneManager.LoadScene("GameScene");
         }
