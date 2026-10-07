@@ -343,3 +343,23 @@ without its own field in that skip list loads, renders in the Editor, and is gon
 the first time the map draws. The end-of-adventure chest lives there for that
 reason as `endOfRoadSlot`; anything else that has to sit on the road needs the
 same treatment.
+
+## A flat ground tile keeps its `SpriteRenderer` on the prefab root
+
+`RiverWater` and `RiverBridge` lie flat on the ground (root rotated 90 degrees
+about X). `ObjectSpawner` calls `PopupBookVisualPresenter.Attach`, which wraps
+the sprite returned by `ServedObject.GetActualTransform()` in a pivot and, in
+`LateUpdate`, rotates it to the camera. When that sprite is a child of the root,
+the tile stands up and plays a spawn tilt. When the `SpriteRenderer` sits on the
+root, `Attach` returns early and the tile stays flat. Extra renderers (the
+bridge planks) may be children; `GetComponentInChildren` still finds the root's
+renderer first.
+
+The ground is the opaque `PopupBookGround` plane at `y = 0`, and the server sends
+`y = 0`, so a flat sprite at the same height flickers against it. `GroundDecalLift`
+raises the tile by 0.02 in `Start`.
+
+No plain white square sprite exists in `Assets` outside an `Editor` folder
+(`FlatTile.png` is rounded with a dark border). `Assets/Art/Images/Obstacle/RiverTile.png`
+is a 4 x 4 white image at 4 pixels per unit, so one sprite is exactly 1 x 1 world
+unit; tint it with `m_Color`.

@@ -1,5 +1,6 @@
 using Data.GameConfig;
 using Data.Magic;
+using GameScene.Dto;
 using GameScene.Object;
 using GameScene.ServedObjectComponent;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace GameScene
     /// <summary>
     /// 유닛과 건물을 놓을 자리가 땅 위의 다른 몸과 겹치는지 미리 보고, 겹치면 가까운 빈자리를 찾는다.
     /// 서버 CastPlacement 와 같은 기준이다. 상수와 탐색 순서를 서버와 한 글자도 다르게 두면 안 된다.
-    /// HP 가 있는 땅 위 몸만 장애물이고, 공중(높이 2 이상)에 뜬 몸은 겹쳐도 된다.
+    /// HP 가 있는 땅 위 몸과 <see cref="GroundBlockingCell"/> 을 단 강 맵의 물 칸만 장애물이고, 공중(높이 2 이상)에 뜬 몸은 겹쳐도 된다.
     /// 공중에 나타나는 소환(object parameter <c>spawn_height</c> 가 2 이상)은 막히지도 비켜 나지도 않는다.
     /// </summary>
     public static class PlacementPreview
@@ -123,7 +124,25 @@ namespace GameScene
 
             foreach (ServedObject other in container.Values)
             {
-                if (other == null || !IsGroundBody(other, out float otherRadius))
+                if (other == null)
+                {
+                    continue;
+                }
+
+                // 강 맵의 물 칸은 정사각형이라 몸 중심 거리가 아니라 칸의 가장 가까운 점까지 거리로 막는다.
+                if (other.TryGetComponent(out GroundBlockingCell cell))
+                {
+                    Vector3 center = other.transform.position;
+                    if (PlacementSquareRule.Blocks(
+                            groundPoint.x, groundPoint.z, center.x, center.z, cell.HalfSize, radius))
+                    {
+                        return true;
+                    }
+
+                    continue;
+                }
+
+                if (!IsGroundBody(other, out float otherRadius))
                 {
                     continue;
                 }
