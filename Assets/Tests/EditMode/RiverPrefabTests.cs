@@ -1,4 +1,4 @@
-using System.Linq;
+using GameScene.Dto;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -12,17 +12,15 @@ namespace WordOnline.Tests
     public class RiverPrefabTests
     {
         [Test]
-        public void WaterPrefabCutsItsCellFromTheWaterStripAndHasBlockingCell()
+        public void WaterPrefabHasLogicComponentsAndNoArtOfItsOwn()
         {
             GameObject prefab = Resources.Load<GameObject>("Prefabs/RiverWater");
             Assert.IsNotNull(prefab, "Resources/Prefabs/RiverWater.prefab must be loadable.");
 
-            SpriteRenderer renderer = prefab.GetComponent<SpriteRenderer>();
-            Assert.IsNotNull(renderer);
-            Assert.Less(renderer.sortingOrder, 0);
+            AssertNoArt(prefab);
             Assert.IsNotNull(FindByTypeName(prefab, "ServedObject"));
             Assert.IsNotNull(FindByTypeName(prefab, "GroundDecalLift"));
-            AssertStripArt(FindByTypeName(prefab, "RiverCellArt"), renderer);
+            Assert.IsNotNull(FindByTypeName(prefab, "RiverOverlayMember"));
 
             MonoBehaviour cell = FindByTypeName(prefab, "GroundBlockingCell");
             Assert.IsNotNull(cell, "RiverWater must carry GroundBlockingCell.");
@@ -30,48 +28,54 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void BridgePrefabHasWaterCellAndDeckAboveItButNoBlockingCell()
+        public void BridgePrefabHasLogicComponentsButNoBlockingCellAndNoArt()
         {
             GameObject prefab = Resources.Load<GameObject>("Prefabs/RiverBridge");
             Assert.IsNotNull(prefab, "Resources/Prefabs/RiverBridge.prefab must be loadable.");
 
-            SpriteRenderer water = prefab.GetComponent<SpriteRenderer>();
-            Assert.IsNotNull(water);
-            Assert.Less(water.sortingOrder, 0);
+            AssertNoArt(prefab);
             Assert.IsNotNull(FindByTypeName(prefab, "ServedObject"));
+            Assert.IsNotNull(FindByTypeName(prefab, "RiverOverlayMember"));
             Assert.IsNull(FindByTypeName(prefab, "GroundBlockingCell"), "A bridge must not block summons.");
-
-            MonoBehaviour[] arts = prefab.GetComponentsInChildren<MonoBehaviour>()
-                .Where(behaviour => behaviour != null && behaviour.GetType().Name == "RiverCellArt").ToArray();
-            Assert.AreEqual(2, arts.Length, "RiverBridge needs one art component for the water and one for the deck.");
-
-            SpriteRenderer[] renderers = prefab.GetComponentsInChildren<SpriteRenderer>();
-            Assert.AreEqual(2, renderers.Length);
-            foreach (SpriteRenderer renderer in renderers)
-            {
-                Assert.Less(renderer.sortingOrder, 0, "River art must stay below units.");
-                if (renderer != water)
-                {
-                    Assert.Greater(renderer.sortingOrder, water.sortingOrder, "The deck must draw above the water.");
-                }
-            }
-
-            foreach (MonoBehaviour art in arts)
-            {
-                AssertStripArt(art, art.GetComponent<SpriteRenderer>());
-            }
         }
 
-        private static void AssertStripArt(MonoBehaviour art, SpriteRenderer expectedTarget)
+        [Test]
+        public void OverlayPrefabHoldsTheWaterAndBridgeSpritesAtTheLayoutScale()
         {
-            Assert.IsNotNull(art, "The prefab must carry RiverCellArt.");
-            var serialized = new UnityEditor.SerializedObject(art);
-            Assert.AreSame(expectedTarget, serialized.FindProperty("target").objectReferenceValue);
-            Sprite strip = serialized.FindProperty("strip").objectReferenceValue as Sprite;
-            Assert.IsNotNull(strip, "RiverCellArt needs its strip sprite.");
-            // The strip is 2 columns by 10 rows of cells, one cell being pixelsPerUnit pixels wide.
-            Assert.AreEqual(2f, strip.bounds.size.x, 0.0001f);
-            Assert.AreEqual(10f, strip.bounds.size.y, 0.0001f);
+            GameObject prefab = Resources.Load<GameObject>("Prefabs/RiverOverlay");
+            Assert.IsNotNull(prefab, "Resources/Prefabs/RiverOverlay.prefab must be loadable.");
+
+            MonoBehaviour overlay = FindByTypeName(prefab, "RiverOverlay");
+            Assert.IsNotNull(overlay);
+            var serialized = new UnityEditor.SerializedObject(overlay);
+
+            Sprite water = serialized.FindProperty("waterSprite").objectReferenceValue as Sprite;
+            Assert.IsNotNull(water, "RiverOverlay needs its water sprite.");
+            Assert.AreEqual(RiverOverlayLayout.WaterWidth, water.bounds.size.x, 0.0001f);
+            Assert.AreEqual(RiverOverlayLayout.WaterDepth, water.bounds.size.y, 0.0001f);
+            // 물 sprite 의 pivot 은 왼쪽 아래라서 bounds 가 (0, 0) 에서 시작한다.
+            Assert.AreEqual(0f, water.bounds.min.x, 0.0001f);
+            Assert.AreEqual(0f, water.bounds.min.y, 0.0001f);
+
+            Sprite bridge = serialized.FindProperty("bridgeSprite").objectReferenceValue as Sprite;
+            Assert.IsNotNull(bridge, "RiverOverlay needs its bridge sprite.");
+            Assert.AreEqual(RiverOverlayLayout.BridgeSize, bridge.bounds.size.x, 0.0001f);
+            Assert.AreEqual(RiverOverlayLayout.BridgeSize, bridge.bounds.size.y, 0.0001f);
+            // 다리 sprite 의 pivot 은 가운데라서 bounds 가 0 을 가운데에 둔다.
+            Assert.AreEqual(0f, bridge.bounds.center.x, 0.0001f);
+            Assert.AreEqual(0f, bridge.bounds.center.y, 0.0001f);
+        }
+
+        /// <summary>
+        /// 그림은 overlay 가 그린다. prefab 의 SpriteRenderer 는 ServedObject 와 PopupBookVisualPresenter 가
+        /// 찾을 수 있게 root 에 남기되 sprite 는 비워 둔다. 자식 renderer 가 있으면 root 가 아닌 곳이 선택될 수 있다.
+        /// </summary>
+        private static void AssertNoArt(GameObject prefab)
+        {
+            SpriteRenderer[] renderers = prefab.GetComponentsInChildren<SpriteRenderer>(true);
+            Assert.AreEqual(1, renderers.Length, "Only the root SpriteRenderer may remain.");
+            Assert.AreSame(prefab.GetComponent<SpriteRenderer>(), renderers[0]);
+            Assert.IsNull(renderers[0].sprite, "The prefab must not draw the old strips.");
         }
 
         private static MonoBehaviour FindByTypeName(GameObject prefab, string typeName)
