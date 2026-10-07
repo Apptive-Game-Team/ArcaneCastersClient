@@ -357,7 +357,11 @@ renderer first.
 
 The ground is the opaque `PopupBookGround` plane at `y = 0`, and the server sends
 `y = 0`, so a flat sprite at the same height flickers against it. `GroundDecalLift`
-raises the tile by 0.02 in `Start`.
+keeps the tile at least 0.02 above the ground in `LateUpdate`. Raising it once in
+`Start` was not enough: right after creating an object the server sends a position
+update with `y = 0`, and `PositionUpdater` tweens the transform to it, which erases a
+height set earlier. Anything laid flat on the ground has to restore its height after
+`PositionUpdater` has run.
 
 The river art is two strip images, not per-cell sprites: `RiverWaterStrip.png`
 (water, sand shore, opaque) and `RiverBridgeStrip.png` (two plank bridges on a
