@@ -359,7 +359,15 @@ The ground is the opaque `PopupBookGround` plane at `y = 0`, and the server send
 `y = 0`, so a flat sprite at the same height flickers against it. `GroundDecalLift`
 raises the tile by 0.02 in `Start`.
 
-No plain white square sprite exists in `Assets` outside an `Editor` folder
-(`FlatTile.png` is rounded with a dark border). `Assets/Art/Images/Obstacle/RiverTile.png`
-is a 4 x 4 white image at 4 pixels per unit, so one sprite is exactly 1 x 1 world
-unit; tint it with `m_Color`.
+The river art is two strip images, not per-cell sprites: `RiverWaterStrip.png`
+(water, sand shore, opaque) and `RiverBridgeStrip.png` (two plank bridges on a
+transparent background), both 512 x 2560 at 256 pixels per unit, so they are 2 x 10
+world units, the river band exactly (columns 8 and 9, rows 0 to 9). `RiverCellArt`
+reads the cell from the spawn position and builds a 1 x 1 sprite from the strip at
+runtime, so the prefab's `SpriteRenderer.m_Sprite` is empty on purpose. When the
+server changes the river layout, the strips and the row numbers they were painted
+for must change with it. The strip was assembled by `.art/tools/compose-river-strips.py` from two generated images: a water segment tile (mirrored to fill the
+height) and one bridge pasted at rows 1 to 3 and 6 to 8. An image generator does not
+hit pixel positions by itself, so paste generated parts at computed positions and
+draw the logic grid over the result to check it, instead of asking for the whole
+strip in one image.

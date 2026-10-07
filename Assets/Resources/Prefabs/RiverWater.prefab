@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4410000000000000004}
   - component: {fileID: 4410000000000000005}
   - component: {fileID: 4410000000000000006}
+  - component: {fileID: 4410000000000000007}
   m_Layer: 0
   m_Name: RiverWater
   m_TagString: Untagged
@@ -76,15 +77,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -2
-  m_Sprite: {fileID: 21300000, guid: cf3540fad5394faf8a3c6e57dc625ca8, type: 3}
-  m_Color: {r: 0.25, g: 0.55, b: 0.9, a: 1}
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &4410000000000000004
@@ -129,3 +130,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   height: 0.02
+--- !u!114 &4410000000000000007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4410000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38419bd62a3a44099f1062e189f7d6f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 4410000000000000003}
+  strip: {fileID: 21300000, guid: 8a5418090505473b86fa45de0ddb3d64, type: 3}
