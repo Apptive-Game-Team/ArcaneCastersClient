@@ -409,6 +409,10 @@ MonoBehaviour:
     profile: {fileID: 0}
     intentionalSilent: 1
     serverAlias: 0
+  - runtimeType: RockObstacle
+    profile: {fileID: 0}
+    intentionalSilent: 1
+    serverAlias: 0
   - runtimeType: GiantVine
     profile: {fileID: 11400000, guid: 54e67cfea3ea3664c9abdd3895c28fa5, type: 2}
     intentionalSilent: 0

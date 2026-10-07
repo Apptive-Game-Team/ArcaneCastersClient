@@ -1,5 +1,6 @@
 using Data.GameConfig;
 using Data.Magic;
+using GameScene.Dto;
 using GameScene.Object;
 using GameScene.ServedObjectComponent;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace GameScene
     /// <summary>
     /// 유닛과 건물을 놓을 자리가 땅 위의 다른 몸과 겹치는지 미리 보고, 겹치면 가까운 빈자리를 찾는다.
     /// 서버 CastPlacement 와 같은 기준이다. 상수와 탐색 순서를 서버와 한 글자도 다르게 두면 안 된다.
-    /// HP 가 있는 땅 위 몸만 장애물이고, 공중(높이 2 이상)에 뜬 몸은 겹쳐도 된다.
+    /// HP 가 있는 땅 위 몸과 <see cref="PlacementObstacle"/> 를 단 고정 바위만 장애물이고, 공중(높이 2 이상)에 뜬 몸은 겹쳐도 된다.
     /// 공중에 나타나는 소환(object parameter <c>spawn_height</c> 가 2 이상)은 막히지도 비켜 나지도 않는다.
     /// </summary>
     public static class PlacementPreview
@@ -19,7 +20,7 @@ namespace GameScene
         private const string HpGaugeCategory = "HP";
 
         /// <summary>두 몸의 반지름 합에 곱하는 비율. 0.6 이면 몸이 살짝 겹치는 자리까지 놓을 수 있다.</summary>
-        public const float PlacementOverlapRatio = 0.6f;
+        public const float PlacementOverlapRatio = PlacementOverlapRule.OverlapRatio;
 
         // 서버 MagicInputHandler 의 MAP_MIN_X / MAP_MAX_X / MAP_MIN_Z / MAP_MAX_Z 와 같은 값이다.
         // 이 밖의 자리는 서버가 시전을 거절하므로 빈자리 후보에서 뺀다.
@@ -128,7 +129,7 @@ namespace GameScene
                     continue;
                 }
 
-                if (GroundDistance(groundPoint, other.transform.position) < (otherRadius + radius) * PlacementOverlapRatio)
+                if (PlacementOverlapRule.Overlaps(GroundDistance(groundPoint, other.transform.position), otherRadius, radius))
                 {
                     return true;
                 }
@@ -155,6 +156,13 @@ namespace GameScene
             if (other.transform.position.y >= AerialStandardHeight)
             {
                 return false;
+            }
+
+            // 고정 바위 장애물은 HP 도 Collider gizmo 도 없으므로 prefab 에 실린 반지름을 쓴다.
+            if (other.TryGetComponent(out PlacementObstacle obstacle))
+            {
+                radius = obstacle.Radius;
+                return radius > 0f;
             }
 
             bool hasHp = false;

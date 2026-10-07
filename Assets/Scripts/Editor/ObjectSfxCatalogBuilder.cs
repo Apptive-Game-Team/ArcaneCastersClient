@@ -73,7 +73,8 @@ public static class ObjectSfxCatalogBuilder
     private static readonly string[] IntentionalSilentRuntimeTypes =
     {
         "ServedObjectHpBar",
-        "Towerback"
+        "Towerback",
+        "RockObstacle"
     };
 
     [MenuItem("Tools/Sound/Create or Update Baseline Object SFX Catalog")]
