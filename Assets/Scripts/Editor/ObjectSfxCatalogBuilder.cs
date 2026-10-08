@@ -85,7 +85,8 @@ public static class ObjectSfxCatalogBuilder
     {
         "ServedObjectHpBar",
         "RiverWater",
-        "RiverBridge"
+        "RiverBridge",
+        "RiverOverlay"
     };
 
     // Defaults follow server attack implementations and database size tags.
