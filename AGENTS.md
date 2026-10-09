@@ -140,6 +140,7 @@ Before adding, assigning or removing gameplay sounds, read
 
 Before changing magic preview playback or registrations, read
 `.agents/docs/magic-preview.md` for damage-status and recording validation traps.
+Before changing preview loading or caches, read `.agents/docs/server-magic-previews.md`.
 `DEV_BUILD` controls development server routing for WebGL builds. Avoid editing generated Unity metadata by hand unless the change is intentional, and keep `ProjectSettings/ProjectVersion.txt` in sync with the Unity version used for the change.
 
 ## Versioning

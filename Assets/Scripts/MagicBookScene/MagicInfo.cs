@@ -38,9 +38,18 @@ namespace MagicBookScene
 
         private readonly List<GameObject> spawned = new();
         private int initVersion;
+        private CombinedMagicData currentMagic;
+
+        private void OnEnable() => MagicPreviewDataSource.Changed += PreviewChanged;
+        private void OnDisable() { MagicPreviewDataSource.Changed -= PreviewChanged; initVersion++; }
+        private void PreviewChanged(string name)
+        {
+            if (currentMagic != null && (name == null || name == currentMagic.serverName)) Init(currentMagic);
+        }
 
         public async void Init(CombinedMagicData data)
         {
+            currentMagic = data;
             int version = ++initVersion;
             // Stop the previous replay as soon as selection changes, even while text loads.
             foreach (GameObject spawnedObject in spawned)
