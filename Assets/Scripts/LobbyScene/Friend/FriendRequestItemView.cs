@@ -1,14 +1,19 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace LobbyScene
 {
+    /// <summary>
+    /// One row of the requests tab (<c>Assets/Prefabs/UI/Lobby/Friend/FriendRequestRow.prefab</c>).
+    /// A received request shows accept and reject; a sent request shows cancel.
+    /// </summary>
     public class FriendRequestItemView : MonoBehaviour
     {
+        private static readonly Color InkColor = new Color32(0x1C, 0x1A, 0x2B, 0xFF);
+        private static readonly Color SlateTextColor = new Color32(0x5B, 0x62, 0x75, 0xFF);
+
         [SerializeField] private TMP_Text nameText;
-        [SerializeField] private TMP_Text timeText;
         [SerializeField] private UnityEngine.UI.Button acceptButton;
         [SerializeField] private UnityEngine.UI.Button rejectButton;
         [SerializeField] private UnityEngine.UI.Button cancelButton;
@@ -55,19 +60,8 @@ namespace LobbyScene
             onRejectClicked = onReject;
             onCancelClicked = null;
 
-            if (nameText != null)
-            {
-                nameText.text = request.senderName ?? "알 수 없음";
-            }
-
-            if (timeText != null)
-            {
-                timeText.text = FormatTime(request.createdAt);
-            }
-
-            if (acceptButton != null) acceptButton.gameObject.SetActive(true);
-            if (rejectButton != null) rejectButton.gameObject.SetActive(true);
-            if (cancelButton != null) cancelButton.gameObject.SetActive(false);
+            SetName($"{request.senderName} 님의 친구 요청", InkColor);
+            SetButtons(received: true);
         }
 
         public void BindSent(
@@ -79,29 +73,22 @@ namespace LobbyScene
             onRejectClicked = null;
             onCancelClicked = onCancel;
 
-            if (nameText != null)
-            {
-                nameText.text = request.receiverName ?? "알 수 없음";
-            }
-
-            if (timeText != null)
-            {
-                timeText.text = FormatTime(request.createdAt);
-            }
-
-            if (acceptButton != null) acceptButton.gameObject.SetActive(false);
-            if (rejectButton != null) rejectButton.gameObject.SetActive(false);
-            if (cancelButton != null) cancelButton.gameObject.SetActive(true);
+            SetName($"{request.receiverName} 님에게 보낸 요청 (대기중)", SlateTextColor);
+            SetButtons(received: false);
         }
 
-        private static string FormatTime(string isoTime)
+        private void SetName(string text, Color color)
         {
-            if (string.IsNullOrEmpty(isoTime)) return string.Empty;
-            if (DateTime.TryParse(isoTime, out DateTime parsed))
-            {
-                return parsed.ToLocalTime().ToString("yyyy-MM-dd HH:mm");
-            }
-            return isoTime;
+            if (nameText == null) return;
+            nameText.text = text;
+            nameText.color = color;
+        }
+
+        private void SetButtons(bool received)
+        {
+            if (acceptButton != null) acceptButton.gameObject.SetActive(received);
+            if (rejectButton != null) rejectButton.gameObject.SetActive(received);
+            if (cancelButton != null) cancelButton.gameObject.SetActive(!received);
         }
     }
 }

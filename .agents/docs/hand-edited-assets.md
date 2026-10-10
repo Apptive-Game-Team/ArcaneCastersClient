@@ -397,3 +397,76 @@ result (mock: `docs/pr-media/261/river-mock-64ppu-logical-guides.png`, ground te
 resampled to 64 pixels per unit, one background texture covering 20 units) before
 accepting. The `.meta` files set sprite single, 256 pixels per unit, `maxTextureSize`
 4096 (the 2560 pixel height must not shrink), no mipmaps.
+
+## Changing a CanvasScaler reference resolution
+
+Issue #269: `LobbyScene.unity` had a canvas at 800x450 while every other canvas is
+1920x1080, so the lobby drew 2.4 times larger than the rest. Changing
+`m_ReferenceResolution` alone makes the whole canvas 2.4 times smaller, so every
+child must be multiplied by 2.4 too. Several things hide from a plain multiply:
+
+1. A `PrefabInstance` stores its geometry as `m_Modifications`
+   (`m_SizeDelta.x`, `m_fontSize`, `m_margin.x` ...). Scale those values, and add a
+   modification for every value the prefab supplies that was never overridden
+   (`Button Variant` text: `m_fontSizeMin` 9, `m_fontSizeMax` 15, margin 10/2/10/5).
+   Otherwise the autosize range and margins stay at the old scale.
+2. A `Sliced` image keeps its border in sprite pixels, so after a 2.4 times larger
+   canvas the border looks 2.4 times thinner. Divide `m_PixelsPerUnitMultiplier` by the factor.
+3. Scripts that build UI at runtime hard-code pixel sizes for the canvas they were
+   written against (`FriendBootstrap` friend modal 760x560, moved into
+   `Assets/Prefabs/UI/Lobby/Friend/FriendModal.prefab` by #309;
+   `LobbyUIController` reward popup 430x230). Serialized script fields in canvas
+   units hide the same way: `BattleHoverPresenter.bounceHeight` (12, now 28.8) is a
+   plain float that no RectTransform search finds. Grep `sizeDelta` and `anchoredPosition`
+   in `Assets/Scripts` before changing a canvas, and list what you could not rescale.
+4. Do not shrink the battle HUD's hand bar by editing YAML. `GameScene`
+   `BarController.MoveBar` moves the `Bars` rect between the literal y values 540
+   and 240, which assume the old bar height, and `LowerBar` and `ManaBar` stretch
+   across the screen width. #297 scaled `LowerBar`, `ManaBar` and `Timer` by
+   `m_LocalScale` 0.75 and changed their `m_SizeDelta` and grid padding; the
+   developer opened it in the Editor and the hand bar was broken, and the mana bar
+   floated about 150 above the hand. The `GameScene.unity` change was reverted.
+   Resizing the HUD needs the two `MoveBar` positions redesigned with it and a check
+   in the Editor. `CardImage.prefab` (the hand card) is also used by
+   `SpectatingScene` and `InteractiveTutorialScene` and has fixed-size children, so
+   do not edit the prefab or the grid cell size for this either.
+5. A GameObject the scene adds under a prefab instance is a normal document whose
+   `m_Father` is a `stripped` RectTransform. A rescale script that walks
+   `m_Children` from the canvas never reaches it, because a stripped transform has
+   no `m_Children`; it lives only in the PrefabInstance's `m_AddedGameObjects`.
+   #297 missed the hamburger `Icon` under the `Menu` Button Variant this way: the
+   button grew to 87x94.5 and the icon stayed 16.25x16.25, so it showed as a tiny
+   icon inside a large button. Walk ancestors upward from every RectTransform
+   instead (a stripped transform's parent is its PrefabInstance's
+   `m_TransformParent`), and keep only those that reach the rescaled canvas. A
+   root PrefabInstance with its own `Canvas` is a separate canvas: `MatchingPage`
+   in `LobbyScene` is 800x450 inside its prefab, so its `CoachPanel` and
+   `CoachCloseButton` stay unscaled.
+6. The prefab's own `m_PixelsPerUnitMultiplier` counts as an unoverridden value
+   from item 1: `Button Variant` ships 4, so every Sliced instance on a 1920 canvas
+   needs a `1.66667` modification on `1683031503725330102`. `RectOffset` fields
+   (`m_Padding` of a layout group) hold integers; round them after multiplying
+   instead of writing 9.6, which #297 did for `UserNamePill`.
+
+## A modal prefab saved inactive in the scene
+
+`FriendModal.prefab` (#309) is instanced once in `LobbyScene` with an
+`m_IsActive: 0` override, and its controller `FriendModalUIController` sits on the
+prefab root. Two things follow, and neither shows an error:
+
+- `FindObjectOfType<T>()` skips inactive objects and returns null. `FriendBootstrap`
+  uses `FindObjectOfType<FriendModalUIController>(true)`.
+- The controller's `Awake` does not run until the first `SetActive(true)`, so it
+  must not deactivate itself in `Awake` (the old controller did, which would close
+  the modal the moment it opened). Listener wiring is idempotent and also called
+  from `Open()`.
+
+`FriendManager` is added with `AddComponent` at runtime, so its serialized
+`friendModal` was always null and friend events never refreshed the open modal.
+`FriendBootstrap` now hands the scene instance over with `BindFriendModal`.
+
+`Button Primary.prefab` has no instance anywhere in the project, so ids computed
+inside it are unverified. The friend prefabs use `Button Variant` instances with the
+same nine modifications `Button Primary` applies (orange `m_Color`, outline
+material, white text) instead. A generator for this layout is the fastest route:
+the modal and three row prefabs are about 300 YAML documents.

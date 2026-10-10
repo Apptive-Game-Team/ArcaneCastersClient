@@ -1,6 +1,7 @@
 using System.Collections;
 using Data.Profile;
 using Global;
+using Global.Button;
 using LobbyScene;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,11 @@ namespace ProfileScene
         [SerializeField] private ScrollRect gameHistoryScrollRect;
         [SerializeField] private int gameHistoryPageSize = 20;
         [SerializeField] private float loadMoreThreshold = 0.05f;
+        // The scene's own Appearance button; showing the panel through it keeps one list of what it turns on.
+        [SerializeField] private GameObjectVisibilityButton appearanceButton;
+
+        // Set by the lobby menu's appearance item just before it loads this scene, read once on Start.
+        private static bool showAppearanceOnLoad;
 
         private Coroutine gameHistoryRenderCoroutine;
         private int nextGameHistoryPage;
@@ -58,14 +64,35 @@ namespace ProfileScene
             }
         }
 
+        public static void RequestAppearanceOnNextLoad()
+        {
+            showAppearanceOnLoad = true;
+        }
+
         private IEnumerator Start()
         {
+            ShowRequestedAppearance();
+
             if (SceneContext.User == null)
             {
                 yield return UserInfoGetter.GetUserInfo();
             }
 
             Refresh();
+        }
+
+        private void ShowRequestedAppearance()
+        {
+            if (!showAppearanceOnLoad)
+            {
+                return;
+            }
+
+            showAppearanceOnLoad = false;
+            if (appearanceButton != null)
+            {
+                appearanceButton.ApplyVisibility();
+            }
         }
 
         public void Refresh()

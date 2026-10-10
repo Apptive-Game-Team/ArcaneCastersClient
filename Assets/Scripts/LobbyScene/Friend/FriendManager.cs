@@ -82,6 +82,32 @@ namespace LobbyScene
             eventStream.Connect(ServerList.MatchingServer.Api, SceneContext.JwtToken);
         }
 
+        // FriendBootstrap adds this component at runtime, so the scene's modal cannot be a serialized
+        // reference here; the bootstrap hands it over once it has found the LobbyScene instance.
+        public void BindFriendModal(FriendModalUIController modal)
+        {
+            friendModal = modal;
+            if (friendModal != null)
+            {
+                friendModal.Initialize(apiClient);
+            }
+        }
+
+        // Same hand-over as the modal: the invite dialog is a LobbyScene prefab instance, and this
+        // component only exists at runtime. Binding last matters because the pending invites are
+        // fetched here: a RecoverSnapshot that ran earlier (application focus on scene start) found no
+        // dialog and dropped the invite, so a player returning to the lobby never saw it.
+        public void BindInviteDialog(FriendMatchInviteDialog dialog)
+        {
+            if (inviteDialog == dialog) return;
+
+            inviteDialog = dialog;
+            if (inviteDialog != null)
+            {
+                RecoverSnapshot();
+            }
+        }
+
         public void OpenFriendModal()
         {
             if (friendModal != null)

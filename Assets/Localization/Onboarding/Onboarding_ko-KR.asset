@@ -103,7 +103,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000023
-    m_Localized: "메뉴에서는 옵션과 내 프로필을 볼 수 있어요."
+    m_Localized: "메뉴에서는 프로필, 친구, 외형, 상자, 설정을 열 수 있어요."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000024

@@ -1,69 +1,90 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace LobbyScene
 {
-    public class FriendModalUIController : MonoBehaviour
+    /// <summary>
+    /// The lobby friend modal. The layout lives in <c>Assets/Prefabs/UI/Lobby/Friend/FriendModal.prefab</c>,
+    /// instanced once in <c>LobbyScene</c> and saved inactive. This component sits on the prefab root,
+    /// which is also the full-screen dim overlay: a click that lands on the overlay itself closes the modal.
+    /// <para>
+    /// Rows are instances of the three row prefabs, created into the tab's list on every refresh.
+    /// Static labels are localized in the prefabs; the status messages below are set here.
+    /// </para>
+    /// </summary>
+    public class FriendModalUIController : MonoBehaviour, IPointerClickHandler
     {
-        [Header("Root & Navigation")]
-        [SerializeField] private GameObject root;
+        private static readonly Color PrimaryOrange = new Color32(0xFF, 0x9A, 0x1F, 0xFF);
+        private static readonly Color TabInactiveBg = new Color32(0xEE, 0xF3, 0xF8, 0xFF);
+        private static readonly Color SlateTextColor = new Color32(0x5B, 0x62, 0x75, 0xFF);
+
+        private enum Tab
+        {
+            Search,
+            Friends,
+            Requests
+        }
+
+        [Header("Header & Tabs")]
         [SerializeField] private UnityEngine.UI.Button closeButton;
-        [SerializeField] private UnityEngine.UI.Button friendListTabButton;
-        [SerializeField] private UnityEngine.UI.Button requestsTabButton;
         [SerializeField] private UnityEngine.UI.Button searchTabButton;
+        [SerializeField] private UnityEngine.UI.Button friendsTabButton;
+        [SerializeField] private UnityEngine.UI.Button requestsTabButton;
+        [SerializeField] private GameObject searchTitle;
+        [SerializeField] private GameObject friendsTitle;
+        [SerializeField] private GameObject requestsTitle;
 
         [Header("Tab Panels")]
-        [SerializeField] private GameObject friendListPanel;
-        [SerializeField] private GameObject requestsPanel;
         [SerializeField] private GameObject searchPanel;
+        [SerializeField] private GameObject friendsPanel;
+        [SerializeField] private GameObject requestsPanel;
 
-        [Header("Friend List Tab")]
+        [Header("Search Tab")]
+        [SerializeField] private InputField searchInputField;
+        [SerializeField] private UnityEngine.UI.Button searchButton;
+        [SerializeField] private Transform searchResultContainer;
+        [SerializeField] private TMP_Text searchStatusText;
+
+        [Header("Friends Tab")]
         [SerializeField] private Transform friendListContainer;
-        [SerializeField] private FriendItemView friendItemPrefab;
-        [SerializeField] private TMP_Text emptyFriendListText;
-        [SerializeField] private UnityEngine.UI.Button refreshFriendListButton;
+        [SerializeField] private TMP_Text friendStatusText;
 
         [Header("Requests Tab")]
         [SerializeField] private Transform receivedRequestsContainer;
+        [SerializeField] private TMP_Text receivedStatusText;
         [SerializeField] private Transform sentRequestsContainer;
-        [SerializeField] private FriendRequestItemView requestItemPrefab;
-        [SerializeField] private TMP_Text emptyReceivedRequestsText;
-        [SerializeField] private TMP_Text emptySentRequestsText;
-        [SerializeField] private UnityEngine.UI.Button refreshRequestsButton;
+        [SerializeField] private TMP_Text sentStatusText;
 
-        [Header("Search Tab")]
-        [SerializeField] private TMP_InputField searchInputField;
-        [SerializeField] private UnityEngine.UI.Button searchButton;
-        [SerializeField] private Transform searchResultContainer;
-        [SerializeField] private FriendSearchResultItemView searchResultItemPrefab;
-        [SerializeField] private TMP_Text searchStatusText;
+        [Header("Row Prefabs")]
+        [SerializeField] private FriendItemView friendRowPrefab;
+        [SerializeField] private FriendRequestItemView requestRowPrefab;
+        [SerializeField] private FriendSearchResultItemView searchResultRowPrefab;
 
-        [Header("Feedback / Toast")]
-        [SerializeField] private TMP_Text toastText;
+        private readonly List<GameObject> searchRows = new List<GameObject>();
+        private readonly List<GameObject> friendRows = new List<GameObject>();
+        private readonly List<GameObject> receivedRows = new List<GameObject>();
+        private readonly List<GameObject> sentRows = new List<GameObject>();
 
         private FriendApiClient apiClient;
-        private Coroutine toastCoroutine;
+        private Tab currentTab = Tab.Search;
+        private bool wired;
 
-        public bool IsOpen => root != null && root.activeSelf;
+        // Each refresh bumps its counter, so a response that arrives after a newer request is dropped.
+        private int searchVersion;
+        private int friendsVersion;
+        private int requestsVersion;
+
+        public bool IsOpen => gameObject.activeSelf;
+
+        // The F hotkey toggles the modal; it must not fire while the player types into the search field.
+        public bool IsTyping => searchInputField != null && searchInputField.isFocused;
 
         private void Awake()
         {
-            EnsureRoot();
-            if (root != null) root.SetActive(false);
-
-            if (closeButton != null) closeButton.onClick.AddListener(Close);
-            if (friendListTabButton != null) friendListTabButton.onClick.AddListener(ShowFriendListTab);
-            if (requestsTabButton != null) requestsTabButton.onClick.AddListener(ShowRequestsTab);
-            if (searchTabButton != null) searchTabButton.onClick.AddListener(ShowSearchTab);
-
-            if (refreshFriendListButton != null) refreshFriendListButton.onClick.AddListener(RefreshFriendList);
-            if (refreshRequestsButton != null) refreshRequestsButton.onClick.AddListener(RefreshRequests);
-            if (searchButton != null) searchButton.onClick.AddListener(ExecuteSearch);
-            if (searchInputField != null) searchInputField.onSubmit.AddListener(_ => ExecuteSearch());
+            Wire();
         }
 
         public void Initialize(FriendApiClient client)
@@ -71,104 +92,190 @@ namespace LobbyScene
             apiClient = client;
         }
 
+        public void Toggle()
+        {
+            if (IsOpen)
+            {
+                Close();
+                return;
+            }
+
+            Open();
+        }
+
         public void Open()
         {
-            EnsureRoot();
-            if (root != null) root.SetActive(true);
-            ShowFriendListTab();
+            Wire();
+            gameObject.SetActive(true);
+            ShowSearchTab();
         }
 
         public void Close()
         {
-            if (root != null) root.SetActive(false);
+            gameObject.SetActive(false);
         }
 
-        public void ShowFriendListTab()
+        // Clicks on the window bubble up to here too; only a click on the dim overlay closes the modal.
+        public void OnPointerClick(PointerEventData eventData)
         {
-            ActivateTabPanel(friendListPanel);
-            RefreshFriendList();
-        }
+            if (eventData.pointerCurrentRaycast.gameObject != gameObject)
+            {
+                return;
+            }
 
-        public void ShowRequestsTab()
-        {
-            ActivateTabPanel(requestsPanel);
-            RefreshRequests();
-        }
-
-        public void ShowSearchTab()
-        {
-            ActivateTabPanel(searchPanel);
-            if (searchStatusText != null) searchStatusText.text = "닉네임이나 이메일로 친구를 검색하세요.";
+            Close();
         }
 
         public void RefreshCurrentTab()
         {
             if (!IsOpen) return;
-            if (friendListPanel != null && friendListPanel.activeSelf)
+
+            if (currentTab == Tab.Friends)
             {
-                RefreshFriendList();
+                ShowFriendsTab();
             }
-            else if (requestsPanel != null && requestsPanel.activeSelf)
+            else if (currentTab == Tab.Requests)
             {
-                RefreshRequests();
+                ShowRequestsTab();
             }
         }
 
-        #region Friend List
-
-        public void RefreshFriendList()
+        private void Wire()
         {
-            if (apiClient == null) return;
-            StartCoroutine(apiClient.GetFriends((success, friends) =>
+            if (wired) return;
+            wired = true;
+
+            if (closeButton != null) closeButton.onClick.AddListener(Close);
+            if (searchTabButton != null) searchTabButton.onClick.AddListener(ShowSearchTab);
+            if (friendsTabButton != null) friendsTabButton.onClick.AddListener(ShowFriendsTab);
+            if (requestsTabButton != null) requestsTabButton.onClick.AddListener(ShowRequestsTab);
+            if (searchButton != null) searchButton.onClick.AddListener(ExecuteSearch);
+            if (searchInputField != null) searchInputField.onSubmit.AddListener(_ => ExecuteSearch());
+        }
+
+        private void SelectTab(Tab tab)
+        {
+            currentTab = tab;
+
+            if (searchPanel != null) searchPanel.SetActive(tab == Tab.Search);
+            if (friendsPanel != null) friendsPanel.SetActive(tab == Tab.Friends);
+            if (requestsPanel != null) requestsPanel.SetActive(tab == Tab.Requests);
+
+            if (searchTitle != null) searchTitle.SetActive(tab == Tab.Search);
+            if (friendsTitle != null) friendsTitle.SetActive(tab == Tab.Friends);
+            if (requestsTitle != null) requestsTitle.SetActive(tab == Tab.Requests);
+
+            SetTabStyle(searchTabButton, tab == Tab.Search);
+            SetTabStyle(friendsTabButton, tab == Tab.Friends);
+            SetTabStyle(requestsTabButton, tab == Tab.Requests);
+        }
+
+        private static void SetTabStyle(UnityEngine.UI.Button button, bool isSelected)
+        {
+            if (button == null) return;
+
+            if (button.image != null)
             {
-                if (!success || friends == null)
+                button.image.color = isSelected ? PrimaryOrange : TabInactiveBg;
+            }
+
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+            if (label != null)
+            {
+                label.color = isSelected ? Color.white : SlateTextColor;
+            }
+        }
+
+        #region Search Tab
+
+        public void ShowSearchTab()
+        {
+            SelectTab(Tab.Search);
+            searchVersion++;
+            if (searchInputField != null) searchInputField.text = string.Empty;
+            ClearRows(searchRows);
+            HideStatus(searchStatusText);
+        }
+
+        public void ExecuteSearch()
+        {
+            if (searchInputField == null || apiClient == null) return;
+            string query = searchInputField.text?.Trim();
+            if (string.IsNullOrEmpty(query)) return;
+
+            int version = ++searchVersion;
+            ClearRows(searchRows);
+            ShowStatus(searchStatusText, $"'{query}' 검색 중...", PrimaryOrange);
+
+            StartCoroutine(apiClient.SearchMembers(query, (success, results) =>
+            {
+                if (version != searchVersion) return;
+
+                if (!success || results == null || results.Count == 0)
                 {
-                    ShowToast("친구 목록을 불러오지 못했습니다.");
+                    ShowStatus(searchStatusText, "검색 결과가 없습니다.", SlateTextColor);
                     return;
                 }
 
-                RenderFriendList(friends);
+                HideStatus(searchStatusText);
+                if (searchResultRowPrefab == null || searchResultContainer == null) return;
+
+                foreach (FriendSearchResult result in results)
+                {
+                    FriendSearchResultItemView row = Instantiate(searchResultRowPrefab, searchResultContainer);
+                    row.Bind(result, OnSendFriendRequest);
+                    searchRows.Add(row.gameObject);
+                }
             }));
         }
 
-        private void RenderFriendList(List<FriendSummary> friends)
+        private void OnSendFriendRequest(FriendSearchResult result)
         {
-            if (friendListContainer == null) return;
-
-            ClearChildren(friendListContainer);
-
-            bool isEmpty = friends == null || friends.Count == 0;
-            if (emptyFriendListText != null)
+            if (apiClient == null) return;
+            StartCoroutine(apiClient.SendFriendRequest(result.name, (success, request) =>
             {
-                emptyFriendListText.gameObject.SetActive(isEmpty);
-            }
+                if (success) ExecuteSearch();
+            }));
+        }
 
-            if (isEmpty || friendItemPrefab == null) return;
+        #endregion
 
-            foreach (FriendSummary friend in friends)
+        #region Friends Tab
+
+        public void ShowFriendsTab()
+        {
+            SelectTab(Tab.Friends);
+            int version = ++friendsVersion;
+            ClearRows(friendRows);
+            ShowStatus(friendStatusText, "친구 목록 불러오는 중...", PrimaryOrange);
+
+            if (apiClient == null) return;
+            StartCoroutine(apiClient.GetFriends((success, friends) =>
             {
-                FriendItemView item = Instantiate(friendItemPrefab, friendListContainer);
-                item.gameObject.SetActive(true);
-                item.Bind(
-                    friend,
-                    onInvite: OnInviteFriend,
-                    onDelete: OnDeleteFriend
-                );
-            }
+                if (version != friendsVersion) return;
+
+                if (!success || friends == null || friends.Count == 0)
+                {
+                    ShowStatus(friendStatusText, "등록된 친구가 없습니다. [친구 검색]에서 친구를 추가해보세요!", SlateTextColor);
+                    return;
+                }
+
+                HideStatus(friendStatusText);
+                if (friendRowPrefab == null || friendListContainer == null) return;
+
+                foreach (FriendSummary friend in friends)
+                {
+                    FriendItemView row = Instantiate(friendRowPrefab, friendListContainer);
+                    row.Bind(friend, OnInviteFriend, OnDeleteFriend);
+                    friendRows.Add(row.gameObject);
+                }
+            }));
         }
 
         private void OnInviteFriend(FriendSummary friend)
         {
             if (apiClient == null) return;
-            ShowToast($"{friend.name}님에게 친선전 초대를 보냈습니다.");
-
-            StartCoroutine(apiClient.InviteFriend(friend.userId, (success, invite) =>
-            {
-                if (!success)
-                {
-                    ShowToast("친선전 초대를 보내지 못했습니다.");
-                }
-            }));
+            StartCoroutine(apiClient.InviteFriend(friend.userId, (success, invite) => { }));
         }
 
         private void OnDeleteFriend(FriendSummary friend)
@@ -176,15 +283,7 @@ namespace LobbyScene
             if (apiClient == null) return;
             StartCoroutine(apiClient.DeleteFriend(friend.userId, success =>
             {
-                if (success)
-                {
-                    ShowToast($"{friend.name}님과 친구 관계를 삭제했습니다.");
-                    RefreshFriendList();
-                }
-                else
-                {
-                    ShowToast("친구 삭제에 실패했습니다.");
-                }
+                if (success) ShowFriendsTab();
             }));
         }
 
@@ -192,240 +291,109 @@ namespace LobbyScene
 
         #region Requests Tab
 
-        public void RefreshRequests()
+        public void ShowRequestsTab()
         {
+            SelectTab(Tab.Requests);
+            int version = ++requestsVersion;
+            ClearRows(receivedRows);
+            ClearRows(sentRows);
+            HideStatus(receivedStatusText);
+            HideStatus(sentStatusText);
+
             if (apiClient == null) return;
-
-            StartCoroutine(apiClient.GetReceivedRequests((success, list) =>
+            StartCoroutine(apiClient.GetReceivedRequests((success, requests) =>
             {
-                if (success && list != null)
+                if (version != requestsVersion) return;
+
+                if (!success || requests == null || requests.Count == 0)
                 {
-                    RenderReceivedRequests(list);
-                }
-            }));
-
-            StartCoroutine(apiClient.GetSentRequests((success, list) =>
-            {
-                if (success && list != null)
-                {
-                    RenderSentRequests(list);
-                }
-            }));
-        }
-
-        private void RenderReceivedRequests(List<FriendRequestItem> list)
-        {
-            if (receivedRequestsContainer == null) return;
-            ClearChildren(receivedRequestsContainer);
-
-            bool isEmpty = list == null || list.Count == 0;
-            if (emptyReceivedRequestsText != null)
-            {
-                emptyReceivedRequestsText.gameObject.SetActive(isEmpty);
-            }
-
-            if (isEmpty || requestItemPrefab == null) return;
-
-            foreach (FriendRequestItem req in list)
-            {
-                FriendRequestItemView item = Instantiate(requestItemPrefab, receivedRequestsContainer);
-                item.gameObject.SetActive(true);
-                item.BindReceived(
-                    req,
-                    onAccept: OnAcceptRequest,
-                    onReject: OnRejectRequest
-                );
-            }
-        }
-
-        private void RenderSentRequests(List<FriendRequestItem> list)
-        {
-            if (sentRequestsContainer == null) return;
-            ClearChildren(sentRequestsContainer);
-
-            bool isEmpty = list == null || list.Count == 0;
-            if (emptySentRequestsText != null)
-            {
-                emptySentRequestsText.gameObject.SetActive(isEmpty);
-            }
-
-            if (isEmpty || requestItemPrefab == null) return;
-
-            foreach (FriendRequestItem req in list)
-            {
-                FriendRequestItemView item = Instantiate(requestItemPrefab, sentRequestsContainer);
-                item.gameObject.SetActive(true);
-                item.BindSent(
-                    req,
-                    onCancel: OnCancelRequest
-                );
-            }
-        }
-
-        private void OnAcceptRequest(FriendRequestItem req)
-        {
-            if (apiClient == null) return;
-            StartCoroutine(apiClient.AcceptFriendRequest(req.id, (success, _) =>
-            {
-                if (success)
-                {
-                    ShowToast("친구 요청을 수락했습니다.");
-                    RefreshRequests();
-                }
-                else
-                {
-                    ShowToast("친구 요청 수락에 실패했습니다.");
-                }
-            }));
-        }
-
-        private void OnRejectRequest(FriendRequestItem req)
-        {
-            if (apiClient == null) return;
-            StartCoroutine(apiClient.RejectFriendRequest(req.id, (success, _) =>
-            {
-                if (success)
-                {
-                    ShowToast("친구 요청을 거절했습니다.");
-                    RefreshRequests();
-                }
-                else
-                {
-                    ShowToast("친구 요청 거절에 실패했습니다.");
-                }
-            }));
-        }
-
-        private void OnCancelRequest(FriendRequestItem req)
-        {
-            if (apiClient == null) return;
-            StartCoroutine(apiClient.CancelFriendRequest(req.id, success =>
-            {
-                if (success)
-                {
-                    ShowToast("친구 요청을 취소했습니다.");
-                    RefreshRequests();
-                }
-                else
-                {
-                    ShowToast("친구 요청 취소에 실패했습니다.");
-                }
-            }));
-        }
-
-        #endregion
-
-        #region Search Tab
-
-        public void ExecuteSearch()
-        {
-            if (searchInputField == null || apiClient == null) return;
-            string query = searchInputField.text?.Trim();
-            if (string.IsNullOrEmpty(query))
-            {
-                if (searchStatusText != null) searchStatusText.text = "검색어를 입력하세요.";
-                return;
-            }
-
-            if (searchStatusText != null) searchStatusText.text = "검색 중...";
-            if (searchButton != null) searchButton.interactable = false;
-
-            StartCoroutine(apiClient.SearchMembers(query, (success, results) =>
-            {
-                if (searchButton != null) searchButton.interactable = true;
-
-                if (!success || results == null)
-                {
-                    if (searchStatusText != null) searchStatusText.text = "검색에 실패했습니다.";
+                    ShowStatus(receivedStatusText, "받은 친구 요청이 없습니다.", SlateTextColor);
                     return;
                 }
 
-                RenderSearchResults(results);
+                foreach (FriendRequestItem request in requests)
+                {
+                    FriendRequestItemView row = CreateRequestRow(receivedRequestsContainer, receivedRows);
+                    if (row != null) row.BindReceived(request, OnAcceptRequest, OnRejectRequest);
+                }
+            }));
+
+            StartCoroutine(apiClient.GetSentRequests((success, requests) =>
+            {
+                if (version != requestsVersion) return;
+
+                if (!success || requests == null || requests.Count == 0)
+                {
+                    ShowStatus(sentStatusText, "보낸 친구 요청이 없습니다.", SlateTextColor);
+                    return;
+                }
+
+                foreach (FriendRequestItem request in requests)
+                {
+                    FriendRequestItemView row = CreateRequestRow(sentRequestsContainer, sentRows);
+                    if (row != null) row.BindSent(request, OnCancelRequest);
+                }
             }));
         }
 
-        private void RenderSearchResults(List<FriendSearchResult> results)
+        private FriendRequestItemView CreateRequestRow(Transform container, List<GameObject> rows)
         {
-            if (searchResultContainer == null) return;
-            ClearChildren(searchResultContainer);
-
-            if (results == null || results.Count == 0)
-            {
-                if (searchStatusText != null) searchStatusText.text = "검색 결과가 없습니다.";
-                return;
-            }
-
-            if (searchStatusText != null) searchStatusText.text = $"{results.Count}명의 사용자를 찾았습니다.";
-
-            if (searchResultItemPrefab == null) return;
-
-            foreach (FriendSearchResult result in results)
-            {
-                FriendSearchResultItemView item = Instantiate(searchResultItemPrefab, searchResultContainer);
-                item.gameObject.SetActive(true);
-                item.Bind(result, onSendRequest: r => OnSendFriendRequest(r, item));
-            }
+            if (requestRowPrefab == null || container == null) return null;
+            FriendRequestItemView row = Instantiate(requestRowPrefab, container);
+            rows.Add(row.gameObject);
+            return row;
         }
 
-        private void OnSendFriendRequest(FriendSearchResult result, FriendSearchResultItemView itemView)
+        private void OnAcceptRequest(FriendRequestItem request)
         {
             if (apiClient == null) return;
-            string targetQuery = result.name;
-
-            StartCoroutine(apiClient.SendFriendRequest(targetQuery, (success, _) =>
+            StartCoroutine(apiClient.AcceptFriendRequest(request.id, (success, accepted) =>
             {
-                if (success)
-                {
-                    ShowToast($"{result.name}님에게 친구 요청을 보냈습니다.");
-                    itemView.SetRequestSent();
-                }
-                else
-                {
-                    ShowToast("친구 요청 전송에 실패했습니다.");
-                }
+                if (success) ShowRequestsTab();
+            }));
+        }
+
+        private void OnRejectRequest(FriendRequestItem request)
+        {
+            if (apiClient == null) return;
+            StartCoroutine(apiClient.RejectFriendRequest(request.id, (success, rejected) =>
+            {
+                if (success) ShowRequestsTab();
+            }));
+        }
+
+        private void OnCancelRequest(FriendRequestItem request)
+        {
+            if (apiClient == null) return;
+            StartCoroutine(apiClient.CancelFriendRequest(request.id, success =>
+            {
+                if (success) ShowRequestsTab();
             }));
         }
 
         #endregion
 
-        private void ActivateTabPanel(GameObject activePanel)
+        private static void ShowStatus(TMP_Text status, string message, Color color)
         {
-            if (friendListPanel != null) friendListPanel.SetActive(friendListPanel == activePanel);
-            if (requestsPanel != null) requestsPanel.SetActive(requestsPanel == activePanel);
-            if (searchPanel != null) searchPanel.SetActive(searchPanel == activePanel);
+            if (status == null) return;
+            status.text = message;
+            status.color = color;
+            status.gameObject.SetActive(true);
         }
 
-        private void ShowToast(string message)
+        private static void HideStatus(TMP_Text status)
         {
-            if (toastText == null) return;
-            toastText.text = message;
-            toastText.gameObject.SetActive(true);
-
-            if (toastCoroutine != null) StopCoroutine(toastCoroutine);
-            toastCoroutine = StartCoroutine(HideToastRoutine(2.5f));
+            if (status != null) status.gameObject.SetActive(false);
         }
 
-        private IEnumerator HideToastRoutine(float delaySeconds)
+        private static void ClearRows(List<GameObject> rows)
         {
-            yield return new WaitForSecondsRealtime(delaySeconds);
-            if (toastText != null) toastText.gameObject.SetActive(false);
-            toastCoroutine = null;
-        }
-
-        private static void ClearChildren(Transform container)
-        {
-            for (int i = container.childCount - 1; i >= 0; i--)
+            foreach (GameObject row in rows)
             {
-                Destroy(container.GetChild(i).gameObject);
+                if (row != null) Destroy(row);
             }
-        }
 
-        private void EnsureRoot()
-        {
-            if (root == null)
-            {
-                root = gameObject;
-            }
+            rows.Clear();
         }
     }
 }
