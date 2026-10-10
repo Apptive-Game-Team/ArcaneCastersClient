@@ -49,7 +49,17 @@ namespace GameScene.ServedObjectComponent
         [SerializeField] private float _effectScaleMin = 0.8f;
         [SerializeField] private float _effectScaleMax = 1.8f;
         public int id;
-        public PresentationWorld PresentationWorld { get; set; }
+        private PresentationWorld _presentationWorld;
+        public PresentationWorld PresentationWorld
+        {
+            get => _presentationWorld;
+            set
+            {
+                _presentationWorld = value;
+                _cachedCamera = null;
+            }
+        }
+        private Camera _cachedCamera;
         private SpriteRenderer damageRenderer;
         private float lastDamageFlash = float.NegativeInfinity;
         private float damageFlashUntil;
@@ -408,9 +418,19 @@ namespace GameScene.ServedObjectComponent
             return centerWorldPosition + _spriteRenderer.transform.TransformVector(localOffset);
         }
 
+        private Camera GetCamera()
+        {
+            if (_cachedCamera == null)
+            {
+                _cachedCamera = GameScene.Object.PresentationWorld.CameraFor(this);
+            }
+
+            return _cachedCamera;
+        }
+
         private Vector2 GetScreenDirection(Vector3 fromWorldPosition, Vector3 toWorldPosition)
         {
-            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
+            Camera camera = GetCamera();
             Vector3 delta = camera != null
                 ? camera.WorldToScreenPoint(toWorldPosition) - camera.WorldToScreenPoint(fromWorldPosition)
                 : toWorldPosition - fromWorldPosition;
@@ -441,7 +461,7 @@ namespace GameScene.ServedObjectComponent
         /// <summary>Screen-up in world space, so anchors sit above the sprite from the player's view.</summary>
         private Vector3 GetAnchorUpDirection()
         {
-            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
+            Camera camera = GetCamera();
             return camera != null ? camera.transform.up : Vector3.up;
         }
 
