@@ -42,16 +42,8 @@ MonoBehaviour:
     m_Localized: "덱은 카드 15장으로 짜요"
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000008
-    m_Localized: "나만의 덱을 만들어 보세요"
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000009
     m_Localized: "덱을 저장해야 다른 화면으로 갈 수 있어요"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 318000000010
-    m_Localized: "15장을 다 채웠어요. 저장을 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000011
@@ -120,10 +112,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000027
     m_Localized: "덱 버튼을 눌러 보세요"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 318000000028
-    m_Localized: "카드를 골라 덱에 넣어 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000029

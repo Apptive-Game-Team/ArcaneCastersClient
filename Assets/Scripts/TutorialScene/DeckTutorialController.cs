@@ -16,11 +16,9 @@ namespace TutorialScene
         [SerializeField] private Button saveButton;
         [SerializeField] private ButtonBase returnToLobbyButton;
 
-        public event System.Action CreateDeckSelected;
-        public event System.Action DeckSaved;
         public event System.Action ReturnToLobbySelected;
 
-        private bool isSubscribedToDeckManagement;
+        private bool isSubscribedToReturnButton;
 
         private void OnEnable()
         {
@@ -31,40 +29,22 @@ namespace TutorialScene
                 return;
             }
 
-            if (deckManagementController == null)
-            {
-                deckManagementController = GetComponent<DeckManagementController>();
-            }
-
-            if (deckManagementController == null)
-            {
-                return;
-            }
-
-            deckManagementController.NewDeckSelected += OnNewDeckSelected;
-            deckManagementController.DeckCardCountChanged += NotifyDeckCardCountChanged;
-            deckManagementController.DeckSaved += OnDeckSaved;
-
             if (returnToLobbyButton != null)
             {
                 returnToLobbyButton.OnClick += OnReturnToLobbySelected;
             }
 
-            isSubscribedToDeckManagement = true;
+            isSubscribedToReturnButton = true;
         }
 
         private void OnDisable()
         {
-            if (!isSubscribedToDeckManagement)
+            if (!isSubscribedToReturnButton)
             {
                 return;
             }
 
-            isSubscribedToDeckManagement = false;
-
-            deckManagementController.NewDeckSelected -= OnNewDeckSelected;
-            deckManagementController.DeckCardCountChanged -= NotifyDeckCardCountChanged;
-            deckManagementController.DeckSaved -= OnDeckSaved;
+            isSubscribedToReturnButton = false;
 
             if (returnToLobbyButton != null)
             {
@@ -77,62 +57,9 @@ namespace TutorialScene
             Show("onboarding.deck.rules", deckRuleArea != null ? deckRuleArea.transform : null, onNext);
         }
 
-        public void ShowCreateDeck()
-        {
-            Show("onboarding.deck.createDeck", deckListArea != null ? deckListArea.transform : null);
-        }
-
-        public void ShowDeckEditor()
-        {
-            Show(
-                "onboarding.deck.selectCards",
-                new[]
-                {
-                    currentDeckCardsArea != null ? currentDeckCardsArea.transform : null,
-                    ownedCardsArea != null ? ownedCardsArea.transform : null
-                },
-                null,
-                TutorialPanelSide.Right);
-        }
-
-        public void ShowSaveDeck()
-        {
-            Show("onboarding.deck.saveEnabled",
-                new[]
-                {
-                    currentDeckCardsArea != null ? currentDeckCardsArea.transform : null,
-                    ownedCardsArea != null ? ownedCardsArea.transform : null
-                },
-                null, TutorialPanelSide.Right);
-        }
-
         public void ShowReturnToLobby()
         {
             Show("onboarding.deck.returnToLobby", returnToLobbyButton != null ? returnToLobbyButton.transform : null, TutorialPanelSide.Right);
-        }
-
-        private void OnNewDeckSelected()
-        {
-            CreateDeckSelected?.Invoke();
-        }
-
-        private void NotifyDeckCardCountChanged(int cardCount)
-        {
-            if (cardCount >= 15)
-            {
-                ShowSaveDeck();
-            }
-        }
-
-        private bool OnDeckSaved()
-        {
-            if (DeckSaved == null)
-            {
-                return false;
-            }
-
-            DeckSaved?.Invoke();
-            return true;
         }
 
         private void OnReturnToLobbySelected()
