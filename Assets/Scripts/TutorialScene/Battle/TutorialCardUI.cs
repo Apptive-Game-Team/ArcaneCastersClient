@@ -58,6 +58,9 @@ namespace TutorialScene
             cardNameText.text = await LocaleUtils.GetStringAsync("Magic", Magic?.localizationKey ?? magicName);
         }
 
+        /// <summary>지금 고른 카드인가. gamepad 가 손패에서 이어 고를 슬롯을 정하는 데 쓴다.</summary>
+        public bool IsSelected => isActive;
+
         public void SetCardActive(bool isActive)
         {
             this.isActive = isActive;

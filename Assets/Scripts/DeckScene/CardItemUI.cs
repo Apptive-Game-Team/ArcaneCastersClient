@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace DeckScene
 {
-    public class CardItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class CardItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
     {
         [SerializeField] private TextMeshProUGUI cardNameText;
         [SerializeField] private TextMeshProUGUI cardManaText;
@@ -143,6 +143,17 @@ namespace DeckScene
         }
 
         public void OnPointerExit(PointerEventData eventData)
+        {
+            onPointerExit?.Invoke();
+        }
+
+        // gamepad 는 마우스를 올릴 수 없으므로 선택을 hover 로 취급해 같은 팝업을 띄운다.
+        public void OnSelect(BaseEventData eventData)
+        {
+            onPointerEnter?.Invoke(this);
+        }
+
+        public void OnDeselect(BaseEventData eventData)
         {
             onPointerExit?.Invoke();
         }
