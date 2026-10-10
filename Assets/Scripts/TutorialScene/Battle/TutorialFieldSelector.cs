@@ -17,16 +17,18 @@ namespace TutorialScene
         TutorialCardSender cardInputSender;
         private GameObject currentAimObj;
         private GameObject currentRangeObj;
+        private SkillIndicatorShapeRenderer rangeShapeRenderer;
         private GameObject currentSkillIndicator;
         private LineSkillIndicator currentLineIndicator;
         private CircleSkillIndicator currentCircleIndicator;
         private bool currentSkillIndicatorIsLine;
+        private Camera cachedCamera;
 
         void Start()
         {
             cardInputSender = FindObjectOfType<TutorialCardSender>();
             currentAimObj = CreateAimIndicator();
-            currentRangeObj = CreateRangeIndicator();
+            currentRangeObj = CreateRangeIndicator(out rangeShapeRenderer);
             currentAimObj.SetActive(false);
             currentRangeObj.SetActive(false);
         
@@ -70,7 +72,7 @@ namespace TutorialScene
             GameParameterResolver.TryGetMagicParameter(magic, "radius", out float magicRadius);
 
             Vector3 casterPosition = new Vector3(1f, 0f, 5f);
-            SetCircleWorldRadius(currentRangeObj, casterPosition, magicRange);
+            SetCircleWorldRadius(rangeShapeRenderer, casterPosition, magicRange);
 
 
             bool wantLine = MagicIndicatorResolver.IsLaneAim(magic);
@@ -131,17 +133,21 @@ namespace TutorialScene
             return origin + offset.normalized * safeRange;
         }
 
-        private static bool TryGetGroundPosition(Vector3 screenPosition, out Vector3 groundPosition)
+        private bool TryGetGroundPosition(Vector3 screenPosition, out Vector3 groundPosition)
         {
             groundPosition = Vector3.zero;
-            Camera camera = Camera.main;
-            if (camera == null)
+            if (cachedCamera == null)
+            {
+                cachedCamera = Camera.main;
+            }
+
+            if (cachedCamera == null)
             {
                 return false;
             }
 
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-            Ray ray = camera.ScreenPointToRay(screenPosition);
+            Ray ray = cachedCamera.ScreenPointToRay(screenPosition);
             if (!groundPlane.Raycast(ray, out float distance))
             {
                 return false;
@@ -166,15 +172,12 @@ namespace TutorialScene
             }
         }
 
-        private static void SetCircleWorldRadius(GameObject indicator, Vector3 position, float radius)
+        private static void SetCircleWorldRadius(SkillIndicatorShapeRenderer shapeRenderer, Vector3 position, float radius)
         {
-            SkillIndicatorShapeRenderer shapeRenderer = indicator.GetComponent<SkillIndicatorShapeRenderer>();
-            if (shapeRenderer == null)
+            if (shapeRenderer != null)
             {
-                shapeRenderer = indicator.AddComponent<SkillIndicatorShapeRenderer>();
+                shapeRenderer.SetCircle(position, radius, true, RangeIndicatorSortingOrder, 0f);
             }
-
-            shapeRenderer.SetCircle(position, radius, true, RangeIndicatorSortingOrder, 0f);
         }
 
         private void UpdateSkillIndicator(
@@ -193,6 +196,7 @@ namespace TutorialScene
                 return;
             }
 
+            // CircleSkillIndicator is cached when created (currentCircleIndicator) to avoid calling GetComponent<CircleSkillIndicator>() per frame
             if (currentCircleIndicator != null)
             {
                 currentCircleIndicator.SetIndicator(previewPosition, radius);
@@ -202,15 +206,14 @@ namespace TutorialScene
         private static GameObject CreateAimIndicator()
         {
             GameObject indicator = new GameObject("AimIndicator");
-            indicator.AddComponent<SkillIndicatorShapeRenderer>();
             ConfigureAimIndicator(indicator);
             return indicator;
         }
 
-        private static GameObject CreateRangeIndicator()
+        private static GameObject CreateRangeIndicator(out SkillIndicatorShapeRenderer shapeRenderer)
         {
             GameObject indicator = new GameObject("RangeIndicator");
-            indicator.AddComponent<SkillIndicatorShapeRenderer>();
+            shapeRenderer = indicator.AddComponent<SkillIndicatorShapeRenderer>();
             return indicator;
         }
 
