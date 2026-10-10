@@ -43,7 +43,7 @@ namespace Global.Sound.BGM
             PlayBGM();
         }
 
-        private void PlayBGM()
+        private void PlayBGM(bool resetPitch = true)
         {
             overridden = false;
             if (audioSource == null)
@@ -54,7 +54,11 @@ namespace Global.Sound.BGM
             BGMClipContainer bgmClipContainer = FindObjectOfType<BGMClipContainer>();
             AudioClip targetClip = bgmClipContainer != null ? bgmClipContainer.GetBGMClip() : null;
 
-            audioSource.pitch = 1.0f;
+            // A scene load starts at normal speed; restoring mid-match keeps fever time's pitch.
+            if (resetPitch)
+            {
+                audioSource.pitch = 1.0f;
+            }
 
             if (targetClip == null)
             {
@@ -109,7 +113,7 @@ namespace Global.Sound.BGM
                 return;
             }
 
-            PlayBGM();
+            PlayBGM(false);
         }
 
         public void SetPitch(float pitch)
