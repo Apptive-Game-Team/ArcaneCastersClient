@@ -343,3 +343,57 @@ without its own field in that skip list loads, renders in the Editor, and is gon
 the first time the map draws. The end-of-adventure chest lives there for that
 reason as `endOfRoadSlot`; anything else that has to sit on the road needs the
 same treatment.
+
+## A flat ground tile keeps its `SpriteRenderer` on the prefab root
+
+`RiverWater` and `RiverBridge` lie flat on the ground (root rotated 90 degrees
+about X). `ObjectSpawner` calls `PopupBookVisualPresenter.Attach`, which wraps
+the sprite returned by `ServedObject.GetActualTransform()` in a pivot and, in
+`LateUpdate`, rotates it to the camera. When that sprite is a child of the root,
+the tile stands up and plays a spawn tilt. When the `SpriteRenderer` sits on the
+root, `Attach` returns early and the tile stays flat. Do not add child renderers
+to these prefabs; the art is the overlay described below.
+
+The ground is the opaque `PopupBookGround` plane at `y = 0`, and the server sends
+`y = 0`, so a flat sprite at the same height flickers against it. `GroundDecalLift`
+keeps the tile at least 0.02 above the ground in `LateUpdate`. Raising it once in
+`Start` was not enough: right after creating an object the server sends a position
+update with `y = 0`, and `PositionUpdater` tweens the transform to it, which erases a
+height set earlier. Anything laid flat on the ground has to restore its height after
+`PositionUpdater` has run.
+
+The prefabs no longer draw the river. Their root `SpriteRenderer` stays, with an
+empty sprite, only so `ServedObject` and `PopupBookVisualPresenter.Attach` find it on
+the root and leave the tile flat; both already handle a null sprite. The picture is one
+overlay, drawn once per match by `RiverOverlay`
+(`Resources/Prefabs/RiverOverlay.prefab`). Each `RiverWater` and `RiverBridge` carries a
+`RiverOverlayMember`, which counts the live river objects per `PresentationWorld`
+(null for the real match). The first member to wake creates the overlay, the last one
+destroyed destroys it, so the order objects arrive in does not matter, a rematch in the
+same scene reuses the one overlay, and nothing is left after the match. Inside a
+`PresentationWorld` the overlay is a child of the world.
+
+The numbers live in `GameScene.Dto.RiverOverlayLayout` (assembly
+`WordOnline.GameContracts`, tested by `RiverOverlayLayoutTests`), all at 256 pixels per
+unit and lifted 0.02 above the ground (the overlay is not driven by `PositionUpdater`,
+so one lift at creation is enough):
+
+| picture | pixels | covers | pivot | position |
+| --- | --- | --- | --- | --- |
+| `RiverWaterOverlay.png` | 1024 x 2560 | x 7 to 11, z 0 to 10 | bottom left | (7, 0.02, 0), sorting order -2 |
+| `RiverBridgeOverlay.png` (twice) | 1024 x 1024 | 4 x 4 units | center | (9, 0.02, 2.5) and (9, 0.02, 7.5), sorting order -1 |
+
+The water has soft banks that cross the logical lines x = 8 and x = 10 by up to 0.25
+unit. The bridge at 2.5 opens z 1 to 4 (rows 1 to 3), the one at 7.5 opens z 6 to 9
+(rows 6 to 8). The server contract is unchanged: 8 `RiverWater` and 12 `RiverBridge`
+objects at cell centers (columns 8 and 9; water rows 0, 4, 5, 9; bridge rows 1, 2, 3, 6, 7, 8).
+
+If the server moves the river, change the constants in `RiverOverlayLayout` and repaint
+the two pictures for the new rectangle. An image generator does not hit pixel positions
+by itself: generate the water and the bridge as separate images on a flat key
+color, key the background out (`.art/tools/key-out-background.py`), resample to 256
+pixels per unit, place them at the numbers above, and draw the logical grid over the
+result (mock: `docs/pr-media/261/river-mock-64ppu-logical-guides.png`, ground texture
+resampled to 64 pixels per unit, one background texture covering 20 units) before
+accepting. The `.meta` files set sprite single, 256 pixels per unit, `maxTextureSize`
+4096 (the 2560 pixel height must not shrink), no mipmaps.

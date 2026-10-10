@@ -83,7 +83,10 @@ public static class ObjectSfxCatalogBuilder
 
     private static readonly string[] IntentionalSilentRuntimeTypes =
     {
-        "ServedObjectHpBar"
+        "ServedObjectHpBar",
+        "RiverWater",
+        "RiverBridge",
+        "RiverOverlay"
     };
 
     // Defaults follow server attack implementations and database size tags.
