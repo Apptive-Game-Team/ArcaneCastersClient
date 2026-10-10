@@ -418,12 +418,17 @@ child must be multiplied by 2.4 too. Several things hide from a plain multiply:
    units hide the same way: `BattleHoverPresenter.bounceHeight` (12, now 28.8) is a
    plain float that no RectTransform search finds. Grep `sizeDelta` and `anchoredPosition`
    in `Assets/Scripts` before changing a canvas, and list what you could not rescale.
-4. `GameScene` `BarController.MoveBar` moves the `Bars` rect between the literal
-   y values 540 and 240. Shrinking the bar by editing offsets breaks the closed
-   state; scaling a pivot-bottom child with `m_LocalScale` keeps both positions.
-   `CardImage.prefab` (the hand card) is also used by `SpectatingScene` and
-   `InteractiveTutorialScene` and has fixed-size children, so shrink the hand by
-   scaling its parent, not by editing the prefab or the grid cell size.
+4. Do not shrink the battle HUD's hand bar by editing YAML. `GameScene`
+   `BarController.MoveBar` moves the `Bars` rect between the literal y values 540
+   and 240, which assume the old bar height, and `LowerBar` and `ManaBar` stretch
+   across the screen width. #297 scaled `LowerBar`, `ManaBar` and `Timer` by
+   `m_LocalScale` 0.75 and changed their `m_SizeDelta` and grid padding; the
+   developer opened it in the Editor and the hand bar was broken, and the mana bar
+   floated about 150 above the hand. The `GameScene.unity` change was reverted.
+   Resizing the HUD needs the two `MoveBar` positions redesigned with it and a check
+   in the Editor. `CardImage.prefab` (the hand card) is also used by
+   `SpectatingScene` and `InteractiveTutorialScene` and has fixed-size children, so
+   do not edit the prefab or the grid cell size for this either.
 5. A GameObject the scene adds under a prefab instance is a normal document whose
    `m_Father` is a `stripped` RectTransform. A rescale script that walks
    `m_Children` from the canvas never reaches it, because a stripped transform has
