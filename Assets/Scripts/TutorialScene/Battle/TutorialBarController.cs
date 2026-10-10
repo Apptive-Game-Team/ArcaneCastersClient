@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace TutorialScene
@@ -8,7 +9,9 @@ namespace TutorialScene
     {
     
         private RectTransform _rectTransform;
-        [SerializeField] private bool isActive = false;
+        /// <summary>사용자가 정한 열림 상태. 조준 중 임시로 내려가는 것은 여기에 반영하지 않는다.</summary>
+        [FormerlySerializedAs("isActive")]
+        [SerializeField] private bool userWantsOpen = false;
         [SerializeField] private Button manaBarButton;
         [SerializeField] private Button fieldButton;
         private bool lastActive = false;
@@ -29,27 +32,23 @@ namespace TutorialScene
                     return;
                 }
 
-                isActive = true;
+                userWantsOpen = !userWantsOpen;
             });
             fieldButton.onClick.AddListener(() =>
             {
-                isActive = false;
+                userWantsOpen = false;
             });
         }
 
         private void Update()
         {
-            if (cardInputSender.IsFieldSelectMode())
+            bool shown = userWantsOpen && !cardInputSender.IsFieldSelectMode();
+            fieldButton.gameObject.SetActive(shown);
+
+            if (lastActive != shown)
             {
-                isActive = false;
-            }
-        
-            fieldButton.gameObject.SetActive(isActive);
-        
-            if (lastActive != isActive)
-            {
-                lastActive = isActive;
-                SetBarActive(isActive);
+                lastActive = shown;
+                SetBarActive(shown);
             }
         }
 
