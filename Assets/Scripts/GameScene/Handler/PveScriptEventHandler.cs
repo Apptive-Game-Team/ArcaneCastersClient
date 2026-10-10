@@ -347,7 +347,7 @@ namespace GameScene.Handler
 
         private void EnsureWorldCamera()
         {
-            if (worldCamera == null)
+            if (!worldCamera)
             {
                 worldCamera = Camera.main;
             }
