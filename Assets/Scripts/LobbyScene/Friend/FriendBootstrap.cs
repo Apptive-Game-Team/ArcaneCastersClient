@@ -77,8 +77,19 @@ namespace LobbyScene
                     defaultFont = existingTmp.font;
                 }
             }
+        }
 
-            instance.CreateFriendPillButton(pill);
+        // Entry for the scene-authored friend button (FriendButton). The
+        // bootstrap is created by LobbyUserNameUI.Awake before any click.
+        public static void ToggleFriendModal()
+        {
+            if (instance == null)
+            {
+                Debug.LogWarning("[FriendBootstrap] Friend button pressed before FriendBootstrap.Attach ran.");
+                return;
+            }
+
+            instance.ToggleModal();
         }
 
         private void EnsureFriendManager()
@@ -97,51 +108,6 @@ namespace LobbyScene
             {
                 ToggleModal();
             }
-        }
-
-        private void CreateFriendPillButton(Transform pill)
-        {
-            if (pill.parent == null) return;
-
-            Transform existing = pill.parent.Find("FriendPillButton");
-            if (existing != null) return;
-
-            GameObject friendBtnObj = new GameObject("FriendPillButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(UnityEngine.UI.Button));
-            friendBtnObj.transform.SetParent(pill.parent, false);
-
-            RectTransform pillRect = pill.GetComponent<RectTransform>();
-            RectTransform btnRect = friendBtnObj.GetComponent<RectTransform>();
-
-            btnRect.anchorMin = pillRect.anchorMin;
-            btnRect.anchorMax = pillRect.anchorMax;
-            btnRect.pivot = pillRect.pivot;
-            btnRect.sizeDelta = new Vector2(120f, pillRect.sizeDelta.y > 0 ? pillRect.sizeDelta.y : 34f);
-            btnRect.anchoredPosition = pillRect.anchoredPosition + new Vector2(pillRect.sizeDelta.x + 10f, 0f);
-
-            Image img = friendBtnObj.GetComponent<Image>();
-            img.sprite = flatPillSprite ?? pill.GetComponent<Image>()?.sprite;
-            img.type = Image.Type.Sliced;
-            img.pixelsPerUnitMultiplier = 4f;
-            img.color = CardBg;
-
-            GameObject textObj = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
-            textObj.transform.SetParent(friendBtnObj.transform, false);
-            TextMeshProUGUI label = textObj.GetComponent<TextMeshProUGUI>();
-            if (defaultFont != null) label.font = defaultFont;
-            label.text = "친구 (F)";
-            label.fontSize = 16;
-            label.fontStyle = FontStyles.Bold;
-            label.alignment = TextAlignmentOptions.Center;
-            label.color = InkColor;
-
-            RectTransform textRect = textObj.GetComponent<RectTransform>();
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.one;
-            textRect.sizeDelta = Vector2.zero;
-
-            UnityEngine.UI.Button btn = friendBtnObj.GetComponent<UnityEngine.UI.Button>();
-            btn.targetGraphic = img;
-            btn.onClick.AddListener(ToggleModal);
         }
 
         public void ToggleModal()
