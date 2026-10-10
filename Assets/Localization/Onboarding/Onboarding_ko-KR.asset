@@ -19,11 +19,11 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 318000000001
-    m_Localized: "튜토리얼을 하시겠습니까?"
+    m_Localized: "튜토리얼을 해 볼까요?"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000002
-    m_Localized: "처음이라면 짧은 튜토리얼로 덱, 마법서, 매칭, 메뉴를 안내해 드릴게요."
+    m_Localized: "처음이라면 짧게 안내해 드릴게요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000003
@@ -39,23 +39,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000007
-    m_Localized: "덱은 카드 15장으로 구성해요."
+    m_Localized: "덱은 카드 15장으로 짜요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000008
-    m_Localized: "이제 나만의 덱을 직접 만들어 보세요."
+    m_Localized: "나만의 덱을 만들어 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000009
-    m_Localized: "덱을 완성하고 저장하기 전까지는 다른 화면으로 이동할 수 없어요."
+    m_Localized: "덱을 저장해야 다른 화면으로 갈 수 있어요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000010
-    m_Localized: "15장을 모두 채웠어요. 저장 버튼을 눌러 덱을 저장하세요."
+    m_Localized: "15장을 다 채웠어요. 저장을 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000011
-    m_Localized: "덱 저장이 끝났어요. 로비 버튼을 눌러 돌아가세요."
+    m_Localized: "저장했어요. 로비 버튼을 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000012
@@ -63,19 +63,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000013
-    m_Localized: "마법서에서는 마법들의 자세한 정보를 볼 수 있어요."
+    m_Localized: "마법서에서 마법을 자세히 볼 수 있어요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000014
-    m_Localized: "예시로 풀씨 슬라임을 살펴볼게요."
+    m_Localized: "풀씨 슬라임을 예로 살펴볼게요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000015
-    m_Localized: "속성표 버튼을 눌러 보세요."
+    m_Localized: "속성표 버튼을 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000016
-    m_Localized: "마법서 안내가 끝났어요. 로비 버튼을 눌러 돌아가세요."
+    m_Localized: "마법서 안내가 끝났어요. 로비 버튼을 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000017
@@ -83,19 +83,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000018
-    m_Localized: "오른쪽 드롭다운에서 사용할 덱을 선택할 수 있어요."
+    m_Localized: "오른쪽 목록에서 쓸 덱을 고를 수 있어요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000019
-    m_Localized: "사람들과 매치해 실력을 겨뤄 보세요."
+    m_Localized: "다른 사람과 겨뤄 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000020
-    m_Localized: "봇과 매치해 부담 없이 연습할 수도 있어요."
+    m_Localized: "봇과 편하게 연습할 수도 있어요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000021
-    m_Localized: "모험을 즐길 수 있어요."
+    m_Localized: "모험도 즐길 수 있어요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000022
@@ -103,11 +103,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000023
-    m_Localized: "메뉴에서는 옵션과 내 프로필을 볼 수 있어요."
+    m_Localized: "메뉴에서 옵션과 프로필을 볼 수 있어요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000024
-    m_Localized: "온보딩이 완료되었습니다."
+    m_Localized: "튜토리얼을 마쳤어요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000025
@@ -119,55 +119,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000027
-    m_Localized: "덱 버튼을 눌러 덱 화면으로 이동하세요."
+    m_Localized: "덱 버튼을 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000028
-    m_Localized: "카드 리스트에서 카드를 골라 현재 덱에 넣어 보세요."
+    m_Localized: "카드를 골라 덱에 넣어 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000029
-    m_Localized: "마법서 버튼을 눌러 마법서 화면으로 이동하세요."
+    m_Localized: "마법서 버튼을 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000030
-    m_Localized: "아무 마법이나 클릭해 보세요."
+    m_Localized: "아무 마법이나 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000031
-    m_Localized: "마법 설명을 읽어 보세요."
+    m_Localized: "마법 설명을 읽어 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000032
-    m_Localized: "속성표에서 속성 관계를 확인할 수 있어요."
+    m_Localized: "속성표에서 상성을 볼 수 있어요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000033
-    m_Localized: "마법을 시전할 위치를 클릭해 보세요."
+    m_Localized: "마법을 쓸 자리를 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000035
-    m_Localized: "시전이 잘 안 되고 있어요. 강조된 카드를 골라 다시 시도해 보세요."
+    m_Localized: "시전이 안 되고 있어요. 강조된 카드를 골라 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000036
-    m_Localized: "테두리가 강조된 카드를 골라 마법을 써 보세요."
+    m_Localized: "테두리가 빛나는 카드로 마법을 써 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000037
-    m_Localized: "마나 바를 클릭해서 띄워 보세요."
+    m_Localized: "마나 바를 눌러 카드 창을 열어 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000038
-    m_Localized: "봇 전투로 연습해 보세요."
+    m_Localized: "봇과 연습해 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000039
-    m_Localized: "이제 직접 해봐요! 봇과 연습 버튼을 눌러 첫 전투를 시작해요."
+    m_Localized: "봇과 연습 버튼을 눌러 첫 경기를 해 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000040
-    m_Localized: "첫 게임 잘 끝냈어요! 이제 하고 싶은 걸 자유롭게 해보세요."
+    m_Localized: "첫 경기를 마쳤어요! 이제 자유롭게 즐겨 보세요"
     m_Metadata:
       m_Items: []
   references:
