@@ -5732,10 +5732,10 @@ RectTransform:
   - {fileID: 191327566}
   - {fileID: 929900710819349375}
   - {fileID: 212980422}
+  - {fileID: 1904400002}
   - {fileID: 3030300000000000002}
   - {fileID: 333331036}
   - {fileID: 910200002}
-  - {fileID: 1904400002}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
