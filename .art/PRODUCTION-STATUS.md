@@ -207,6 +207,7 @@
 | `Background/Gate/rock.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/rock.png` 와 같은 이름·크기). 452x166 RGBA, 불씨 금이 간 현무암 더미. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
 | `Background/Gate/grass_1.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/grass_1.png` 와 같은 이름·크기). 238x117 RGBA, 마른 재색 풀 한 포기와 불씨 둘. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
 | `Background/Gate/grass_2.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/grass_2.png` 와 같은 이름·크기). 466x99 RGBA, 마른 풀 다섯 포기 줄. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `UI/Card/type_fire.png`, `type_water.png`, `type_nature.png`, `type_lightning.png`, `type_rock.png`, `type_wind.png` | 클라이언트 PR (이슈 #304) | **검수 대기.** 원소 아이콘 6장. 마법서 상성표, 도감 원소 칩, 덱 카드가 `CardImageMapper.asset` 으로 쓴다. 181x256 · 180x256 · 136x256 · 161x256 · 256x192 · 256x195 RGBA(옛 128 긴 변의 두 배), 여백 없이 잘랐다. 여섯 장을 1536x1024 한 캔버스의 3x2 격자에 같이 그리게 해 한 번에 통과했다(`codex` `image_gen` 1회). 레퍼런스는 `MasterStyleKey.png`, `ArcaneImpact.png`, 원소 룬 여섯 장 합성. magenta key 제거, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0. 쓰는 곳이 모두 `preserveAspect` 인 UI `Image` 라 화면 크기는 RectTransform 과 가로세로 비로만 정해지고 픽셀 수·PPU 와 무관하다 — `.meta` 는 그대로 뒀다. 가로세로 비는 다섯 장이 옛 비의 8% 안이다. `type_wind` 만 1.88 에서 1.31 로 바뀌어 상성표 칸 안에서 옛 그림보다 세로로 커진다(옛 바람이 여섯 중 가장 작아 보였다). 프롬프트는 1.9 를 숫자로 요구했지만 격자 한 칸 안에서는 지켜지지 않았다 |
 
 ## 다음 교체 후보
 
@@ -263,12 +264,12 @@ v1 은 alpha 덩어리가 정확히 날 넷으로 갈라지므로(281x31, 450x68
 |---|---|
 | `LightningCloud.png`, `LightningCloudStrike0.png` ~ `LightningCloudStrike5.png` | 일곱 장 모두 둥글고 부드러운 구름 덩어리인데, 같은 구름 소재인 `RainCloud.png` 는 각진 다면체다. 한 게임 안에 구름 기법이 두 가지로 갈려 있다. 이슈 #548 에서 이 형태로 올라온 것이라 반려가 아니라 결정 사항이다 |
 
-### 통일 범위에 넣을지 정할 자산 33장
+### 통일 범위에 넣을지 정할 자산 27장
 
 아래는 baseline 그대로지만 게임 플레이 스프라이트가 아니다. 같은 기준을 댈
 대상인지 이 문서에서 정한 적이 없어 목록만 남긴다.
 
-- `Art/Images/UI/Card/` 11장 — `type_fire`·`type_lightning`·`type_nature`·`type_rock`·`type_water`·`type_wind`, `magic_build`·`magic_drop`·`magic_explode`·`magic_shoot`·`magic_spawn`. 평면 vector 아이콘으로 자기들끼리는 일관돼 있다
+- `Art/Images/UI/Card/` 5장 — `magic_build`·`magic_drop`·`magic_explode`·`magic_shoot`·`magic_spawn`. 평면 vector 아이콘으로 자기들끼리는 일관돼 있다. 같은 폴더의 원소 아이콘 `type_*` 6장은 이슈 #304 에서 다시 그려 완료 표로 옮겼다
 - `Art/Images/Customize/` 9장 — 모자·망토와 그 아이콘, `check.png`
 - `Art/Images/Adventure/` 3장 — 모험 지도/배경 자산, 아직 같은 기준을 댈지 정하지 않았다. `Resources/Game/pve/` 3장(`pve_nature_slime_nest.png`, `pve_water_slime_nest.png`, `pve_vine_witch.png`)은 이슈 #169 에서 다면체 cut-paper 로 다시 그려 완료 표로 옮겼다
 - 기타 UI 7장 — `Art/Images/Card.png`, `Art/Images/UI/Catalog.png`·`SpeechBubble.png`·`lockImage.png`, `Art/Images/Obstacle/CircleObstacle.png`, `Resources/UI/ObjectIndicator.png`·`SpeechBubble.png`
