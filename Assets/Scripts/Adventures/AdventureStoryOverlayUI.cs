@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Data.Adventures.Domain;
 using Data.Adventures.Local;
 using Global;
@@ -20,6 +21,9 @@ namespace Adventures
         private const float ActivePortraitScale = 1f;
         private const float InactivePortraitScale = 0.92f;
         private const float InputBufferDuration = 0.15f;
+
+        private static readonly Regex MarkdownBold = new Regex(@"\*\*(.+?)\*\*", RegexOptions.Compiled);
+        private static readonly Regex MarkdownItalic = new Regex(@"\*(?!\s)(.+?)(?<!\s)\*", RegexOptions.Compiled);
 
         private static AdventureStoryOverlayUI instance;
 
@@ -393,12 +397,12 @@ namespace Adventures
             {
                 if (speakerNameText != null)
                 {
-                    speakerNameText.text = localizedSpeakerName;
+                    speakerNameText.text = ConvertMarkdownToRichText(localizedSpeakerName);
                 }
 
                 if (dialogueText != null)
                 {
-                    dialogueText.text = localizedDialogue;
+                    dialogueText.text = ConvertMarkdownToRichText(localizedDialogue);
                 }
             }
 
@@ -409,6 +413,19 @@ namespace Adventures
             }
 
             lineResolutionCoroutine = null;
+        }
+
+        // Safety net for authors who keep writing markdown emphasis: **x** becomes <b>x</b> and
+        // *x* becomes <i>x</i> so no asterisks reach the screen.
+        private static string ConvertMarkdownToRichText(string text)
+        {
+            if (string.IsNullOrEmpty(text) || text.IndexOf('*') < 0)
+            {
+                return text;
+            }
+
+            text = MarkdownBold.Replace(text, "<b>$1</b>");
+            return MarkdownItalic.Replace(text, "<i>$1</i>");
         }
 
         private AsyncOperationHandle<string>? GetSpeakerNameHandle(AdventureStoryLineData line)
