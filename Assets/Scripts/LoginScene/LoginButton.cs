@@ -43,8 +43,6 @@ namespace LoginScene
                     ResetButton();
                     yield break;
                 }
-            
-                WDebug.Log("Response: " + webRequest.downloadHandler.text);
 
                 try
                 {
