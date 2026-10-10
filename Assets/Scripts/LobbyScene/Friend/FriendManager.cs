@@ -93,6 +93,21 @@ namespace LobbyScene
             }
         }
 
+        // Same hand-over as the modal: the invite dialog is a LobbyScene prefab instance, and this
+        // component only exists at runtime. Binding last matters because the pending invites are
+        // fetched here: a RecoverSnapshot that ran earlier (application focus on scene start) found no
+        // dialog and dropped the invite, so a player returning to the lobby never saw it.
+        public void BindInviteDialog(FriendMatchInviteDialog dialog)
+        {
+            if (inviteDialog == dialog) return;
+
+            inviteDialog = dialog;
+            if (inviteDialog != null)
+            {
+                RecoverSnapshot();
+            }
+        }
+
         public void OpenFriendModal()
         {
             if (friendModal != null)

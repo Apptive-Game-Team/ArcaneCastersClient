@@ -468,6 +468,10 @@ MonoBehaviour:
     m_Localized: Request pending
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000428
+    m_Localized: Friendly Match Invite
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

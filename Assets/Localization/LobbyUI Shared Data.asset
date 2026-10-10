@@ -469,6 +469,10 @@ MonoBehaviour:
     m_Key: FriendRequestPending
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000428
+    m_Key: FriendInviteDialogTitle
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

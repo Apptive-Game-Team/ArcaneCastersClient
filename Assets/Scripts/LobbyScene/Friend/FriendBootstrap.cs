@@ -6,12 +6,14 @@ namespace LobbyScene
 {
     /// <summary>
     /// Creates the friend manager on first lobby load, owns the F hotkey, and connects the friend
-    /// modal that <c>LobbyScene</c> places as an inactive <c>FriendModal.prefab</c> instance.
+    /// modal and the invite dialog that <c>LobbyScene</c> places as <c>FriendModal.prefab</c> and
+    /// <c>FriendMatchInviteDialog.prefab</c> instances.
     /// </summary>
     public class FriendBootstrap : MonoBehaviour
     {
         private static FriendBootstrap instance;
         private FriendModalUIController modal;
+        private FriendMatchInviteDialog inviteDialog;
 
         public static void Attach(Transform pill)
         {
@@ -26,6 +28,7 @@ namespace LobbyScene
             }
 
             instance.BindModal();
+            instance.BindInviteDialog();
         }
 
         // Entry for the lobby menu's friend item (LobbyMenu.OpenFriends). The
@@ -68,6 +71,27 @@ namespace LobbyScene
             if (FriendManager.Instance != null)
             {
                 FriendManager.Instance.BindFriendModal(modal);
+            }
+        }
+
+        // Bound after the modal so the pending-invite fetch it starts finds both windows in place.
+        // The dialog's own Awake hides its inner root, so the instance itself stays active.
+        private void BindInviteDialog()
+        {
+            if (inviteDialog == null)
+            {
+                inviteDialog = FindObjectOfType<FriendMatchInviteDialog>(true);
+            }
+
+            if (inviteDialog == null)
+            {
+                Debug.LogWarning("[FriendBootstrap] LobbyScene has no FriendMatchInviteDialog instance.");
+                return;
+            }
+
+            if (FriendManager.Instance != null)
+            {
+                FriendManager.Instance.BindInviteDialog(inviteDialog);
             }
         }
 
