@@ -61,7 +61,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11952177456451584
-    m_Localized: "**Squish\u2026**"
+    m_Localized: "<b>Squish\u2026</b>"
     m_Metadata:
       m_Items: []
   - m_Id: 11952238559072256
@@ -74,7 +74,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11952288257380352
-    m_Localized: "**Squish Squish\u2026**"
+    m_Localized: "<b>Squish Squish\u2026</b>"
     m_Metadata:
       m_Items: []
   - m_Id: 11952321639845888
@@ -87,7 +87,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11952364224614400
-    m_Localized: '**Creeeak**'
+    m_Localized: '<b>Creeeak</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 11952395698671616
@@ -141,7 +141,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11952747407407340
-    m_Localized: '**Creak...**'
+    m_Localized: '<b>Creak...</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 11952788641975230
@@ -174,7 +174,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11953077283950460
-    m_Localized: '**Clank... clank...**'
+    m_Localized: '<b>Clank... clank...</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 11953118518518350
@@ -194,7 +194,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11953283456789910
-    m_Localized: '**Grrrrr...**'
+    m_Localized: '<b>Grrrrr...</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 11953324691357800
