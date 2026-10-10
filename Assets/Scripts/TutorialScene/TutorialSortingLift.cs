@@ -24,6 +24,25 @@ namespace TutorialScene
         }
 
         private readonly List<Entry> entries = new List<Entry>();
+        private readonly List<TutorialPointer> pointers = new List<TutorialPointer>();
+
+        /// <summary>
+        /// 대상을 손가락으로 가리킨다. 올린 sorting 과 같이 RestoreAll 에서 거두므로, 단계를
+        /// 넘기거나 튜토리얼을 건너뛰면 손가락도 같이 사라진다.
+        /// </summary>
+        public void Point(Transform target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            TutorialPointer pointer = TutorialPointer.PointAt(target);
+            if (pointer != null)
+            {
+                pointers.Add(pointer);
+            }
+        }
 
         public void Lift(Transform target, int sortingLayerId, int sortingOrder)
         {
@@ -64,6 +83,16 @@ namespace TutorialScene
 
         public void RestoreAll()
         {
+            foreach (TutorialPointer pointer in pointers)
+            {
+                if (pointer != null)
+                {
+                    pointer.Dismiss();
+                }
+            }
+
+            pointers.Clear();
+
             // 같은 대상을 두 번 올렸을 수 있으므로 역순으로 되돌려야 처음 값이 남는다.
             for (int i = entries.Count - 1; i >= 0; i--)
             {
