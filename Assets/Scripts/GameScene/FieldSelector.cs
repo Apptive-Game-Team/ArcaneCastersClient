@@ -103,6 +103,8 @@ namespace GameScene
             currentRangeObj = CreateRangeIndicator(out rangeShapeRenderer);
             currentAimObj.SetActive(false);
             currentRangeObj.SetActive(false);
+
+            TryGetGroundCollider(out _);
         }
 
         void Update()
@@ -387,30 +389,38 @@ namespace GameScene
 
             nextGroundColliderSearchTime = Time.unscaledTime + MissingReferenceRetryInterval;
 
-            if (!string.IsNullOrEmpty(groundObjectName))
-            {
-                GameObject groundObject = GameObject.Find(groundObjectName);
-                if (groundObject != null && groundObject.TryGetComponent(out groundCollider))
-                {
-                    resolvedGroundCollider = groundCollider;
-                    return true;
-                }
-            }
-
-            resolvedGroundCollider = FindObjectByName<Collider>("Ground") ??
-                                     FindObjectByName<Collider>("Panel");
+            resolvedGroundCollider = FindGroundColliderInScene();
             groundCollider = resolvedGroundCollider;
             return resolvedGroundCollider != null;
         }
 
-        private static T FindObjectByName<T>(string namePart) where T : Component
+        private Collider FindGroundColliderInScene()
         {
-            T[] components = FindObjectsByType<T>(FindObjectsSortMode.None);
-            foreach (T component in components)
+            Collider[] colliders = FindObjectsByType<Collider>(FindObjectsSortMode.None);
+            if (!string.IsNullOrEmpty(groundObjectName))
             {
-                if (component != null && component.name.Contains(namePart, System.StringComparison.OrdinalIgnoreCase))
+                foreach (Collider col in colliders)
                 {
-                    return component;
+                    if (col != null && col.gameObject.name == groundObjectName)
+                    {
+                        return col;
+                    }
+                }
+            }
+
+            foreach (Collider col in colliders)
+            {
+                if (col != null && col.name.Contains("Ground", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    return col;
+                }
+            }
+
+            foreach (Collider col in colliders)
+            {
+                if (col != null && col.name.Contains("Panel", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    return col;
                 }
             }
 
