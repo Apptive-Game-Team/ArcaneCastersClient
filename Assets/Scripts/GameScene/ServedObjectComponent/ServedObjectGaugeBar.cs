@@ -52,6 +52,7 @@ namespace GameScene.ServedObjectComponent
         private bool subscribedToGaugeChanges;
         private Canvas canvas;
         private bool gaugeReceived;
+        private Camera targetCamera;
 
         private void Awake()
         {
@@ -60,7 +61,8 @@ namespace GameScene.ServedObjectComponent
             if (canvas != null)
             {
                 canvasRectTransform = canvas.GetComponent<RectTransform>();
-                canvas.worldCamera = GameScene.Object.PresentationWorld.CameraFor(this);
+                targetCamera = GameScene.Object.PresentationWorld.CameraFor(this);
+                canvas.worldCamera = targetCamera;
             }
 
             ApplyDataVisibility();
@@ -258,9 +260,23 @@ namespace GameScene.ServedObjectComponent
             return Mathf.Max(fallbackBounds.size.x, fallbackBounds.size.y);
         }
 
+        private Camera GetFacingCamera()
+        {
+            if (targetCamera == null)
+            {
+                targetCamera = GameScene.Object.PresentationWorld.CameraFor(this);
+                if (canvas != null && canvas.worldCamera == null)
+                {
+                    canvas.worldCamera = targetCamera;
+                }
+            }
+
+            return targetCamera;
+        }
+
         private Quaternion GetFacingRotation()
         {
-            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
+            Camera camera = GetFacingCamera();
             return camera != null ? camera.transform.rotation : Quaternion.identity;
         }
 
