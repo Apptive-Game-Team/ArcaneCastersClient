@@ -7,7 +7,7 @@ namespace TutorialScene
     /// <summary>
     /// 튜토리얼에서 눌러야 할 곳을 손가락 그림으로 가리킨다. 손끝이 대상 중심에 오도록 두고,
     /// 0.6초마다 손을 대상 쪽으로 눌렀다 뗀다. 누르는 순간 손끝 자리에 고리가 한 번 퍼진다.
-    /// 끌어다 놓는 단계는 출발점에서 누르고 도착점까지 끌고 가서 떼는 동작을 반복한다.
+    /// 카드를 골라 전장에 놓는 단계는 카드를 누르고 놓을 자리로 옮겨 가 누르는 동작을 반복한다.
     /// </summary>
     /// <remarks>
     /// 프리팹 루트가 자기 Screen Space Overlay Canvas 를 갖는다. 대상이 어느 Canvas 에 있든
@@ -63,7 +63,7 @@ namespace TutorialScene
             return pointer;
         }
 
-        /// <summary>UI 대상에서 화면 좌표 한 점까지 끌어다 놓으라고 가리킨다.</summary>
+        /// <summary>UI 대상을 누른 뒤 화면 좌표 한 점을 누르라고, 대상에서 그 점까지 손을 옮기며 가리킨다.</summary>
         public static TutorialPointer Drag(Transform from, Func<Vector2?> toScreenPoint)
         {
             TutorialPointer pointer = Spawn();
@@ -206,8 +206,9 @@ namespace TutorialScene
         }
 
         /// <summary>
-        /// 한 주기: 출발점에서 누르고(0~0.2), 누른 채 도착점까지 옮기고(0.2~0.7), 떼고(0.7~0.85),
-        /// 잠깐 사라졌다가(0.85~1) 처음부터 다시 한다.
+        /// 카드는 끌어서 놓는 것이 아니라 눌러 고른 뒤 놓을 자리를 누른다(CardUI.OnCardClicked,
+        /// FieldSelector). 그래서 손은 출발점을 한 번 누르고(0~0.2), 손을 든 채 도착점으로
+        /// 옮겨(0.2~0.6), 도착점을 한 번 누른 뒤(0.6~0.8), 잠깐 사라졌다가(0.8~1) 다시 한다.
         /// </summary>
         private void UpdateDrag(Vector2 from, Vector2 to, float elapsed)
         {
@@ -215,23 +216,28 @@ namespace TutorialScene
 
             if (phase < 0.2f)
             {
-                float depth = Mathf.SmoothStep(0f, 1f, phase / 0.2f);
+                if ((lastPhase < 0.1f || lastPhase > phase) && phase >= 0.1f)
+                {
+                    StartRing(from);
+                }
+
+                float depth = Mathf.Sin(phase / 0.2f * Mathf.PI);
                 PlaceHand(from, 1f - depth, Mathf.Lerp(1f, pressedScale, depth), 1f);
             }
-            else if (phase < 0.7f)
+            else if (phase < 0.6f)
             {
-                float travel = Mathf.SmoothStep(0f, 1f, (phase - 0.2f) / 0.5f);
-                PlaceHand(Vector2.Lerp(from, to, travel), 0f, pressedScale, 1f);
+                float travel = Mathf.SmoothStep(0f, 1f, (phase - 0.2f) / 0.4f);
+                PlaceHand(Vector2.Lerp(from, to, travel), 1f, 1f, 1f);
             }
-            else if (phase < 0.85f)
+            else if (phase < 0.8f)
             {
-                if (lastPhase < 0.7f)
+                if (lastPhase < 0.7f && phase >= 0.7f)
                 {
                     StartRing(to);
                 }
 
-                float release = (phase - 0.7f) / 0.15f;
-                PlaceHand(to, release, Mathf.Lerp(pressedScale, 1f, release), 1f - release);
+                float depth = Mathf.Sin((phase - 0.6f) / 0.2f * Mathf.PI);
+                PlaceHand(to, 1f - depth, Mathf.Lerp(1f, pressedScale, depth), 1f);
             }
             else
             {
