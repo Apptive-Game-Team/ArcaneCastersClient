@@ -12,6 +12,7 @@ namespace Global.Sound.BGM
         private SoundVolumeSetter volumeSetter;
         private Coroutine transition;
         private float fade = 1f;
+        private bool overridden;
 
         protected override void Awake()
         {
@@ -42,8 +43,9 @@ namespace Global.Sound.BGM
             PlayBGM();
         }
 
-        private void PlayBGM()
+        private void PlayBGM(bool resetPitch = true)
         {
+            overridden = false;
             if (audioSource == null)
             {
                 return;
@@ -52,7 +54,11 @@ namespace Global.Sound.BGM
             BGMClipContainer bgmClipContainer = FindObjectOfType<BGMClipContainer>();
             AudioClip targetClip = bgmClipContainer != null ? bgmClipContainer.GetBGMClip() : null;
 
-            audioSource.pitch = 1.0f;
+            // A scene load starts at normal speed; restoring mid-match keeps fever time's pitch.
+            if (resetPitch)
+            {
+                audioSource.pitch = 1.0f;
+            }
 
             if (targetClip == null)
             {
@@ -73,6 +79,41 @@ namespace Global.Sound.BGM
             }
 
             StartTransition(SwitchTo(targetClip));
+        }
+
+        /// <summary>
+        /// Fades to <paramref name="clip"/> until <see cref="RestoreSceneDefault"/> or the next scene load.
+        /// A null clip does nothing, so the current BGM keeps playing.
+        /// </summary>
+        public void PlayOverride(AudioClip clip)
+        {
+            if (audioSource == null || clip == null)
+            {
+                return;
+            }
+
+            overridden = true;
+            if (audioSource.clip == clip && audioSource.isPlaying)
+            {
+                if (!Mathf.Approximately(fade, 1f))
+                {
+                    StartTransition(FadeTo(1f));
+                }
+                return;
+            }
+
+            StartTransition(SwitchTo(clip));
+        }
+
+        /// <summary>Returns to the scene's own track. Does nothing unless <see cref="PlayOverride"/> is active.</summary>
+        public void RestoreSceneDefault()
+        {
+            if (!overridden)
+            {
+                return;
+            }
+
+            PlayBGM(false);
         }
 
         public void SetPitch(float pitch)
