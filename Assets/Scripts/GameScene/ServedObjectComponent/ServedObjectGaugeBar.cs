@@ -52,6 +52,7 @@ namespace GameScene.ServedObjectComponent
         private bool subscribedToGaugeChanges;
         private Canvas canvas;
         private bool gaugeReceived;
+        private bool hasResolvedServedObject;
 
         private void Awake()
         {
@@ -122,6 +123,11 @@ namespace GameScene.ServedObjectComponent
             NormalizeTransform();
         }
 
+        private void OnTransformParentChanged()
+        {
+            hasResolvedServedObject = false;
+        }
+
         private bool ResolveServedObject()
         {
             if (servedObject != null)
@@ -129,7 +135,13 @@ namespace GameScene.ServedObjectComponent
                 return true;
             }
 
+            if (hasResolvedServedObject)
+            {
+                return false;
+            }
+
             servedObject = GetComponentInParent<ServedObject>();
+            hasResolvedServedObject = true;
             return servedObject != null;
         }
 
