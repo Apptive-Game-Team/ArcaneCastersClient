@@ -1,5 +1,6 @@
 using Data;
 using Data.Adventures;
+using Data.BattleThemes;
 using GameScene.Dto;
 using Global;
 using LobbyScene.Debugger;
@@ -62,7 +63,8 @@ namespace Adventures
                 return;
             }
 
-            MatchedInfoDto matchedInfoDto = MatchedInfoDto.CreateDebugSession(response.sessionId, "left", SceneContext.UserID);
+            MatchedInfoDto matchedInfoDto = MatchedInfoDto.CreateDebugSession(
+                response.sessionId, "left", SceneContext.UserID, response.mapType);
             OnMatched(matchedInfoDto);
         }
 
@@ -84,10 +86,13 @@ namespace Adventures
 
             // CurrentAdventure is destroyed on this load (it is bound to AdventureScene /
             // AdventuresScene), so the theme has to be copied into SceneContext now or it is
-            // gone by the time BattleThemeApplier reads it in GameScene.
-            SceneContext.BattleTheme = CurrentAdventure.Instance != null
+            // gone by the time BattleThemeApplier reads it in GameScene. The server's mapType
+            // wins; the adventure's own BattleTheme is only the fallback for a server that
+            // sends none.
+            BattleThemeScriptableObject adventureTheme = CurrentAdventure.Instance != null
                 ? CurrentAdventure.Instance.Adventure?.BattleTheme
                 : null;
+            SceneContext.PrepareMap(matchedInfoDto.mapType, adventureTheme);
 
             SceneManager.LoadScene(targetSceneName);
         }
