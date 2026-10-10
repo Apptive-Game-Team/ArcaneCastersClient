@@ -4,7 +4,21 @@ namespace GameScene
 {
     public abstract class GameConfig
     {
-        public const float FRAME_DURATION = 0.05f;
+        public const int DEFAULT_TICK_RATE = 20;
+
+        /// <summary>
+        /// 서버 tick 이 초당 몇 번 도는지. 서버가 "sync" 메시지의 tickRate 로 알려 준다.
+        /// 이 필드가 없는 옛 서버는 항상 20 이었으므로 없거나 0 이하면 20 으로 둔다.
+        /// </summary>
+        public static int TickRate { get; private set; } = DEFAULT_TICK_RATE;
+
+        /// <summary>서버 tick 하나의 길이(초). 위치 보간 길이와 파괴 지연처럼 서버 frame 에 묶인 값에 쓴다.</summary>
+        public static float FrameDuration => 1f / TickRate;
+
+        public static void SetTickRate(int tickRate)
+        {
+            TickRate = tickRate > 0 ? tickRate : DEFAULT_TICK_RATE;
+        }
 
         // 아래 필드 치수는 서버 상수의 복제본이다.
         // 원본: game 모듈 com.wordonline.server.game.config.GameConfig 의 WIDTH / HEIGHT.

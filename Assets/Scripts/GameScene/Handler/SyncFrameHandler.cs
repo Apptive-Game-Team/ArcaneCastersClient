@@ -19,6 +19,8 @@ namespace GameScene.Handler
                 return;
             }
 
+            GameConfig.SetTickRate(syncFrameInfo.tickRate);
+
             // 마나 UI 업데이트
             GameSceneUIController.Instance.UpdateMana(syncFrameInfo.updatedMana);
             
