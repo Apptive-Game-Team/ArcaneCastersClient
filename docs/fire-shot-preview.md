@@ -1,5 +1,9 @@
 # Magic previews using actual in-game presentation
 
+Runtime recordings are downloaded from the selected lobby's server-preview API.
+The legacy 85 recordings are now Editor-only regression fixtures. See
+`.agents/docs/server-magic-previews.md` for startup, caching and deployment ordering.
+
 The deck hover and magic book explanation use the same MagicPreview prefab.
 The book retains its icon; replay appears below the description. Situations play
 sequentially without selectors or captions.

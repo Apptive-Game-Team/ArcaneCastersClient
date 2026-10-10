@@ -31,6 +31,16 @@ namespace DeckScene
 
         private HoverPopupTransition hoverTransition;
         private int renderVersion;
+        private IReadOnlyList<CombinedMagicData> shownMagics;
+        private RectTransform shownAnchor;
+
+        private void OnEnable() => MagicPreviewDataSource.Changed += PreviewChanged;
+        private void OnDisable() { MagicPreviewDataSource.Changed -= PreviewChanged; renderVersion++; }
+        private void PreviewChanged(string name)
+        {
+            if (shownMagics == null || shownMagics.Count != 1) return;
+            if (name == null || name == shownMagics[0].serverName) Show(shownMagics, shownAnchor);
+        }
 
         private void Awake()
         {
@@ -58,6 +68,8 @@ namespace DeckScene
             panelRoot ??= gameObject;
             Hide();
             ClearItems();
+            shownMagics = magics;
+            shownAnchor = anchor;
             bool hasPreview = previewPrefab != null && magics != null && magics.Count == 1 && previewPrefab.Supports(magics[0]);
             currentPanelHeight = hasPreview
                 ? PanelHeight + previewPrefab.GetComponent<LayoutElement>().preferredHeight + DetailSpacing
@@ -95,6 +107,7 @@ namespace DeckScene
 
         public void Hide()
         {
+            shownMagics = null;
             renderVersion++;
             GameObject root = panelRoot != null ? panelRoot : gameObject;
             hoverTransition ??= new HoverPopupTransition(this);
