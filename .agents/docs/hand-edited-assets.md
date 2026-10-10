@@ -413,8 +413,10 @@ child must be multiplied by 2.4 too. Several things hide from a plain multiply:
 2. A `Sliced` image keeps its border in sprite pixels, so after a 2.4 times larger
    canvas the border looks 2.4 times thinner. Divide `m_PixelsPerUnitMultiplier` by the factor.
 3. Scripts that build UI at runtime hard-code pixel sizes for the canvas they were
-   written against (`FriendBootstrap` pill button 120 wide, font 16;
-   `LobbyUIController` reward popup 430x230). Grep `sizeDelta` and `anchoredPosition`
+   written against (`FriendBootstrap` friend modal 760x560;
+   `LobbyUIController` reward popup 430x230). Serialized script fields in canvas
+   units hide the same way: `BattleHoverPresenter.bounceHeight` (12, now 28.8) is a
+   plain float that no RectTransform search finds. Grep `sizeDelta` and `anchoredPosition`
    in `Assets/Scripts` before changing a canvas, and list what you could not rescale.
 4. `GameScene` `BarController.MoveBar` moves the `Bars` rect between the literal
    y values 540 and 240. Shrinking the bar by editing offsets breaks the closed
@@ -422,3 +424,20 @@ child must be multiplied by 2.4 too. Several things hide from a plain multiply:
    `CardImage.prefab` (the hand card) is also used by `SpectatingScene` and
    `InteractiveTutorialScene` and has fixed-size children, so shrink the hand by
    scaling its parent, not by editing the prefab or the grid cell size.
+5. A GameObject the scene adds under a prefab instance is a normal document whose
+   `m_Father` is a `stripped` RectTransform. A rescale script that walks
+   `m_Children` from the canvas never reaches it, because a stripped transform has
+   no `m_Children`; it lives only in the PrefabInstance's `m_AddedGameObjects`.
+   #297 missed the hamburger `Icon` under the `Menu` Button Variant this way: the
+   button grew to 87x94.5 and the icon stayed 16.25x16.25, so it showed as a tiny
+   icon inside a large button. Walk ancestors upward from every RectTransform
+   instead (a stripped transform's parent is its PrefabInstance's
+   `m_TransformParent`), and keep only those that reach the rescaled canvas. A
+   root PrefabInstance with its own `Canvas` is a separate canvas: `MatchingPage`
+   in `LobbyScene` is 800x450 inside its prefab, so its `CoachPanel` and
+   `CoachCloseButton` stay unscaled.
+6. The prefab's own `m_PixelsPerUnitMultiplier` counts as an unoverridden value
+   from item 1: `Button Variant` ships 4, so every Sliced instance on a 1920 canvas
+   needs a `1.66667` modification on `1683031503725330102`. `RectOffset` fields
+   (`m_Padding` of a layout group) hold integers; round them after multiplying
+   instead of writing 9.6, which #297 did for `UserNamePill`.
