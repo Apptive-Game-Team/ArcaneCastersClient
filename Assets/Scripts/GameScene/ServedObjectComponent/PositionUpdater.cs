@@ -77,27 +77,25 @@ namespace GameScene.ServedObjectComponent
             lastX = x;
         }
         
-        // 반대 방향 이동이 이 시간 동안 이어져야 방향을 바꾼다. 갱신 횟수로 세면 tick rate 마다 달라진다.
+        // 반대 방향 갱신이 이 시간만큼 연속으로 와야 방향을 바꾼다. 횟수로 세되 기준을 tick rate 에 맞춰
+        // 20 FPS 에서는 예전과 같은 10번이 된다. 시각으로 재면 멈췄다가 한 번 튄 갱신에도 바로 뒤집힌다.
         private const float FLIP_THRESHOLD_SECONDS = 0.5f;
-        private float flipPendingSince = -1f;
-        
+        private int flipCounter = 0;
+
         private void SetFlipX(bool flipX)
         {
             if (spriteRenderer.flipX != flipX)
             {
-                if (flipPendingSince < 0f)
-                {
-                    flipPendingSince = Time.time;
-                }
-                if (Time.time - flipPendingSince >= FLIP_THRESHOLD_SECONDS)
+                flipCounter++;
+                if (flipCounter >= Mathf.CeilToInt(FLIP_THRESHOLD_SECONDS * GameConfig.TickRate))
                 {
                     spriteRenderer.flipX = flipX;
-                    flipPendingSince = -1f;
+                    flipCounter = 0;
                 }
             }
             else
             {
-                flipPendingSince = -1f;
+                flipCounter = 0;
             }
         }
     }
