@@ -103,7 +103,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000023
-    m_Localized: "The menu lets you open Options and My Profile."
+    m_Localized: "The menu opens your profile, friends, appearance, chests and settings."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000024

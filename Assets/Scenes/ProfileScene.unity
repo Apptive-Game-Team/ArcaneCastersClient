@@ -416,6 +416,7 @@ MonoBehaviour:
   gameHistoryScrollRect: {fileID: 660125648}
   gameHistoryPageSize: 20
   loadMoreThreshold: 0.05
+  appearanceButton: {fileID: 3805682341646821748}
 --- !u!114 &307
 MonoBehaviour:
   m_ObjectHideFlags: 0

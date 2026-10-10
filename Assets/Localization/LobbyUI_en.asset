@@ -392,6 +392,10 @@ MonoBehaviour:
     m_Localized: Could not open it now. It is waiting in your chests.
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000401
+    m_Localized: "Friends"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -393,6 +393,10 @@ MonoBehaviour:
     m_Key: AdventureChestOpenFailed
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000401
+    m_Key: Friends
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

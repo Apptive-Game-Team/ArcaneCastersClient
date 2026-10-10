@@ -401,6 +401,10 @@ MonoBehaviour:
       \uD654\uBA74\uC5D0 \uBCF4\uAD00\uB418\uC5B4 \uC788\uC5B4\uC694."
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000401
+    m_Localized: "\uCE5C\uAD6C"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

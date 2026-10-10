@@ -79,7 +79,7 @@ namespace LobbyScene
             }
         }
 
-        // Entry for the scene-authored friend button (FriendButton). The
+        // Entry for the lobby menu's friend item (LobbyMenu.OpenFriends). The
         // bootstrap is created by LobbyUserNameUI.Awake before any click.
         public static void ToggleFriendModal()
         {
