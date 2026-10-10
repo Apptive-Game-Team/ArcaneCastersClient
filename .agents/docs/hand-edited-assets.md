@@ -397,3 +397,28 @@ result (mock: `docs/pr-media/261/river-mock-64ppu-logical-guides.png`, ground te
 resampled to 64 pixels per unit, one background texture covering 20 units) before
 accepting. The `.meta` files set sprite single, 256 pixels per unit, `maxTextureSize`
 4096 (the 2560 pixel height must not shrink), no mipmaps.
+
+## Changing a CanvasScaler reference resolution
+
+Issue #269: `LobbyScene.unity` had a canvas at 800x450 while every other canvas is
+1920x1080, so the lobby drew 2.4 times larger than the rest. Changing
+`m_ReferenceResolution` alone makes the whole canvas 2.4 times smaller, so every
+child must be multiplied by 2.4 too. Several things hide from a plain multiply:
+
+1. A `PrefabInstance` stores its geometry as `m_Modifications`
+   (`m_SizeDelta.x`, `m_fontSize`, `m_margin.x` ...). Scale those values, and add a
+   modification for every value the prefab supplies that was never overridden
+   (`Button Variant` text: `m_fontSizeMin` 9, `m_fontSizeMax` 15, margin 10/2/10/5).
+   Otherwise the autosize range and margins stay at the old scale.
+2. A `Sliced` image keeps its border in sprite pixels, so after a 2.4 times larger
+   canvas the border looks 2.4 times thinner. Divide `m_PixelsPerUnitMultiplier` by the factor.
+3. Scripts that build UI at runtime hard-code pixel sizes for the canvas they were
+   written against (`FriendBootstrap` pill button 120 wide, font 16;
+   `LobbyUIController` reward popup 430x230). Grep `sizeDelta` and `anchoredPosition`
+   in `Assets/Scripts` before changing a canvas, and list what you could not rescale.
+4. `GameScene` `BarController.MoveBar` moves the `Bars` rect between the literal
+   y values 540 and 240. Shrinking the bar by editing offsets breaks the closed
+   state; scaling a pivot-bottom child with `m_LocalScale` keeps both positions.
+   `CardImage.prefab` (the hand card) is also used by `SpectatingScene` and
+   `InteractiveTutorialScene` and has fixed-size children, so shrink the hand by
+   scaling its parent, not by editing the prefab or the grid cell size.
