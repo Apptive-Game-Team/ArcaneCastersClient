@@ -21,6 +21,7 @@ namespace TutorialScene
         private bool _advanceRequested;
         private readonly HashSet<string> _usedMagicNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private bool _enemyDead;
+        private readonly BattleTutorialPointerGuide _pointerGuide = new BattleTutorialPointerGuide();
         public event Action OnEnd;
 
         protected override void Awake()
@@ -33,6 +34,7 @@ namespace TutorialScene
         private void OnDestroy()
         {
             _cardSender.MagicUsed -= OnMagicUsed;
+            _pointerGuide.Clear();
         }
 
         private void Start()
@@ -69,10 +71,10 @@ namespace TutorialScene
                         yield return WaitAdvance();
                         break;
                     case TutorialWaitType.UsedMagic:
-                        yield return WaitUntil(() => _usedMagicNames.Contains(step.magicName));
+                        yield return WaitUntil(() => _usedMagicNames.Contains(step.magicName), step.magicName);
                         break;
                     case TutorialWaitType.EnemyDead:
-                        yield return WaitUntil(() => _enemyDead);
+                        yield return WaitUntil(() => _enemyDead, null);
                         break;
                 }
             }
@@ -108,10 +110,17 @@ namespace TutorialScene
             }
         }
 
-        private IEnumerator WaitUntil(System.Func<bool> condition)
+        /// <summary>마법을 써야 넘어가는 단계. 기다리는 동안 손가락이 써야 할 카드를 가리킨다.</summary>
+        /// <param name="magicName">써야 할 마법. null 이면 아무 카드나 가리킨다.</param>
+        private IEnumerator WaitUntil(System.Func<bool> condition, string magicName)
         {
             while (!condition())
+            {
+                _pointerGuide.Update(magicName, _cardSender);
                 yield return null;
+            }
+
+            _pointerGuide.Clear();
         }
 
         public void RequestAdvance()
