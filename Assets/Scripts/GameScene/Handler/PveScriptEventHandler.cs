@@ -186,6 +186,7 @@ namespace GameScene.Handler
         {
             activeSpeakerObjectId = speakerObjectId;
             TryResolveTarget(activeSpeakerObjectId, out activeTarget);
+            EnsureWorldCamera();
             SetBubbleMessage(message);
             hideAtTime = Time.unscaledTime + duration;
             bubbleRoot.gameObject.SetActive(true);
