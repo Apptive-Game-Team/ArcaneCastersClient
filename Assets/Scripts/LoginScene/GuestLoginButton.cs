@@ -34,8 +34,6 @@ namespace LoginScene
                     yield break;
                 }
             
-                WDebug.Log("Response: " + webRequest.downloadHandler.text);
-            
                 string body = webRequest.downloadHandler.text;
                 if (!JsonCodec.TryDeserialize(body, out GuestAuthResponseDto authResponseDto, out string error))
                 {
