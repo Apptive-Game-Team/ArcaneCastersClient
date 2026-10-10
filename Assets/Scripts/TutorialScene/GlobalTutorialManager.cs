@@ -46,6 +46,16 @@ namespace TutorialScene
 
         public void SetProgress(OnboardingProgress progress)
         {
+            // 덱 만들기·저장 단계는 없어졌다. 옛 값이 들어오면 덱 단계의 마지막 단계로 보낸다.
+            switch (progress)
+            {
+                case OnboardingProgress.Deck_SelectCreateDeck:
+                case OnboardingProgress.Deck_CreateDeck:
+                case OnboardingProgress.Deck_SaveDeck:
+                    progress = OnboardingProgress.Deck_ReturnToLobby;
+                    break;
+            }
+
             CurrentProgress = progress;
         }
 
