@@ -71,6 +71,14 @@ and nowhere else in that table.
   This counts the escaped output, so a Korean line breaks after far fewer words
   than an English one.
 - Files are LF only (`.gitattributes` is `* text=auto eol=lf`).
+- `Onboarding/Onboarding_ko-KR.asset` and `Onboarding_en.asset` do not follow
+  the two rules above: both store the raw text, Hangul included, in a
+  double-quoted scalar on one line. Keep that shape when editing them; rewriting
+  them to the escaped, wrapped form turns a one-line text change into a diff of
+  every row. Check the rule against the file before applying it — wrapping
+  reproduces every Editor-written row of `tutorial_ko-KR.asset` and
+  `tutorial_en.asset`, and the rows it did not reproduce were hand-written on
+  one line.
 
 Do not copy the neighbouring rows blindly. The tables already contain damage
 that an Editor pass would fix but review will not:
