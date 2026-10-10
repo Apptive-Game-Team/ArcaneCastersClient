@@ -23,21 +23,7 @@ namespace GameScene.Handler
                 return;
             }
 
-            if (!string.IsNullOrEmpty(info.channel))
-            {
-                Apply(info.channel, info.value, info.seq);
-            }
-
-            if (info.states != null)
-            {
-                foreach (PveStateDto state in info.states)
-                {
-                    if (state != null)
-                    {
-                        Apply(state.channel, state.value, state.seq);
-                    }
-                }
-            }
+            Apply(info.channel, info.value, info.seq);
         }
 
         private void Apply(string channel, string value, int seq)

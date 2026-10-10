@@ -17,9 +17,7 @@ namespace GameScene.Dto
             { "pveScript", typeof(PveScriptEventInfo) },
             { "pveScriptEvent", typeof(PveScriptEventInfo) },
             { "pveObjective", typeof(PveObjectiveInfo) },
-            // Assumed names: the server worker had not fixed the push's type when this was written.
-            { "pveState", typeof(PveStateInfo) },
-            { "pveSync", typeof(PveStateInfo) }
+            { "pveState", typeof(PveStateInfo) }
         };
 
         public ServerMessageConverter() : base("type", Subtypes)
