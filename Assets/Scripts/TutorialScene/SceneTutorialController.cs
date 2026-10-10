@@ -56,6 +56,35 @@ namespace TutorialScene
             panel?.Show(messageKey, onNext, panelSide);
 
             LiftAboveMask(targets, blockTargetClick);
+            PointAtAction(targets, onNext);
+        }
+
+        /// <summary>
+        /// 이 단계에서 눌러야 할 것을 손가락으로 가리킨다. 다음 버튼으로 넘어가는 단계는 패널의
+        /// 다음 버튼을, 대상을 눌러야 넘어가는 단계는 대상을 가리킨다. 대상을 여럿 주면 배경처럼
+        /// 아래에 깔 것을 먼저 주므로(LiftAboveMask), 눌러야 할 것은 맨 뒤에 있다.
+        /// </summary>
+        private void PointAtAction(Transform[] targets, Action onNext)
+        {
+            if (onNext != null)
+            {
+                lift.Point(panel != null ? panel.NextButtonTransform : null);
+                return;
+            }
+
+            if (targets == null)
+            {
+                return;
+            }
+
+            for (int i = targets.Length - 1; i >= 0; i--)
+            {
+                if (targets[i] != null)
+                {
+                    lift.Point(targets[i]);
+                    return;
+                }
+            }
         }
 
         /// <summary>
