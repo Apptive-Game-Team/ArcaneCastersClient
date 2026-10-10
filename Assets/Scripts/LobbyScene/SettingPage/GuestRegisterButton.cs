@@ -37,7 +37,7 @@ namespace LobbyScene.SettingPage
 
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                WDebug.LogError("Error: " + webRequest.downloadHandler.text);
+                WDebug.LogError($"Guest register HTTP error: {webRequest.responseCode} / {webRequest.error}");
                 SystemMessageUI.Instance.ShowMessage(webRequest.downloadHandler.text);
                 ResetButton();
                 yield break;
