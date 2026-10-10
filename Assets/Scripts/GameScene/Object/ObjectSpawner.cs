@@ -33,6 +33,12 @@ namespace GameScene.Object
                 TitanFistPresenter.Attach(spawnedObject);
             }
 
+            // Previews pass a world and must not touch the live BGM.
+            if (createdObjectDto.boss && world == null)
+            {
+                BossBgmTrigger.Attach(spawnedObject);
+            }
+
             ServedObject servedObject = spawnedObject.GetOrAddComponent<ServedObject>();
             PopupBookVisualPresenter popupBookPresenter = PopupBookVisualPresenter.Attach(servedObject);
 

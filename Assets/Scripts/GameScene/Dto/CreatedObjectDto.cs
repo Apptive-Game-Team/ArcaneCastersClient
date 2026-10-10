@@ -12,6 +12,8 @@ namespace GameScene.Dto
         public Vector3 position;
         public string type; // enum 대응 가능
         public List<Gizmo> gizmos;
+        // Written by the server only when true. Absent means false, so a server that predates the field is safe.
+        public bool boss;
 
         public CreatedObjectDto()
         {
