@@ -19,11 +19,11 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 318000000001
-    m_Localized: "Would you like to start the tutorial?"
+    m_Localized: "Want to try the tutorial?"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000002
-    m_Localized: "If this is your first time, we will briefly introduce decks, the magic book, matching, and the menu."
+    m_Localized: "New here? We will show you around"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000003
@@ -39,23 +39,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000007
-    m_Localized: "A deck has 15 cards."
+    m_Localized: "A deck holds 15 cards"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000008
-    m_Localized: "Now build your own deck."
+    m_Localized: "Build your own deck"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000009
-    m_Localized: "You cannot leave this screen until your deck is complete and saved."
+    m_Localized: "Save your deck before you leave"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000010
-    m_Localized: "You have selected all 15 cards. Press Save to store your deck."
+    m_Localized: "All 15 cards are in. Press Save"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000011
-    m_Localized: "Your deck is saved. Press the lobby button to return."
+    m_Localized: "Saved. Press the lobby button"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000012
@@ -63,19 +63,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000013
-    m_Localized: "The magic book shows detailed information about spells."
+    m_Localized: "The Magic Book shows spell details"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000014
-    m_Localized: "Let's look at Grass Seed Slime as an example."
+    m_Localized: "Take Grass Seed Slime as an example"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000015
-    m_Localized: "Press the element chart button."
+    m_Localized: "Press the element chart button"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000016
-    m_Localized: "The magic book guide is complete. Press the lobby button to return."
+    m_Localized: "Guide done. Press the lobby button"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000017
@@ -83,19 +83,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000018
-    m_Localized: "Use the dropdown on the right to choose your deck."
+    m_Localized: "Pick your deck from the list on the right"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000019
-    m_Localized: "Match with other players to test your skills."
+    m_Localized: "Test your skills against other players"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000020
-    m_Localized: "You can also match against bots for relaxed practice."
+    m_Localized: "Or practice against bots"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000021
-    m_Localized: "You can enjoy adventures."
+    m_Localized: "You can go on adventures too"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000022
@@ -103,11 +103,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000023
-    m_Localized: "The menu lets you open Options and My Profile."
+    m_Localized: "The menu has Options and your Profile"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000024
-    m_Localized: "Onboarding complete."
+    m_Localized: "Tutorial complete"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000025
@@ -119,55 +119,55 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000027
-    m_Localized: "Press the Deck button to open the deck screen."
+    m_Localized: "Press the Deck button"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000028
-    m_Localized: "Choose cards from the card list and add them to your current deck."
+    m_Localized: "Pick cards to add to your deck"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000029
-    m_Localized: "Press the Magic Book button to open the magic book screen."
+    m_Localized: "Press the Magic Book button"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000030
-    m_Localized: "Click any magic."
+    m_Localized: "Tap any spell"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000031
-    m_Localized: "Read the magic description."
+    m_Localized: "Read the spell description"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000032
-    m_Localized: "The chart shows element relationships."
+    m_Localized: "The chart shows element matchups"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000033
-    m_Localized: "Click where you want the spell to land."
+    m_Localized: "Tap where the spell should land"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000035
-    m_Localized: "Casting is not working. Try one of the outlined cards."
+    m_Localized: "Casting failed. Try an outlined card"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000036
-    m_Localized: "Pick the outlined cards and cast a spell."
+    m_Localized: "Cast a spell with an outlined card"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000037
-    m_Localized: "Click the mana bar to bring it up."
+    m_Localized: "Tap the mana bar to open your cards"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000038
-    m_Localized: "Try a bot match to practice."
+    m_Localized: "Try a practice match against a bot"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000039
-    m_Localized: "Your turn. Hit the bot match button to start your first battle."
+    m_Localized: "Press the bot match button to play your first match"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000040
-    m_Localized: "Nicely done on your first game. Go play whatever you like now."
+    m_Localized: "First match done! Now play as you like"
     m_Metadata:
       m_Items: []
   references:

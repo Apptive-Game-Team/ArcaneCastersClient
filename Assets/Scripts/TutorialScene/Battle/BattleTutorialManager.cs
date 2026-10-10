@@ -18,6 +18,9 @@ namespace TutorialScene
         [SerializeField] TextMeshProUGUI _dialogueText;
         [SerializeField] ManaMocker _manaMocker;
 
+        [Tooltip("마법을 써야 하는 단계에서 숨길 대화창. 비우면 대화 문구의 부모를 쓴다.")]
+        [SerializeField] GameObject _dialogueRoot;
+
         private bool _advanceRequested;
         private readonly HashSet<string> _usedMagicNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private bool _enemyDead;
@@ -63,7 +66,7 @@ namespace TutorialScene
                     GiveCard(name);
                 }
 
-                yield return SetLocalizedDialogue(step.localizationKey);
+                yield return ShowStepMessage(step);
 
                 switch (step.waitType)
                 {
@@ -79,8 +82,50 @@ namespace TutorialScene
                 }
             }
 
+            TutorialHint.HideCurrent();
             OnEnd?.Invoke();
             SceneManager.LoadScene(_tutorialData.lobbySceneName);
+        }
+
+        /// <summary>
+        /// 마법을 써야 넘어가는 단계는 대화창을 숨기고 위쪽 한 줄 안내만 띄운다. 대화창은
+        /// 아무 키나 눌러 넘기는 설명 단계에서만 쓴다. 대화창이 화면 아래에 떠 있으면
+        /// 마법을 쓰는 동안 캐릭터와 전장을 가린다.
+        /// </summary>
+        private IEnumerator ShowStepMessage(TutorialStep step)
+        {
+            bool isAction = step.waitType != TutorialWaitType.Next;
+            GameObject dialogueRoot = DialogueRoot;
+            if (dialogueRoot != null)
+            {
+                dialogueRoot.SetActive(!isAction);
+            }
+
+            if (isAction)
+            {
+                TutorialHint.Show(_tutorialData.stringTableName, step.localizationKey);
+                yield break;
+            }
+
+            TutorialHint.HideCurrent();
+            yield return SetLocalizedDialogue(step.localizationKey);
+        }
+
+        /// <summary>
+        /// 대화창 루트. 씬에서 따로 지정하지 않으면 문구의 부모(TutorialSelectPanel 루트)를 쓴다.
+        /// </summary>
+        private GameObject DialogueRoot
+        {
+            get
+            {
+                if (_dialogueRoot != null)
+                {
+                    return _dialogueRoot;
+                }
+
+                Transform parent = _dialogueText != null ? _dialogueText.transform.parent : null;
+                return parent != null ? parent.gameObject : null;
+            }
         }
 
         private IEnumerator SetLocalizedDialogue(string key)
