@@ -388,6 +388,14 @@ MonoBehaviour:
       centered on each remnant.
     m_Metadata:
       m_Items: []
+  - m_Id: 1000073
+    m_Localized: Defender
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000074
+    m_Localized: Attacker
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
