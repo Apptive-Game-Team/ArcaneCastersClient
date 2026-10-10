@@ -396,6 +396,78 @@ MonoBehaviour:
     m_Localized: "Friends"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000410
+    m_Localized: Find Friends
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000411
+    m_Localized: Friend List
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000412
+    m_Localized: Requests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000413
+    m_Localized: Find and Add Friends
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000414
+    m_Localized: Friend Requests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000415
+    m_Localized: Search by nickname or email...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000416
+    m_Localized: Search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000417
+    m_Localized: Enter a nickname or email, then press Search to send a request.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000418
+    m_Localized: Received Requests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000419
+    m_Localized: Sent Requests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000420
+    m_Localized: Add Friend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000421
+    m_Localized: Invite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000422
+    m_Localized: Remove
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000423
+    m_Localized: Accept
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000424
+    m_Localized: Decline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000425
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000426
+    m_Localized: Already friends
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000427
+    m_Localized: Request pending
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -397,6 +397,78 @@ MonoBehaviour:
     m_Key: Friends
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000410
+    m_Key: FriendTabSearch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000411
+    m_Key: FriendTabList
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000412
+    m_Key: FriendTabRequests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000413
+    m_Key: FriendTitleSearch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000414
+    m_Key: FriendTitleRequests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000415
+    m_Key: FriendSearchPlaceholder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000416
+    m_Key: FriendSearchButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000417
+    m_Key: FriendSearchHint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000418
+    m_Key: FriendReceivedHeader
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000419
+    m_Key: FriendSentHeader
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000420
+    m_Key: FriendSendRequest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000421
+    m_Key: FriendInvite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000422
+    m_Key: FriendRemove
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000423
+    m_Key: FriendAccept
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000424
+    m_Key: FriendReject
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000425
+    m_Key: FriendCancelRequest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000426
+    m_Key: FriendAlreadyFriend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000427
+    m_Key: FriendRequestPending
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

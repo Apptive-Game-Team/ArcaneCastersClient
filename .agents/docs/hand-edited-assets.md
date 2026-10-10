@@ -413,7 +413,8 @@ child must be multiplied by 2.4 too. Several things hide from a plain multiply:
 2. A `Sliced` image keeps its border in sprite pixels, so after a 2.4 times larger
    canvas the border looks 2.4 times thinner. Divide `m_PixelsPerUnitMultiplier` by the factor.
 3. Scripts that build UI at runtime hard-code pixel sizes for the canvas they were
-   written against (`FriendBootstrap` friend modal 760x560;
+   written against (`FriendBootstrap` friend modal 760x560, moved into
+   `Assets/Prefabs/UI/Lobby/Friend/FriendModal.prefab` by #309;
    `LobbyUIController` reward popup 430x230). Serialized script fields in canvas
    units hide the same way: `BattleHoverPresenter.bounceHeight` (12, now 28.8) is a
    plain float that no RectTransform search finds. Grep `sizeDelta` and `anchoredPosition`
@@ -446,3 +447,26 @@ child must be multiplied by 2.4 too. Several things hide from a plain multiply:
    needs a `1.66667` modification on `1683031503725330102`. `RectOffset` fields
    (`m_Padding` of a layout group) hold integers; round them after multiplying
    instead of writing 9.6, which #297 did for `UserNamePill`.
+
+## A modal prefab saved inactive in the scene
+
+`FriendModal.prefab` (#309) is instanced once in `LobbyScene` with an
+`m_IsActive: 0` override, and its controller `FriendModalUIController` sits on the
+prefab root. Two things follow, and neither shows an error:
+
+- `FindObjectOfType<T>()` skips inactive objects and returns null. `FriendBootstrap`
+  uses `FindObjectOfType<FriendModalUIController>(true)`.
+- The controller's `Awake` does not run until the first `SetActive(true)`, so it
+  must not deactivate itself in `Awake` (the old controller did, which would close
+  the modal the moment it opened). Listener wiring is idempotent and also called
+  from `Open()`.
+
+`FriendManager` is added with `AddComponent` at runtime, so its serialized
+`friendModal` was always null and friend events never refreshed the open modal.
+`FriendBootstrap` now hands the scene instance over with `BindFriendModal`.
+
+`Button Primary.prefab` has no instance anywhere in the project, so ids computed
+inside it are unverified. The friend prefabs use `Button Variant` instances with the
+same nine modifications `Button Primary` applies (orange `m_Color`, outline
+material, white text) instead. A generator for this layout is the fastest route:
+the modal and three row prefabs are about 300 YAML documents.

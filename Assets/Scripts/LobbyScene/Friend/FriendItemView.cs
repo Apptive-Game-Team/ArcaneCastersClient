@@ -1,15 +1,21 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace LobbyScene
 {
+    /// <summary>
+    /// One row of the friend list (<c>Assets/Prefabs/UI/Lobby/Friend/FriendRow.prefab</c>).
+    /// The invite button shows only while the friend is online.
+    /// </summary>
     public class FriendItemView : MonoBehaviour
     {
+        private static readonly Color TealColor = new Color32(0x2F, 0xB8, 0xA8, 0xFF);
+        private static readonly Color PrimaryOrange = new Color32(0xFF, 0x9A, 0x1F, 0xFF);
+        private static readonly Color MutedTextColor = new Color32(0x8E, 0x95, 0xA5, 0xFF);
+
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text statusText;
-        [SerializeField] private TMP_Text mmrText;
         [SerializeField] private UnityEngine.UI.Button inviteButton;
         [SerializeField] private UnityEngine.UI.Button deleteButton;
 
@@ -42,28 +48,29 @@ namespace LobbyScene
             onInviteClicked = onInvite;
             onDeleteClicked = onDelete;
 
+            bool isOnline = IsStatus(friend.status, "Online");
+            bool isBusy = IsStatus(friend.status, "OnMatching") || IsStatus(friend.status, "OnPlaying");
+
             if (nameText != null)
             {
-                nameText.text = friend.name ?? "알 수 없음";
+                nameText.text = $"{friend.name}  MMR {friend.mmr}";
             }
 
             if (statusText != null)
             {
-                statusText.text = FormatStatus(friend.status);
-            }
-
-            if (mmrText != null)
-            {
-                mmrText.text = $"MMR: {friend.mmr}";
+                statusText.text = $"[{FormatStatus(friend.status)}]";
+                statusText.color = isOnline ? TealColor : (isBusy ? PrimaryOrange : MutedTextColor);
             }
 
             if (inviteButton != null)
             {
-                // Can invite only when online/in lobby
-                bool canInvite = friend.status != null &&
-                                 friend.status.Equals("Online", StringComparison.OrdinalIgnoreCase);
-                inviteButton.interactable = canInvite;
+                inviteButton.gameObject.SetActive(isOnline);
             }
+        }
+
+        private static bool IsStatus(string status, string expected)
+        {
+            return status != null && status.Equals(expected, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string FormatStatus(string status)

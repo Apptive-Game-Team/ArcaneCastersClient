@@ -82,6 +82,17 @@ namespace LobbyScene
             eventStream.Connect(ServerList.MatchingServer.Api, SceneContext.JwtToken);
         }
 
+        // FriendBootstrap adds this component at runtime, so the scene's modal cannot be a serialized
+        // reference here; the bootstrap hands it over once it has found the LobbyScene instance.
+        public void BindFriendModal(FriendModalUIController modal)
+        {
+            friendModal = modal;
+            if (friendModal != null)
+            {
+                friendModal.Initialize(apiClient);
+            }
+        }
+
         public void OpenFriendModal()
         {
             if (friendModal != null)
