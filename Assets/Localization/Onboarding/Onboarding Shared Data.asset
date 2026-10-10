@@ -39,16 +39,8 @@ MonoBehaviour:
     m_Key: onboarding.deck.rules
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000008
-    m_Key: onboarding.deck.createDeck
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000009
     m_Key: onboarding.deck.cannotLeave
-    m_Metadata:
-      m_Items: []
-  - m_Id: 318000000010
-    m_Key: onboarding.deck.saveEnabled
     m_Metadata:
       m_Items: []
   - m_Id: 318000000011
@@ -117,10 +109,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000027
     m_Key: onboarding.deck.openDeck
-    m_Metadata:
-      m_Items: []
-  - m_Id: 318000000028
-    m_Key: onboarding.deck.selectCards
     m_Metadata:
       m_Items: []
   - m_Id: 318000000029

@@ -76,25 +76,10 @@ namespace TutorialScene
         private void ShowDeckRules()
         {
             GlobalTutorialManager.Instance.SetProgress(OnboardingProgress.Deck_ExplainDeck);
-            deckController.ShowDeckRules(ShowCreateDeckStep);
+            deckController.ShowDeckRules(ShowReturnToLobbyStep);
         }
 
-        private void ShowCreateDeckStep()
-        {
-            GlobalTutorialManager.Instance.SetProgress(OnboardingProgress.Deck_SelectCreateDeck);
-            deckController.CreateDeckSelected += OnCreateDeckSelected;
-            deckController.ShowCreateDeck();
-        }
-
-        private void OnCreateDeckSelected()
-        {
-            deckController.CreateDeckSelected -= OnCreateDeckSelected;
-            GlobalTutorialManager.Instance.SetProgress(OnboardingProgress.Deck_SaveDeck);
-            deckController.DeckSaved += OnDeckSaved;
-            deckController.ShowDeckEditor();
-        }
-
-        private void OnDeckSaved()
+        private void ShowReturnToLobbyStep()
         {
             GlobalTutorialManager.Instance.SetProgress(OnboardingProgress.Deck_ReturnToLobby);
             deckController.ReturnToLobbySelected -= OnReturnToLobbySelected;
@@ -125,8 +110,6 @@ namespace TutorialScene
         {
             if (deckController != null)
             {
-                deckController.CreateDeckSelected -= OnCreateDeckSelected;
-                deckController.DeckSaved -= OnDeckSaved;
                 deckController.ReturnToLobbySelected -= OnReturnToLobbySelected;
                 deckController.Hide();
                 deckController = null;
