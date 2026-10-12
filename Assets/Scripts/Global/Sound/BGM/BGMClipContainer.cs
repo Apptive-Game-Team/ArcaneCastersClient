@@ -16,14 +16,35 @@ namespace Global.Sound.BGM
             public AudioClip clip;
         }
 
+        public const string BossKey = "boss";
+
+        // Set for the current scene only, by BattleThemeApplier on an adventure match.
+        private AudioClip themeBattleClip;
+        private AudioClip themeBossClip;
+
+        /// <summary>
+        /// Replaces the scene default track and the <see cref="BossKey"/> track with the battle
+        /// theme's own. A null argument keeps what this container already holds for that slot.
+        /// </summary>
+        public void SetThemeClips(AudioClip battleClip, AudioClip bossClip)
+        {
+            themeBattleClip = battleClip;
+            themeBossClip = bossClip;
+        }
+
         public AudioClip GetBGMClip()
         {
-            return bgmClip;
+            return themeBattleClip != null ? themeBattleClip : bgmClip;
         }
 
         /// <summary>The clip registered under <paramref name="key"/>, or null when the key is not in the list.</summary>
         public AudioClip GetClip(string key)
         {
+            if (key == BossKey && themeBossClip != null)
+            {
+                return themeBossClip;
+            }
+
             if (bgmEntries == null)
             {
                 return null;
