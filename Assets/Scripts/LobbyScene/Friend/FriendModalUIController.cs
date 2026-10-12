@@ -254,7 +254,13 @@ namespace LobbyScene
             {
                 if (version != friendsVersion) return;
 
-                if (!success || friends == null || friends.Count == 0)
+                if (!success)
+                {
+                    ShowStatus(friendStatusText, "친구 목록을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.", SlateTextColor);
+                    return;
+                }
+
+                if (friends == null || friends.Count == 0)
                 {
                     ShowStatus(friendStatusText, "등록된 친구가 없습니다. [친구 검색]에서 친구를 추가해보세요!", SlateTextColor);
                     return;
@@ -305,7 +311,13 @@ namespace LobbyScene
             {
                 if (version != requestsVersion) return;
 
-                if (!success || requests == null || requests.Count == 0)
+                if (!success)
+                {
+                    ShowStatus(receivedStatusText, "받은 친구 요청을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.", SlateTextColor);
+                    return;
+                }
+
+                if (requests == null || requests.Count == 0)
                 {
                     ShowStatus(receivedStatusText, "받은 친구 요청이 없습니다.", SlateTextColor);
                     return;
@@ -322,7 +334,13 @@ namespace LobbyScene
             {
                 if (version != requestsVersion) return;
 
-                if (!success || requests == null || requests.Count == 0)
+                if (!success)
+                {
+                    ShowStatus(sentStatusText, "보낸 친구 요청을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.", SlateTextColor);
+                    return;
+                }
+
+                if (requests == null || requests.Count == 0)
                 {
                     ShowStatus(sentStatusText, "보낸 친구 요청이 없습니다.", SlateTextColor);
                     return;
