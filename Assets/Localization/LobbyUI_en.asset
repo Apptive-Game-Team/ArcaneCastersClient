@@ -470,6 +470,68 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000428
     m_Localized: Friendly Match Invite
+  - m_Id: 76060000000000601
+    m_Localized: Local server
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000602
+    m_Localized: Run matches on my PC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000603
+    m_Localized: Install
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000604
+    m_Localized: Update
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000605
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000606
+    m_Localized: Not installed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000607
+    m_Localized: No version is available to install
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000608
+    m_Localized: 'Version {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000609
+    m_Localized: 'New version available: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000610
+    m_Localized: "Version {0} - starting"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000611
+    m_Localized: "Version {0} - running"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000612
+    m_Localized: 'Could not start: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000613
+    m_Localized: 'Downloading {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000614
+    m_Localized: 'Install failed: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000615
+    m_Localized: "Tick rate - next match {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000616
+    m_Localized: Auto
     m_Metadata:
       m_Items: []
   references:
