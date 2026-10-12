@@ -91,6 +91,32 @@ jobs:
             Library-${{ matrix.targetPlatform }}-
             Library-
 
+      # 로컬 game server 가 처음 쓸 정적 데이터를 설치본에 넣는다. client 는 이 파일과 내려받은
+      # static.json 중 lobby 가 요구하는 staticVersion 과 같은 것을 쓴다. 주소는
+      # MatchingServerCatalog.Deploy 와 같다. Library cache key 를 흔들지 않도록 cache 단계 뒤에 쓴다.
+      - name: Fetch offline static data
+        env:
+          DEPLOY_LOBBY_URL: https://lobby.ac.yunseong.dev
+        run: |
+          set -euo pipefail
+          mkdir -p Assets/StreamingAssets/Offline
+          curl -fsSL --retry 3 "$DEPLOY_LOBBY_URL/api/offline-pack" -o offline-pack.json
+          python3 - <<'PY'
+          import json, sys
+          pack = json.load(open('offline-pack.json'))
+          if pack.get('schemaVersion') != 1:
+              print(f"::error::offline-pack schemaVersion {pack.get('schemaVersion')} is not 1")
+              sys.exit(1)
+          data = pack.get('staticData')
+          if not isinstance(data, dict) or data.get('schemaVersion') != 1:
+              print('::error::offline-pack has no staticData with schemaVersion 1')
+              sys.exit(1)
+          with open('Assets/StreamingAssets/Offline/static.json', 'w', encoding='utf-8') as out:
+              json.dump(data, out, ensure_ascii=False, separators=(',', ':'))
+          print(f"static.json staticVersion {pack.get('staticVersion')}")
+          PY
+          rm offline-pack.json
+
       # 데스크톱은 BuildScript 에 대응하는 메서드가 없어 game-ci 기본 빌드를 쓴다.
       # BuildScript 의 DEV_BUILD 심볼은 WebGL 그룹에만 적용되므로 영향이 없다.
       - name: Build ${{ matrix.label }}
