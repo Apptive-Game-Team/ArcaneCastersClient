@@ -126,6 +126,7 @@ namespace Sound
             source.PlayOneShot(clip);
             voices.Add(new Voice(
                 source,
+                clip,
                 category,
                 priority,
                 baseVolume,
@@ -261,6 +262,7 @@ namespace Sound
         private sealed class Voice
         {
             public readonly AudioSource Source;
+            public readonly AudioClip Clip;
             public readonly GameSfxCategory Category;
             public readonly GameSfxPriority Priority;
             public readonly float BaseVolume;
@@ -268,12 +270,14 @@ namespace Sound
 
             public Voice(
                 AudioSource source,
+                AudioClip clip,
                 GameSfxCategory category,
                 GameSfxPriority priority,
                 float baseVolume,
                 float endTime)
             {
                 Source = source;
+                Clip = clip;
                 Category = category;
                 Priority = priority;
                 BaseVolume = baseVolume;

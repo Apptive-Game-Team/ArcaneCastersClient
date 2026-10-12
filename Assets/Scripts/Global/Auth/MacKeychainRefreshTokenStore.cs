@@ -206,7 +206,6 @@ namespace Global.Auth
         private static extern int SecKeychainItemModifyAttributesAndData(IntPtr itemReference,
             IntPtr attributeList, uint length, byte[] data);
 
-        // void CFRelease(CFTypeRef cf);
         [DllImport(CoreFoundationFramework)]
         private static extern void CFRelease(IntPtr reference);
     }

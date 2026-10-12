@@ -39,16 +39,8 @@ MonoBehaviour:
     m_Key: onboarding.deck.rules
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000008
-    m_Key: onboarding.deck.createDeck
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000009
     m_Key: onboarding.deck.cannotLeave
-    m_Metadata:
-      m_Items: []
-  - m_Id: 318000000010
-    m_Key: onboarding.deck.saveEnabled
     m_Metadata:
       m_Items: []
   - m_Id: 318000000011
@@ -119,10 +111,6 @@ MonoBehaviour:
     m_Key: onboarding.deck.openDeck
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000028
-    m_Key: onboarding.deck.selectCards
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000029
     m_Key: onboarding.magicBook.openMagicBook
     m_Metadata:
@@ -165,6 +153,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000040
     m_Key: onboarding.hospitality.complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000041
+    m_Key: onboarding.deck.deckList
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000042
+    m_Key: onboarding.deck.deckCards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000043
+    m_Key: onboarding.deck.ownedCards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000044
+    m_Key: onboarding.deck.cardMana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000045
+    m_Key: onboarding.deck.saveButton
     m_Metadata:
       m_Items: []
   m_Metadata:

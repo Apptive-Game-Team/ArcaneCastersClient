@@ -53,6 +53,11 @@ namespace GameScene.Handler
             }
 
             ServedObject actor = PresentationWorld.Find(hit.actorId, world);
+            if (actor != null)
+            {
+                HitKnockback.Play(target, actor.transform.position);
+            }
+
             if (actor != null && StormStagChargeImpactRules.ShouldPlay(actor.ActiveEffects))
             {
                 DamagedObjectEffect.SetSelfDestroyEffect(

@@ -136,16 +136,7 @@ namespace ResultScene
 
         private void SetMmrDelta(int? delta)
         {
-            if (mmrDeltaText == null) return;
-
-            if (delta == null)
-            {
-                mmrDeltaText.text = string.Empty;
-                return;
-            }
-
-            mmrDeltaText.text = delta.Value >= 0 ? $"+{delta.Value}" : delta.Value.ToString();
-            mmrDeltaText.color = delta.Value >= 0 ? mmrGainColor : mmrLossColor;
+            ResultMmrDeltaPresenter.SetMmrDelta(mmrDeltaText, delta, mmrGainColor, mmrLossColor);
         }
 
         private static void SetActive(GameObject target, bool active)

@@ -97,3 +97,7 @@ crashlytics-build.properties
 # Python bytecode from the .art tooling (generate-magic-pages.py)
 __pycache__/
 *.pyc
+
+# Regenerated from the current GameScene by the editor-only playground tool.
+Assets/DevPlayground/Generated/
+Assets/DevPlayground/Generated.meta

@@ -23,6 +23,7 @@ namespace LobbyScene
 
         private static void ClearServerScopedData()
         {
+            Data.Magic.MagicPreviewDataSource.Clear();
             SceneContext.User = null;
             SceneContext.MatchInfo = null;
             SceneContext.SelectedDeck = null;

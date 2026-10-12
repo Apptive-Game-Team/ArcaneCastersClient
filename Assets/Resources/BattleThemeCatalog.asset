@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc271a292d494179b16fbdec3d10f10d, type: 3}
+  m_Name: BattleThemeCatalog
+  m_EditorClassIdentifier:
+  forest: {fileID: 11400000, guid: 05dd762f4d094cdc9feb169253ae35cd, type: 2}
+  fortress: {fileID: 11400000, guid: 13bcbcaed1f9489abb1ddf8b4f5213da, type: 2}
+  gate: {fileID: 11400000, guid: bd087dbdd86440ea979ff5eea57da807, type: 2}

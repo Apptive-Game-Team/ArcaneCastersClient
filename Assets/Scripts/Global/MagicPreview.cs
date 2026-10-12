@@ -19,9 +19,13 @@ namespace Global
     {
         [SerializeField] private RawImage output;
         [SerializeField] private Material groundMaterial;
-        [SerializeField] private PreviewClip[] clips;
+#if UNITY_EDITOR
+        // Editor tests inject fixtures. No recordings or asset references are shipped in the player.
+        private PreviewClip[] clips;
+#endif
         [SerializeField] private TMP_Text scenarioCaption;
-        private PreviewClip clip;
+        private string magicId;
+        private string recordingJson;
         private Recording recording;
         private Scenario[] scenarios;
         private int scenarioIndex;
@@ -40,33 +44,41 @@ namespace Global
         private int stageSlot = -1;
 
         public void SetViewZoom(float zoom) => viewZoom = Mathf.Clamp(zoom, 1f, 2f);
-        public bool Supports(CombinedMagicData magic) => FindClip(magic?.serverName) != null;
+        public bool Supports(CombinedMagicData magic) => TryGetRecording(magic?.serverName, out _);
         public bool Configure(CombinedMagicData magic)
         {
             ReleaseStage();
-            clip = FindClip(magic?.serverName);
+            magicId = magic?.serverName;
+            TryGetRecording(magicId, out recordingJson);
             recording = null;
             scenarios = null;
             if (isActiveAndEnabled) OnEnable();
-            return clip != null;
+            return recordingJson != null;
         }
 
-        private PreviewClip FindClip(string name)
+        private bool TryGetRecording(string name, out string json)
         {
-            if (string.IsNullOrWhiteSpace(name) || clips == null) return null;
+            json = null;
+            if (string.IsNullOrWhiteSpace(name)) return false;
+#if UNITY_EDITOR
+            if (clips != null)
             foreach (PreviewClip candidate in clips)
-                if (candidate != null && candidate.recordingAsset != null && string.Equals(candidate.magicId, name, StringComparison.OrdinalIgnoreCase)) return candidate;
-            return null;
+                if (candidate != null && candidate.recordingAsset != null && string.Equals(candidate.magicId, name, StringComparison.OrdinalIgnoreCase)) {
+                    json = candidate.recordingAsset.text;
+                    return true;
+                }
+#endif
+            return MagicPreviewDataSource.TryGet(name, out json);
         }
 
         private void OnEnable()
         {
-            if (output == null || clip == null) return;
+            if (output == null || recordingJson == null) return;
             try
             {
-                recording ??= JsonCodec.Deserialize<Recording>(clip.recordingAsset.text);
+                recording ??= JsonCodec.Deserialize<Recording>(recordingJson);
                 if (recording == null || (recording.version != 1 && recording.version != 2) ||
-                    !string.Equals(recording.magic, clip.magicId, StringComparison.OrdinalIgnoreCase) ||
+                    !string.Equals(recording.magic, magicId, StringComparison.OrdinalIgnoreCase) ||
                     recording.frameDuration <= 0f || float.IsNaN(recording.frameDuration) || float.IsInfinity(recording.frameDuration) || groundMaterial == null)
                     throw new InvalidOperationException("Unsupported recording.");
                 scenarios = recording.version == 1
@@ -200,7 +212,7 @@ namespace Global
         {
             world.Clear();
             world.SetParameters(scenario.parameters);
-            world.DamageFlashInterval = clip.magicId == "sand_storm" ? 1f : 0f;
+            world.DamageFlashInterval = magicId == "sand_storm" ? 1f : 0f;
             fixtureTargetIds = Targets(scenario);
             elapsed = 0f;
             nextFrame = 0;
@@ -225,7 +237,7 @@ namespace Global
 
         private void Unavailable(Exception exception)
         {
-            Debug.LogWarning($"Magic preview unavailable ({clip?.magicId}): {exception.Message}");
+            Debug.LogWarning($"Magic preview unavailable ({magicId}): {exception.Message}");
             ReleaseStage();
             gameObject.SetActive(false);
         }
@@ -246,7 +258,9 @@ namespace Global
             previewCamera = null;
         }
 
+#if UNITY_EDITOR
         [Serializable] private sealed class PreviewClip { public string magicId; public TextAsset recordingAsset; }
+#endif
         [Serializable, Preserve] private sealed class Recording { [Preserve] public Recording() { } public int version; public string magic; public float frameDuration, duration; public Frame[] frames; public Scenario[] scenarios; }
         [Serializable, Preserve] private sealed class Scenario { [Preserve] public Scenario() { } public string id, labelKo, labelEn; public float duration; public Frame[] frames; public int[] fixtureTargetIds; public Dictionary<string, float> parameters; }
         [Serializable, Preserve] private sealed class Frame { [Preserve] public Frame() { } public float time; public ObjectsInfo objects; public List<GameEvent> events; }

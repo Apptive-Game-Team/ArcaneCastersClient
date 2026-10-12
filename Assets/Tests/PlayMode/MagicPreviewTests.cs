@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -36,6 +37,18 @@ namespace WordOnline.Tests
             var instance = UnityEngine.Object.Instantiate(prefab, root.transform);
             previewType = Runtime("Global.MagicPreview");
             preview = instance.GetComponent(previewType);
+            Type clipType = previewType.GetNestedType("PreviewClip", BindingFlags.NonPublic);
+            // Keep recordings in Editor-only fixtures; the player prefab has no bundled JSON references.
+            string[] paths = System.IO.Directory.GetFiles("Assets/Tests/Editor/MagicPreviews", "*.json");
+            paths = paths.OrderBy(path => System.IO.Path.GetFileNameWithoutExtension(path) == "fire_shot" ? 0 : 1).ToArray();
+            Array fixtures = Array.CreateInstance(clipType, paths.Length);
+            for (int i = 0; i < paths.Length; i++) {
+                object fixture = Activator.CreateInstance(clipType, true);
+                clipType.GetField("magicId").SetValue(fixture, System.IO.Path.GetFileNameWithoutExtension(paths[i]));
+                clipType.GetField("recordingAsset").SetValue(fixture, AssetDatabase.LoadAssetAtPath<TextAsset>(paths[i].Replace('\\', '/')));
+                fixtures.SetValue(fixture, i);
+            }
+            previewType.GetField("clips", Private).SetValue(preview, fixtures);
         }
         private object Field(string name) => previewType.GetField(name, Private).GetValue(preview);
         private object Property(string name) => previewType.GetProperty(name).GetValue(preview);
@@ -355,6 +368,7 @@ namespace WordOnline.Tests
             var clone = UnityEngine.Object.Instantiate(preview.gameObject, root.transform);
             clone.SetActive(false);
             var second = clone.GetComponent(previewType);
+            previewType.GetField("clips", Private).SetValue(second, Field("clips"));
             var type = Runtime("Data.Magic.CombinedMagicData");
             object magic = Activator.CreateInstance(type);
             type.GetField("serverName").SetValue(magic, "fire_shot");

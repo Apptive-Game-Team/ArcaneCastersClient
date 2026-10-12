@@ -11,8 +11,10 @@ namespace MagicBookScene
     // without a new art pass.
     public class ElementChartView : MonoBehaviour
     {
-        // Row is the attacking element, column is the defending element.
-        // Mirrors ElementalChart.CHART on the game server.
+        // Row is the attacking element, column is the defending element, both indexed by
+        // ElementType (None first). Mirrors ElementalChart.CHART on the game server.
+        // The chart draws only the elements from Fire onward: None attacks and defends at
+        // 1x against everything, so its row and column say nothing.
         private static readonly float[,] Multipliers =
         {
             //             None  Fire  Water Nature Lightning Rock  Wind
@@ -25,15 +27,19 @@ namespace MagicBookScene
             /* Wind      */ { 1f, 1f, 1f, 1f, 2f, 2f, 1f },
         };
 
-        private const int ElementCount = 7;
+        private const ElementType FirstChartElement = ElementType.Fire;
+        private const int ElementCount = (int)ElementType.Wind - (int)FirstChartElement + 1;
         private const int LineCount = ElementCount + 1;
         private const float ChartPadding = 34f;
+        // Strip reserved at the top and at the left of the panel for the axis titles that
+        // MagicBookScene.unity places (ColumnAxisTitle, RowAxisTitle). Their rects assume
+        // this value, so change both together.
+        private const float AxisTitleBand = 48f;
         private const float CellSpacing = 6f;
         // FlatTile 을 2000x1125 캔버스에서 목업의 3px 외곽선으로 그리는 배율 (DESIGN.md).
         private const float CellCornerScale = 1.6f;
         private const float IconInset = 8f;
         private const float MultiplierFontSize = 30f;
-        private const float AxisFontSize = 18f;
 
         // DESIGN.md 의 tile-light, grey-text, red, mana 색.
         private static readonly Color CellColor = new Color32(0xEE, 0xF3, 0xF8, 0xFF);
@@ -62,21 +68,33 @@ namespace MagicBookScene
             built = true;
 
             RectTransform grid = CreateGrid();
-            CreateAxisCell(grid);
+            CreateCornerCell(grid);
 
             for (int defender = 0; defender < ElementCount; defender++)
             {
-                CreateIconCell(grid, (ElementType)defender);
+                CreateIconCell(grid, ChartElement(defender));
             }
 
             for (int attacker = 0; attacker < ElementCount; attacker++)
             {
-                CreateIconCell(grid, (ElementType)attacker);
+                ElementType attackerElement = ChartElement(attacker);
+                CreateIconCell(grid, attackerElement);
                 for (int defender = 0; defender < ElementCount; defender++)
                 {
-                    CreateMultiplierCell(grid, Multipliers[attacker, defender]);
+                    CreateMultiplierCell(grid, GetMultiplier(attackerElement, ChartElement(defender)));
                 }
             }
+        }
+
+        // Maps a chart row or column (0 is the first drawn element) to its ElementType.
+        private static ElementType ChartElement(int index)
+        {
+            return (ElementType)((int)FirstChartElement + index);
+        }
+
+        private static float GetMultiplier(ElementType attacker, ElementType defender)
+        {
+            return Multipliers[(int)attacker, (int)defender];
         }
 
         private RectTransform CreateGrid()
@@ -86,8 +104,8 @@ namespace MagicBookScene
             gridRect.SetParent(transform, false);
             gridRect.anchorMin = Vector2.zero;
             gridRect.anchorMax = Vector2.one;
-            gridRect.offsetMin = new Vector2(ChartPadding, ChartPadding);
-            gridRect.offsetMax = new Vector2(-ChartPadding, -ChartPadding);
+            gridRect.offsetMin = new Vector2(ChartPadding + AxisTitleBand, ChartPadding);
+            gridRect.offsetMax = new Vector2(-ChartPadding, -(ChartPadding + AxisTitleBand));
 
             var grid = gridObject.GetComponent<GridLayoutGroup>();
             grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
@@ -102,19 +120,16 @@ namespace MagicBookScene
         {
             Rect panel = ((RectTransform)transform).rect;
             float totalSpacing = CellSpacing * (LineCount - 1);
-            float width = (panel.width - ChartPadding * 2f - totalSpacing) / LineCount;
-            float height = (panel.height - ChartPadding * 2f - totalSpacing) / LineCount;
+            float width = (panel.width - ChartPadding * 2f - AxisTitleBand - totalSpacing) / LineCount;
+            float height = (panel.height - ChartPadding * 2f - AxisTitleBand - totalSpacing) / LineCount;
             return new Vector2(Mathf.Max(width, 1f), Mathf.Max(height, 1f));
         }
 
-        // The top-left corner names the two axes: rows attack, columns defend.
-        private void CreateAxisCell(RectTransform grid)
+        // The top-left corner has no content. It stays a plain tile so the header row and
+        // column line up with the grid; the axis titles sit outside the grid, in the scene.
+        private void CreateCornerCell(RectTransform grid)
         {
-            GameObject cell = CreateCell(grid, "AxisCell");
-            TMP_Text defenderLabel = CreateLabel(cell, "DefenderAxis", "DEF", AxisFontSize, NeutralTextColor);
-            defenderLabel.alignment = TextAlignmentOptions.TopRight;
-            TMP_Text attackerLabel = CreateLabel(cell, "AttackerAxis", "ATK", AxisFontSize, NeutralTextColor);
-            attackerLabel.alignment = TextAlignmentOptions.BottomLeft;
+            CreateCell(grid, "CornerCell");
         }
 
         private void CreateIconCell(RectTransform grid, ElementType slot)
@@ -123,7 +138,7 @@ namespace MagicBookScene
             Sprite sprite = ResolveIcon(slot);
             if (sprite == null)
             {
-                // None has no card art. Leave the cell empty instead of drawing an
+                // An element with no icon art leaves the cell empty instead of drawing an
                 // untextured Image, which shows up as a white box.
                 return;
             }
@@ -188,7 +203,7 @@ namespace MagicBookScene
             return label;
         }
 
-        // Returns null when the element has no icon, which is the case for None.
+        // Returns null when the element has no icon.
         private Sprite ResolveIcon(ElementType element)
         {
             return cardImageMapper != null

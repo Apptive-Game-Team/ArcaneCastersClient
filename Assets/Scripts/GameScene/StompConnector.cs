@@ -89,6 +89,8 @@ namespace GameScene
             base.Awake();
 
             _frameInfoHandler = new GeneralHandler(_pveSync);
+            // 새 경기마다 tick rate 를 기본값으로 되돌린다. 실제 값은 첫 sync 가 알려 준다.
+            GameConfig.SetTickRate(GameConfig.DEFAULT_TICK_RATE);
 
             _registry = new StompSubscriptionRegistry();
             _reconnect = gameObject.AddComponent<StompReconnectController>();

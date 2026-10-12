@@ -64,6 +64,7 @@ namespace Admin
                 if (!enterSpectatingSceneOnMatched) return;
 
                 SceneContext.MatchInfo = matchedInfo;
+                SceneContext.PrepareMap(matchedInfo.mapType, null);
                 SceneManager.LoadScene("Scenes/SpectatingScene");
             });
         }

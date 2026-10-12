@@ -67,6 +67,12 @@ namespace LobbyScene
             }));
         }
 
+        public void EnterFriendMatch(MatchedInfoDto matchedInfoDto)
+        {
+            if (matchedInfoDto == null) return;
+            OnMatched(matchedInfoDto);
+        }
+
         private void OnMatched(MatchedInfoDto matchedInfoDto)
         {
             SceneContext.MatchInfo = matchedInfoDto;
@@ -75,6 +81,9 @@ namespace LobbyScene
             SceneContext.ClearAdventureMatch();
             const string targetSceneName = "GameScene";
             if (SceneManager.GetActiveScene().name.Contains(targetSceneName)) return;
+
+            // Taken from the server's mapType; no mapType keeps the scene default.
+            SceneContext.PrepareMap(matchedInfoDto.mapType, null);
 
             // Matched can fire more than once for the same reconnect (snapshot poll and
             // event stream both feed it), so only the first call may start the transition.

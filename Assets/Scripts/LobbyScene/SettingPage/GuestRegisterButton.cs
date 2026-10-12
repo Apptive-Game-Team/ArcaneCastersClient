@@ -37,13 +37,11 @@ namespace LobbyScene.SettingPage
 
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                WDebug.LogError("Error: " + webRequest.downloadHandler.text);
+                WDebug.LogError($"Guest register HTTP error: {webRequest.responseCode} / {webRequest.error}");
                 SystemMessageUI.Instance.ShowMessage(webRequest.downloadHandler.text);
                 ResetButton();
                 yield break;
             }
-                
-            WDebug.Log("Response: " + webRequest.downloadHandler.text);
 
             // 옛 SceneContext.ClearContext() 는 메모리만 비웠다. 그러면 guest 이던 시절의 refresh token
             // family 가 서버에서 60일 동안 살아 있고 값도 기기에 남는다. Logout 이 취소 endpoint 를

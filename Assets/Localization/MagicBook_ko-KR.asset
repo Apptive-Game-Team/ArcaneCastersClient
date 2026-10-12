@@ -402,6 +402,14 @@ MonoBehaviour:
       \uD3ED\uBC1C\uC2DC\uD0B5\uB2C8\uB2E4."
     m_Metadata:
       m_Items: []
+  - m_Id: 1000073
+    m_Localized: "\uBC29\uC5B4 \uC6D0\uC18C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000074
+    m_Localized: "\uACF5\uACA9 \uC6D0\uC18C"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

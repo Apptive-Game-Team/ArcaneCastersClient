@@ -50,10 +50,13 @@ namespace LobbyScene.Debugger
                 yield break;
             }
 
-            SceneContext.MatchInfo = MatchedInfoDto.CreateDebugSession(response.sessionId, "left", SceneContext.UserID);
+            SceneContext.MatchInfo = MatchedInfoDto.CreateDebugSession(
+                response.sessionId, "left", SceneContext.UserID, response.mapType);
             // A debug practice session is never an adventure match; guarantee the forest
-            // default in case a previous adventure match left a theme set.
+            // default in case a previous adventure match left a theme set, then take the
+            // server's mapType if it sent one.
             SceneContext.ClearAdventureMatch();
+            SceneContext.PrepareMap(response.mapType, null);
             yield return GameDataRefresh.Refresh();
             SceneManager.LoadScene("GameScene");
         }
@@ -81,10 +84,13 @@ namespace LobbyScene.Debugger
                 yield break;
             }
 
-            SceneContext.MatchInfo = MatchedInfoDto.CreateDebugSession(response.sessionId, side, SceneContext.UserID);
+            SceneContext.MatchInfo = MatchedInfoDto.CreateDebugSession(
+                response.sessionId, side, SceneContext.UserID, response.mapType);
             // A debug 1v1 session is never an adventure match; guarantee the forest default
-            // in case a previous adventure match left a theme set.
+            // in case a previous adventure match left a theme set, then take the server's
+            // mapType if it sent one.
             SceneContext.ClearAdventureMatch();
+            SceneContext.PrepareMap(response.mapType, null);
             yield return GameDataRefresh.Refresh();
             SceneManager.LoadScene("GameScene");
         }

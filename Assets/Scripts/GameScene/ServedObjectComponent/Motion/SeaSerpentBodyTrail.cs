@@ -276,7 +276,7 @@ namespace GameScene.ServedObjectComponent.Motion
             for (int i = 0; i < segmentCount; i++)
             {
                 Vector3 aheadPosition = i == 0 ? headPosition : pathPositions[i - 1];
-                Vector2 travelDirection = GetScreenDirection(pathPositions[i], aheadPosition);
+                Vector2 travelDirection = GetScreenDirection(camera, pathPositions[i], aheadPosition);
                 float wave = slitherAmplitude * Mathf.Sin(Time.time * slitherSpeed - i * slitherPhaseStep);
                 segmentPositions[i] = pathPositions[i] + GetLateralOffset(camera, travelDirection, wave);
             }
@@ -290,7 +290,7 @@ namespace GameScene.ServedObjectComponent.Motion
                 }
 
                 Vector3 aheadPosition = i == 0 ? headPosition : segmentPositions[i - 1];
-                Vector2 towardAhead = GetScreenDirection(segmentPositions[i], aheadPosition);
+                Vector2 towardAhead = GetScreenDirection(camera, segmentPositions[i], aheadPosition);
                 segment.position = segmentPositions[i];
                 segment.rotation = GetLeanRotation(camera, towardAhead);
 
@@ -308,9 +308,8 @@ namespace GameScene.ServedObjectComponent.Motion
         /// <c>ProjectileUtil.GetRotation</c> reads it. The camera is tilted, so a world delta is not
         /// the direction the player sees.
         /// </summary>
-        private Vector2 GetScreenDirection(Vector3 from, Vector3 to)
+        private static Vector2 GetScreenDirection(Camera camera, Vector3 from, Vector3 to)
         {
-            Camera camera = GameScene.Object.PresentationWorld.CameraFor(this);
             Vector3 delta = camera != null
                 ? camera.WorldToScreenPoint(to) - camera.WorldToScreenPoint(from)
                 : to - from;

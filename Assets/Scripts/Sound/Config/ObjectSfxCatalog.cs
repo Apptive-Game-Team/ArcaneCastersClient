@@ -9,11 +9,16 @@ namespace Sound.Config
     {
         [SerializeField] private string runtimeType;
         [SerializeField] private ObjectSfxProfile profile;
+        [SerializeField] private ObjectSfxProfile attackProfile;
         [SerializeField] private bool intentionalSilent;
         [SerializeField] private bool serverAlias;
 
         public string RuntimeType => runtimeType;
         public ObjectSfxProfile Profile => profile;
+        public ObjectSfxProfile AttackProfile => attackProfile;
+        public ObjectSfxEventSlot EffectiveAttack => IntentionalSilent
+            ? null
+            : (attackProfile != null ? attackProfile : profile)?.Attack;
         public bool IntentionalSilent => intentionalSilent;
         public bool ServerAlias => serverAlias;
     }
@@ -29,7 +34,16 @@ namespace Sound.Config
 
         public bool TryResolve(string runtimeType, out ObjectSfxProfile profile)
         {
+            return TryResolve(runtimeType, out profile, out _);
+        }
+
+        public bool TryResolve(
+            string runtimeType,
+            out ObjectSfxProfile profile,
+            out ObjectSfxEventSlot attack)
+        {
             profile = null;
+            attack = null;
 
             if (string.IsNullOrEmpty(runtimeType))
             {
@@ -44,6 +58,7 @@ namespace Sound.Config
                 }
 
                 profile = entry.IntentionalSilent ? null : entry.Profile;
+                attack = entry.EffectiveAttack;
                 return true;
             }
 

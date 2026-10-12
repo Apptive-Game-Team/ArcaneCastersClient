@@ -36,7 +36,7 @@ namespace RegisterScene
 
                 if (webRequest.result != UnityWebRequest.Result.Success)
                 {
-                    WDebug.LogError("Error: " + webRequest.error);
+                    WDebug.LogError($"Register HTTP error: {webRequest.responseCode} / {webRequest.error}");
                     SystemMessageUI.Instance.ShowMessage(webRequest.downloadHandler.text);
                     ResetButton();
                     yield break;

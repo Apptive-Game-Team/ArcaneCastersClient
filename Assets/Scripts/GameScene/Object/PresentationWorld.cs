@@ -57,7 +57,6 @@ namespace GameScene.Object
             {
                 if (component is GameScene.Player.PlayerNameSetter nameSetter) nameSetter.SuppressPreviewName();
                 if (component is Selectable || component is GameScene.Player.PlayerNameSetter ||
-                    component is GameScene.ServedObjectComponent.OnAttack.OnAttackSoundPlayer ||
                     component is GameScene.ServedObjectComponent.Sound.ServedObjectSfxController)
                     component.enabled = false;
             }

@@ -1,0 +1,25 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on any icon. Use a landscape canvas exactly 1.5 times as wide as it is tall, 1536 pixels wide by 1024 pixels tall.
+
+A matching set of six small element icons for a 2.5D faceted low-poly papercraft game, drawn with the exact rendering technique of the attached reference images: the master style key lineup, the arcane impact shard effect, and the six element rune emblems. The emblems in the middle of the attached runes are the motifs to draw; draw ONLY the emblem itself, never the dark stone disc, ring or plate around it.
+
+Rendering technique, required exactly as in the references:
+- Faceted low-poly 2D. Build every shape from large flat polygonal planes, like cut and folded matte paper. One flat, solid colour per plane, hard sharp creases between neighbouring planes.
+- Three value bands per shape: a base colour, a broad flat highlight plane on the upper-left, a broad flat shadow plane on the lower-right. One light source from the upper-left for all six icons.
+- No outer contour line, no ink outline anywhere. Shapes separate only by flat colour value.
+- No smooth 3D shading, no gloss, no specular glint, no gradient across a plane, no texture, no grain, no painterly brushwork, no glow, no sparks or ember scatter. If it could be mistaken for a rendered 3D model or a digital painting, it is wrong.
+- Restrained saturation, mid-to-high value. Nothing muddy, nothing neon.
+- Large, chunky, simple silhouettes with 6 to 12 planes each. No thin strokes, no small detached fragments. Every icon is ONE connected shape and must stay clearly readable when shrunk to 48 pixels.
+
+Layout, required exactly: the canvas is an invisible 3 by 2 grid of six equal square cells, 512 by 512 pixels each. Do not draw grid lines, borders, cards or frames — the cells stay implied by empty magenta. One icon per cell, centered in its cell, with about 8 percent empty magenta margin around it so no icon touches its neighbour. All six use the same plane size, the same crease sharpness and the same light direction, so they read as one set.
+
+Top row, left to right:
+1. FIRE: one rising flame with two or three pointed tongues, the tallest tongue in the middle, plus one small separate-looking tongue joined at the base. Taller than wide: exactly 0.7 times as wide as it is tall (about 330 pixels wide by 470 pixels tall). Palette: highlight #F7A33C, main orange #E65E08, deep red shadow #9B3014, small inner core plane #F6C451.
+2. WATER: one water drop, pointed tip at the top, round bottom, with one faceted swirl plane inside like the water rune. Exactly 0.75 times as wide as it is tall (about 350 by 470 pixels). Palette: #E8F7EE highlight, #98DEEB, #6FCCF4 main, #53B2EB, #2D92E4 shadow.
+3. NATURE: one single leaf standing upright, tip at the top, tilted slightly to the right, a short stem at the bottom, a central vein formed by the crease between the left (lit) and right (shaded) halves. Exactly 0.57 times as wide as it is tall (about 270 by 470 pixels). Palette: #B8CE59 highlight, #9DA74D main, #768738 shade, #384823 deep shadow.
+
+Bottom row, left to right:
+4. LIGHTNING: one bold zigzag lightning bolt with a single sharp kink, thick and chunky, pointed at the bottom. Exactly 0.6 times as wide as it is tall (about 280 by 470 pixels). Palette: #FCFBD5 highlight, #F6DB5F main gold, #D7A313 deep gold, #996B07 shadow.
+5. ROCK: one chunky faceted boulder, wider than tall, flat-ish bottom, angular top. Exactly 1.38 times as wide as it is tall (about 470 by 340 pixels). Palette: warm tan stone #CDC8B8 highlight, #A3A29D main, #8A857A shadow. No moss, no grass, no green.
+6. WIND: one wind gust made of three parallel flowing ribbons sweeping to the right, each ribbon curling into a small hook at its right end, the ribbons joined into one connected shape at the left. Clearly wider than tall: exactly 1.9 times as wide as it is tall (about 470 by 250 pixels). Palette: #E5EBE7 highlight, #B3CCCA, #9BB3B3 main, #5EA191, #2A6D64 shadow.
+
+Exclusions: no stone disc, no ring, no circle plate, no coin, no badge, no card border, no frame, no text, no letters, no numbers, no watermark, no face, no eyes, no creature, no ground, no shadow under the icons.

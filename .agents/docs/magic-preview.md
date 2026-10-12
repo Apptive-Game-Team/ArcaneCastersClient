@@ -1,5 +1,8 @@
 # Shared in-game magic presentation
 
+Runtime recordings now come from the server. Read `server-magic-previews.md` before
+changing the source/caches. Legacy offline fixtures are Editor-only test assets.
+
 Both DeltaFrameHandler and MagicPreview call PresentationFramePlayer with real
 ObjectsInfo/GameEvent DTOs in create → events → projectiles → update order.
 Do not add a parallel sprite renderer, synthetic beam, gauge, effect marker or
@@ -30,7 +33,8 @@ components and reference tracking; inspect mid-animation captures.
 
 Coverage: 85 recordings / 129 cases. Regenerate with
 .agents/tools/expand-magic-previews.ps1 -CopyRecordings after server export.
-The script prints missing clip/meta registrations only, never old style mappings.
+The script updates Editor fixtures and reports missing metadata; it never registers
+recordings in the runtime prefab or Resources.
 Run MagicPreviewTests to verify both viewports and all native object initializations.
 Advancing elapsed instantly does not advance coroutines/tweens; animated tests must
 wait on Unity time. Initial-frame/cycle tests alone cannot prove animated parity.

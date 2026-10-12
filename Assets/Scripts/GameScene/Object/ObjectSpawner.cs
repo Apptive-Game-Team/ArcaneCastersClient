@@ -4,7 +4,6 @@ using GameScene.PopupBook;
 using GameScene.ServedObjectComponent;
 using GameScene.ServedObjectComponent.Sound;
 using Global;
-using Global.Sound;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -36,9 +35,6 @@ namespace GameScene.Object
 
             ServedObject servedObject = spawnedObject.GetOrAddComponent<ServedObject>();
             PopupBookVisualPresenter popupBookPresenter = PopupBookVisualPresenter.Attach(servedObject);
-
-            if (world == null) SetAudioSourceVolume(spawnedObject);
-            LegacySfxMuter.Mute(spawnedObject);
 
             servedObject.PresentationWorld = world;
             servedObject.SetMaster(createdObjectDto.master);
@@ -77,16 +73,6 @@ namespace GameScene.Object
                 Destroy(spawnedObject);
             }
             return servedObject;
-        }
-
-        private static void SetAudioSourceVolume(GameObject obj)
-        {
-            AudioSource[] audioSources = obj.GetComponentsInChildren<AudioSource>();
-            foreach (var source in audioSources)
-            {
-                SoundVolumeSetter.Attach(source, SoundVolumeSetter.SoundType.Game, source.volume);
-            }
-            WDebug.Log($"Spawned object: {obj}, audio sources set: {audioSources.Length}");
         }
 
         public static GameObject GetPrefab(string type)

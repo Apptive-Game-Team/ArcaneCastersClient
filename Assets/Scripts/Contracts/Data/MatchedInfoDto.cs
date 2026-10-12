@@ -1,5 +1,6 @@
 using Admin.Dto;
 using Data.Net;
+using Newtonsoft.Json;
 
 namespace Data
 {
@@ -12,6 +13,17 @@ namespace Data
         public User leftUser;
         public User rightUser;
         public string sessionId;
+
+        /// <summary>
+        /// Map kind the game server picked, as the server spells it (<c>GRASSLAND</c>, <c>RIVER</c>,
+        /// <c>FORTRESS</c>, <c>GATE</c>, <c>FOREST</c>). Absent or null from an older server. Kept a
+        /// string so an unknown name cannot throw out of the whole response; read it through
+        /// <see cref="MapKind"/>.
+        /// </summary>
+        public string mapType;
+
+        [JsonIgnore]
+        public MapKind MapKind => MapKinds.Parse(mapType);
 
         /// <summary>접속 주소를 어느 필드에서 가져왔는지. 진단 로그용이다.</summary>
         public string ConnectionSource => string.IsNullOrEmpty(webSocketUrl) ? server : webSocketUrl;
@@ -55,7 +67,7 @@ namespace Data
             }
         }
 
-        public static MatchedInfoDto CreateDebugSession(string sessionId, string userSide, long userId)
+        public static MatchedInfoDto CreateDebugSession(string sessionId, string userSide, long userId, string mapType = null)
         {
             long userIdLeft = userSide == "left" ? userId : -1;
             long userIdRight = userSide == "right" ? userId : -1;
@@ -66,7 +78,8 @@ namespace Data
                 server = "http://localhost:7777",
                 leftUser = new User(userIdLeft, "debugger_left", "debugger_left@team6515.com", -1),
                 rightUser = new User(userIdRight, "debugger_right", "debugger_right@team6515.com", -1),
-                sessionId = sessionId
+                sessionId = sessionId,
+                mapType = mapType
             };
         }
 
@@ -78,7 +91,8 @@ namespace Data
                 server = roomInfo.serverUrl,
                 leftUser = new User(roomInfo.leftUserId, "debugger_left", "debugger_left@team6515.com", -1),
                 rightUser = new User(roomInfo.rightUserId, "debugger_right", "debugger_right@team6515.com", -1),
-                sessionId = roomInfo.sessionId
+                sessionId = roomInfo.sessionId,
+                mapType = roomInfo.mapType
             };
         }
     }

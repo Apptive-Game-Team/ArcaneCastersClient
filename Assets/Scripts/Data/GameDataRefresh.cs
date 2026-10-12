@@ -9,6 +9,7 @@ namespace Data
     {
         public static IEnumerator Refresh(Action onComplete = null)
         {
+            MagicPreviewDataSource.Refresh();
             bool parametersCompleted = false;
             bool magicsCompleted = false;
 

@@ -62,6 +62,7 @@ namespace Admin
         protected override void OnClickButton()
         {
             SceneContext.MatchInfo = MatchedInfoDto.CreateSpectatingSession(roomInfo);
+            SceneContext.PrepareMap(roomInfo.mapType, null);
             SceneManager.LoadScene("Scenes/SpectatingScene");
         }
     }
