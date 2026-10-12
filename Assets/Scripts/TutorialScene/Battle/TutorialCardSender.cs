@@ -170,9 +170,7 @@ namespace TutorialScene
 
         public void SetExpectedMagicUI()
         {
-            CombinedMagicData magic = GetCurrentMagic();
-            TutorialSceneUIController.Instance.TrySetExpectedMagicUI(magic);
-            TutorialSceneUIController.Instance.SetExpectedManaCost(CardManaCost.Of(magic));
+            TutorialSceneUIController.Instance.SetExpectedManaCost(CardManaCost.Of(GetCurrentMagic()));
         }
     }
 }
