@@ -42,6 +42,9 @@ namespace Global.LocalHosting
         /// <summary>마지막으로 받은 offline-pack. 아직 못 받았으면 null 이고, 그동안 로컬 경기는 하지 않는다.</summary>
         public OfflinePackResponse Latest { get; private set; }
 
+        // Latest 를 준 lobby 주소. lobby 마다 정적 데이터와 로컬 경기 설정이 다르므로 주소가 바뀌면 버린다.
+        private string latestSource;
+
         public bool Installing { get; private set; }
 
         /// <summary>0~1. 다운로드가 0.9 까지, 확인과 압축 풀기가 나머지다.</summary>
@@ -68,6 +71,13 @@ namespace Global.LocalHosting
         public IEnumerator RefreshOfflinePack()
         {
             StaticDataHeader downloaded = StaticDataFile.ReadHeader(LocalServerPaths.StaticDataPath);
+
+            string source = ServerList.MatchingServer.url;
+            if (latestSource != source)
+            {
+                Latest = null;
+                latestSource = null;
+            }
 
             ServerEndpoint endpoint = ServerList.MatchingServer.Api.Path("api", "offline-pack");
             if (downloaded.IsUsable) endpoint = endpoint.Query("staticVersion", downloaded.StaticVersion);
@@ -106,6 +116,7 @@ namespace Global.LocalHosting
             }
 
             Latest = pack;
+            latestSource = source;
             Changed?.Invoke();
         }
 
