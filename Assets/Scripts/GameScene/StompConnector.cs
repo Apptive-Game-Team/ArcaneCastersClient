@@ -180,9 +180,11 @@ namespace GameScene
                 return;
             }
 
-            string url = gameServer.Query("token", SceneContext.JwtToken);
+            // 로컬 서버 경기는 사용자 JWT 대신 로컬 서버를 띄울 때 만든 init token 으로 인증한다.
+            string token = matchInfo.GameServerToken(SceneContext.JwtToken);
+            string url = gameServer.Query("token", token);
             _connectGate.NoteHandshakeStarted(now);
-            _transport.Connect(url, SceneContext.JwtToken);
+            _transport.Connect(url, token);
         }
 
         public void SendMessageToServer(string topic, string message)
