@@ -7,7 +7,7 @@ namespace TutorialScene
     /// <summary>
     /// 전투 튜토리얼에서 마법을 써야 하는 단계의 손가락. 매 프레임 지금 눌러야 할 것을 다시 고른다.
     /// 마나 바가 내려가 카드가 화면 밖이면 마나 바를, 카드가 보이면 카드를, 카드를 고른 뒤에는
-    /// 놓을 자리를 가리킨다.
+    /// 놓을 자리를 가리킨다. 쏜 투사체가 날아가는 동안은 맞을지 보도록 아무것도 가리키지 않는다.
     /// </summary>
     internal sealed class BattleTutorialPointerGuide
     {
@@ -33,7 +33,7 @@ namespace TutorialScene
         /// <param name="magicName">써야 할 마법의 serverName. null 이면 아무 카드나 쓴다.</param>
         public void Update(string magicName, TutorialCardSender sender)
         {
-            if (sender == null)
+            if (sender == null || UnityEngine.Object.FindObjectOfType<ShotMocker>() != null)
             {
                 Clear();
                 return;
