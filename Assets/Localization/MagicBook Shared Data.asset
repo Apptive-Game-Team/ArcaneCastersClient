@@ -383,6 +383,10 @@ MonoBehaviour:
     m_Key: chart.axis.attacker
     m_Metadata:
       m_Items: []
+  - m_Id: 1000075
+    m_Key: bean_shooter
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

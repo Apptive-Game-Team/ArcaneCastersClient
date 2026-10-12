@@ -396,6 +396,11 @@ MonoBehaviour:
     m_Localized: Attacker
     m_Metadata:
       m_Items: []
+  - m_Id: 1000075
+    m_Localized: Summons a headless soil crawler that shoots kidney beans from far
+      away. It attacks only ground units.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
