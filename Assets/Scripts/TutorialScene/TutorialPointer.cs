@@ -7,7 +7,6 @@ namespace TutorialScene
     /// <summary>
     /// 튜토리얼에서 눌러야 할 곳을 손가락 그림으로 가리킨다. 손끝이 대상 중심에 오도록 두고,
     /// 0.6초마다 손을 대상 쪽으로 눌렀다 뗀다. 누르는 순간 손끝 자리에 고리가 한 번 퍼진다.
-    /// 카드를 골라 전장에 놓는 단계는 카드를 누르고 놓을 자리로 옮겨 가 누르는 동작을 반복한다.
     /// </summary>
     /// <remarks>
     /// 프리팹 루트가 자기 Screen Space Overlay Canvas 를 갖는다. 대상이 어느 Canvas 에 있든
@@ -28,9 +27,6 @@ namespace TutorialScene
         [SerializeField] private float pressDistance = 26f;
         [SerializeField] private float pressedScale = 0.88f;
 
-        [Header("Drag")]
-        [SerializeField] private float dragCycleSeconds = 1.8f;
-
         [Header("Ring")]
         [SerializeField] private float ringSeconds = 0.35f;
         [SerializeField] private float ringStartScale = 0.4f;
@@ -39,7 +35,6 @@ namespace TutorialScene
 
         private RectTransform canvasRect;
         private Func<Vector2?> pressPoint;
-        private Func<Vector2?> dragTo;
         private float startTime;
         private float lastPhase;
         private float ringStartedAt = float.NegativeInfinity;
@@ -57,20 +52,6 @@ namespace TutorialScene
             if (pointer != null)
             {
                 pointer.pressPoint = screenPoint;
-                pointer.dragTo = null;
-            }
-
-            return pointer;
-        }
-
-        /// <summary>UI 대상을 누른 뒤 화면 좌표 한 점을 누르라고, 대상에서 그 점까지 손을 옮기며 가리킨다.</summary>
-        public static TutorialPointer Drag(Transform from, Func<Vector2?> toScreenPoint)
-        {
-            TutorialPointer pointer = Spawn();
-            if (pointer != null)
-            {
-                pointer.pressPoint = () => ScreenCenterOf(from);
-                pointer.dragTo = toScreenPoint;
             }
 
             return pointer;
@@ -176,16 +157,7 @@ namespace TutorialScene
                 return;
             }
 
-            float elapsed = Time.unscaledTime - startTime;
-            Vector2? to = dragTo?.Invoke();
-            if (to.HasValue)
-            {
-                UpdateDrag(ToLocal(press.Value), ToLocal(to.Value), elapsed);
-            }
-            else
-            {
-                UpdatePress(ToLocal(press.Value), elapsed);
-            }
+            UpdatePress(ToLocal(press.Value), Time.unscaledTime - startTime);
 
             UpdateRing();
         }
@@ -203,48 +175,6 @@ namespace TutorialScene
 
             lastPhase = phase;
             PlaceHand(tip, 1f - depth, Mathf.Lerp(1f, pressedScale, depth), 1f);
-        }
-
-        /// <summary>
-        /// 카드는 끌어서 놓는 것이 아니라 눌러 고른 뒤 놓을 자리를 누른다(CardUI.OnCardClicked,
-        /// FieldSelector). 그래서 손은 출발점을 한 번 누르고(0~0.2), 손을 든 채 도착점으로
-        /// 옮겨(0.2~0.6), 도착점을 한 번 누른 뒤(0.6~0.8), 잠깐 사라졌다가(0.8~1) 다시 한다.
-        /// </summary>
-        private void UpdateDrag(Vector2 from, Vector2 to, float elapsed)
-        {
-            float phase = Mathf.Repeat(elapsed / dragCycleSeconds, 1f);
-
-            if (phase < 0.2f)
-            {
-                if ((lastPhase < 0.1f || lastPhase > phase) && phase >= 0.1f)
-                {
-                    StartRing(from);
-                }
-
-                float depth = Mathf.Sin(phase / 0.2f * Mathf.PI);
-                PlaceHand(from, 1f - depth, Mathf.Lerp(1f, pressedScale, depth), 1f);
-            }
-            else if (phase < 0.6f)
-            {
-                float travel = Mathf.SmoothStep(0f, 1f, (phase - 0.2f) / 0.4f);
-                PlaceHand(Vector2.Lerp(from, to, travel), 1f, 1f, 1f);
-            }
-            else if (phase < 0.8f)
-            {
-                if (lastPhase < 0.7f && phase >= 0.7f)
-                {
-                    StartRing(to);
-                }
-
-                float depth = Mathf.Sin((phase - 0.6f) / 0.2f * Mathf.PI);
-                PlaceHand(to, 1f - depth, Mathf.Lerp(1f, pressedScale, depth), 1f);
-            }
-            else
-            {
-                SetHandVisible(false);
-            }
-
-            lastPhase = phase;
         }
 
         /// <summary>

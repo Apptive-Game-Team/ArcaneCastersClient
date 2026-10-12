@@ -6,8 +6,8 @@ namespace TutorialScene
 {
     /// <summary>
     /// 전투 튜토리얼에서 마법을 써야 하는 단계의 손가락. 매 프레임 지금 눌러야 할 것을 다시 고른다.
-    /// 마나 바가 내려가 카드가 화면 밖이면 마나 바를, 카드가 보이면 카드를 누르고 놓을 자리로
-    /// 옮겨 가 누르는 동작을, 카드를 고른 뒤에는 놓을 자리를 가리킨다.
+    /// 마나 바가 내려가 카드가 화면 밖이면 마나 바를, 카드가 보이면 카드를, 카드를 고른 뒤에는
+    /// 놓을 자리를 가리킨다.
     /// </summary>
     internal sealed class BattleTutorialPointerGuide
     {
@@ -15,7 +15,7 @@ namespace TutorialScene
         {
             None,
             OpenBar,
-            DragCard,
+            PickCard,
             PickField
         }
 
@@ -39,19 +39,17 @@ namespace TutorialScene
                 return;
             }
 
-            TutorialCardUI card = FindCard(magicName);
-            CombinedMagicData magic = sender.IsFieldSelectMode() ? sender.GetCurrentMagic() : card != null ? card.Magic : null;
-            Func<Vector2?> fieldPoint = () => FieldScreenPoint(magic);
-
             if (sender.IsFieldSelectMode())
             {
-                Show(Mode.PickField, null, () => TutorialPointer.PointAtScreen(fieldPoint));
+                CombinedMagicData magic = sender.GetCurrentMagic();
+                Show(Mode.PickField, null, () => TutorialPointer.PointAtScreen(() => FieldScreenPoint(magic)));
                 return;
             }
 
+            TutorialCardUI card = FindCard(magicName);
             if (card != null && TutorialPointer.IsFullyOnScreen(card.transform as RectTransform))
             {
-                Show(Mode.DragCard, card.transform, () => TutorialPointer.Drag(card.transform, fieldPoint));
+                Show(Mode.PickCard, card.transform, () => TutorialPointer.PointAt(card.transform));
                 return;
             }
 
