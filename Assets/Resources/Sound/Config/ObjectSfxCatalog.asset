@@ -83,6 +83,11 @@ MonoBehaviour:
     attackProfile: {fileID: 11400000, guid: dc55df079e0e4844a51ddf79e2849dea, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: BeanShooter
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: EvilEnt
     profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
     attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
@@ -534,6 +539,11 @@ MonoBehaviour:
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: WaterShot
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: Bean
     profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
     attackProfile: {fileID: 0}
     intentionalSilent: 0

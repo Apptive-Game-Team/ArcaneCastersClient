@@ -43,7 +43,7 @@ public static class ObjectSfxCatalogBuilder
             "FireSpirit", "FireTadpole", "MagmaSpirit", "PveFireTadpole"),
         new("WaterCreature", "AquaArcher", "BubbleSpirit", "SeaSerpent", "WaterSlime"),
         new("NatureCreature",
-            "EvilEnt", "LeafSlime", "PveEvilEnt", "PveVineWitch", "SeedSpirit",
+            "BeanShooter", "EvilEnt", "LeafSlime", "PveEvilEnt", "PveVineWitch", "SeedSpirit",
             "TreeGolem", "VineSpirit", "WillOWisp"),
         new("LightningCreature",
             "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "StormRider",
@@ -73,7 +73,7 @@ public static class ObjectSfxCatalogBuilder
             "BoulderStrike", "TitanFist"),
         new("TransientShot",
             "ChainLightning", "TideCall", "WindBlade"),
-        new("UnitShot", "ElectricShot", "FireShot", "LeafShot", "WaterShot",
+        new("UnitShot", "ElectricShot", "FireShot", "LeafShot", "WaterShot", "Bean",
             "MagmaFist", "DragonFlame", "BombSpriteBomb", "GroundTidalWarhead", "TidalWarhead"),
         new("TransientExplode",
             "ElectricExplode", "FireExplode", "FireworkShell", "LeafExplode",
@@ -95,7 +95,7 @@ public static class ObjectSfxCatalogBuilder
         new("TowerAttack", "GroundCannon", "GroundTower", "RockTurret", "ElectricTower", "FireworkTower", "DragonTower", "Towerback", "TitanRemnant"),
         new("WaterLaunch", "AquaArcher", "WaterSlime", "BubbleSpirit", "CloudDragon", "BubbleGenerator"),
         new("FireLaunch", "FireChildSpirit", "FireSpirit"),
-        new("SmallAttack", "ChickenCommando", "EmberSpirit", "FireSlime", "FireTadpole", "PveFireTadpole", "LeafSlime", "SeedSpirit", "VineSpirit", "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "ThunderBird", "ThunderSpirit", "ZapMouse", "RockMage", "RockSlime", "MiniRock", "WindSlime", "WindSpirit", "BombSprite"),
+        new("SmallAttack", "ChickenCommando", "EmberSpirit", "FireSlime", "FireTadpole", "PveFireTadpole", "LeafSlime", "SeedSpirit", "VineSpirit", "BeanShooter", "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "ThunderBird", "ThunderSpirit", "ZapMouse", "RockMage", "RockSlime", "MiniRock", "WindSlime", "WindSpirit", "BombSprite"),
         new("SwingAttack", "SeaSerpent", "TreeGolem", "EvilEnt", "PveEvilEnt", "PveVineWitch", "StormRider", "StormStag", "RockGolem", "WallGolem", "MagmaSpirit"),
     };
 
