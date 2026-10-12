@@ -533,3 +533,23 @@ new code side by side on real sprites from `Assets/Resources/Game/sprites` at ab
 screen pixels tall, enlarged 4x with nearest neighbour. #352 did this
 (`docs/pr-media/352/outline-before-after-90px.png`). The render does not prove the shader
 compiles for WebGL; say so in the pull request and leave that to an Editor check.
+
+## A copied button still calls the component you dropped
+
+`LocalServerPanel.prefab` (#314) copies `KoreanButton` from `Panal.prefab` six times
+for the tick rate buttons and drops its `LocaleSetButton`. The `Button`'s
+`m_OnClick` still listed `m_Target: {fileID: <the dropped LocaleSetButton>}`, so the
+copy pointed at an anchor that no longer existed in the file. The unresolved-reference
+check above caught it. When you drop a component from a copied subtree, empty every
+`m_PersistentCalls.m_Calls` that targeted it in the same pass. A regex that clears a
+call list up to the next two-space field misses the last field of a document, because
+the next line there is `--- !u!`.
+
+## `Button` inside `namespace LobbyScene.*` is a namespace
+
+`Assets/Scripts/LobbyScene/Button/` declares `namespace LobbyScene.Button`, so a field
+typed `Button` in any `LobbyScene.*` file fails with `CS0118: 'Button' is a namespace
+but is used like a type`, even with `using UnityEngine.UI;` or a `using Button = ...`
+alias at the top of the file: name lookup walks the enclosing namespaces before the
+file's using directives. Write `UnityEngine.UI.Button`, as
+`LobbyScene/SettingPage/LocalServerPage.cs` does.
