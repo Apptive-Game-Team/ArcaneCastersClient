@@ -49,7 +49,8 @@ public static class ObjectSfxCatalogBuilder
             "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "StormRider",
             "StormStag", "ThunderBird", "ThunderSpirit", "ZapMouse"),
         new("RockCreature",
-            "DimensionToad", "PveDimensionToad", "RockGolem", "RockMage", "RockSlime", "MiniRock", "WallGolem"),
+            "DimensionToad", "PveDimensionToad", "RockGolem", "RockMage", "RockSlime", "MiniRock", "WallGolem",
+            "PveBrickGolem"),
         new("WindCreature", "CloudDragon", "WindSlime", "WindSpirit", "BombSprite"),
         new("OrganicBuilding",
             "GiantVine", "LifeTree", "PveNatureSlimeNest", "PveVineColony",
@@ -96,7 +97,7 @@ public static class ObjectSfxCatalogBuilder
         new("WaterLaunch", "AquaArcher", "WaterSlime", "BubbleSpirit", "CloudDragon", "BubbleGenerator"),
         new("FireLaunch", "FireChildSpirit", "FireSpirit"),
         new("SmallAttack", "ChickenCommando", "EmberSpirit", "FireSlime", "FireTadpole", "PveFireTadpole", "LeafSlime", "SeedSpirit", "VineSpirit", "BeanShooter", "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "ThunderBird", "ThunderSpirit", "ZapMouse", "RockMage", "RockSlime", "MiniRock", "WindSlime", "WindSpirit", "BombSprite"),
-        new("SwingAttack", "SeaSerpent", "TreeGolem", "EvilEnt", "PveEvilEnt", "PveVineWitch", "StormRider", "StormStag", "RockGolem", "WallGolem", "MagmaSpirit"),
+        new("SwingAttack", "SeaSerpent", "TreeGolem", "EvilEnt", "PveEvilEnt", "PveVineWitch", "StormRider", "StormStag", "RockGolem", "WallGolem", "PveBrickGolem", "MagmaSpirit"),
     };
 
     private static readonly string[] ServerAliases =

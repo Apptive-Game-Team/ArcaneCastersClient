@@ -203,6 +203,11 @@ MonoBehaviour:
     attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: PveBrickGolem
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: CloudDragon
     profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
     attackProfile: {fileID: 11400000, guid: dc55df079e0e4844a51ddf79e2849dea, type: 2}
