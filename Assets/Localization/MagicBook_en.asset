@@ -195,7 +195,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000044
-    m_Localized: "Summons a cowardly lightning spirit mouse that loves buildings."
+    m_Localized: "Summons a lightning spirit mouse that loves buildings."
     m_Metadata:
       m_Items: []
   - m_Id: 1000045
