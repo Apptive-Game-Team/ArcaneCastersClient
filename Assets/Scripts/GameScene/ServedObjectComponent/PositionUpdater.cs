@@ -44,7 +44,7 @@ namespace GameScene.ServedObjectComponent
             {
                 onMoved?.Invoke();
             }
-            moveTween = transform.DOMove(nextPosition.Value, GameConfig.FRAME_DURATION)
+            moveTween = transform.DOMove(nextPosition.Value, GameConfig.FrameDuration)
                 .SetEase(Ease.Linear)
                 .SetLink(transform.gameObject);
             
@@ -60,7 +60,9 @@ namespace GameScene.ServedObjectComponent
 
             double x = (double) nextPosition?.x;
 
-            if (Math.Abs(lastX - x) > 0.1 * GameConfig.FRAME_DURATION)
+            // 갱신 한 번당 x 이동량 기준이다. 0.1 * FrameDuration 은 초속 0.1 칸이라
+            // tick rate 가 20 이든 60 이든 같은 속도에서 방향이 바뀐다.
+            if (Math.Abs(lastX - x) > 0.1 * GameConfig.FrameDuration)
             {
                 if (lastX < x)
                 {
@@ -75,15 +77,17 @@ namespace GameScene.ServedObjectComponent
             lastX = x;
         }
         
-        private const int FLIP_THRESHOLD = 10;
+        // 반대 방향 갱신이 이 시간만큼 연속으로 와야 방향을 바꾼다. 횟수로 세되 기준을 tick rate 에 맞춰
+        // 20 FPS 에서는 예전과 같은 10번이 된다. 시각으로 재면 멈췄다가 한 번 튄 갱신에도 바로 뒤집힌다.
+        private const float FLIP_THRESHOLD_SECONDS = 0.5f;
         private int flipCounter = 0;
-        
+
         private void SetFlipX(bool flipX)
         {
             if (spriteRenderer.flipX != flipX)
             {
                 flipCounter++;
-                if (flipCounter >= FLIP_THRESHOLD)
+                if (flipCounter >= Mathf.CeilToInt(FLIP_THRESHOLD_SECONDS * GameConfig.TickRate))
                 {
                     spriteRenderer.flipX = flipX;
                     flipCounter = 0;

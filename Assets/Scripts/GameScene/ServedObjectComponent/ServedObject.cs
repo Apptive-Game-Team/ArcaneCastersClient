@@ -298,7 +298,7 @@ namespace GameScene.ServedObjectComponent
             switch (status)
             {
                 case "Destroyed":
-                    DestroySelf(GameConfig.FRAME_DURATION);
+                    DestroySelf(GameConfig.FrameDuration);
                     break;
 
                 case "Attack":
