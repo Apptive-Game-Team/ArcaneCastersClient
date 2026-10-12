@@ -47,7 +47,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000011
-    m_Localized: "저장했어요. 로비 버튼을 눌러 보세요"
+    m_Localized: "지금 덱을 그대로 써도 돼요. 로비 버튼을 눌러 보세요"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000012
@@ -156,6 +156,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000040
     m_Localized: "첫 경기를 마쳤어요! 이제 자유롭게 즐겨 보세요"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000041
+    m_Localized: "여기서 쓸 덱을 고르거나 새로 만들 수 있어요"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000042
+    m_Localized: "지금 덱에 든 카드예요. 누르면 덱에서 빠져요"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000043
+    m_Localized: "가진 카드예요. 누르면 덱에 들어가요"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000044
+    m_Localized: "카드마다 드는 마나를 볼 수 있어요"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000045
+    m_Localized: "덱을 바꿨다면 여기를 눌러 저장해요"
     m_Metadata:
       m_Items: []
   references:

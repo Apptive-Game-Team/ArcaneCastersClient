@@ -47,7 +47,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000011
-    m_Localized: "Saved. Press the lobby button"
+    m_Localized: "You can keep this deck. Press the lobby button"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000012
@@ -156,6 +156,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000040
     m_Localized: "First match done! Now play as you like"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000041
+    m_Localized: "Pick a deck or make a new one here"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000042
+    m_Localized: "Cards in this deck. Press one to take it out"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000043
+    m_Localized: "Your cards. Press one to put it in the deck"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000044
+    m_Localized: "Each card shows the mana it costs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000045
+    m_Localized: "Changed your deck? Save it here"
     m_Metadata:
       m_Items: []
   references:
