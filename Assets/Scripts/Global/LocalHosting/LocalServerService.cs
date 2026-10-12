@@ -30,6 +30,9 @@ namespace Global.LocalHosting
         public event Action Changed;
 
         private bool lobbyEntryRunning;
+        // 진행 중에 로비에 다시 들어왔다. 서버 선택 dropdown 은 로비를 다시 불러 lobby 주소를 바꾸므로,
+        // 첫 진입의 요청이 이전 주소로 가 있는 동안 들어온 진입을 버리면 바뀐 주소로는 묻지 못한다.
+        private bool lobbyEntryPending;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void EnsureInstance()
@@ -78,15 +81,23 @@ namespace Global.LocalHosting
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (scene.name != LobbySceneName) return;
-            if (lobbyEntryRunning) return;
+            if (lobbyEntryRunning)
+            {
+                lobbyEntryPending = true;
+                return;
+            }
             StartCoroutine(OnLobbyEntered());
         }
 
         private IEnumerator OnLobbyEntered()
         {
             lobbyEntryRunning = true;
-            yield return PackStore.RefreshOfflinePack();
-            yield return Reporter.RetryPending();
+            do
+            {
+                lobbyEntryPending = false;
+                yield return PackStore.RefreshOfflinePack();
+                yield return Reporter.RetryPending();
+            } while (lobbyEntryPending);
             lobbyEntryRunning = false;
 
             EnsureServer();
