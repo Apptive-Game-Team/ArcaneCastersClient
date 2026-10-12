@@ -119,5 +119,15 @@ namespace TutorialScene
         /// 훈수 힌트는 화면을 가리면 안 되므로 Show 뒤에 이 값을 덮어쓴다.
         /// </summary>
         public RectTransform RootRectTransform => Root.transform as RectTransform;
+
+        /// <summary>다음 버튼. 다음 버튼으로 넘어가는 단계에서 손가락이 이것을 가리킨다.</summary>
+        public Transform NextButtonTransform
+        {
+            get
+            {
+                ResolveChildren();
+                return nextButton != null ? nextButton.transform : null;
+            }
+        }
     }
 }

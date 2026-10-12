@@ -286,6 +286,13 @@ the project's real types instead of stubs. Two things make it work:
 - Compile a changed asmdef assembly under its real name (`-out:WordOnline.Contracts.dll`).
   Under any other name, `Assembly-CSharp.dll` still asks for `WordOnline.Contracts`
   and every type it exposes from there fails with CS0012.
+- Reference `Library\ScriptAssemblies\Assembly-CSharp-firstpass.dll` as well. The
+  DOTween modules (`DOFade`, `DOAnchorPosY` and the rest) are source files under
+  `Assets/Plugins`, so they compile into the firstpass assembly, not into
+  `DOTween.dll`. The response files in `C:\temp\client-map-type-compile` leave it
+  out, and reusing them gives 21 CS1929/CS1061 errors in files nobody touched
+  (`RewardChestPresenter.cs`, `BeamProjectile.cs` and others). With the
+  reference added the same tree compiles with 0 errors.
 
 Unity's NUnit (`com.unity.ext.nunit`) throws `TypeLoadException` for
 `System.Runtime.Remoting.Messaging.CallContext` on .NET 8, so it cannot run the

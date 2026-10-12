@@ -16,11 +16,9 @@ namespace TutorialScene
         [SerializeField] private Button saveButton;
         [SerializeField] private ButtonBase returnToLobbyButton;
 
-        public event System.Action CreateDeckSelected;
-        public event System.Action DeckSaved;
         public event System.Action ReturnToLobbySelected;
 
-        private bool isSubscribedToDeckManagement;
+        private bool isSubscribedToReturnButton;
 
         private void OnEnable()
         {
@@ -31,40 +29,22 @@ namespace TutorialScene
                 return;
             }
 
-            if (deckManagementController == null)
-            {
-                deckManagementController = GetComponent<DeckManagementController>();
-            }
-
-            if (deckManagementController == null)
-            {
-                return;
-            }
-
-            deckManagementController.NewDeckSelected += OnNewDeckSelected;
-            deckManagementController.DeckCardCountChanged += NotifyDeckCardCountChanged;
-            deckManagementController.DeckSaved += OnDeckSaved;
-
             if (returnToLobbyButton != null)
             {
                 returnToLobbyButton.OnClick += OnReturnToLobbySelected;
             }
 
-            isSubscribedToDeckManagement = true;
+            isSubscribedToReturnButton = true;
         }
 
         private void OnDisable()
         {
-            if (!isSubscribedToDeckManagement)
+            if (!isSubscribedToReturnButton)
             {
                 return;
             }
 
-            isSubscribedToDeckManagement = false;
-
-            deckManagementController.NewDeckSelected -= OnNewDeckSelected;
-            deckManagementController.DeckCardCountChanged -= NotifyDeckCardCountChanged;
-            deckManagementController.DeckSaved -= OnDeckSaved;
+            isSubscribedToReturnButton = false;
 
             if (returnToLobbyButton != null)
             {
@@ -72,38 +52,34 @@ namespace TutorialScene
             }
         }
 
+        public void ShowDeckList(System.Action onNext)
+        {
+            Show("onboarding.deck.deckList", deckListArea != null ? deckListArea.transform : null, onNext, true);
+        }
+
+        public void ShowDeckCards(System.Action onNext)
+        {
+            Show("onboarding.deck.deckCards", FindDeckCardsTarget(), onNext, true);
+        }
+
         public void ShowDeckRules(System.Action onNext)
         {
-            Show("onboarding.deck.rules", deckRuleArea != null ? deckRuleArea.transform : null, onNext);
+            Show("onboarding.deck.rules", deckRuleArea != null ? deckRuleArea.transform : null, onNext, true);
         }
 
-        public void ShowCreateDeck()
+        public void ShowOwnedCards(System.Action onNext)
         {
-            Show("onboarding.deck.createDeck", deckListArea != null ? deckListArea.transform : null);
+            Show("onboarding.deck.ownedCards", ownedCardsArea != null ? ownedCardsArea.transform : null, TutorialPanelSide.Right, onNext, true);
         }
 
-        public void ShowDeckEditor()
+        public void ShowCardMana(System.Action onNext)
         {
-            Show(
-                "onboarding.deck.selectCards",
-                new[]
-                {
-                    currentDeckCardsArea != null ? currentDeckCardsArea.transform : null,
-                    ownedCardsArea != null ? ownedCardsArea.transform : null
-                },
-                null,
-                TutorialPanelSide.Right);
+            Show("onboarding.deck.cardMana", FindFirstOwnedCard(), TutorialPanelSide.Right, onNext, true);
         }
 
-        public void ShowSaveDeck()
+        public void ShowSaveButton(System.Action onNext)
         {
-            Show("onboarding.deck.saveEnabled",
-                new[]
-                {
-                    currentDeckCardsArea != null ? currentDeckCardsArea.transform : null,
-                    ownedCardsArea != null ? ownedCardsArea.transform : null
-                },
-                null, TutorialPanelSide.Right);
+            Show("onboarding.deck.saveButton", saveButton != null ? saveButton.transform : null, onNext, true);
         }
 
         public void ShowReturnToLobby()
@@ -111,33 +87,47 @@ namespace TutorialScene
             Show("onboarding.deck.returnToLobby", returnToLobbyButton != null ? returnToLobbyButton.transform : null, TutorialPanelSide.Right);
         }
 
-        private void OnNewDeckSelected()
-        {
-            CreateDeckSelected?.Invoke();
-        }
-
-        private void NotifyDeckCardCountChanged(int cardCount)
-        {
-            if (cardCount >= 15)
-            {
-                ShowSaveDeck();
-            }
-        }
-
-        private bool OnDeckSaved()
-        {
-            if (DeckSaved == null)
-            {
-                return false;
-            }
-
-            DeckSaved?.Invoke();
-            return true;
-        }
-
         private void OnReturnToLobbySelected()
         {
             ReturnToLobbySelected?.Invoke();
+        }
+
+        /// <summary>
+        /// 덱에 든 카드 목록의 ScrollRect 를 짚는다. currentDeckCardsArea 는 덱 목록과 저장 버튼까지
+        /// 담은 오른쪽 판 전체라서, 카드 목록만 보이게 하려면 목록을 감싼 ScrollRect 를 올려야 한다.
+        /// </summary>
+        private Transform FindDeckCardsTarget()
+        {
+            Transform container = deckManagementController != null ? deckManagementController.deckCardsContainer : null;
+            ScrollRect scrollRect = container != null ? container.GetComponentInParent<ScrollRect>() : null;
+            if (scrollRect != null)
+            {
+                return scrollRect.transform;
+            }
+
+            return currentDeckCardsArea != null ? currentDeckCardsArea.transform : null;
+        }
+
+        /// <summary>
+        /// 가진 카드 목록에서 맨 앞의 열린 카드를 짚는다. 잠긴 카드는 자물쇠와 여는 조건이 덮고 있으므로
+        /// 건너뛴다. 목록을 아직 못 불러왔으면 가진 카드 영역 전체를 짚는다.
+        /// </summary>
+        private Transform FindFirstOwnedCard()
+        {
+            Transform container = deckManagementController != null ? deckManagementController.ownedCardsContainer : null;
+            if (container != null)
+            {
+                foreach (Transform card in container)
+                {
+                    Button button = card.GetComponent<Button>();
+                    if (card.gameObject.activeInHierarchy && button != null && button.interactable)
+                    {
+                        return card;
+                    }
+                }
+            }
+
+            return ownedCardsArea != null ? ownedCardsArea.transform : null;
         }
     }
 }
