@@ -123,6 +123,11 @@ MonoBehaviour:
     attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: PveCorruptedVineSpirit
+    profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: WillOWisp
     profile: {fileID: 11400000, guid: ba6a7647975b34a46972cc354ba119d6, type: 2}
     attackProfile: {fileID: 0}
@@ -219,6 +224,11 @@ MonoBehaviour:
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: WindSpirit
+    profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: PveCorruptedWindSpirit
     profile: {fileID: 11400000, guid: 95b80db328d0cf94988214403522ecbf, type: 2}
     attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
     intentionalSilent: 0
