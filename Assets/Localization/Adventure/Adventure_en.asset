@@ -218,8 +218,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11953530864197250
-    m_Localized: The witch's vines reach even here. Have they wrapped the whole
-      keep?
+    m_Localized: The vines reach even here. Have they wrapped the whole keep?
     m_Metadata:
       m_Items: []
   - m_Id: 11953572098765140
@@ -231,16 +230,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11953654567900920
-    m_Localized: You again? This time my fortress will be your grave.
+    m_Localized: '<b>Rumble... rumble...</b>'
     m_Metadata:
       m_Items: []
   - m_Id: 11953695802468810
-    m_Localized: This fortress, this forest... I'm putting it all back the way
-      it was.
+    m_Localized: The wall is moving. The vines dug into the stones and woke the guardian
+      sleeping inside.
     m_Metadata:
       m_Items: []
   - m_Id: 11953737037036700
-    m_Localized: Then let's see this through to the end.
+    m_Localized: Bring the golem down and the fortress is ours again.
     m_Metadata:
       m_Items: []
   - m_Id: 11960000000000001
@@ -531,6 +530,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 11960000000000072
     m_Localized: "A gate closes!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000073
+    m_Localized: Brick Golem
     m_Metadata:
       m_Items: []
   references:

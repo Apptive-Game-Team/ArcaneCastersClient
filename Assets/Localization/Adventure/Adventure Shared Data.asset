@@ -226,7 +226,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11953737037036700
-    m_Key: 4-3_pre_002_right
+    m_Key: 4-3_pre_002_left
     m_Metadata:
       m_Items: []
   - m_Id: 11960000000000001
@@ -511,6 +511,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 11960000000000072
     m_Key: pve_18_gate_d_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000073
+    m_Key: pve_brick_golem
     m_Metadata:
       m_Items: []
   m_Metadata:

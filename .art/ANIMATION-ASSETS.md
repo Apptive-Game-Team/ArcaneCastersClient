@@ -26,6 +26,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `RockTurretAttacking.png` | 인간제 투석 포탑 · 발사 직후 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
 | `WaterSlime.png` | 물 슬라임 · 한 개체 기본 자세 | `WaterSlime.prefab` 기본 SpriteRenderer |
 | `WaterSlimeAttackSpit.png` | 물 슬라임 · 물 뱉기 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.15초 표시 |
+| `PveBrickGolem.png` | 벽돌 골렘 · 두 주먹을 땅에 댄 기본 자세 | `PveBrickGolem.prefab` 기본 SpriteRenderer |
+| `PveBrickGolem2.png` | 벽돌 골렘 · 한 팔을 높이 든 내려찍기 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
 
 실제 파일명과 `.meta` GUID는 런타임 참조 때문에 유지한다. 문서와 홈페이지에서는
 숫자 접미사 대신 의미 이름을 표시한다.
