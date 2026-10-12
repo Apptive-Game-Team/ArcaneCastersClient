@@ -30,9 +30,9 @@ namespace TutorialScene
             Show(messageKey, target != null ? new[] { target } : null, onNext, TutorialPanelSide.Left, blockTargetClick);
         }
 
-        protected void Show(string messageKey, Transform target, TutorialPanelSide panelSide, Action onNext = null)
+        protected void Show(string messageKey, Transform target, TutorialPanelSide panelSide, Action onNext = null, bool blockTargetClick = false)
         {
-            Show(messageKey, target != null ? new[] { target } : null, onNext, panelSide);
+            Show(messageKey, target != null ? new[] { target } : null, onNext, panelSide, blockTargetClick);
         }
 
         protected void Show(string messageKey, Transform[] targets, Action onNext = null)
@@ -126,7 +126,7 @@ namespace TutorialScene
                 {
                     if (target != null)
                     {
-                        lift.Lift(target, layer, ++order);
+                        lift.Lift(target, layer, ++order, !blockTargetClick);
                     }
                 }
             }

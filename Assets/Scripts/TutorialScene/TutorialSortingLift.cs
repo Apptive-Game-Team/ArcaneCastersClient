@@ -21,6 +21,7 @@ namespace TutorialScene
             public int OriginalSortingOrder;
             public int OriginalSortingLayerId;
             public GraphicRaycaster AddedRaycaster;
+            public GraphicRaycaster DisabledRaycaster;
         }
 
         private readonly List<Entry> entries = new List<Entry>();
@@ -44,7 +45,11 @@ namespace TutorialScene
             }
         }
 
-        public void Lift(Transform target, int sortingLayerId, int sortingOrder)
+        /// <param name="clickable">
+        /// false 면 대상을 보여 주기만 하고 누르지 못하게 한다. raycaster 를 붙이지 않고, 원래
+        /// 있던 raycaster 는 끈다. 그러면 클릭이 대상 대신 아래의 마스크에 걸린다.
+        /// </param>
+        public void Lift(Transform target, int sortingLayerId, int sortingOrder, bool clickable = true)
         {
             if (target == null)
             {
@@ -69,9 +74,15 @@ namespace TutorialScene
 
             // 자식 Canvas의 Graphic은 부모 Canvas의 raycaster에 잡히지 않는다. 버튼이 계속
             // 눌리도록 raycaster도 같이 붙인다.
-            if (target.GetComponent<GraphicRaycaster>() == null)
+            GraphicRaycaster raycaster = target.GetComponent<GraphicRaycaster>();
+            if (clickable && raycaster == null)
             {
                 entry.AddedRaycaster = target.gameObject.AddComponent<GraphicRaycaster>();
+            }
+            else if (!clickable && raycaster != null && raycaster.enabled)
+            {
+                raycaster.enabled = false;
+                entry.DisabledRaycaster = raycaster;
             }
 
             canvas.overrideSorting = true;
@@ -102,6 +113,11 @@ namespace TutorialScene
                 if (entry.AddedRaycaster != null)
                 {
                     Object.DestroyImmediate(entry.AddedRaycaster);
+                }
+
+                if (entry.DisabledRaycaster != null)
+                {
+                    entry.DisabledRaycaster.enabled = true;
                 }
 
                 if (entry.Canvas == null)

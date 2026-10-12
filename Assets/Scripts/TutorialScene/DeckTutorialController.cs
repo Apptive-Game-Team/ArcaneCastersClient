@@ -54,32 +54,32 @@ namespace TutorialScene
 
         public void ShowDeckList(System.Action onNext)
         {
-            Show("onboarding.deck.deckList", deckListArea != null ? deckListArea.transform : null, onNext);
+            Show("onboarding.deck.deckList", deckListArea != null ? deckListArea.transform : null, onNext, true);
         }
 
         public void ShowDeckCards(System.Action onNext)
         {
-            Show("onboarding.deck.deckCards", FindDeckCardsTarget(), onNext);
+            Show("onboarding.deck.deckCards", FindDeckCardsTarget(), onNext, true);
         }
 
         public void ShowDeckRules(System.Action onNext)
         {
-            Show("onboarding.deck.rules", deckRuleArea != null ? deckRuleArea.transform : null, onNext);
+            Show("onboarding.deck.rules", deckRuleArea != null ? deckRuleArea.transform : null, onNext, true);
         }
 
         public void ShowOwnedCards(System.Action onNext)
         {
-            Show("onboarding.deck.ownedCards", ownedCardsArea != null ? ownedCardsArea.transform : null, TutorialPanelSide.Right, onNext);
+            Show("onboarding.deck.ownedCards", ownedCardsArea != null ? ownedCardsArea.transform : null, TutorialPanelSide.Right, onNext, true);
         }
 
         public void ShowCardMana(System.Action onNext)
         {
-            Show("onboarding.deck.cardMana", FindFirstOwnedCard(), TutorialPanelSide.Right, onNext);
+            Show("onboarding.deck.cardMana", FindFirstOwnedCard(), TutorialPanelSide.Right, onNext, true);
         }
 
         public void ShowSaveButton(System.Action onNext)
         {
-            Show("onboarding.deck.saveButton", saveButton != null ? saveButton.transform : null, onNext);
+            Show("onboarding.deck.saveButton", saveButton != null ? saveButton.transform : null, onNext, true);
         }
 
         public void ShowReturnToLobby()
