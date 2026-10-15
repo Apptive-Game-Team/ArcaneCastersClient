@@ -70,12 +70,12 @@ namespace GameScene.Card
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) || GamepadInput.CancelDown)
             {
                 Cancel();
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) || GamepadInput.NorthDown)
             {
                 // 스페이스는 사용자가 정한 마나 바 열림 상태를 올림과 내림 사이에서 바꾼다.
                 // 조준 중에 잠시 내려가는 것은 BarController 가 따로 계산한다.
@@ -86,6 +86,46 @@ namespace GameScene.Card
             {
                 ToggleCardBySlot(slotIndex);
             }
+
+            if (GamepadHandNavigation.TryGetPressedStep(out int step))
+            {
+                StepCardSelection(step);
+            }
+        }
+
+        /// <summary>LB / RB 로 고른 카드를 이전 · 다음 슬롯으로 옮긴다. 숫자 키와 같은 경로로 고른다.</summary>
+        private void StepCardSelection(int step)
+        {
+            if (isWaitingInputResponse || GameSceneUIController.Instance == null)
+            {
+                return;
+            }
+
+            int selectedSlot = -1;
+            for (int slot = 0; slot < CardHotkey.SlotCount; slot++)
+            {
+                CardUI card = GameSceneUIController.Instance.GetCardAt(slot);
+                if (card != null && card.IsSelected)
+                {
+                    selectedSlot = slot;
+                    break;
+                }
+            }
+
+            int target = GamepadHandNavigation.PickSlot(
+                step, selectedSlot, slot => GameSceneUIController.Instance.GetCardAt(slot) != null);
+            if (target < 0)
+            {
+                return;
+            }
+
+            // 필드 선택에 새로 들어올 때만 cursor 를 시전자 위치에서 시작한다. 이미 조준 중이면 cursor 를 그대로 둔다.
+            if (!isFieldSelectMode)
+            {
+                AimPointerSource.BeginGamepadAim();
+            }
+
+            ToggleCardBySlot(target);
         }
 
         private void ToggleManaBar()

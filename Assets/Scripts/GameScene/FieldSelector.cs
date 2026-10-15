@@ -130,7 +130,7 @@ namespace GameScene
 
             Vector3 casterPosition = GetCasterPosition();
 
-            if (!TryGetGroundPosition(Input.mousePosition, out Vector3 mouseWorldPos))
+            if (!TryGetGroundPosition(AimPointerSource.GetScreenPosition(casterPosition), out Vector3 mouseWorldPos))
             {
                 rangeShapeRenderer.SetCircle(casterPosition, range, true, RangeIndicatorSortingOrder, 0f);
                 return;
@@ -181,7 +181,8 @@ namespace GameScene
             DrawSkillIndicatorLayers(resolvedShapes, blockedColor, blockedEdgeColor);
 
             // UI 레이캐스트는 클릭을 걸러내는 용도뿐이므로, 실제로 버튼을 뗀 프레임에만 수행한다.
-            if (!Input.GetMouseButtonUp(0))
+            bool gamepadConfirm = GamepadInput.SubmitDown;
+            if (!Input.GetMouseButtonUp(0) && !gamepadConfirm)
             {
                 return;
             }
@@ -189,12 +190,14 @@ namespace GameScene
             // UI 하나가 이 누름을 통째로 가져갔으면 뗀 자리가 필드 위여도 이 누름은 필드의 것이 아니다.
             // emote 고르기 판처럼 눌러서 끌고 떼는 UI 가 여기 걸린다. 뗀 자리만 보면 판 위에서
             // 시작한 끌기가 필드 위에서 끝났을 때 마법이 시전된다.
-            if (PointerInputUtility.IsPointerCapturedByUi) return;
+            // gamepad 확정은 마우스 위치와 무관하므로 UI hover 검사를 건너뛴다.
+            if (!gamepadConfirm && PointerInputUtility.IsPointerCapturedByUi) return;
 
             // 유닛과 건물은 누른 유닛 자리로 끌려가지 않고 마우스가 가리키는 바닥에 놓인다. 그 밖의 마법은
             // 유닛을 누르면 Selectable 이 그 유닛 자리로 보낸다.
             bool leavesBody = MagicCastKinds.LeavesBody(magicData.castKind);
-            if (leavesBody ? PointerInputUtility.IsPointerOverUi() : PointerInputUtility.IsPointerOverUiOrSelectable())
+            if (!gamepadConfirm &&
+                (leavesBody ? PointerInputUtility.IsPointerOverUi() : PointerInputUtility.IsPointerOverUiOrSelectable()))
             {
                 return;
             }
