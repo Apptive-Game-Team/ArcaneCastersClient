@@ -19,95 +19,95 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 1000000
-    m_Localized: "Summons a swarm of surviving water slimes that leave a water field in their wake."
+    m_Localized: "Summons a swarm of water slimes that attack the nearest ground target from a distance and cannot hit flying units. Their trail leaves water fields that make any non-water unit wet, your own included."
     m_Metadata:
       m_Items: []
   - m_Id: 1000001
-    m_Localized: "Fires a hellfire projectile in the target direction."
+    m_Localized: "Fires a hellfire projectile in the target direction that explodes on the first enemy unit, building or base it touches, damaging enemies around the impact and setting the one it hit on fire. Flying units are out of its reach."
     m_Metadata:
       m_Items: []
   - m_Id: 1000002
-    m_Localized: "Erupts a geyser that damages enemies and launches them into the air."
+    m_Localized: "Erupts a geyser at the target point after a short delay that damages every unit and building in the area, your own included, and launches ground units into the air, heavier ones less. Units thrown up cannot be targeted by ground attackers until they land."
     m_Metadata:
       m_Items: []
   - m_Id: 1000003
-    m_Localized: "Builds a cannon of the human magic civilization that shells ground units."
+    m_Localized: "Builds a human arcane cannon that shells the closest ground enemy in range, buildings and the enemy base included. It cannot hit flying units, and it leaves rubble that blocks ground movement when destroyed."
     m_Metadata:
       m_Items: []
   - m_Id: 1000004
-    m_Localized: "Builds a human anti-air arcane tower that deals area damage to flying units."
+    m_Localized: "Builds a human anti-air tower that shoots the closest flying enemy in range and also damages enemies right next to it. It cannot attack ground units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000005
-    m_Localized: "Opens a well pooled with World Tree mana that restores your mana."
+    m_Localized: "Opens a well that speeds up your mana regeneration for as long as it stands. Enemies can destroy it, and it dries up on its own after a while."
     m_Metadata:
       m_Items: []
   - m_Id: 1000006
-    m_Localized: "Summons an equipment-wielding water slime archer that attacks ground and flying units from range."
+    m_Localized: "Summons a water slime archer that walks toward the nearest enemy and shoots it from range. It can hit ground units, flying units, buildings and the enemy base."
     m_Metadata:
       m_Items: []
   - m_Id: 1000007
-    m_Localized: "Summons a mossy warrior of the rock golem tribe that attacks ground enemies up close."
+    m_Localized: "Summons a mossy rock golem that walks to the nearest ground enemy and punches it, pushing it back a little. It cannot hit flying units, and it leaves rubble that blocks ground movement when it falls."
     m_Metadata:
       m_Items: []
   - m_Id: 1000008
-    m_Localized: "Summons a World Tree wind spirit rider that prioritizes attacking the player."
+    m_Localized: "Summons a fast wind spirit rider that runs straight for the enemy base and attacks it in melee. It only fights other ground enemies when the base cannot be targeted."
     m_Metadata:
       m_Items: []
   - m_Id: 1000009
-    m_Localized: "Summons a lightning spirit born at the World Tree that flies fast and attacks enemies."
+    m_Localized: "Summons a flying lightning spirit that shoots ground enemies, buildings and the enemy base from range. It cannot attack other flying units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000010
-    m_Localized: "Summons a lesser demon of the Hellfire Legion that burns nearby enemies."
+    m_Localized: "Summons lesser demons that walk to the nearest ground enemy and spray flames in a line, burning whatever they hit. Their fiery aura also burns every nearby unit that is not fire, your own included."
     m_Metadata:
       m_Items: []
   - m_Id: 1000011
-    m_Localized: "Calls down a lightning spirit's thunderbolt onto the target area."
+    m_Localized: "Calls down lightning on a narrow column at the target point at once and twice more after short pauses, hitting every enemy in the column on the ground or in the air. Your own lightning units in the column are charged instead, and each strike leaves a brief electric field that stuns non-lightning units that enter it."
     m_Metadata:
       m_Items: []
   - m_Id: 1000012
-    m_Localized: "Summons a magma-crusted demon of the Hellfire Legion that burns enemies."
+    m_Localized: "Summons a heavy magma demon that, on reaching a ground enemy, slams a burst of fire onto its position that damages and burns every enemy around it. It cannot target flying units, its aura burns every nearby unit that is not fire, and it leaves rubble when it falls."
     m_Metadata:
       m_Items: []
   - m_Id: 1000013
-    m_Localized: "Places a World Tree healing totem that restores allies in range."
+    m_Localized: "Places a healing totem that heals your own units, buildings and base within its reach at regular intervals, flying units included. If it is placed on top of a friendly unit it follows that unit, and it fades after a while."
     m_Metadata:
       m_Items: []
   - m_Id: 1000014
-    m_Localized: "Whips up a wind spirit's dust storm that batters enemies in the area."
+    m_Localized: "Whips up a dust storm at the target point that lingers and keeps damaging every enemy standing inside it. It only reaches ground enemies."
     m_Metadata:
       m_Items: []
   - m_Id: 1000015
-    m_Localized: "Sends a wind spirit turned tornado sweeping across the field."
+    m_Localized: "Sends a tornado drifting slowly from the target point toward the center of the field. It catches ground enemies it touches, spins and lifts them into the air, and damages them more the more it carries."
     m_Metadata:
       m_Items: []
   - m_Id: 1000016
-    m_Localized: "Rains hellfire meteors over a wide area."
+    m_Localized: "Rains meteors at random spots around the target point for several seconds. Each meteor falls from the sky and hits only the first enemy it touches, on the ground or in the air, and a meteor that touches nothing is wasted."
     m_Metadata:
       m_Items: []
   - m_Id: 1000017
-    m_Localized: "Summons a cloud-scaled wind spirit dragon that dampens the area and attacks enemies."
+    m_Localized: "Summons a flying cloud dragon that shoots the nearest enemy, ground or air, from range, and wets every unit around it, which puts out burning. Now and then it looses a chain lightning that stuns the first enemy it hits and jumps on to others for less damage each time."
     m_Metadata:
       m_Items: []
   - m_Id: 1000018
-    m_Localized: "Summons a flock of World Tree thunderbirds that charge at enemies."
+    m_Localized: "Summons a flock of fragile thunderbirds that dive onto ground enemies, buildings or the enemy base, hitting harder the farther they fall, then climb back up. They cannot attack flying units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000019
-    m_Localized: "Summons a slow but sturdy World Tree ancient guardian that fights ground enemies."
+    m_Localized: "Summons a slow, sturdy tree golem that melee-attacks ground enemies and slowly heals itself. It leaves a trail of leaves that heals anyone standing on it, friend or foe, and slows units that are not nature."
     m_Metadata:
       m_Items: []
   - m_Id: 1000020
-    m_Localized: "Summons a World Tree nature spirit woven from vines that chases down enemies."
+    m_Localized: "Summons vine spirits that shoot the nearest enemy, ground or air, from range. Each hit snares the target, slowing it and pulling flying units down, and fire damage tears the snare off for extra damage. Nature enemies are immune."
     m_Metadata:
       m_Items: []
   - m_Id: 1000021
-    m_Localized: "Plants a vine colony that keeps sending out vines to fend off enemies."
+    m_Localized: "Plants a vine colony that raises a vine under the nearest ground enemy in reach every few seconds, damaging and slowing everything the vine touches. The colony can be attacked and fades after a while."
     m_Metadata:
       m_Items: []
   - m_Id: 1000022
-    m_Localized: "Summons a rune-stone shaman of the rock golem tribe that strikes enemies with two rocks."
+    m_Localized: "Summons a rune-stone shaman of the rock golem tribe that walks toward the nearest enemy and throws two rocks per attack, one at each of the two closest enemies in range, or both at one if it is alone. It hits ground and flying targets alike."
     m_Metadata:
       m_Items: []
   - m_Id: 1000023
@@ -115,51 +115,51 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000024
-    m_Localized: "Summons a swarm of small ember demons of the Hellfire Legion."
+    m_Localized: "Summons a swarm of small ember demons that walk to the nearest ground target and hit it in melee, but cannot attack flying units. Their trail leaves burning fields that scorch any non-fire unit that steps in, your own included."
     m_Metadata:
       m_Items: []
   - m_Id: 1000025
-    m_Localized: "Summons a pair of MiniRock twins of the rock golem tribe."
+    m_Localized: "Summons small rock golems that slowly walk to the nearest ground target and hit it in melee. They are sturdy but cannot attack flying units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000026
-    m_Localized: "Summons a gale wind spirit that rushes at enemies and bursts."
+    m_Localized: "Summons a flying wind spirit that waits until an enemy flying unit appears, then dives at the nearest one and explodes, damaging flying enemies around it. It also explodes where it is killed and never attacks ground units or buildings."
     m_Metadata:
       m_Items: []
   - m_Id: 1000027
-    m_Localized: "Tears open a hellfire magma rift that scorches the area."
+    m_Localized: "Opens a magma rift at the target point that erupts after a short delay, damaging every unit and building in the area, your own included, and setting enemies on fire. Flying units are out of reach."
     m_Metadata:
       m_Items: []
   - m_Id: 1000028
-    m_Localized: "Places a wind spirit's tailwind totem that blows enemies in a fixed direction."
+    m_Localized: "Places a wind totem that repeatedly pushes enemy ground units in the area in front of it back toward their own base without damaging them, heavy ones less. It fades after a short time and enemies can destroy it sooner; flying units are not pushed."
     m_Metadata:
       m_Items: []
   - m_Id: 1000029
-    m_Localized: "Builds a small human siege turret that hurls rocks."
+    m_Localized: "Builds a small stationary turret that hurls rocks at the nearest enemy ground unit, building or base within its reach, and it cannot hit flying units. It crumbles after a short time, and enemies can destroy it sooner."
     m_Metadata:
       m_Items: []
   - m_Id: 1000030
-    m_Localized: "Plants a World Tree sapling that keeps healing nearby allies."
+    m_Localized: "Plants a World Tree sapling that heals your ground units, buildings and base standing close to it at regular intervals. It withers after a while, and enemies can destroy it sooner."
     m_Metadata:
       m_Items: []
   - m_Id: 1000031
-    m_Localized: "Launches a crescent wind blade that pierces through enemies."
+    m_Localized: "Launches a wind blade that cuts straight through every enemy ground unit, building and base in its path, dealing less damage to each one it passes, until it leaves the field. It cannot hit flying units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000032
-    m_Localized: "Erupts a line of World Tree vines that strike enemies in sequence."
+    m_Localized: "Erupts a line of vines from the caster toward the target one after another, damaging each enemy ground unit, building or base along the line once and snaring it to slow it down. Units do not block the line, flying units are out of reach, and fire damage on a snared target breaks the snare for extra damage."
     m_Metadata:
       m_Items: []
   - m_Id: 1000033
-    m_Localized: "Calls a water slime tide that pushes enemies back and leaves a water trail."
+    m_Localized: "Calls a water tide that rolls through the field, pushing every enemy ground unit it touches in its direction of travel and dealing only slight damage once to each. It leaves water fields along its path that make any non-water unit wet, your own included, and fades after a short time."
     m_Metadata:
       m_Items: []
   - m_Id: 1000034
-    m_Localized: "Rolls a rock golem tribe boulder that bounces off enemies and walls."
+    m_Localized: "Rolls a heavy boulder along the ground that damages every enemy it touches and bounces off enemies and the field walls. It disappears after a few bounces and cannot hit flying units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000035
-    m_Localized: "Arcs a lightning spirit's bolt that chains between enemies."
+    m_Localized: "Fires a lightning bolt that strikes the first enemy it touches and briefly stuns it, then jumps to another nearby enemy it has not hit yet, dealing less damage with each jump up to a limited number of enemies. Only the first strike is blocked by what is in its path; later jumps can reach nearby flying units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000036
@@ -167,75 +167,75 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000037
-    m_Localized: "Fires a will-o'-wisp of World Tree mana that seizes control of an enemy."
+    m_Localized: "Fires a will-o'-wisp along the ground that takes control of the first enemy unit it touches, which then fights for you for good. Bases and some buildings cannot be taken over, and the wisp flies on past them."
     m_Metadata:
       m_Items: []
   - m_Id: 1000038
-    m_Localized: "Drops a Hellfire Legion frenzy totem that makes units in range attack anything, allies included."
+    m_Localized: "Drops a totem that lands at the target point and throws units around it into a frenzy for a short time: they attack the nearest unit of either side, allies included, and attack faster. It affects your units as well as the enemy's."
     m_Metadata:
       m_Items: []
   - m_Id: 1000039
-    m_Localized: "Sends down leaf fairies that repair allied buildings and extend their duration."
+    m_Localized: "Drops a leaf fairy that heals the first allied unit, building or base it touches and restarts the lifetime of allied buildings that expire. If it touches an enemy first, it damages and snares that enemy instead."
     m_Metadata:
       m_Items: []
   - m_Id: 1000040
-    m_Localized: "Drops a rock golem tribe boulder from the sky."
+    m_Localized: "Drops a boulder from the sky that takes a moment to fall, then damages only the first enemy it touches, ground or flying. It deals no area damage and does nothing if no enemy is under it."
     m_Metadata:
       m_Items: []
   - m_Id: 1000041
-    m_Localized: "Deploys a paratrooper of the human magic civilization that lands and fights ground enemies."
+    m_Localized: "Deploys a paratrooper of the human magic civilization on the target point who cannot act until it lands, then walks to the nearest ground enemy and fights it in melee. It cannot attack flying units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000042
-    m_Localized: "Triggers a World Tree overgrowth that grows small lifeforms larger."
+    m_Localized: "Bursts roots out of the target point after a short delay, damaging and slowing enemies in the area. Your seed spirits in the area grow into tree golems; if there are none, it summons new seed spirits there instead."
     m_Metadata:
       m_Items: []
   - m_Id: 1000043
-    m_Localized: "Leaves a Hellfire Legion ember crater that spits fireballs around it."
+    m_Localized: "Leaves an ember crater that can be attacked and spits fireballs in random directions. A fireball damages the first enemy it touches, otherwise it lands and leaves a fire patch that burns anything standing on it, your own units too."
     m_Metadata:
       m_Items: []
   - m_Id: 1000044
-    m_Localized: "Summons a lightning spirit mouse that loves buildings."
+    m_Localized: "Summons a few lightning spirit mice that run past enemy units to the nearest enemy building and attack it in melee, then go for the enemy base. They never target enemy units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000045
-    m_Localized: "Builds a human rally beacon that gathers nearby allies and sends them at enemies around it."
+    m_Localized: "Drops a beacon on the target point that stands for a while and cannot be attacked. Allies within a wide reach stop advancing and gather around it, fighting only enemies that come near, and they attack faster while close to it."
     m_Metadata:
       m_Items: []
   - m_Id: 1000046
-    m_Localized: "Detonates a lightning spirit's charge that shocks nearby enemies."
+    m_Localized: "Detonates a lightning charge on the target point after a short delay, shocking enemies in the area so they cannot act. It damages every ground unit, building and base in the area, your own included."
     m_Metadata:
       m_Items: []
   - m_Id: 1000047
-    m_Localized: "Spins up a wind spirit's razor gale that keeps cutting enemies in the area."
+    m_Localized: "Spins up a razor gale on the target point that lasts a few seconds and cuts everything in the area again and again, your own units and buildings included."
     m_Metadata:
       m_Items: []
   - m_Id: 1000048
-    m_Localized: "Builds a water slime bubble generator that shields allies."
+    m_Localized: "Builds a bubble generator that wraps the nearest ally in reach in a bubble that blocks the next hit it takes. It skips allies that already have a bubble, never attacks, and fades after a while."
     m_Metadata:
       m_Items: []
   - m_Id: 1000049
-    m_Localized: "Builds a human arcane lightning tower that fires bouncing bolts."
+    m_Localized: "Builds a tower that zaps the nearest enemy in reach, ground or flying, then arcs to a few more nearby enemies for less damage. The tower can be attacked and fades after a while."
     m_Metadata:
       m_Items: []
   - m_Id: 1864653363056640
-    m_Localized: "Summons a Boundary Carrier of the dimensional wanderers that alternately opens gates for Cinder Shards and Storm Shards."
+    m_Localized: "Summons a toad that never attacks. It walks toward the nearest enemy building or base and keeps its distance, runs from enemy ground units that come close, and releases fire and lightning tadpoles in turn, starting at once. Tadpoles are short-lived melee ground fighters."
     m_Metadata:
       m_Items: []
   - m_Id: 1864718152470528
-    m_Localized: "Summons a Hellfire Legion commander that keeps sending out lesser demons to attack enemies."
+    m_Localized: "Summons a flying Hellfire Legion commander that never attacks itself: it drifts toward the nearest enemy and stops at a distance. Every few seconds it sends out a flying lesser demon that shoots ground and flying targets, up to a limited number in total."
     m_Metadata:
       m_Items: []
   - m_Id: 1864733830778880
-    m_Localized: "Summons a bubble-wielding water slime that attacks flying units with bursting bubbles."
+    m_Localized: "Summons a flying water slime that only targets flying enemies. It floats toward the nearest one and shoots bursting bubbles that also hurt other flyers next to the target. It never attacks ground units, buildings or the base."
     m_Metadata:
       m_Items: []
   - m_Id: 1864741510549504
-    m_Localized: "Overloads a lightning spirit's charge into a heavy shock and an anti-air blast."
+    m_Localized: "Overloads a lightning charge on the target point: after a short delay it damages and shocks every enemy in the area, then a moment later each shocked enemy bursts, hurting the enemies around it for less damage. Your own units are not hurt."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507520
-    m_Localized: "Summons a MiniRock strapped with a human-made anti-air tower that attacks flying units."
+    m_Localized: "Summons a slow MiniRock with an anti-air tower strapped to its back. It walks toward the nearest enemy but always prefers a flyer in reach, shooting it from range with a small splash; against ground enemies it only hits at close range."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507521
@@ -267,17 +267,21 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507528
-    m_Localized: Summons an Evil Ent that punches from range and periodically drags
-      in a light enemy to burn it.
+    m_Localized: Summons a slow ground giant that punches enemies from range. When
+      a light enemy comes within reach, it drags that enemy in, stuns it, and burns
+      it with a fire fist.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507529
-    m_Localized: Summons a thunder stag that charges and attacks enemies.
+    m_Localized: Summons a thunder stag that builds up speed and rams ground enemies,
+      hitting harder the faster it is going. It bolts away after each hit and zaps
+      nearby enemies with small lightning.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507530
-    m_Localized: Summons a titan remnant that remains on the battlefield for a time,
-      periodically erupting a giant stone fist beneath nearby enemies.
+    m_Localized: Builds a titan remnant that stays for a while and, whenever an enemy
+      is in range, thrusts a giant stone fist up under it, damaging enemies around
+      that spot. It leaves a rock remnant if destroyed.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507531
@@ -289,61 +293,81 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000050
-    m_Localized: Summons a large, sturdy rock golem that fights only ground enemies.
+    m_Localized: Summons a very sturdy, slow rock golem that attacks only ground
+      enemies and knocks them back. It leaves a rock remnant behind when it is killed.
     m_Metadata:
       m_Items: []
   - m_Id: 1000051
-    m_Localized: Places a trap that arms when an enemy steps in, then stuns the area.
+    m_Localized: Places a trap that arms when an enemy walks into its area, then
+      after a short delay stuns every enemy still in the area. It is used up once
+      it goes off and deals no damage.
     m_Metadata:
       m_Items: []
   - m_Id: 1000052
-    m_Localized: Places a totem that stops nearby allied buildings from decaying.
+    m_Localized: Builds a totem that pauses the countdown of nearby allied buildings
+      so they last longer while they stay in range. It does not heal them.
     m_Metadata:
       m_Items: []
   - m_Id: 1000053
-    m_Localized: Builds a tower that lobs shells and blows up where they land.
+    m_Localized: Builds a tower that keeps lobbing fireworks onto a fixed spot ahead
+      of it toward the enemy side, exploding on arrival and hurting enemies there.
+      It does not aim and expires after a while.
     m_Metadata:
       m_Items: []
   - m_Id: 1000054
-    m_Localized: Builds a structure that keeps spreading leaf fields around it.
+    m_Localized: Builds a structure that keeps growing leaf fields around it, which
+      snare enemies and heal allies. Allied seed spirits near it sprout vines that
+      hurt nearby enemies.
     m_Metadata:
       m_Items: []
   - m_Id: 1000055
-    m_Localized: Builds a tower that fires flame shots at both ground and air targets.
+    m_Localized: Builds a tower that keeps firing burning flame shots straight toward
+      the enemy side, hitting the first ground enemy in the line and burning it.
+      It does not aim, and it expires after a while.
     m_Metadata:
       m_Items: []
   - m_Id: 1000056
-    m_Localized: Summons a serpent that leaves water fields where it moves and fires
-      a water beam through every enemy in a line.
+    m_Localized: Summons a slow ground serpent that leaves water fields along its
+      path. It fires a water beam that hits every enemy standing in a line, flying
+      ones included.
     m_Metadata:
       m_Items: []
   - m_Id: 1000057
-    m_Localized: Drains your own units down to half health and fires a beam that
-      deals 70% of what it took, split over four hits.
+    m_Localized: Drains your own units down to half health and channels the stolen
+      health into a beam that strikes the closest enemy in the line, four times.
+      Damage left over from a kill moves on to the next enemy in the line.
     m_Metadata:
       m_Items: []
   - m_Id: 1000058
-    m_Localized: Fires a warhead that homes in on the nearest air target, or the
-      nearest ground target when there is none.
+    m_Localized: Launches a homing warhead that locks onto the enemy nearest the
+      aimed spot, preferring air targets and using ground targets only if none are
+      flying. It explodes on the first enemy it touches, hurting enemies around the
+      blast, and hits harder against air targets.
     m_Metadata:
       m_Items: []
   - m_Id: 1000059
-    m_Localized: Hurls a boulder that knocks its target back and deals extra damage
-      when the target slams into a wall or another enemy.
+    m_Localized: Hurls a boulder that hits the first enemy in its path, knocking
+      it back and stunning it briefly. If the pushed enemy slams into a wall, a rock
+      remnant, or another enemy, it takes extra damage, and so does that enemy.
     m_Metadata:
       m_Items: []
   - m_Id: 1000060
-    m_Localized: Summons a flying sprite that drops bombs on ground targets and blows
-      them up where they land.
+    m_Localized: Summons a flying sprite that flies over ground enemies and drops
+      bombs on them, which explode where they land and hurt nearby ground enemies.
+      It ignores air targets and does not die when attacking.
     m_Metadata:
       m_Items: []
   - m_Id: 1000061
-    m_Localized: Plants a giant vine, then grows two rings of vines around it a moment
-      later.
+    m_Localized: Plants a giant vine that damages and slows enemies around it at
+      once, then a moment later grows two rings of vines that hit each enemy once
+      more. Each enemy the vines hit leaves you a seed spirit, and your seed spirits
+      touched by the vines grow into vine spirits.
     m_Metadata:
       m_Items: []
   - m_Id: 1000062
-    m_Localized: Builds a nest that keeps sending out seed spirits until it expires.
+    m_Localized: Builds a nest that spawns a ground seed spirit at regular intervals
+      until the nest expires or is destroyed. Seed spirits fight in melee and leave
+      leaf fields behind as they walk.
     m_Metadata:
       m_Items: []
   - m_Id: 1000063
@@ -379,13 +403,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000071
-    m_Localized: Shakes a circular area, turning medium rock remnants into Rock Golems
-      and small remnants into MiniRocks.
+    m_Localized: "Shakes the ground at the chosen spot and raises every rock remnant
+      there, from either side, into your own units: small remnants into mini rocks
+      and medium remnants into rock golems. It does nothing without remnants."
     m_Metadata:
       m_Items: []
   - m_Id: 1000072
-    m_Localized: Detonates every rock remnant in a circular area, creating an explosion
-      centered on each remnant.
+    m_Localized: Detonates every rock remnant in the area, from either side, after
+      a short delay, with each explosion hurting everything near it, your own units
+      too. Medium remnants leave a small remnant behind.
     m_Metadata:
       m_Items: []
   - m_Id: 1000073
@@ -397,8 +423,9 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000075
-    m_Localized: Summons a headless soil crawler that shoots kidney beans from far
-      away. It attacks only ground units.
+    m_Localized: Summons a ground unit that shoots beans in a straight line at the
+      closest ground enemy. A bean hits the first ground enemy in its path and cannot
+      hit air units.
     m_Metadata:
       m_Items: []
   references:

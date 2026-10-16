@@ -44,6 +44,21 @@ Not every magic needs a `MagicBook` row — the `Magic` table is larger than the
 표에서 읽으므로, 서버가 새 마법을 내보내면 `Magic` 표에 키를 넣지 않는 한 손패와
 덱 화면에 raw key 가 그대로 보인다. 마법을 추가할 때 `Magic` 표는 선택이 아니다.
 
+## What a MagicBook description says
+
+A `MagicBook` row describes what the magic does in the game, read from the game
+server code: how a spell reaches its target (a shot hits the first enemy in its
+path, a drop falls on the point), what it can hit (ground, air, buildings, the
+base), whether a unit moves and what it attacks, and side effects such as
+friendly fire. Numbers stay out because balance changes them.
+
+The game server's jev bot reads the English row to choose cards
+(`bot/magic-descriptions.properties` in the game repository is a copy of it), so
+a row that is wrong misleads the bot as well as the player. The old flavour text
+said `wind_spirit` rushes at enemies; the code only targets flying units, and
+the bot kept summoning it to attack the base. When a magic's behaviour changes
+on the server, change its row here and copy it to the game repository again.
+
 ## Adding an entry
 
 A string table is three files: `<Table> Shared Data.asset` maps key to `m_Id`,
