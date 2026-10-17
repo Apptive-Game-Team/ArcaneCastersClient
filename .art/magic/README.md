@@ -1,5 +1,8 @@
 # 마법 컨셉 페이지
 
+2026-10-17 신규 소환 마법: [비전 보병](pages/arcane_infantry.md),
+[분화구 운반수](pages/crater_carrier.md). 두 페이지는 아래 기존 생성 목록에 추가한 구현 계약이다.
+
 game 서버의 concrete `*Magic.java`를 기준으로 생성한 아트·동작 문서다.
 
 - 생성 페이지: 83개

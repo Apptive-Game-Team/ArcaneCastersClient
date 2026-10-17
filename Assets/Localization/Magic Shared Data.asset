@@ -447,6 +447,14 @@ MonoBehaviour:
     m_Key: beanShooter
     m_Metadata:
       m_Items: []
+  - m_Id: 78337300000000000
+    m_Key: arcaneInfantry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78337400000000000
+    m_Key: craterCarrier
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

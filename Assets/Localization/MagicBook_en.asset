@@ -428,6 +428,18 @@ MonoBehaviour:
       hit air units.
     m_Metadata:
       m_Items: []
+  - m_Id: 1000076
+    m_Localized: Summons a human infantry soldier who strikes ground
+      enemies with a short club of condensed magical energy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000077
+    m_Localized: Summons a Fire and Rock artillery demon. It plants
+      its stone mortar before firing explosive shells at ground enemies. Shells land
+      at the position aimed at when fired. Packing the mortar takes time before it
+      can move again.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
