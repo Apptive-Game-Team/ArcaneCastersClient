@@ -2,7 +2,7 @@
 
 - Date: 2026-10-19
 - GitHub Issue: #348
-- Status: Verified; ready for pull request
+- Status: Complete; PR #349 open against dev
 
 ## Goal
 
@@ -72,7 +72,7 @@ summoning aliases resolve to the woody SeedNest compatibility body.
   and charged StormStag), HP-only silence, preview silence and cooldown behavior.
   Run existing sound regression tests and catalog validation when Unity is available;
   otherwise compile against locally available assemblies and state runtime limits.
-- [ ] **Step 3: Rollout / Rollback** Commit only task files, push feature/348,
+- [x] **Step 3: Rollout / Rollback** Commit only task files, push feature/348,
   open assigned/labeled PR against dev and attach it. Do not merge or update root
   submodule pointer before merge. Revert the feature commit for rollback.
 
@@ -121,3 +121,7 @@ Audio probes confirm three mono PCM16 44.1 kHz clips at -3 dBFS with decayed tai
 git diff --check passes after removing unrelated Editor-generated changes.
 Graphify update was attempted from the monorepo root; its CLI is not installed.
 In-game listening and WebGL playback have not been performed.
+
+Published feature/348 and opened assigned/labeled PR #349 against dev:
+https://github.com/Apptive-Game-Team/ArcaneCastersClient/pull/349
+The parent submodule pointer is unchanged because the PR is not merged.
