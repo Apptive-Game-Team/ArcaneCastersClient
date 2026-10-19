@@ -517,3 +517,19 @@ instead of on your code. Replace it with
 `*.csproj`), then check every `HintPath` outside `Program Files` with `wslpath -u`
 before building. Rebuilding the `<Compile Include>` lists from the worktree took
 about 11 seconds for `Assembly-CSharp.csproj`, 0 errors.
+
+## A shader change is checked by porting the fragment to Python
+
+No shader compiler runs here (no Editor, no `dxc`, `fxc` or `glslangValidator`), and a
+screenshot of the running game is not available either. The first version of
+`ArcaneCasters/SpriteTeamOutline` (#340) passed review by reading alone and shipped a
+ragged outline: one ring of 8 samples at width 3 leaves about 2.3 screen pixels between
+samples, and the edge threshold on the pixel's own alpha left a fringe of body colour
+outside the outline. Neither shows in the code; both show at once in a render.
+
+Before changing a sprite shader, port the fragment function to numpy (bilinear sampling,
+no mipmaps, `fwidth(uv)` = one over the on-screen size in pixels) and render the old and
+new code side by side on real sprites from `Assets/Resources/Game/sprites` at about 90
+screen pixels tall, enlarged 4x with nearest neighbour. #352 did this
+(`docs/pr-media/352/outline-before-after-90px.png`). The render does not prove the shader
+compiles for WebGL; say so in the pull request and leave that to an Editor check.
