@@ -57,7 +57,7 @@ namespace WordOnline.Tests
                 ""status"": ""ACCEPTED"",
                 ""matchInfo"": {
                     ""sessionId"": ""sess-456"",
-                    ""server"": ""ws://localhost:7777""
+                    ""server"": ""ws://127.0.0.1:7777""
                 }
             }";
 
@@ -66,7 +66,7 @@ namespace WordOnline.Tests
             Assert.That(invite.inviteId, Is.EqualTo("inv-123"));
             Assert.That(invite.matchInfo, Is.Not.Null);
             Assert.That(invite.matchInfo.sessionId, Is.EqualTo("sess-456"));
-            Assert.That(invite.matchInfo.server, Is.EqualTo("ws://localhost:7777"));
+            Assert.That(invite.matchInfo.server, Is.EqualTo("ws://127.0.0.1:7777"));
         }
 
         [Test]

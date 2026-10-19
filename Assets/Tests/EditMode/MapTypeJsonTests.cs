@@ -16,7 +16,7 @@ namespace WordOnline.Tests
     {
         private const string MatchedInfoJson = @"{
             ""message"": ""matched"",
-            ""server"": ""http://localhost:7777"",
+            ""server"": ""http://127.0.0.1:7777"",
             ""sessionId"": ""session-1"",
             ""mapType"": ""FORTRESS"",
             ""leftUser"": { ""id"": 11, ""name"": ""left"" },

@@ -44,9 +44,9 @@ namespace WordOnline.Tests
         [Test]
         public void AsWebSocket_MapsHttpToWs()
         {
-            string url = ServerEndpoint.Of("http://localhost:6209").AsWebSocket();
+            string url = ServerEndpoint.Of("http://127.0.0.1:6209").AsWebSocket();
 
-            Assert.AreEqual("ws://localhost:6209/", url);
+            Assert.AreEqual("ws://127.0.0.1:6209/", url);
         }
 
         [Test]

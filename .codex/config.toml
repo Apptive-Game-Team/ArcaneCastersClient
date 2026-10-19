@@ -2,7 +2,7 @@
 #
 #   UNITY_MCP_URL        where the Unity MCP bridge listens; override when the
 #                        editor runs on another host (for example a WSL guest
-#                        reaching a Windows host). Defaults to localhost below.
+#                        reaching a Windows host). Defaults to 127.0.0.1 below.
 #   ELEVENLABS_API_KEY   read from the environment, never stored here.
 
 [mcp_servers.unityMCP]
