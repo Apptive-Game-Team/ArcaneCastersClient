@@ -326,6 +326,16 @@ in three contract files nobody had touched. Compare each copied project's
 `ProjectReference` list with the `references` of the matching `.asmdef` before
 reading the error list.
 
+A quicker check for a few edited files: compile only those files with `csc.dll`
+against the Windows checkout's `Assembly-CSharp.dll` (add `-nowarn:0436` for the
+duplicate types). On #340 the C:\dev\ac-client checkout no longer existed; the
+`C:\Users\jys09\Projects\ArcaneCasters\Client` one did. This check is never clean
+by itself. Editing `ServedObject.cs` gave CS1503, because the source `ServedObject`
+and the DLL's `ServedObject` are different types, and CS1061 on
+`PositionUpdater.UpdatePosition`, because the DLL was older than the branch. Compile
+the same files from `origin/dev` with the same response file. Only errors that are
+missing from that baseline come from your change.
+
 The EditMode test DLL built this way cannot be run outside Unity: Unity's
 `nunit.framework.dll` needs .NET Framework remoting (`CallContext`). Tests that
 touch only `WordOnline.Contracts` and `JsonCodec` run under `dotnet test` in a

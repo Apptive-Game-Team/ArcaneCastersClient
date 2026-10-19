@@ -19,13 +19,9 @@ namespace GameScene.ServedObjectComponent
     /// </summary>
     public class ServedObjectGaugeBar : MonoBehaviour
     {
-        private const string LeftPlayer = "LeftPlayer";
-        private const string RightPlayer = "RightPlayer";
         private const string HpCategory = "HP";
         private const float FallbackCanvasWidth = 100f;
         private const float FallbackCanvasHeight = 20f;
-        private static readonly Color LeftHpFillColor = new Color(0.92f, 0.24f, 0.24f, 1f);
-        private static readonly Color RightHpFillColor = new Color(0.25f, 0.55f, 0.98f, 1f);
         private static readonly Color NeutralHpFillColor = new Color(0.46f, 0.92f, 0.47f, 1f);
         private static readonly Color DefaultBackgroundColor = new Color(0f, 0f, 0f, 0.45f);
 
@@ -329,15 +325,7 @@ namespace GameScene.ServedObjectComponent
 
         private static Color GetHpFillColor(string master)
         {
-            switch (master)
-            {
-                case LeftPlayer:
-                    return LeftHpFillColor;
-                case RightPlayer:
-                    return RightHpFillColor;
-                default:
-                    return NeutralHpFillColor;
-            }
+            return TeamColors.TryGet(master, out Color color) ? color : NeutralHpFillColor;
         }
 
         /// <summary>True only for the bar that owns the team indicator, i.e. the HP bar.</summary>
@@ -375,18 +363,7 @@ namespace GameScene.ServedObjectComponent
 
         private static bool TryGetIndicatorColor(string master, out Color indicatorColor)
         {
-            switch (master)
-            {
-                case LeftPlayer:
-                    indicatorColor = LeftHpFillColor;
-                    return true;
-                case RightPlayer:
-                    indicatorColor = RightHpFillColor;
-                    return true;
-                default:
-                    indicatorColor = Color.clear;
-                    return false;
-            }
+            return TeamColors.TryGet(master, out indicatorColor);
         }
     }
 }
