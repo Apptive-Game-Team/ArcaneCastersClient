@@ -18,6 +18,11 @@ MonoBehaviour:
     attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: ArcaneInfantry
+    profile: {fileID: 11400000, guid: 8dcd36e83b082b54f86c6a8bf19fd807, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: Player
     profile: {fileID: 11400000, guid: 8dcd36e83b082b54f86c6a8bf19fd807, type: 2}
     attackProfile: {fileID: 0}
@@ -29,6 +34,11 @@ MonoBehaviour:
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: FireChildSpirit
+    profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
+    attackProfile: {fileID: 11400000, guid: e02075cea483447281d5fd1665692517, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: CraterCarrier
     profile: {fileID: 11400000, guid: 314b3d14429bcb144a3fbe2998f00dee, type: 2}
     attackProfile: {fileID: 11400000, guid: e02075cea483447281d5fd1665692517, type: 2}
     intentionalSilent: 0
@@ -563,6 +573,11 @@ MonoBehaviour:
     attackProfile: {fileID: 0}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: CraterShell
+    profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: MagmaFist
     profile: {fileID: 11400000, guid: 1bee8cdf04084621a386079bf80da998, type: 2}
     attackProfile: {fileID: 0}
@@ -609,6 +624,11 @@ MonoBehaviour:
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: MagmaExplosion
+    profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
+    attackProfile: {fileID: 0}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: CraterExplosion
     profile: {fileID: 11400000, guid: 74ef85ae71924592ade4d203a432e56c, type: 2}
     attackProfile: {fileID: 0}
     intentionalSilent: 0

@@ -53,6 +53,13 @@ the Editor with a "missing script" component.
 
 ## Writing a new `.meta` by hand
 
+When deriving a new prefab from an existing variant, validate modification targets
+against the current base's fileIDs as well as checking that referenced GUIDs exist.
+`MagmaExplosion` still carried an old audio-clip override targeting a component
+already removed from `AbstractExplode`; copying that row into `CraterExplosion`
+looked valid to Unity but retained a dead serialized reference. Prune such overrides
+from the new variant instead of copying them forward.
+
 Copy the shape from a sibling of the same importer. A script meta is three
 lines: `fileFormatVersion: 2`, `guid: <32 lowercase hex>`, `timeCreated: <int>`.
 The guid must be new — grep it across `Assets/`, `Packages/` and

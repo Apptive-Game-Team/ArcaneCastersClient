@@ -243,8 +243,11 @@ does not scale with how far away the target happens to be.
 
 Server `Status` arrives as a raw string and `ServedObject.HandleStatus` routes
 only `Destroyed`, `Attack` and `Damaged`. Everything else, including `Idle` and
-`Move`, falls through to `OnOtherStatus`, which only `PlayerActionController`
-subscribes to. A creature cannot react to `Idle` or `Move` through status.
+`Move`, falls through to `OnOtherStatus`. Creatures that need persistent poses must
+subscribe explicitly, as `CraterCarrierPresenter` does for `Deploying`, `Deployed`
+and `Recovering`. Do not use `OnMoved` to select a carried pose: knockback can move
+a deployed unit. Restore the phase on the server after transient attack/damage
+statuses so live updates and full reconnect snapshots use the same presentation.
 
 ## Verifying without the Editor
 
