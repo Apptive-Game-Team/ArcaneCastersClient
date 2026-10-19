@@ -289,6 +289,7 @@ PPU·pivot·앵커 좌표를 같이 출력한다.
 | 실제 파일 | 의미 이름 | 사용 방식 |
 |---|---|---|
 | `Effect/AreaOfEffect/RepairAura.png` | repair_totem · 수리 범위 경계 | `RepairTotem.prefab` 자식 SpriteRenderer, `AuraRadiusScaler`가 크기 결정 |
+| `Effect/AreaOfEffect/RallyZone.png` | rallying_totem · 집결 구역 경계 (`effect_radius`) | `RallyingTotem.prefab` 자식 `RallyZone`, `AuraRadiusScaler`가 크기 결정, `GroundPinnedChild`가 땅 XZ 평면에 눕히고 낙하 중에도 땅에 고정 |
 
 - **상태 오라를 키워서 범위 표시로 쓰지 않는다.** element 오라 6종은 전부 가로
   1.28 world unit 로 그려져 있고 실제 최대 사용처가 `FireSpirit`의 2.8배, 즉 3.58
