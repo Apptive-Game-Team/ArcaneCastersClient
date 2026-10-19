@@ -180,6 +180,11 @@ namespace GameScene
                 return;
             }
 
+            // Debug.Log, not WDebug: dev runs Java and Rust game servers side by side, and which one
+            // a match landed on has to show in the console of a release WebGL build too. The address
+            // is logged before the token query is added.
+            Debug.Log($"[Match] game server: {matchInfo.ConnectionSource}, session: {matchInfo.sessionId}");
+
             string url = gameServer.Query("token", SceneContext.JwtToken);
             _connectGate.NoteHandshakeStarted(now);
             _transport.Connect(url, SceneContext.JwtToken);
