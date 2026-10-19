@@ -50,6 +50,9 @@ namespace LobbyScene
         public LocalizedString randomDeckPlay;
         
         private bool initializing = true;
+        // The deck whose selection request is still in flight, 0 when none. A dropdown click repopulates
+        // the dropdown before the reply arrives, and selectedDeckId still names the previous deck then.
+        private long pendingDeckId;
         private LoadingHandle loadingHandle;
 
         private IEnumerator Start()
@@ -67,7 +70,11 @@ namespace LobbyScene
             {
                 yield return UserInfoGetter.GetUserInfo();
             }
-        
+            else
+            {
+                yield return UserInfoGetter.RefreshGameUser();
+            }
+
             lobbyUserNameUI.SetUserName(SceneContext.User.name);
             ApplyOwnAppearance(SceneContext.User.appearance);
             yield return QuestRewardTracker.CheckAndShowRewards(rewardUiPrefab, rewardTilePrefab);
@@ -154,38 +161,22 @@ namespace LobbyScene
             int savedDeckIndex = userDecks
                 .Select(d => d.id)
                 .ToList()
-                .IndexOf(SceneContext.User.selectedDeckId);
+                .IndexOf(pendingDeckId != 0 ? pendingDeckId : SceneContext.User.selectedDeckId);
 
             // The dropdown is repopulated on every click. Random play is not stored on the server, so a
             // refetch must keep it instead of falling back to the saved deck.
             bool keepRandom = !initializing && LobbySceneViewModel.Instance.DeckMode == MatchDeckMode.Random;
 
-            int dropdownIndex;
+            int dropdownIndex = savedDeckIndex >= 0 && !keepRandom ? savedDeckIndex + 1 : 0;
             if (savedDeckIndex == -1 && !keepRandom && userDecks.Length > 0)
             {
-                SceneContext.User.selectedDeckId = userDecks[0].id;
-                StartCoroutine(SelectDeckCoroutine(userDecks[0].id));
-                savedDeckIndex = 0;
+                dropdownIndex = 1;
+                pendingDeckId = userDecks[0].id;
+                StartCoroutine(SelectDeckCoroutine(userDecks[0].id, null));
             }
 
-            if (savedDeckIndex >= 0 && !keepRandom)
-            {
-                dropdownIndex = savedDeckIndex + 1;
-                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Selected;
-                DeckSceneContext.CurrentDeck = userDecks[savedDeckIndex];
-            }
-            else
-            {
-                dropdownIndex = 0;
-                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Random;
-                DeckSceneContext.CurrentDeck = null;
-            }
+            ShowDropdownIndex(dropdownIndex);
 
-            deckDropdown.SetValueWithoutNotify(dropdownIndex);
-            deckDropdown.RefreshShownValue();
-            UpdateCaption(names[dropdownIndex]);
-            ShowDeckSummons();
-        
             loadingHandle?.Dispose();
             initializing = false;
         }
@@ -193,27 +184,54 @@ namespace LobbyScene
         // 3) 드랍다운에서 선택 바뀌었을 때
         public void OnDropdownChanged(int newIndex)
         {
+            DeckResponseDto previousDeck = DeckSceneContext.CurrentDeck;
+            ShowDropdownIndex(newIndex);
             if (newIndex == 0)
             {
-                LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Random;
-                DeckSceneContext.CurrentDeck = null;
-                UpdateCaption(randomDeckPlay.GetLocalizedString());
-                ShowDeckSummons();
+                pendingDeckId = 0;
                 WDebug.Log("랜덤 덱 플레이 선택");
                 return;
             }
 
             var selected = userDecks[newIndex - 1];
-            LobbySceneViewModel.Instance.DeckMode = MatchDeckMode.Selected;
-            // PopulateDropdown reads this to place the dropdown, so a stale value moves it back to the old deck.
-            SceneContext.User.selectedDeckId = selected.id;
-            DeckSceneContext.CurrentDeck = selected;     // 컨텍스트 갱신
             WDebug.Log($"index: {newIndex} 선택된 덱: {selected.name} (ID: {selected.id})");
-            UpdateCaption(selected.name);                // 상단 텍스트 갱신
-            ShowDeckSummons();
-            StartCoroutine(SelectDeckCoroutine(DeckSceneContext.CurrentDeck.id));
+            pendingDeckId = selected.id;
+            StartCoroutine(SelectDeckCoroutine(selected.id, previousDeck));
         }
-        private IEnumerator SelectDeckCoroutine(long deckId)
+
+        /// <summary>
+        /// Shows dropdown option <paramref name="index"/>: 0 is random play, n is <c>userDecks[n - 1]</c>.
+        /// It sets the match deck mode and the lobby summons, and leaves <c>selectedDeckId</c> alone, because
+        /// only a selection the matching server accepted may change that.
+        /// </summary>
+        private void ShowDropdownIndex(int index)
+        {
+            DeckResponseDto deck = index > 0 ? userDecks[index - 1] : null;
+            LobbySceneViewModel.Instance.DeckMode = deck != null ? MatchDeckMode.Selected : MatchDeckMode.Random;
+            DeckSceneContext.CurrentDeck = deck;
+            deckDropdown.SetValueWithoutNotify(index);
+            deckDropdown.RefreshShownValue();
+            UpdateCaption(deck != null ? deck.name : randomDeckPlay.GetLocalizedString());
+            ShowDeckSummons();
+        }
+
+        private int DropdownIndexOf(DeckResponseDto deck)
+        {
+            if (deck == null)
+            {
+                return 0;
+            }
+
+            int deckIndex = Array.FindIndex(userDecks, d => d.id == deck.id);
+            return deckIndex >= 0 ? deckIndex + 1 : 0;
+        }
+
+        /// <summary>
+        /// Asks the matching server to select <paramref name="deckId"/>. The game server deals whatever deck the
+        /// matching server has selected, so a failure puts the dropdown back on <paramref name="previousDeck"/>
+        /// (null is random play) instead of leaving it on a deck the match will not use.
+        /// </summary>
+        private IEnumerator SelectDeckCoroutine(long deckId, DeckResponseDto previousDeck)
         {
             string url = $"{ServerList.MatchingServer.url}/api/users/mine/decks/{deckId}";
             using var www = UnityWebRequest.Post(url, new WWWForm());
@@ -223,13 +241,26 @@ namespace LobbyScene
         
             yield return www.SendWebRequest();
 
+            if (pendingDeckId == deckId)
+            {
+                pendingDeckId = 0;
+            }
+
             if (www.result != UnityWebRequest.Result.Success)
             {
                 SystemMessageUI.Instance.ShowMessage(deckSelectionFailed);
                 WDebug.LogError($"덱 선택 실패: {www.responseCode} / {www.error}");
+
+                // A later pick already replaced this one on screen, and its own request settles it.
+                if (DeckSceneContext.CurrentDeck?.id == deckId)
+                {
+                    ShowDropdownIndex(DropdownIndexOf(previousDeck));
+                }
             }
             else
             {
+                // PopulateDropdown places the dropdown by this id on every click.
+                SceneContext.User.selectedDeckId = deckId;
                 if (!initializing)
                     SystemMessageUI.Instance.ShowMessage(deckSelectionSuccess);
                 WDebug.Log("덱 선택 성공: " + www.downloadHandler.text);
