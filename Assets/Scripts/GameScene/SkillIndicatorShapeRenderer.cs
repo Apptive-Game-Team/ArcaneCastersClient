@@ -51,7 +51,8 @@ namespace GameScene
             None,
             Circle,
             LocalCircle,
-            Line
+            Line,
+            AirLine
         }
 
         private MeshFilter meshFilter;
@@ -225,6 +226,73 @@ namespace GameScene
 
             float halfWidth = Mathf.Max(width, 0.01f) * 0.5f;
             BuildLineMesh(safeLength, halfWidth, resolvedFillColor);
+            edgeRenderer.enabled = false;
+        }
+
+        /// <summary>
+        /// 공중을 지나는 3D 직선을 카메라를 향한 띠로 그린다. 지면에 눕는 다른 도형과 달리 점이 월드 좌표 그대로
+        /// mesh 에 들어가므로 transform 은 원점에 둔다. 띠의 폭 방향은 선 방향과 카메라 앞쪽 모두에 수직이라
+        /// 카메라 기울기와 무관하게 화면에서 <paramref name="width"/> 만큼 굵게 보인다.
+        /// </summary>
+        public void SetAirLine(Vector3 start, Vector3 end, int sortingOrder, float width, Color fillColor)
+        {
+            if (IsUnchanged(ShapeMode.AirLine, start, end, 0f, width, sortingOrder, true, fillColor))
+            {
+                return;
+            }
+
+            RecordShapeState(ShapeMode.AirLine, start, end, 0f, width, sortingOrder, true, fillColor);
+
+            EnsureRenderers();
+            DisableSpriteRenderer();
+
+            Vector3 direction = end - start;
+            Camera camera = Camera.main;
+            if (camera == null || direction.sqrMagnitude <= Mathf.Epsilon)
+            {
+                SetVisible(false);
+                return;
+            }
+
+            // 선이 카메라 앞쪽과 나란하면 cross 가 0 이 되므로 그때는 카메라 오른쪽을 쓴다.
+            Vector3 side = Vector3.Cross(camera.transform.forward, direction);
+            side = side.sqrMagnitude <= Mathf.Epsilon ? camera.transform.right : side.normalized;
+            side *= Mathf.Max(width, 0.01f) * 0.5f;
+
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+            transform.localScale = Vector3.one;
+
+            vertexBuffer.Clear();
+            colorBuffer.Clear();
+            triangleBuffer.Clear();
+            vertexBuffer.Add(start - side);
+            vertexBuffer.Add(start + side);
+            vertexBuffer.Add(end + side);
+            vertexBuffer.Add(end - side);
+            for (int i = 0; i < 4; i++)
+            {
+                colorBuffer.Add(fillColor);
+            }
+
+            // 기본 sprite shader 는 뒷면도 그리므로 감는 방향은 상관없다.
+            triangleBuffer.Add(0);
+            triangleBuffer.Add(1);
+            triangleBuffer.Add(2);
+            triangleBuffer.Add(0);
+            triangleBuffer.Add(2);
+            triangleBuffer.Add(3);
+
+            Mesh mesh = GetShapeMesh();
+            mesh.Clear();
+            mesh.SetVertices(vertexBuffer);
+            mesh.SetTriangles(triangleBuffer, 0);
+            mesh.SetColors(colorBuffer);
+            mesh.RecalculateBounds();
+            meshFilter.sharedMesh = mesh;
+
+            SetVisible(true);
+            SetSorting(sortingOrder);
             edgeRenderer.enabled = false;
         }
 

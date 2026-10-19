@@ -491,3 +491,12 @@ inside it are unverified. The friend prefabs use `Button Variant` instances with
 same nine modifications `Button Primary` applies (orange `m_Color`, outline
 material, white text) instead. A generator for this layout is the fastest route:
 the modal and three row prefabs are about 300 YAML documents.
+
+`C:\dev\ac-client` no longer exists on this machine. A copied older compile
+workspace (for example `C:\temp\client-329-compile`) still has it in every
+`HintPath` and `Reference`, and `dotnet build` then fails on missing references
+instead of on your code. Replace it with
+`C:\Users\jys09\Projects\ArcaneCasters\Client` (`sed -i` over the copied
+`*.csproj`), then check every `HintPath` outside `Program Files` with `wslpath -u`
+before building. Rebuilding the `<Compile Include>` lists from the worktree took
+about 11 seconds for `Assembly-CSharp.csproj`, 0 errors.
