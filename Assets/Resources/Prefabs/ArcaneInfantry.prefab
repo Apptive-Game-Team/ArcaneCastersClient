@@ -14,19 +14,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3630220617462090093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       propertyPath: m_Sprite
-      value:
+      value: 
       objectReference: {fileID: 21300000, guid: 6ef5b05d68544ec0a99e0789f52fed9f, type: 3}
-    - target: {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
-      propertyPath: swapSprite
-      value:
-      objectReference: {fileID: 21300000, guid: ea46a1d301194c4580c316c3dd547091, type: 3}
+    - target: {fileID: 4479202527324724850, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.8285714
+      objectReference: {fileID: 0}
+    - target: {fileID: 4479202527324724850, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1.1571429
+      objectReference: {fileID: 0}
     - target: {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       propertyPath: duration
       value: 0.16
       objectReference: {fileID: 0}
+    - target: {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: swapSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ea46a1d301194c4580c316c3dd547091, type: 3}
     - target: {fileID: 5578864975448036440, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2
+      value: 0.11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
