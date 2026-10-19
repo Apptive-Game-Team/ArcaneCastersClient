@@ -305,7 +305,7 @@ MonoBehaviour:
   pulseScale: 1.03
   squashScale: 0.98
   cycleDuration: 2.2
-  rotationAngle: 4
+  rotationAngle: 0
   minAlphaMultiplier: 0.65
 --- !u!114 &7048510083982479683
 MonoBehaviour:
