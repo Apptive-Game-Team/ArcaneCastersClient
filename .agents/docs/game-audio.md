@@ -7,6 +7,16 @@ and profile playback required muting every spawned source, hiding duplicate owne
 and unused audio. Those owners were removed in #256. BGM and UI have separate
 owners; preview-world source suppression remains deliberate.
 
+Target contact audio uses `HitEvent` → `GameEventHandler` → the target's
+`ServedObjectSfxController.PlayHit` → `EffectiveHit` → `GameSfxPlayer`. Do not
+subscribe contact audio to `OnHpDecreased` or projectile destruction: those also
+represent HP-only damage/reconciliation or expiration. Play before visual early
+returns; a missing attacker/visual component and charged StormStag still need
+target audio. Previews stay silent. `hitProfile` overrides only Hit and preserves
+disabled overrides, matching attack policy. Classify material in builder HitGroups,
+not by element (MagmaSpirit is rock, PveVineWitch is a creature). Read
+`docs/material-hit-sounds.md` for the mapping, import provenance and verification.
+
 `ServedObject.OnAttack` → `ServedObjectSfxController` → catalog entry's
 `EffectiveAttack` → `GameSfxPlayer` is the attack path. One catalog entry selects
 one attack slot. `attackProfile` overrides Attack only; other lifecycle events

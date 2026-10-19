@@ -7,6 +7,7 @@ namespace GameScene.ServedObjectComponent.Sound
 {
     public class ServedObjectSfxController : MonoBehaviour
     {
+        private const float HitCooldown = 0.2f;
         private static readonly HashSet<string> WarnedRuntimeTypes = new();
         private static ObjectSfxCatalog catalog;
         private static bool catalogLoadAttempted;
@@ -14,11 +15,12 @@ namespace GameScene.ServedObjectComponent.Sound
         private ServedObject servedObject;
         private ObjectSfxProfile profile;
         private ObjectSfxEventSlot attackSlot;
+        private ObjectSfxEventSlot hitSlot;
         private float nextMovementTime;
+        private float nextHitTime;
         private bool deathPlayed;
         private bool ownsAttack;
         private bool ownsMovement;
-        private bool ownsHit;
         private bool ownsHeal;
         private bool ownsDeath;
 
@@ -34,14 +36,14 @@ namespace GameScene.ServedObjectComponent.Sound
         {
             if (target.GetComponent<ServedObjectSfxController>() != null ||
                 !TryResolveProfile(runtimeType, out ObjectSfxProfile resolvedProfile,
-                    out ObjectSfxEventSlot resolvedAttack))
+                    out ObjectSfxEventSlot resolvedAttack, out ObjectSfxEventSlot resolvedHit))
             {
                 return;
             }
 
             ServedObjectSfxController controller =
                 target.gameObject.AddComponent<ServedObjectSfxController>();
-            controller.Initialize(target, resolvedProfile, resolvedAttack, playSpawn);
+            controller.Initialize(target, resolvedProfile, resolvedAttack, resolvedHit, playSpawn);
         }
 
         private static bool TryResolveProfile(
@@ -49,8 +51,18 @@ namespace GameScene.ServedObjectComponent.Sound
             out ObjectSfxProfile resolvedProfile,
             out ObjectSfxEventSlot resolvedAttack)
         {
+            return TryResolveProfile(runtimeType, out resolvedProfile, out resolvedAttack, out _);
+        }
+
+        private static bool TryResolveProfile(
+            string runtimeType,
+            out ObjectSfxProfile resolvedProfile,
+            out ObjectSfxEventSlot resolvedAttack,
+            out ObjectSfxEventSlot resolvedHit)
+        {
             resolvedProfile = null;
             resolvedAttack = null;
+            resolvedHit = null;
             if (!catalogLoadAttempted)
             {
                 catalog = Resources.Load<ObjectSfxCatalog>(ObjectSfxCatalog.ResourcesPath);
@@ -66,7 +78,7 @@ namespace GameScene.ServedObjectComponent.Sound
                 return false;
             }
 
-            if (!catalog.TryResolve(runtimeType, out resolvedProfile, out resolvedAttack))
+            if (!catalog.TryResolve(runtimeType, out resolvedProfile, out resolvedAttack, out resolvedHit))
             {
                 WarnOnce(
                     runtimeType,
@@ -75,7 +87,7 @@ namespace GameScene.ServedObjectComponent.Sound
                 return false;
             }
 
-            return resolvedProfile != null || resolvedAttack != null;
+            return resolvedProfile != null || resolvedAttack != null || resolvedHit != null;
         }
 
         // Offline tutorial casts have no authoritative ServedObject attack event.
@@ -111,24 +123,21 @@ namespace GameScene.ServedObjectComponent.Sound
             ServedObject target,
             ObjectSfxProfile resolvedProfile,
             ObjectSfxEventSlot resolvedAttack,
+            ObjectSfxEventSlot resolvedHit,
             bool playSpawn)
         {
             servedObject = target;
             profile = resolvedProfile;
             attackSlot = resolvedAttack;
+            hitSlot = resolvedHit;
             deathPlayed = false;
             nextMovementTime = 0f;
+            nextHitTime = float.NegativeInfinity;
 
             ownsMovement = profile != null && profile.Movement.Enabled;
             if (ownsMovement)
             {
                 servedObject.OnMoved += PlayMovement;
-            }
-
-            ownsHit = profile != null && profile.Hit.Enabled;
-            if (ownsHit)
-            {
-                servedObject.OnHpDecreased += PlayHit;
             }
 
             ownsHeal = profile != null && profile.Heal.Enabled;
@@ -175,8 +184,20 @@ namespace GameScene.ServedObjectComponent.Sound
         private void PlayHeal() =>
             PlaySlot(profile.Heal, GameSfxCategory.HitHeal, GameSfxPriority.HitHeal);
 
-        private void PlayHit() =>
-            PlaySlot(profile.Hit, GameSfxCategory.HitHeal, GameSfxPriority.HitHeal);
+        // Only an authoritative live HitEvent owns contact audio. HP changes also
+        // include ongoing damage and reconciliation, which must not add another hit.
+        public void PlayHit()
+        {
+            if (servedObject == null || servedObject.PresentationWorld != null ||
+                hitSlot == null || !hitSlot.Enabled || hitSlot.Clip == null ||
+                Time.unscaledTime < nextHitTime)
+            {
+                return;
+            }
+
+            nextHitTime = Time.unscaledTime + HitCooldown;
+            PlaySlot(hitSlot, GameSfxCategory.HitHeal, GameSfxPriority.HitHeal);
+        }
 
         private void PlayDeath()
         {
@@ -215,11 +236,6 @@ namespace GameScene.ServedObjectComponent.Sound
             if (ownsMovement)
             {
                 servedObject.OnMoved -= PlayMovement;
-            }
-
-            if (ownsHit)
-            {
-                servedObject.OnHpDecreased -= PlayHit;
             }
 
             if (ownsHeal)
