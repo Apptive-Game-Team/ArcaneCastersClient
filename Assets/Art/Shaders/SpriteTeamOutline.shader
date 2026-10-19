@@ -62,25 +62,50 @@ Shader "ArcaneCasters/SpriteTeamOutline"
                 return SampleSpriteTexture(uv).a * inside;
             }
 
+            // 12 directions on 3 rings (1/3, 2/3 and all of _OutlineWidth). One ring of 8, as this
+            // shader first had, leaves about 2.3 screen pixels between samples at width 3, so gaps
+            // between them went unseen and the outline came out thicker in some directions than
+            // others. Even rings are turned by half a step so no two rings sample the same angle.
+            // 16 directions on 4 rings rendered the same offline at twice the cost.
+            #define OUTLINE_DIRECTIONS 12
+            #define OUTLINE_RINGS 3
+
             fixed4 OutlineFrag(v2f IN) : SV_Target
             {
                 fixed4 c = SampleSpriteTexture(IN.texcoord) * IN.color;
 
-                float2 d = fwidth(IN.texcoord) * _OutlineWidth;
-                float2 dd = d * 0.7071;
-                float neighbour = 1.0;
-                neighbour = min(neighbour, AlphaAt(IN.texcoord + float2(d.x, 0)));
-                neighbour = min(neighbour, AlphaAt(IN.texcoord - float2(d.x, 0)));
-                neighbour = min(neighbour, AlphaAt(IN.texcoord + float2(0, d.y)));
-                neighbour = min(neighbour, AlphaAt(IN.texcoord - float2(0, d.y)));
-                neighbour = min(neighbour, AlphaAt(IN.texcoord + dd));
-                neighbour = min(neighbour, AlphaAt(IN.texcoord - dd));
-                neighbour = min(neighbour, AlphaAt(IN.texcoord + float2(dd.x, -dd.y)));
-                neighbour = min(neighbour, AlphaAt(IN.texcoord + float2(-dd.x, dd.y)));
+                float2 pixel = fwidth(IN.texcoord);
+                float gap = 0.0;
+                [unroll]
+                for (int ring = 1; ring <= OUTLINE_RINGS; ring++)
+                {
+                    float radius = _OutlineWidth * ring / OUTLINE_RINGS;
+                    // Transparency found at the outermost ring counts half, which anti-aliases the
+                    // inner edge of the outline instead of cutting it at a whole pixel.
+                    float weight = saturate(_OutlineWidth + 0.5 - radius);
+                    float phase = 0.5 - frac(ring * 0.5);
+                    [unroll]
+                    for (int i = 0; i < OUTLINE_DIRECTIONS; i++)
+                    {
+                        float angle = (i + phase) * (6.2831853 / OUTLINE_DIRECTIONS);
+                        float2 offset = float2(cos(angle), sin(angle)) * pixel * radius;
+                        gap = max(gap, (1.0 - AlphaAt(IN.texcoord + offset)) * weight);
+                    }
+                }
+                float edge = smoothstep(0.2, 0.8, gap) * _OutlineColor.a;
+                // No threshold on the pixel's own alpha: the half-transparent rim of the sprite
+                // takes the outline colour too, instead of leaving a fringe of body colour outside it.
+                c.rgb = lerp(c.rgb, _OutlineColor.rgb, edge);
 
-                float self = SampleSpriteTexture(IN.texcoord).a;
-                float edge = smoothstep(0.3, 0.7, self) * (1.0 - smoothstep(0.3, 0.7, neighbour));
-                c.rgb = lerp(c.rgb, _OutlineColor.rgb, edge * _OutlineColor.a);
+                // The sprites have no mipmaps and are drawn smaller than their texture, so one
+                // bilinear sample per pixel leaves a stair-stepped silhouette. Four samples inside
+                // the pixel give its coverage. Without an outline colour the alpha stays the
+                // single sample, so after-images still look exactly like Sprites/Default.
+                float coverage = 0.25 * (AlphaAt(IN.texcoord + pixel * float2(0.125, 0.375))
+                    + AlphaAt(IN.texcoord + pixel * float2(-0.375, 0.125))
+                    + AlphaAt(IN.texcoord + pixel * float2(-0.125, -0.375))
+                    + AlphaAt(IN.texcoord + pixel * float2(0.375, -0.125)));
+                c.a = lerp(c.a, coverage * IN.color.a, _OutlineColor.a);
 
                 c.rgb *= c.a;
                 return c;
