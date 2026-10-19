@@ -75,7 +75,7 @@ namespace Data
             return new MatchedInfoDto
             {
                 message = "debug session",
-                server = "http://localhost:7777",
+                server = "http://127.0.0.1:7777",
                 leftUser = new User(userIdLeft, "debugger_left", "debugger_left@team6515.com", -1),
                 rightUser = new User(userIdRight, "debugger_right", "debugger_right@team6515.com", -1),
                 sessionId = sessionId,

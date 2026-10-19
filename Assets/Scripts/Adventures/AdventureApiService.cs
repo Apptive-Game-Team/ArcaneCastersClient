@@ -12,7 +12,7 @@ namespace Adventures
 {
     public class AdventureApiService : MonoBehaviour
     {
-        private const string DebugBaseUrl = "http://localhost:7777";
+        private const string DebugBaseUrl = "http://127.0.0.1:7777";
 
         public IEnumerator RequestPVE(long scenarioId, Action<MatchedInfoDto> callback)
         {

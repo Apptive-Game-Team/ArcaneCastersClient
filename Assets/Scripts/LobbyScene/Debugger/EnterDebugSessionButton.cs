@@ -12,7 +12,7 @@ namespace LobbyScene.Debugger
 {
     public class EnterDebugSessionButton : ButtonBase
     {
-        private const string DebugBaseUrl = "http://localhost:7777";
+        private const string DebugBaseUrl = "http://127.0.0.1:7777";
 
         [SerializeField] private string side;
 

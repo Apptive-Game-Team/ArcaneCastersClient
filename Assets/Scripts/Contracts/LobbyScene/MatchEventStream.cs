@@ -34,7 +34,7 @@ namespace LobbyScene
             DisposeRequest();
             if (!endpoint.HasValue)
             {
-                endpoint = ServerEndpoint.Of("http://localhost:7777");
+                endpoint = ServerEndpoint.Of("http://127.0.0.1:7777");
             }
 
             string url = endpoint.Path("api", "match", "events");
