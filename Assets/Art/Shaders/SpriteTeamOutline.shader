@@ -62,37 +62,43 @@ Shader "ArcaneCasters/SpriteTeamOutline"
                 return SampleSpriteTexture(uv).a * inside;
             }
 
-            // 12 directions on 3 rings (1/3, 2/3 and all of _OutlineWidth). One ring of 8, as this
-            // shader first had, leaves about 2.3 screen pixels between samples at width 3, so gaps
-            // between them went unseen and the outline came out thicker in some directions than
-            // others. Even rings are turned by half a step so no two rings sample the same angle.
-            // 16 directions on 4 rings rendered the same offline at twice the cost.
+            // 12 directions per ring. One ring of 8, as this shader first had, leaves about 2.3
+            // screen pixels between samples at width 3, so gaps between them went unseen and the
+            // outline came out thicker in some directions than others. 16 directions rendered the
+            // same offline at a third more cost.
             #define OUTLINE_DIRECTIONS 12
-            #define OUTLINE_RINGS 3
+
+            // How much of the outline colour this pixel takes from transparency found at `radius`
+            // screen pixels away. Rings past _OutlineWidth - 0.5 count partly, so a pixel at the
+            // inner edge of the outline blends instead of switching at a whole pixel. `phase` turns
+            // the ring by part of a step so neighbouring rings do not sample the same angles.
+            float RingGap(float2 uv, float2 pixel, float radius, float phase)
+            {
+                float weight = saturate(_OutlineWidth + 0.5 - radius);
+                float gap = 0.0;
+                [unroll]
+                for (int i = 0; i < OUTLINE_DIRECTIONS; i++)
+                {
+                    float angle = (i + phase) * (6.2831853 / OUTLINE_DIRECTIONS);
+                    gap = max(gap, 1.0 - AlphaAt(uv + float2(cos(angle), sin(angle)) * pixel * radius));
+                }
+                return gap * weight;
+            }
 
             fixed4 OutlineFrag(v2f IN) : SV_Target
             {
                 fixed4 c = SampleSpriteTexture(IN.texcoord) * IN.color;
 
                 float2 pixel = fwidth(IN.texcoord);
-                float gap = 0.0;
-                [unroll]
-                for (int ring = 1; ring <= OUTLINE_RINGS; ring++)
-                {
-                    float radius = _OutlineWidth * ring / OUTLINE_RINGS;
-                    // Transparency found at the outermost ring counts half, which anti-aliases the
-                    // inner edge of the outline instead of cutting it at a whole pixel.
-                    float weight = saturate(_OutlineWidth + 0.5 - radius);
-                    float phase = 0.5 - frac(ring * 0.5);
-                    [unroll]
-                    for (int i = 0; i < OUTLINE_DIRECTIONS; i++)
-                    {
-                        float angle = (i + phase) * (6.2831853 / OUTLINE_DIRECTIONS);
-                        float2 offset = float2(cos(angle), sin(angle)) * pixel * radius;
-                        gap = max(gap, (1.0 - AlphaAt(IN.texcoord + offset)) * weight);
-                    }
-                }
-                float edge = smoothstep(0.2, 0.8, gap) * _OutlineColor.a;
+                // Two rings inside the outline catch thin gaps; three at width - 0.25, width and
+                // width + 0.25 weigh 0.75, 0.5 and 0.25, so the inner edge blends in quarter steps.
+                // Three evenly spaced rings blended in one half step only.
+                float gap = RingGap(IN.texcoord, pixel, _OutlineWidth / 3.0, 0.0);
+                gap = max(gap, RingGap(IN.texcoord, pixel, _OutlineWidth * 2.0 / 3.0, 0.5));
+                gap = max(gap, RingGap(IN.texcoord, pixel, _OutlineWidth - 0.25, 0.0));
+                gap = max(gap, RingGap(IN.texcoord, pixel, _OutlineWidth, 0.5));
+                gap = max(gap, RingGap(IN.texcoord, pixel, _OutlineWidth + 0.25, 0.0));
+                float edge = gap * _OutlineColor.a;
                 // No threshold on the pixel's own alpha: the half-transparent rim of the sprite
                 // takes the outline colour too, instead of leaving a fringe of body colour outside it.
                 c.rgb = lerp(c.rgb, _OutlineColor.rgb, edge);
