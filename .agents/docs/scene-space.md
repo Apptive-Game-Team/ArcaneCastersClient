@@ -255,3 +255,17 @@ assuming — and say in the pull request which cases were computed and which sti
 need an Editor pass. For anything aimed across the field, check all four
 headings: `+X`, `-X`, `+Z`, `-Z`. The `+Z` and `-Z` cases are where a world-space
 length or offset fails, and where a bug hides if only `+X` was tried.
+
+## An indicator lane that follows height is a camera-facing ribbon
+
+`magics.indicator` lane layers may set `grounded: false`. The ground part stays a
+flat shape on the XZ plane and shortens to the beam's shadow
+(`L * horizontal / full3D` for `end: "target"`), and when the aim point is more
+than 0.01 above or below the lane origin `FieldSelector` also draws the 3D line
+from the origin toward the aim point with `SkillIndicatorShapeRenderer.SetAirLine`.
+That ribbon's width axis is `cross(camera.forward, lineDirection)`, never
+`Vector3.up`, so it stays the same thickness on screen at the 45° tilt. World
+`+Y` is the server's height, so the line's endpoints use server heights directly.
+While the pointer is over a `Selectable` the aim point is that unit's
+`GetSelectionPosition()` (its feet), the same value the click sends; circles and
+ground lanes use only its x and z.

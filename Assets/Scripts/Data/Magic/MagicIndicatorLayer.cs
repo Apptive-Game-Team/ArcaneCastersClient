@@ -73,13 +73,20 @@ namespace Data.Magic
         public MagicIndicatorValue length;
         public MagicIndicatorValue halfWidth;
 
-        // 아래 세 개는 Prepare 가 한 번 채운다. private 이라 Json.NET 이 직렬화하지 않는다.
+        /// <summary>
+        /// lane 전용 선택 항목. <c>false</c> 면 lane 이 조준점의 높이를 따른다. 없거나 boolean 이 아니면 true 다.
+        /// boolean 이 아닌 값이 와도 throw 하지 않도록 object 로 받고 <see cref="Prepare"/> 에서 해석한다.
+        /// </summary>
+        public object grounded;
+
+        // 아래 네 개는 Prepare 가 한 번 채운다. private 이라 Json.NET 이 직렬화하지 않는다.
         private MagicIndicatorShape parsedShape;
         private MagicIndicatorOrigin parsedOrigin;
         private MagicIndicatorLaneEnd parsedEnd;
+        private bool parsedGrounded = true;
         private bool readable;
 
-        // 아래 네 개는 Prepare 가 푼 결과를 읽기만 한다. [JsonIgnore] 가 없으면 Json.NET 이 getter 도
+        // 아래 다섯 개는 Prepare 가 푼 결과를 읽기만 한다. [JsonIgnore] 가 없으면 Json.NET 이 getter 도
         // 직렬화해서 PlayerPrefs cache 에 shape 와 Shape 가 나란히 들어간다.
 
         /// <summary><see cref="Prepare"/> 가 이 layer 를 그릴 수 있다고 본 경우에만 true.</summary>
@@ -95,6 +102,10 @@ namespace Data.Magic
         [JsonIgnore]
         public MagicIndicatorLaneEnd End => parsedEnd;
 
+        /// <summary>false 일 때만 lane 이 조준점의 높이를 따른다. 기본은 true.</summary>
+        [JsonIgnore]
+        public bool Grounded => parsedGrounded;
+
         /// <summary>
         /// 문자열 필드를 enum 으로 해석하고, 이 layer 를 그릴 수 있는지 알려준다.
         /// document 당 한 번만 불리므로 매 프레임 문자열을 비교하지 않는다.
@@ -105,6 +116,7 @@ namespace Data.Magic
             parsedShape = ParseShape(shape);
             parsedOrigin = ParseOrigin(origin);
             parsedEnd = ParseLaneEnd(end);
+            parsedGrounded = !(grounded is bool groundedFlag) || groundedFlag;
 
             readable = false;
 
