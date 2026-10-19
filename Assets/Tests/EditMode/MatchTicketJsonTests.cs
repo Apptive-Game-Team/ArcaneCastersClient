@@ -17,7 +17,7 @@ namespace WordOnline.Tests
             ""version"": 4,
             ""matchInfo"": {
                 ""message"": ""matched"",
-                ""server"": ""http://127.0.0.1:7777"",
+                ""server"": ""http://localhost:7777"",
                 ""sessionId"": ""session-1"",
                 ""leftUser"": { ""id"": 11, ""name"": ""left"", ""email"": ""left@team6515.com"", ""selectedDeckId"": 3, ""mmr"": 1200 },
                 ""rightUser"": { ""id"": 22, ""name"": ""right"", ""email"": ""right@team6515.com"", ""selectedDeckId"": 4, ""mmr"": 1150 }
