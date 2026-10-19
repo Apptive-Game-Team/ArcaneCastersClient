@@ -1,0 +1,20 @@
+Fill the entire background with one flat, uniform, fully opaque pure green, RGB 0 255 0, hex #00FF00, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Green appears nowhere on the subject itself. Use a square canvas.
+
+Game effect sprite for a 2.5D faceted low-poly papercraft game, matching the exact rendering technique of the attached reference images.
+
+Rendering technique, required exactly as in the references:
+- Build every shape from flat polygonal facet planes, like cut and folded paper. One flat, completely solid color per plane. Hard, sharp creases between adjacent planes.
+- No smooth 3D shading, no soft gradient across a plane, no gloss, no specular highlight, no texture, no surface grain, no photographic noise, no painterly brushwork, no airbrush, no glow, no bloom.
+- If the result could be mistaken for a rendered 3D model, a photo, or a digital painting, it is wrong. It must look built from cut and folded matte paper facets.
+- One soft, broad light source from the upper left: a broad flat highlight facet on the upper-left side of each form, a broad flat shadow facet on the lower-right side. Nothing else.
+- No outer contour line and no ink outline anywhere. Shapes separate from each other only by flat color value.
+- Restrained saturation. Nothing neon.
+
+Canvas and composition, required exactly:
+- Square canvas. One single closed ring, centered, seen from straight above so the ring is a true circle and not an ellipse. The outer edge of the ring touches the canvas edges on all four sides, with only a few pixels of margin.
+- The ring is thin: the band is about one tenth of the overall diameter. The whole middle of the circle is empty background colour — allied creatures stand inside this ring in play, and anything drawn in the middle would cover them.
+- Low detail density. A handful of large simple facet shapes spaced around the ring, not a dense wreath of many small parts. It has to stay quiet behind gameplay and must not compete with the characters standing inside it.
+- The ring must stay readable as a ring when the whole image is shrunk to 64 pixels wide.
+- No text, no frame, no card border, no watermark, no logo, no character, no creature, no totem, no runes, no glyphs, no magic-circle lettering.
+
+Subject identity, shared across all variants: this is the visible edge of the rallying totem's rally zone. The rallying totem is a Hellfire war totem (attached RallyingTotem reference: a dark cracked rock pillar with molten orange light showing through its cracks and jagged horn spikes). Allied creatures gather inside this zone, stop, and fight from it with a burst of attack speed. It is drawn as a ring lying flat on the ground marking the zone's edge, about 4 metres across in play. Use the Hellfire palette #E65E08, #9B3014, #5A291E, #2A1512 and ash #6D4A39, with the same material language as the attached HellfireDemon and RallyingTotem references: dark mass first, molten orange glowing only through cracks, angular and jagged, slight asymmetry allowed. It must read as a war-camp boundary held by the totem, never as a burning fire field that damages whoever stands in it, and never as a technological or arcane magic circle.

@@ -226,7 +226,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11953737037036700
-    m_Key: 4-3_pre_002_right
+    m_Key: 4-3_pre_002_left
     m_Metadata:
       m_Items: []
   - m_Id: 11960000000000001
@@ -421,28 +421,8 @@ MonoBehaviour:
     m_Key: pve_14_intro
     m_Metadata:
       m_Items: []
-  - m_Id: 11960000000000049
-    m_Key: pve_15_gate_b_open
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11960000000000050
-    m_Key: pve_15_gate_a_dead
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11960000000000051
-    m_Key: pve_15_gate_b_dead
-    m_Metadata:
-      m_Items: []
   - m_Id: 11960000000000052
     m_Key: pve_16_intro
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11960000000000053
-    m_Key: pve_16_gate_2_open
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11960000000000054
-    m_Key: pve_16_warn_40
     m_Metadata:
       m_Items: []
   - m_Id: 11960000000000055
@@ -485,10 +465,6 @@ MonoBehaviour:
     m_Key: pve_18_intro
     m_Metadata:
       m_Items: []
-  - m_Id: 11960000000000066
-    m_Key: pve_18_phase_50
-    m_Metadata:
-      m_Items: []
   - m_Id: 11960000000000067
     m_Key: pve_17_gate_a_dead
     m_Metadata:
@@ -497,20 +473,60 @@ MonoBehaviour:
     m_Key: pve_17_gate_b_dead
     m_Metadata:
       m_Items: []
-  - m_Id: 11960000000000069
-    m_Key: pve_18_gate_a_dead
+  - m_Id: 11960000000000086
+    m_Key: pve_14_hold
     m_Metadata:
       m_Items: []
-  - m_Id: 11960000000000070
-    m_Key: pve_18_gate_b_dead
+  - m_Id: 11960000000000074
+    m_Key: pve_14_last
     m_Metadata:
       m_Items: []
-  - m_Id: 11960000000000071
-    m_Key: pve_18_gate_c_dead
+  - m_Id: 11960000000000075
+    m_Key: pve_15_intro
     m_Metadata:
       m_Items: []
-  - m_Id: 11960000000000072
-    m_Key: pve_18_gate_d_dead
+  - m_Id: 11960000000000076
+    m_Key: pve_15_gate_open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000077
+    m_Key: pve_15_keep_on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000078
+    m_Key: pve_16_phase_60
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000079
+    m_Key: pve_16_phase_30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000080
+    m_Key: pve_17_air
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000081
+    m_Key: pve_17_gate_c_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000082
+    m_Key: pve_18_rift_half
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000083
+    m_Key: pve_18_rift_dead
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000084
+    m_Key: pve_18_phase_60
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000085
+    m_Key: pve_18_phase_30
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11960000000000073
+    m_Key: pve_brick_golem
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -25,6 +25,8 @@
 
 | 런타임 리소스 | 웹사이트/검수 근거 | 비고 |
 |---|---|---|
+| `ArcaneInfantry.png`, `ArcaneInfantryAttacking.png` | 클라이언트 이슈 #334, Unity EditMode 검증 | 비전 보병. master-v2 앵커로 생성한 128x81 RGBA 공통 캔버스, PPU 70, Bottom Center. 준비·타격 프레임. 64px 및 두 배경 시트 검수 |
+| `CraterCarrier.png`, `CraterCarrierDeployed.png`, `CraterCarrierRecovering.png` | 클라이언트 이슈 #334, Unity EditMode 검증 | 분화구 운반수. 192x162 RGBA 공통 캔버스, PPU 110, Bottom Center. 운반·설치 완료·설치/회수 자세. 서버 상태로 전환하며 기본 hopping/attack swap 제거 |
 | `AquaArcher.png` | `concept-art/aqua-archer-drawn.webp` | 물의 궁수 기본 프레임 |
 | `AquaArcherAttack.png` | `concept-art/aqua-archer-release.webp` | 화살을 놓은 공격 프레임 |
 | `ChickenCommando.png` | `concept-art/chicken-commando.webp`, `game-assets/chicken-commando.webp` | 인간 공수 특공대 방향 적용 |
@@ -208,6 +210,8 @@
 | `Background/Gate/grass_1.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/grass_1.png` 와 같은 이름·크기). 238x117 RGBA, 마른 재색 풀 한 포기와 불씨 둘. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
 | `Background/Gate/grass_2.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/grass_2.png` 와 같은 이름·크기). 466x99 RGBA, 마른 풀 다섯 포기 줄. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
 | `UI/Card/type_fire.png`, `type_water.png`, `type_nature.png`, `type_lightning.png`, `type_rock.png`, `type_wind.png` | 클라이언트 PR (이슈 #304) | **검수 대기.** 원소 아이콘 6장. 마법서 상성표, 도감 원소 칩, 덱 카드가 `CardImageMapper.asset` 으로 쓴다. 181x256 · 180x256 · 136x256 · 161x256 · 256x192 · 256x195 RGBA(옛 128 긴 변의 두 배), 여백 없이 잘랐다. 여섯 장을 1536x1024 한 캔버스의 3x2 격자에 같이 그리게 해 한 번에 통과했다(`codex` `image_gen` 1회). 레퍼런스는 `MasterStyleKey.png`, `ArcaneImpact.png`, 원소 룬 여섯 장 합성. magenta key 제거, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0. 쓰는 곳이 모두 `preserveAspect` 인 UI `Image` 라 화면 크기는 RectTransform 과 가로세로 비로만 정해지고 픽셀 수·PPU 와 무관하다 — `.meta` 는 그대로 뒀다. 가로세로 비는 다섯 장이 옛 비의 8% 안이다. `type_wind` 만 1.88 에서 1.31 로 바뀌어 상성표 칸 안에서 옛 그림보다 세로로 커진다(옛 바람이 여섯 중 가장 작아 보였다). 프롬프트는 1.9 를 숫자로 요구했지만 격자 한 칸 안에서는 지켜지지 않았다 |
+| `PveBrickGolem.png`, `PveBrickGolem2.png` | 클라이언트 PR (이슈 #329) | **검수 대기, 새 파일.** 요새 마지막 보스 벽돌 골렘의 기본 자세(두 주먹을 땅에 댄 자세)와 공격 자세(한 팔을 높이 든 자세). 256x251 RGBA, PPU 70, Bottom Center. 두 자세를 한 캔버스의 twin panel 로 한 번에 생성(v1 한 번에 통과)하고 공유 crop box `(0, 19, 884, 887)` 와 공유 배율 0.2896 으로 잘랐다. 눈은 몸통 중심보다 오른쪽(파일은 오른쪽을 보고, 경기에서는 RightPlayer 라 뒤집혀 왼쪽을 본다). magenta key 제거, 불투명 픽셀의 magenta 잔색 0, 네 모서리 alpha 0. 공격 자세는 잔해 바닥이 기본 자세보다 3px 위에서 끝난다. `.art/concept/brick-golem/README.md` |
+| `explode/brick_golem_crack_ring.png`, `shoot/brick_golem_sweep.png` | 클라이언트 PR (이슈 #329) | **검수 대기, 새 파일.** 벽돌 골렘의 내려찍기 경고 균열 고리(255x256, 위에서 본 원, 중심 pivot)와 휩쓸기 궤적(256x144, 중심 pivot). 한 캔버스의 두 칸에 한 번에 생성(v1 한 번에 통과), magenta key 제거, 잔색 0, 네 모서리 alpha 0 |
 
 ## 다음 교체 후보
 

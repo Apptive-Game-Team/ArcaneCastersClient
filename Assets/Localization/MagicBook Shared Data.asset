@@ -383,6 +383,18 @@ MonoBehaviour:
     m_Key: chart.axis.attacker
     m_Metadata:
       m_Items: []
+  - m_Id: 1000075
+    m_Key: bean_shooter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000076
+    m_Key: arcane_infantry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000077
+    m_Key: crater_carrier
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

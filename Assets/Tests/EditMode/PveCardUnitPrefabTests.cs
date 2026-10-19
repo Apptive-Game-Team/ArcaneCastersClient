@@ -10,6 +10,7 @@ namespace WordOnline.Tests
         [TestCase("PveFireTadpole")]
         [TestCase("PveLightningTadpole")]
         [TestCase("PveEvilEnt")]
+        [TestCase("PveBrickGolem")]
         public void ServerTypeResolvesToPrefabOfTheSameName(string serverType)
         {
             GameObject prefab = Resources.Load<GameObject>("Prefabs/" + serverType);
@@ -47,6 +48,34 @@ namespace WordOnline.Tests
                 "A stationary boss must not hop in place.");
             Assert.IsTrue(HasComponentNamed(pvp, "HoppingMotionController"),
                 "The PVP unit prefab must keep its hop.");
+        }
+
+        [Test]
+        public void PveBrickGolemStaysPlantedAndSwapsToItsAttackFrame()
+        {
+            GameObject golem = Resources.Load<GameObject>("Prefabs/PveBrickGolem");
+
+            Assert.IsNotNull(golem);
+            Assert.IsFalse(HasComponentNamed(golem, "HoppingMotionController"),
+                "The golem rises out of the ground and must not hop.");
+            Assert.IsFalse(HasComponentNamed(golem, "WaddleMotionController"),
+                "The golem rises out of the ground and must not rock in place.");
+            Assert.IsTrue(HasComponentNamed(golem, "AttackSpriteSwapController"),
+                "The golem shows its raised-arm frame on attack.");
+        }
+
+        [TestCase("BrickGolemSlamWarning")]
+        [TestCase("BrickGolemSlam")]
+        [TestCase("BrickGolemSweep")]
+        public void BrickGolemProjectionResolvesToAProjectile(string projectionType)
+        {
+            GameObject prefab = Resources.Load<GameObject>("Projectiles/" + projectionType);
+
+            Assert.IsNotNull(prefab, $"Resources/Projectiles/{projectionType}.prefab must be loadable.");
+            // IProjectile lives in Assembly-CSharp, which this test assembly cannot reference.
+            Assert.IsTrue(prefab.GetComponents<MonoBehaviour>()
+                    .Any(component => component != null && component.GetType().GetInterface("IProjectile") != null),
+                "ProjectileSpawner calls Init on the root IProjectile.");
         }
 
         private static bool HasComponentNamed(GameObject root, string typeName)

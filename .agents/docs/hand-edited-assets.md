@@ -53,6 +53,13 @@ the Editor with a "missing script" component.
 
 ## Writing a new `.meta` by hand
 
+When deriving a new prefab from an existing variant, validate modification targets
+against the current base's fileIDs as well as checking that referenced GUIDs exist.
+`MagmaExplosion` still carried an old audio-clip override targeting a component
+already removed from `AbstractExplode`; copying that row into `CraterExplosion`
+looked valid to Unity but retained a dead serialized reference. Prune such overrides
+from the new variant instead of copying them forward.
+
 Copy the shape from a sibling of the same importer. A script meta is three
 lines: `fileFormatVersion: 2`, `guid: <32 lowercase hex>`, `timeCreated: <int>`.
 The guid must be new — grep it across `Assets/`, `Packages/` and
@@ -115,6 +122,20 @@ For example, in `Panal.prefab` the `ProfileButton` instance is
 `1254884346060698375`, so the Button is `2649125704893739214` in `Panal.prefab`.
 Compute it this way instead of guessing; a wrong id is accepted silently and
 the reference is simply null at runtime.
+
+## Two abstract mobs carry a copy of the HP bar, not the HP bar prefab
+
+`AbstractMeleeMob`, `AbstractSlime`, `AbstractBuild`, `ChickenCommando` and
+`Player` instance `ServedObjectHpBar.prefab`. `AbstractRangeMob` and
+`AbstractAerialMob` hold their own copy of its objects instead, so a child added
+to `ServedObjectHpBar.prefab` never reaches the 20 range and aerial mobs that
+derive from those two. The team-colour triangle `ObjectIndicator` was missing
+from both copies this way (#339): `ServedObject` hands the triangle to any HP bar
+with `useTeamColors` and turns its own `TeamIndicator` off, and
+`ServedObjectGaugeBar` finds no `ObjectIndicator` image to colour, so no triangle
+was drawn at all. When you change `ServedObjectHpBar.prefab`, make the same edit
+in both abstract copies, and check them with
+`git grep -c "m_Name: <child>" -- 'Assets/Resources/Prefabs/Abstract/*.prefab'`.
 
 ## Disabling a component that drives a RectTransform wakes up stale overrides
 
@@ -326,6 +347,16 @@ in three contract files nobody had touched. Compare each copied project's
 `ProjectReference` list with the `references` of the matching `.asmdef` before
 reading the error list.
 
+A quicker check for a few edited files: compile only those files with `csc.dll`
+against the Windows checkout's `Assembly-CSharp.dll` (add `-nowarn:0436` for the
+duplicate types). On #340 the C:\dev\ac-client checkout no longer existed; the
+`C:\Users\jys09\Projects\ArcaneCasters\Client` one did. This check is never clean
+by itself. Editing `ServedObject.cs` gave CS1503, because the source `ServedObject`
+and the DLL's `ServedObject` are different types, and CS1061 on
+`PositionUpdater.UpdatePosition`, because the DLL was older than the branch. Compile
+the same files from `origin/dev` with the same response file. Only errors that are
+missing from that baseline come from your change.
+
 The EditMode test DLL built this way cannot be run outside Unity: Unity's
 `nunit.framework.dll` needs .NET Framework remoting (`CallContext`). Tests that
 touch only `WordOnline.Contracts` and `JsonCodec` run under `dotnet test` in a
@@ -477,3 +508,28 @@ inside it are unverified. The friend prefabs use `Button Variant` instances with
 same nine modifications `Button Primary` applies (orange `m_Color`, outline
 material, white text) instead. A generator for this layout is the fastest route:
 the modal and three row prefabs are about 300 YAML documents.
+
+`C:\dev\ac-client` no longer exists on this machine. A copied older compile
+workspace (for example `C:\temp\client-329-compile`) still has it in every
+`HintPath` and `Reference`, and `dotnet build` then fails on missing references
+instead of on your code. Replace it with
+`C:\Users\jys09\Projects\ArcaneCasters\Client` (`sed -i` over the copied
+`*.csproj`), then check every `HintPath` outside `Program Files` with `wslpath -u`
+before building. Rebuilding the `<Compile Include>` lists from the worktree took
+about 11 seconds for `Assembly-CSharp.csproj`, 0 errors.
+
+## A shader change is checked by porting the fragment to Python
+
+No shader compiler runs here (no Editor, no `dxc`, `fxc` or `glslangValidator`), and a
+screenshot of the running game is not available either. The first version of
+`ArcaneCasters/SpriteTeamOutline` (#340) passed review by reading alone and shipped a
+ragged outline: one ring of 8 samples at width 3 leaves about 2.3 screen pixels between
+samples, and the edge threshold on the pixel's own alpha left a fringe of body colour
+outside the outline. Neither shows in the code; both show at once in a render.
+
+Before changing a sprite shader, port the fragment function to numpy (bilinear sampling,
+no mipmaps, `fwidth(uv)` = one over the on-screen size in pixels) and render the old and
+new code side by side on real sprites from `Assets/Resources/Game/sprites` at about 90
+screen pixels tall, enlarged 4x with nearest neighbour. #352 did this
+(`docs/pr-media/352/outline-before-after-90px.png`). The render does not prove the shader
+compiles for WebGL; say so in the pull request and leave that to an Editor check.

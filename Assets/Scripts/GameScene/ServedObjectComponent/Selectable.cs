@@ -20,6 +20,13 @@ namespace GameScene.ServedObjectComponent
         private bool _hasRendererBounds;
         private bool _isPointerOver;
 
+        /// <summary>
+        /// 지금 마우스가 올라가 있는 유닛. <see cref="FieldSelector"/> 가 매 프레임 씬을 뒤지지 않고
+        /// 조준점을 유닛 자리로 옮기려고 읽는다. OnPointerEnter 에서 채우고, Exit·Click·OnDisable 에서
+        /// 자기 자신일 때만 비운다 — 다른 유닛의 Enter 가 먼저 오고 이 유닛의 Exit 가 나중에 와도 덮어쓰지 않는다.
+        /// </summary>
+        public static Selectable Hovered { get; private set; }
+
         void Awake()
         {
             if (GameScene.Object.PresentationWorld.For(this) != null) { enabled = false; return; }
@@ -56,6 +63,7 @@ namespace GameScene.ServedObjectComponent
         private void OnDisable()
         {
             _isPointerOver = false;
+            ClearHovered();
             SelectionGroundIndicator.Hide(transform);
             if (outlineComponent != null)
             {
@@ -68,6 +76,7 @@ namespace GameScene.ServedObjectComponent
             if (_spriteRenderer == null || _spriteRenderer.sprite == null) return;
 
             _isPointerOver = true;
+            Hovered = this;
             SelectionGroundIndicator.Show(transform, GetSelectionPosition());
             if (outlineComponent != null)
             {
@@ -78,6 +87,7 @@ namespace GameScene.ServedObjectComponent
         public void OnPointerExit(PointerEventData eventData)
         {
             _isPointerOver = false;
+            ClearHovered();
             SelectionGroundIndicator.Hide(transform);
             if (outlineComponent != null)
             {
@@ -88,6 +98,7 @@ namespace GameScene.ServedObjectComponent
         public void OnPointerClick(PointerEventData eventData)
         {
             _isPointerOver = false;
+            ClearHovered();
             SelectionGroundIndicator.Hide(transform);
             if (outlineComponent != null)
             {
@@ -120,7 +131,16 @@ namespace GameScene.ServedObjectComponent
             cardInputSender.SetExpectedMagicUI();
         }
 
-        private Vector3 GetSelectionPosition()
+        private void ClearHovered()
+        {
+            if (Hovered == this)
+            {
+                Hovered = null;
+            }
+        }
+
+        /// <summary>클릭하면 서버로 보내는 위치. 유닛의 발 위치(부모가 있으면 부모)다.</summary>
+        public Vector3 GetSelectionPosition()
         {
             Transform target = transform.parent != null ? transform.parent : transform;
             return target.position;

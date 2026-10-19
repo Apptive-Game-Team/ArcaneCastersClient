@@ -12,11 +12,8 @@ namespace GameScene.ServedObjectComponent
 {
     public class ServedObject : MonoBehaviour
     {
-        private const string LeftPlayer = "LeftPlayer";
         private const string RightPlayer = "RightPlayer";
         private const string TeamIndicatorResourcePath = "UI/ObjectIndicator";
-        private static readonly Color LeftIndicatorColor = new Color(0.92f, 0.24f, 0.24f, 1f);
-        private static readonly Color RightIndicatorColor = new Color(0.25f, 0.55f, 0.98f, 1f);
         private static Sprite _teamIndicatorSprite;
 
         [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -127,6 +124,7 @@ namespace GameScene.ServedObjectComponent
 
             _positionUpdater = new PositionUpdater(transform, _spriteRenderer, () => OnMoved?.Invoke(), () => PresentationWorld);
             UpdateTeamIndicator();
+            UpdateTeamOutline();
 
             if (master.Equals(RightPlayer))
             {
@@ -579,6 +577,21 @@ namespace GameScene.ServedObjectComponent
             UpdateTeamIndicatorPosition();
         }
 
+        /// <summary>
+        /// Outlines only objects with an HP bar — units, buildings and players. Projectiles and
+        /// effects carry a master too, but outlining them would put team colour on every bolt.
+        /// Runs after <see cref="UpdateTeamIndicator"/>, which is what finds the HP bar.
+        /// </summary>
+        private void UpdateTeamOutline()
+        {
+            if (_teamColorGaugeBar == null || !TeamColors.TryGet(master, out Color outlineColor))
+            {
+                return;
+            }
+
+            TeamSpriteOutline.Apply(_spriteRenderer, outlineColor);
+        }
+
         private bool TryUpdateGaugeBarTeamIndicator()
         {
             if (_teamColorGaugeBar == null)
@@ -666,18 +679,7 @@ namespace GameScene.ServedObjectComponent
 
         private static bool TryGetIndicatorColor(string targetMaster, out Color indicatorColor)
         {
-            switch (targetMaster)
-            {
-                case LeftPlayer:
-                    indicatorColor = LeftIndicatorColor;
-                    return true;
-                case RightPlayer:
-                    indicatorColor = RightIndicatorColor;
-                    return true;
-                default:
-                    indicatorColor = Color.clear;
-                    return false;
-            }
+            return TeamColors.TryGet(targetMaster, out indicatorColor);
         }
 
         private static Sprite GetTeamIndicatorSprite()

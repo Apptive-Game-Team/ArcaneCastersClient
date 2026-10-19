@@ -1,0 +1,16 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on either effect. Use a landscape canvas exactly twice as wide as it is tall (2:1 aspect ratio, for example 2048x1024).
+
+Two separate game effect sprites for a 2.5D faceted low-poly papercraft game, matching the exact rendering technique of the reference images (MasterStyleKey.png for technique, ArcaneImpact.png for how an effect is built from shards, RockGolem.png for the stone material).
+
+Rendering technique, required exactly as in the references:
+- Build every shape from flat polygonal facet planes, like cut paper. One flat, completely solid color per plane, hard sharp creases between planes.
+- No smooth 3D shading, no soft gradient, no gloss, no photo texture, no noise, no painterly brushwork, no bloom, no blur, no particles, no spark scatter.
+- No outer contour line and no ink outline. Shapes separate only by flat color value. Light from the upper left.
+
+Layout: the canvas is split by an invisible vertical line exactly at its horizontal midpoint into two equal square panels. Do not draw the dividing line, a border or a frame. Each effect fills its own panel and touches no other panel.
+
+LEFT panel — ground crack warning ring, seen exactly from straight above (top-down, a perfect circle, not an ellipse): a ring of jagged cracks broken into a stone floor, drawn as a circular band. The ring is made of a dozen thick angular dark crack shards (#535037, #3A3826) arranged around a circle, each crack lit from inside with a flat glowing yellow-green seam (#C8E86A, #9DBF3C), with a few short thick cracks pointing inward toward the centre. The centre of the circle is EMPTY magenta background, and the outside of the ring is empty magenta. The ring touches the top, bottom, left and right edges of its panel. Thick chunky shapes only; every crack at least 3% of the panel wide so it survives shrinking to 64 pixels.
+
+RIGHT panel — sweeping arm smear: a single thick crescent-shaped motion arc, like the trail of a huge stone fist swung horizontally from left to right, curving gently. The crescent is built from three or four broad flat facet bands of pale stone dust (#D8C9AA, #C7BCA7, #AAA08D), thickest at the right leading end and tapering to a point at the left trailing end, with four or five chunky angular stone fragments (#918977, #776F59) flying off its leading edge. The crescent fills the panel width from the left edge to the right edge and is about one third of the panel height thick at its widest, centred vertically.
+
+Exclusions: no text, no watermark, no logo, no frame, no ground plane, no cast shadow, no characters, no fist or arm drawn in either panel, no motion lines other than the crescent itself.

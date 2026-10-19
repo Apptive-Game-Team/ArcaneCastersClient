@@ -30,10 +30,34 @@ namespace GameScene.Dto
             return true;
         }
 
+        private readonly System.Collections.Generic.Dictionary<string, int> lastStateSeq =
+            new System.Collections.Generic.Dictionary<string, int>();
+
+        /// <summary>
+        /// True when a state change on <paramref name="channel"/> is newer than the last one applied
+        /// there, and records its <c>seq</c>. Receiving the same state twice therefore applies it once.
+        /// </summary>
+        public bool ShouldApplyState(string channel, int seq)
+        {
+            if (string.IsNullOrEmpty(channel))
+            {
+                return false;
+            }
+
+            if (lastStateSeq.TryGetValue(channel, out int last) && seq <= last)
+            {
+                return false;
+            }
+
+            lastStateSeq[channel] = seq;
+            return true;
+        }
+
         /// <summary>Call when a new match starts so its events are not compared with the last match.</summary>
         public void Reset()
         {
             LastEventSeq = 0;
+            lastStateSeq.Clear();
         }
     }
 }

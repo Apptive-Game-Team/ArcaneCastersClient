@@ -7,13 +7,19 @@
     "elevenlabs": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["elevenlabs-mcp"],
+      "args": [
+        "elevenlabs-mcp"
+      ],
       "env": {
         "ELEVENLABS_API_KEY": "${ELEVENLABS_API_KEY}",
         "UV_CACHE_DIR": "/tmp/elevenlabs-uv-cache",
         "UV_TOOL_DIR": "/tmp/elevenlabs-uv-tools",
         "ELEVENLABS_MCP_OUTPUT_MODE": "files"
       }
+    },
+    "rider": {
+      "url": "http://127.0.0.1:64482/stream",
+      "type": "http"
     }
   }
 }

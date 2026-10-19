@@ -87,14 +87,14 @@ public static class ObjectSfxCatalogValidator
 
         if (entry.IntentionalSilent)
         {
-            if (entry.Profile != null || entry.AttackProfile != null)
+            if (entry.Profile != null || entry.AttackProfile != null || entry.HitProfile != null)
             {
                 errors.Add($"Intentional-silence row must not reference a profile: {entry.RuntimeType}.");
             }
             return;
         }
 
-        if (entry.Profile == null && entry.AttackProfile == null)
+        if (entry.Profile == null && entry.AttackProfile == null && entry.HitProfile == null)
         {
             errors.Add($"Audible catalog row has no profile: {entry.RuntimeType}.");
             return;
@@ -109,6 +109,20 @@ public static class ObjectSfxCatalogValidator
                 attack.Heal.Enabled || attack.Death.Enabled)
             {
                 errors.Add($"Attack override '{attack.ProfileId}' enables non-attack slots for {entry.RuntimeType}.");
+            }
+        }
+        if (entry.HitProfile != null)
+        {
+            ObjectSfxProfile hit = entry.HitProfile;
+            ValidateSlot(entry.EffectiveHit, "hit", hit.ProfileId, entry.RuntimeType, errors);
+            if (hit.Spawn.Enabled || hit.Movement.Enabled || hit.Attack.Enabled ||
+                hit.Heal.Enabled || hit.Death.Enabled)
+            {
+                errors.Add($"Hit override '{hit.ProfileId}' enables non-hit slots for {entry.RuntimeType}.");
+            }
+            if (entry.Profile != null && entry.Profile.IsProjectileOrTransient)
+            {
+                errors.Add($"Projectile/transient '{entry.RuntimeType}' has a target hit override.");
             }
         }
     }

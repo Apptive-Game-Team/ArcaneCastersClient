@@ -4,6 +4,7 @@ using GameScene.Dto.Event;
 using GameScene.Object;
 using GameScene.ServedObjectComponent;
 using GameScene.ServedObjectComponent.Effect;
+using GameScene.ServedObjectComponent.Sound;
 using Global;
 using UnityEngine;
 
@@ -51,6 +52,10 @@ namespace GameScene.Handler
             {
                 return;
             }
+
+            // Contact audio belongs to the target, including hits without an actor
+            // or a visual HitEffectController and charged StormStag's early return.
+            if (world == null) target.GetComponent<ServedObjectSfxController>()?.PlayHit();
 
             ServedObject actor = PresentationWorld.Find(hit.actorId, world);
             if (actor != null)

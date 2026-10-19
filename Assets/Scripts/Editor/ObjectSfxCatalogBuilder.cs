@@ -32,25 +32,29 @@ public static class ObjectSfxCatalogBuilder
         new("FireLaunch", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
         new("SmallAttack", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
         new("SwingAttack", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
-        new("TowerAttack", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature)
+        new("TowerAttack", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature),
+        new("CreatureHit", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature, "Sound/Game/Hit/creature_onhit_1"),
+        new("WoodHit", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature, "Sound/Game/Hit/wood_onhit_1"),
+        new("RockHit", ObjectSfxElement.Neutral, ObjectSfxArchetype.Creature, "Sound/Game/Hit/rock_onhit_1")
     };
 
     private static readonly CatalogGroup[] CatalogGroups =
     {
-        new("NeutralCreature", "ChickenCommando", "Player"),
+        new("NeutralCreature", "ArcaneInfantry", "ChickenCommando", "Player"),
         new("FireCreature",
-            "EmberSpirit", "FireChildSpirit", "FireLordSpirit", "FireSlime",
+            "CraterCarrier", "EmberSpirit", "FireChildSpirit", "FireLordSpirit", "FireSlime",
             "FireSpirit", "FireTadpole", "MagmaSpirit", "PveFireTadpole"),
         new("WaterCreature", "AquaArcher", "BubbleSpirit", "SeaSerpent", "WaterSlime"),
         new("NatureCreature",
-            "EvilEnt", "LeafSlime", "PveEvilEnt", "PveVineWitch", "SeedSpirit",
+            "BeanShooter", "EvilEnt", "LeafSlime", "PveCorruptedVineSpirit", "PveEvilEnt", "PveVineWitch", "SeedSpirit",
             "TreeGolem", "VineSpirit", "WillOWisp"),
         new("LightningCreature",
             "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "StormRider",
             "StormStag", "ThunderBird", "ThunderSpirit", "ZapMouse"),
         new("RockCreature",
-            "DimensionToad", "PveDimensionToad", "RockGolem", "RockMage", "RockSlime", "MiniRock", "WallGolem"),
-        new("WindCreature", "CloudDragon", "WindSlime", "WindSpirit", "BombSprite"),
+            "DimensionToad", "PveDimensionToad", "RockGolem", "RockMage", "RockSlime", "MiniRock", "WallGolem",
+            "PveBrickGolem"),
+        new("WindCreature", "CloudDragon", "PveCorruptedWindSpirit", "WindSlime", "WindSpirit", "BombSprite"),
         new("OrganicBuilding",
             "GiantVine", "LifeTree", "PveNatureSlimeNest", "PveVineColony",
             "PveWaterSlimeNest", "SeedNest", "Vine", "VineColony"),
@@ -73,11 +77,11 @@ public static class ObjectSfxCatalogBuilder
             "BoulderStrike", "TitanFist"),
         new("TransientShot",
             "ChainLightning", "TideCall", "WindBlade"),
-        new("UnitShot", "ElectricShot", "FireShot", "LeafShot", "WaterShot",
+        new("UnitShot", "CraterShell", "ElectricShot", "FireShot", "LeafShot", "WaterShot", "Bean",
             "MagmaFist", "DragonFlame", "BombSpriteBomb", "GroundTidalWarhead", "TidalWarhead"),
         new("TransientExplode",
             "ElectricExplode", "FireExplode", "FireworkShell", "LeafExplode",
-            "MagmaExplosion", "RockExplode", "ShockOverload", "WaterExplode",
+            "CraterExplosion", "MagmaExplosion", "RockExplode", "ShockOverload", "WaterExplode",
             "WaterExplosion", "WindExplode", "BombSpriteExplosion", "TidalWarheadExplosion")
     };
 
@@ -94,14 +98,39 @@ public static class ObjectSfxCatalogBuilder
     {
         new("TowerAttack", "GroundCannon", "GroundTower", "RockTurret", "ElectricTower", "FireworkTower", "DragonTower", "Towerback", "TitanRemnant"),
         new("WaterLaunch", "AquaArcher", "WaterSlime", "BubbleSpirit", "CloudDragon", "BubbleGenerator"),
-        new("FireLaunch", "FireChildSpirit", "FireSpirit"),
-        new("SmallAttack", "ChickenCommando", "EmberSpirit", "FireSlime", "FireTadpole", "PveFireTadpole", "LeafSlime", "SeedSpirit", "VineSpirit", "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "ThunderBird", "ThunderSpirit", "ZapMouse", "RockMage", "RockSlime", "MiniRock", "WindSlime", "WindSpirit", "BombSprite"),
-        new("SwingAttack", "SeaSerpent", "TreeGolem", "EvilEnt", "PveEvilEnt", "PveVineWitch", "StormRider", "StormStag", "RockGolem", "WallGolem", "MagmaSpirit"),
+        new("FireLaunch", "CraterCarrier", "FireChildSpirit", "FireSpirit"),
+        new("SmallAttack", "ArcaneInfantry", "ChickenCommando", "EmberSpirit", "FireSlime", "FireTadpole", "PveFireTadpole", "LeafSlime", "SeedSpirit", "VineSpirit", "PveCorruptedVineSpirit", "PveCorruptedWindSpirit", "BeanShooter", "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "ThunderBird", "ThunderSpirit", "ZapMouse", "RockMage", "RockSlime", "MiniRock", "WindSlime", "WindSpirit", "BombSprite"),
+        new("SwingAttack", "SeaSerpent", "TreeGolem", "EvilEnt", "PveEvilEnt", "PveVineWitch", "StormRider", "StormStag", "RockGolem", "WallGolem", "PveBrickGolem", "MagmaSpirit"),
     };
 
     private static readonly string[] ServerAliases =
     {
         "ElectricSummon", "FireSummon", "RockSummon", "WindSummon", "ElectricAbsorb", "LightningDrop"
+    };
+
+    // Physical target material, not element: magma armor is rock, a vine witch is
+    // a creature, and the four legacy nests use the wooden SeedNest body.
+    private static readonly CatalogGroup[] HitGroups =
+    {
+        new("WoodHit",
+            "BeanShooter", "EvilEnt", "PveEvilEnt", "TreeGolem", "VineSpirit",
+            "PveCorruptedVineSpirit", "GiantVine", "LifeTree", "PveNatureSlimeNest",
+            "PveVineColony", "SeedNest", "Vine", "VineColony", "ElectricSummon",
+            "FireSummon", "RockSummon", "WindSummon", "FireRune", "FrenzyTotem",
+            "HealingTotem", "ManaWell", "RallyingTotem", "GrassGenerator", "RepairTotem", "ShockTrap"),
+        new("RockHit",
+            "CraterCarrier", "MagmaSpirit", "DimensionToad", "PveDimensionToad",
+            "RockGolem", "RockMage", "RockSlime", "MiniRock", "WallGolem", "PveBrickGolem",
+            "Crater", "FireworkTower", "GroundCannon", "GroundTower", "RockTurret",
+            "Towerback", "DragonTower", "TitanRemnant", "BubbleGenerator", "ElectricTower",
+            "LightningRune", "NatureRune", "RockRune", "WaterRune", "WindRune", "WindTotem"),
+        new("CreatureHit",
+            "ArcaneInfantry", "ChickenCommando", "Player", "EmberSpirit", "FireChildSpirit",
+            "FireLordSpirit", "FireSlime", "FireSpirit", "FireTadpole", "PveFireTadpole",
+            "AquaArcher", "BubbleSpirit", "SeaSerpent", "WaterSlime", "LeafSlime",
+            "PveVineWitch", "SeedSpirit", "WillOWisp", "ElectricSlime", "LightningTadpole",
+            "PveLightningTadpole", "StormRider", "StormStag", "ThunderBird", "ThunderSpirit",
+            "ZapMouse", "CloudDragon", "PveCorruptedWindSpirit", "WindSlime", "WindSpirit", "BombSprite")
     };
 
     [MenuItem("Tools/Sound/Create or Update Baseline Object SFX Catalog")]
@@ -120,16 +149,26 @@ public static class ObjectSfxCatalogBuilder
 
         // Keep Inspector tuning, including disabled overrides, when rebuilding.
         var existingAttacks = new Dictionary<string, ObjectSfxProfile>(StringComparer.Ordinal);
+        var existingHits = new Dictionary<string, ObjectSfxProfile>(StringComparer.Ordinal);
         var existingAliases = new HashSet<string>(StringComparer.Ordinal);
         foreach (ObjectSfxCatalogEntry row in catalog.Entries)
         {
             if (row.AttackProfile != null) existingAttacks[row.RuntimeType] = row.AttackProfile;
+            if (row.HitProfile != null) existingHits[row.RuntimeType] = row.HitProfile;
             if (row.ServerAlias) existingAliases.Add(row.RuntimeType);
         }
         var defaultAttacks = new Dictionary<string, ObjectSfxProfile>(StringComparer.Ordinal);
         foreach (CatalogGroup group in AttackGroups)
             foreach (string runtimeType in group.RuntimeTypes)
                 defaultAttacks.Add(runtimeType, profiles[group.ProfileId]);
+        var defaultHits = new Dictionary<string, ObjectSfxProfile>(StringComparer.Ordinal);
+        foreach (CatalogGroup group in HitGroups)
+            foreach (string runtimeType in group.RuntimeTypes)
+                defaultHits.Add(runtimeType, profiles[group.ProfileId]);
+
+        ObjectSfxProfile HitFor(string runtimeType) =>
+            existingHits.TryGetValue(runtimeType, out var tuned) ? tuned :
+                defaultHits.TryGetValue(runtimeType, out var baseline) ? baseline : null;
 
         SerializedObject serializedCatalog = new(catalog);
         SerializedProperty entries = serializedCatalog.FindProperty("entries");
@@ -148,7 +187,8 @@ public static class ObjectSfxCatalogBuilder
                     false,
                     existingAttacks.TryGetValue(runtimeType, out var attack) ? attack :
                         defaultAttacks.TryGetValue(runtimeType, out var baseline) ? baseline : null,
-                    existingAliases.Contains(runtimeType) || Array.IndexOf(ServerAliases, runtimeType) >= 0);
+                    existingAliases.Contains(runtimeType) || Array.IndexOf(ServerAliases, runtimeType) >= 0,
+                    HitFor(runtimeType));
             }
         }
 
@@ -161,7 +201,8 @@ public static class ObjectSfxCatalogBuilder
         {
             if (runtimeType == "LightningDrop") continue; // Already in TransientLegacy.
             ObjectSfxProfile aliasProfile = profiles[runtimeType == "ElectricAbsorb" ? "UnitShot" : "OrganicBuilding"];
-            WriteEntry(entries.GetArrayElementAtIndex(index++), runtimeType, aliasProfile, false, null, true);
+            WriteEntry(entries.GetArrayElementAtIndex(index++), runtimeType, aliasProfile, false, null, true,
+                HitFor(runtimeType));
         }
 
         serializedCatalog.ApplyModifiedPropertiesWithoutUndo();
@@ -187,6 +228,7 @@ public static class ObjectSfxCatalogBuilder
         {
             string path = $"{ProfileRoot}/{definition.Id}.asset";
             ObjectSfxProfile profile = AssetDatabase.LoadAssetAtPath<ObjectSfxProfile>(path);
+            bool created = profile == null;
             if (profile == null)
             {
                 profile = ScriptableObject.CreateInstance<ObjectSfxProfile>();
@@ -197,6 +239,14 @@ public static class ObjectSfxCatalogBuilder
             serializedProfile.FindProperty("profileId").stringValue = definition.Id;
             serializedProfile.FindProperty("element").enumValueIndex = (int)definition.Element;
             serializedProfile.FindProperty("archetype").enumValueIndex = (int)definition.Archetype;
+            if (created && definition.HitClip != null)
+            {
+                SerializedProperty hit = serializedProfile.FindProperty("hit");
+                hit.FindPropertyRelative("enabled").boolValue = true;
+                hit.FindPropertyRelative("clip").objectReferenceValue = Resources.Load<AudioClip>(definition.HitClip);
+                hit.FindPropertyRelative("volume").floatValue = 0.55f;
+                hit.FindPropertyRelative("pitch").floatValue = 1f;
+            }
             serializedProfile.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(profile);
             profiles[definition.Id] = profile;
@@ -211,11 +261,13 @@ public static class ObjectSfxCatalogBuilder
         ObjectSfxProfile profile,
         bool intentionalSilent,
         ObjectSfxProfile attackProfile = null,
-        bool serverAlias = false)
+        bool serverAlias = false,
+        ObjectSfxProfile hitProfile = null)
     {
         entry.FindPropertyRelative("runtimeType").stringValue = runtimeType;
         entry.FindPropertyRelative("profile").objectReferenceValue = profile;
         entry.FindPropertyRelative("attackProfile").objectReferenceValue = attackProfile;
+        entry.FindPropertyRelative("hitProfile").objectReferenceValue = hitProfile;
         entry.FindPropertyRelative("intentionalSilent").boolValue = intentionalSilent;
         entry.FindPropertyRelative("serverAlias").boolValue = serverAlias;
     }
@@ -263,15 +315,18 @@ public static class ObjectSfxCatalogBuilder
         public readonly string Id;
         public readonly ObjectSfxElement Element;
         public readonly ObjectSfxArchetype Archetype;
+        public readonly string HitClip;
 
         public ProfileDefinition(
             string id,
             ObjectSfxElement element,
-            ObjectSfxArchetype archetype)
+            ObjectSfxArchetype archetype,
+            string hitClip = null)
         {
             Id = id;
             Element = element;
             Archetype = archetype;
+            HitClip = hitClip;
         }
     }
 }

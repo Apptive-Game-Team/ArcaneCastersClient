@@ -1,5 +1,6 @@
 using Data.BattleThemes;
 using Global;
+using Global.Sound.BGM;
 using UnityEngine;
 
 namespace GameScene
@@ -44,6 +45,23 @@ namespace GameScene
             ApplySprites(theme);
             ApplyGroundTexture(theme);
             ApplyCameraClearColor(theme);
+            ApplyBgm(theme);
+        }
+
+        private static void ApplyBgm(BattleThemeScriptableObject theme)
+        {
+            // A PVP match on a themed map keeps the scene's track; only adventures get theme music.
+            if (SceneContext.AdventureId == null)
+            {
+                return;
+            }
+
+            // Runs in Awake, before BGMPlayer's sceneLoaded handler picks the scene track.
+            BGMClipContainer container = FindObjectOfType<BGMClipContainer>();
+            if (container != null)
+            {
+                container.SetThemeClips(theme.BattleBgm, theme.BossBgm);
+            }
         }
 
         private void ApplySprites(BattleThemeScriptableObject theme)

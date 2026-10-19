@@ -49,6 +49,12 @@ Follow [hand-edited-assets.md](.agents/docs/hand-edited-assets.md) before changi
 ## Testing Guidelines
 `com.unity.test-framework` is installed, but there are no dedicated `Tests` assemblies in the current tree. For new automated tests, create Edit Mode or Play Mode test assemblies under `Assets/Tests` and name files `*Tests.cs`. At minimum, validate scene flow and WebGL-specific behavior manually in the Editor before opening a PR.
 
+`WordOnline.Tests.EditMode` cannot reference `Assembly-CSharp` (no asmdef can), so a test there
+cannot name a game type such as `IProjectile` or `ServedObject`. `prefab.GetComponent<IProjectile>()`
+in a test fails to compile in the Editor, and the Roslyn check in `hand-edited-assets.md` does not
+build `Assets/Tests`, so it does not catch it. Match by type name instead, as
+`PveCardUnitPrefabTests.HasComponentNamed` does, or with `GetType().GetInterface("IProjectile")`.
+
 Before using `dotnet build Assembly-CSharp.csproj` to validate a newly added script, confirm the generated project file contains that script. Unity does not always regenerate the project file while another Editor instance has the project open, and the build then reports misleading missing-type errors only at existing call sites. Refresh/regenerate from Unity, or temporarily add the missing `Compile` entries for the check and remove them before committing.
 
 ## Commit & Pull Request Guidelines

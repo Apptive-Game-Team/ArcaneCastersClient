@@ -17,7 +17,7 @@ namespace Data
         private const string SelectedKeyPreference = "MatchingServer.SelectedKey";
 
         public static readonly MatchingServerOption Local =
-            new MatchingServerOption("local", "localhost", new Server("localhost", "localhost", 6209));
+            new MatchingServerOption("local", "127.0.0.1", new Server("local", "127.0.0.1", 6209));
 
         /// <summary>
         /// The magic-card track's own environment. It runs its own account server with its own

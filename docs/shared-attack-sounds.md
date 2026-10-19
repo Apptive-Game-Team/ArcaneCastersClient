@@ -9,7 +9,7 @@ and remaining attackers use database size tags.
 | TowerAttack | towerattack.wav | GroundCannon, GroundTower, RockTurret, ElectricTower, FireworkTower, DragonTower, Towerback, TitanRemnant |
 | WaterLaunch | aqua.wav | AquaArcher, WaterSlime, BubbleSpirit, CloudDragon, BubbleGenerator |
 | FireLaunch | flame1.wav | FireChildSpirit, FireSpirit |
-| SmallAttack | smallattack1.wav | ChickenCommando, EmberSpirit, FireSlime, FireTadpole, PveFireTadpole, LeafSlime, SeedSpirit, VineSpirit, ElectricSlime, LightningTadpole, PveLightningTadpole, ThunderBird, ThunderSpirit, ZapMouse, RockMage, RockSlime, MiniRock, WindSlime, WindSpirit, BombSprite |
+| SmallAttack | smallattack1.wav | ChickenCommando, EmberSpirit, FireSlime, FireTadpole, PveFireTadpole, LeafSlime, SeedSpirit, VineSpirit, PveCorruptedVineSpirit, PveCorruptedWindSpirit, ElectricSlime, LightningTadpole, PveLightningTadpole, ThunderBird, ThunderSpirit, ZapMouse, RockMage, RockSlime, MiniRock, WindSlime, WindSpirit, BombSprite |
 | SwingAttack | swing1.wav | SeaSerpent, TreeGolem, EvilEnt, PveEvilEnt, PveVineWitch, StormRider, StormStag, RockGolem, WallGolem, MagmaSpirit |
 
 FireLordSpirit and DimensionToad are producers rather than attackers. Support

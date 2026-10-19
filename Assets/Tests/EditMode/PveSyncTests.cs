@@ -81,5 +81,32 @@ namespace WordOnline.Tests
             Assert.AreEqual(0, state.LastEventSeq);
             Assert.IsTrue(state.ShouldShow(1));
         }
+
+        [Test]
+        public void StateReadsChannelValueAndNullValue()
+        {
+            ServerMessage message = JsonCodec.Deserialize<ServerMessage>(
+                "{\"type\":\"pveState\",\"channel\":\"bgm\",\"value\":null,\"seq\":4}");
+
+            var info = (PveStateInfo)message;
+            Assert.AreEqual("bgm", info.channel);
+            Assert.IsNull(info.value);
+            Assert.AreEqual(4, info.seq);
+        }
+
+        [Test]
+        public void StateAppliesOnlyWhenSeqIsNewerPerChannel()
+        {
+            var state = new PveSyncState();
+
+            Assert.IsTrue(state.ShouldApplyState("bgm", 2));
+            Assert.IsFalse(state.ShouldApplyState("bgm", 2));
+            Assert.IsFalse(state.ShouldApplyState("bgm", 1));
+            Assert.IsTrue(state.ShouldApplyState("other", 1));
+            Assert.IsTrue(state.ShouldApplyState("bgm", 5));
+
+            state.Reset();
+            Assert.IsTrue(state.ShouldApplyState("bgm", 1));
+        }
     }
 }
