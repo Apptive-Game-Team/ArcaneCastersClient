@@ -154,7 +154,11 @@ namespace GameScene
             float aimHeight = mouseWorldPos.y;
             if (snapsToUnit)
             {
-                Vector3 selectionPosition = Selectable.Hovered.GetSelectionPosition();
+                // 서버(MagicInputHandler.clampToRange)는 받은 위치를 시전자에서 3D 거리로 잘라 방향을 유지한다.
+                // 같은 방식으로 먼저 3D 로 잘라야 비행 유닛이 사거리 밖일 때 공중 선의 기울기가 서버와 같다.
+                // 3D 거리가 range 이하면 바닥 거리도 range 이하라 아래 ClampToRange 는 더 자르지 않는다.
+                Vector3 selectionPosition = ClampToRange3D(
+                    Selectable.Hovered.GetSelectionPosition(), casterPosition, range);
                 aimHeight = selectionPosition.y;
                 mouseWorldPos = new Vector3(selectionPosition.x, mouseWorldPos.y, selectionPosition.z);
             }
@@ -187,8 +191,6 @@ namespace GameScene
                     aimPosition, casterPosition, range, bodyRadius, out previewPosition);
             }
 
-            // 범위로 자른 뒤에도 높이는 유닛 높이 그대로다. 자르면 방향만 같고 기울기는 달라지지만,
-            // 서버가 받는 값은 자르지 않은 유닛 위치라 어느 쪽이 맞는지는 서버 규칙을 따라야 한다.
             Vector3 aimPoint = new Vector3(previewPosition.x, aimHeight, previewPosition.z);
             MagicIndicatorResolver.Resolve(
                 magicData,
@@ -314,6 +316,18 @@ namespace GameScene
             }
 
             return null;
+        }
+
+        private static Vector3 ClampToRange3D(Vector3 targetPosition, Vector3 origin, float range)
+        {
+            float safeRange = Mathf.Max(range, 0f);
+            Vector3 offset = targetPosition - origin;
+            if (offset.sqrMagnitude <= safeRange * safeRange)
+            {
+                return targetPosition;
+            }
+
+            return origin + offset.normalized * safeRange;
         }
 
         private static Vector3 ClampToRange(Vector3 targetPosition, Vector3 origin, float range)
