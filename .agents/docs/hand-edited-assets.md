@@ -116,6 +116,20 @@ For example, in `Panal.prefab` the `ProfileButton` instance is
 Compute it this way instead of guessing; a wrong id is accepted silently and
 the reference is simply null at runtime.
 
+## Two abstract mobs carry a copy of the HP bar, not the HP bar prefab
+
+`AbstractMeleeMob`, `AbstractSlime`, `AbstractBuild`, `ChickenCommando` and
+`Player` instance `ServedObjectHpBar.prefab`. `AbstractRangeMob` and
+`AbstractAerialMob` hold their own copy of its objects instead, so a child added
+to `ServedObjectHpBar.prefab` never reaches the 20 range and aerial mobs that
+derive from those two. The team-colour triangle `ObjectIndicator` was missing
+from both copies this way (#339): `ServedObject` hands the triangle to any HP bar
+with `useTeamColors` and turns its own `TeamIndicator` off, and
+`ServedObjectGaugeBar` finds no `ObjectIndicator` image to colour, so no triangle
+was drawn at all. When you change `ServedObjectHpBar.prefab`, make the same edit
+in both abstract copies, and check them with
+`git grep -c "m_Name: <child>" -- 'Assets/Resources/Prefabs/Abstract/*.prefab'`.
+
 ## Disabling a component that drives a RectTransform wakes up stale overrides
 
 A `ScrollRect`, `LayoutGroup` or `ContentSizeFitter` rewrites the rects it
