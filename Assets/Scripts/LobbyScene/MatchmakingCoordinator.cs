@@ -86,6 +86,12 @@ namespace LobbyScene
                                       ticket.ParsedState == MatchTicketState.Allocating);
         }
 
+        private static bool IsSameTicket(MatchTicket left, MatchTicket right)
+        {
+            return left != null && right != null && left.ticketId == right.ticketId &&
+                   left.version == right.version;
+        }
+
         private void RequestCancel(MatchTicket ticket)
         {
             PublishLocalState(MatchTicketState.CancelPending);
@@ -106,6 +112,9 @@ namespace LobbyScene
         {
             if (snapshotRequestInFlight || api == null) return;
             snapshotRequestInFlight = true;
+            // A 404 only describes the ticket held when the request went out. A ticket applied
+            // while it was in flight (the create response arriving first) must not be cleared by it.
+            MatchTicket requestedFor = reducer.Current;
             StartCoroutine(api.GetActiveTicket((requestSucceeded, ticket) =>
             {
                 snapshotRequestInFlight = false;
@@ -125,7 +134,8 @@ namespace LobbyScene
                     {
                         PublishLocalState(MatchTicketState.Idle);
                     }
-                    else if (IsCancelable(local) || State == MatchTicketState.CancelPending)
+                    else if (IsSameTicket(local, requestedFor) &&
+                             (IsCancelable(local) || State == MatchTicketState.CancelPending))
                     {
                         // The server has no active ticket, so the player is not matching.
                         // A local Matched ticket is left alone for the game scene reconnect.

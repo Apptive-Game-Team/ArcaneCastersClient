@@ -187,6 +187,23 @@ namespace WordOnline.Tests
             Assert.That(coordinator.CurrentTicket, Is.Null);
         }
 
+        [Test]
+        public void RecoverSnapshot_WhenStale404ArrivesAfterCreateResponse_KeepsQueuedTicket()
+        {
+            // The snapshot goes out before the create request reaches the server, so the server
+            // answers 404, but the create response reaches the client first.
+            apiStub.HoldSnapshot = true;
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.TicketToReturnOnCreate = new MatchTicket { ticketId = "ticket-204", version = 1, state = "QUEUED" };
+            coordinator.Enqueue("normal_deck");
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Queued));
+
+            apiStub.CompleteSnapshot(true, null);
+
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Queued));
+            Assert.That(coordinator.CurrentTicket?.ticketId, Is.EqualTo("ticket-204"));
+        }
+
         private class FakeMatchQueueApiService : MatchQueueApiService
         {
             public string LastRequestedDeckMode { get; private set; }
@@ -196,7 +213,16 @@ namespace WordOnline.Tests
             public MatchCancelResult CancelResultToReturn { get; set; }
             public int CancelCallCount { get; private set; }
             public string LastCanceledTicketId { get; private set; }
+            public bool HoldSnapshot { get; set; }
             private Action<MatchTicket> pendingCreateCallback;
+            private Action<bool, MatchTicket> pendingSnapshotCallback;
+
+            public void CompleteSnapshot(bool requestSucceeded, MatchTicket ticket)
+            {
+                Action<bool, MatchTicket> callback = pendingSnapshotCallback;
+                pendingSnapshotCallback = null;
+                callback?.Invoke(requestSucceeded, ticket);
+            }
 
             public void CompleteCreate(MatchTicket ticket)
             {
@@ -219,6 +245,11 @@ namespace WordOnline.Tests
 
             public override IEnumerator GetActiveTicket(Action<bool, MatchTicket> callback)
             {
+                if (HoldSnapshot)
+                {
+                    pendingSnapshotCallback = callback;
+                    yield break;
+                }
                 callback?.Invoke(true, SnapshotTicket);
                 yield break;
             }
