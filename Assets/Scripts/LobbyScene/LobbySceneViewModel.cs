@@ -142,7 +142,12 @@ namespace LobbyScene
                     StopMatchingAsFailed();
                     break;
                 case MatchTicketState.Idle:
-                    CurrentState.UpdateData(LobbyState.Idle);
+                    // Idle while matching means the server has no ticket for the player
+                    // (a cancel resolved through the snapshot), so close the page as canceled.
+                    if (CurrentState.Data == LobbyState.Matching)
+                        StopMatchingAsCanceled();
+                    else
+                        CurrentState.UpdateData(LobbyState.Idle);
                     break;
             }
         }
