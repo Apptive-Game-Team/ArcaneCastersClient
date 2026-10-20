@@ -49,16 +49,18 @@ namespace LobbyScene
             StartCoroutine(api.CreateTicket(deckMode, ticket =>
             {
                 enqueueInFlight = false;
-                bool cancelRequested = cancelRequestedDuringEnqueue;
-                cancelRequestedDuringEnqueue = false;
                 if (ticket == null)
                 {
+                    bool cancelRequested = cancelRequestedDuringEnqueue;
+                    cancelRequestedDuringEnqueue = false;
                     // No ticket was created, so a pending cancel has nothing left to cancel.
                     PublishLocalState(cancelRequested ? MatchTicketState.Canceled : MatchTicketState.Failed);
                     return;
                 }
-                // ApplyTicket starts the pending cancel itself when the ticket is Queued or Allocating.
+                // ApplyTicket starts the pending cancel itself when the ticket is Queued or Allocating,
+                // so the flag is cleared only after it ran.
                 ApplyTicket(ticket);
+                cancelRequestedDuringEnqueue = false;
             }));
         }
 
