@@ -10,6 +10,7 @@ namespace LobbyScene.SettingPage
         [SerializeField] private GameObject settingPage;
         [SerializeField] private GameObject guestRegisterPage;
         [SerializeField] private GameObject creditsPage;
+        [SerializeField] private GameObject localServerPage;
     
         private readonly Stack<GameObject> pageStack = new Stack<GameObject>();
     
@@ -25,6 +26,9 @@ namespace LobbyScene.SettingPage
                     break;
                 case "Credits":
                     pageStack.Push(creditsPage);
+                    break;
+                case "LocalServer":
+                    pageStack.Push(localServerPage);
                     break;
                 case "Profile":
                     SceneManager.LoadScene("ProfileScene");

@@ -104,3 +104,7 @@ __pycache__/
 # Regenerated from the current GameScene by the editor-only playground tool.
 Assets/DevPlayground/Generated/
 Assets/DevPlayground/Generated.meta
+
+# Written by the release workflow from the deploy lobby's GET /api/offline-pack before a desktop build.
+Assets/StreamingAssets/Offline/
+Assets/StreamingAssets/Offline.meta

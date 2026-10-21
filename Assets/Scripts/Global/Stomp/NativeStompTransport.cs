@@ -228,16 +228,22 @@ namespace Global.Stomp
 
         private async Task SendFrameAsync(string frame)
         {
-            if (_ws == null || _ws.State != WebSocketState.Open) return;
+            var socket = _ws;
+            if (socket == null || socket.State != WebSocketState.Open) return;
+            var cancellationToken = _cts?.Token ?? CancellationToken.None;
             try
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(frame);
-                await _ws.SendAsync(
+                await socket.SendAsync(
                     new ArraySegment<byte>(bytes),
                     WebSocketMessageType.Text,
                     true,
-                    _cts?.Token ?? CancellationToken.None
+                    cancellationToken
                 );
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                // Disconnecting or destroying this transport cancels pending sends.
             }
             catch (Exception ex)
             {
