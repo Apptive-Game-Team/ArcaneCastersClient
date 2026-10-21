@@ -22,19 +22,24 @@ local-server settings page.
 ## Lobby configuration before enabling installation
 
 The client uses the URLs in `GET /api/offline-pack`; it does not rewrite them.
-The lobby's current default still names the Java repository. Set its
+The lobby's public binary distribution URL is configured through
 `local-server.asset-url-template` (Spring environment variable
 `LOCAL_SERVER_ASSET_URL_TEMPLATE`) to:
 
 ```text
-https://github.com/Apptive-Game-Team/ArcaneCastersGameRust/releases/download/v{version}/local-server-{platform}.zip
+https://raw.githubusercontent.com/Apptive-Game-Team/ArcaneCastersPlay/local-server-bundles/v{version}/local-server-{platform}.zip
 ```
 
 Set `LOCAL_SERVER_VERSION` and `LOCAL_SERVER_MINIMUM_VERSION` to published Rust
 bundle versions, not Java versions. Publish all four platform archives and their
 checksums before advertising that version. An empty version advertises no bundle.
-These are deployment prerequisites; changing this client does not deploy the
-Rust server or update the lobby configuration.
+Rust release CI builds native bundles, then publishes only ZIPs and checksums to
+the public `ArcaneCastersPlay` distribution branch. The Rust source repository
+is private: its release URLs return 404 to anonymous clients and must not be
+advertised by the lobby. Verify downloads without GitHub credentials.
+
+Installation metadata refreshes when entering the lobby. After a lobby rollout,
+re-enter the lobby or restart Play Mode; reopening settings alone does not refresh it.
 
 Until a compatible bundle is installed and ready, practice and adventures keep
 using the existing shared-server fallback. A Java archive offered by a stale
@@ -79,6 +84,12 @@ client starts its own child process and passes its token over stdin.
   received `ready`, checked `/healthcheck`, sent `shutdown`, and observed exit 0.
 - Rust `local_launcher_process` (4 tests) and `local_session` (7 tests) passed,
   including completed Practice/PVE matches, result reporting and token checks.
-- Unity Editor gameplay, macOS/Linux execution, published asset downloads and
-  live lobby configuration were not tested. Graphify refresh was unavailable
-  because the executable was not on the Windows command path.
+- Rust v0.1.0 release CI built all four platforms and smoke-tested Windows,
+  Linux and macOS ARM. Public distribution CI downloaded all four bundles
+  anonymously and verified their checksums. The published Windows bundle also
+  passed a local checksum and start/stop smoke test.
+- Fixed settings label formatting by passing arguments directly to Unity
+  Localization, which formats placeholders during lookup. C# compilation passed.
+- Unity Editor gameplay and macOS Intel execution were not tested. The lobby
+  deployment is verified separately from the client. Graphify refresh was
+  unavailable because its executable was not on the Windows command path.
