@@ -70,6 +70,7 @@ namespace GameScene.Card
 
         private void Update()
         {
+            if (GameMenu.BlocksGameplayInput) return;
             if (Input.GetMouseButtonDown(1))
             {
                 Cancel();
@@ -209,6 +210,7 @@ namespace GameScene.Card
 
         public void SendInput(Vector3 pos) //whenFieldSelect
         {
+            if (GameMenu.BlocksGameplayInput) return;
             if (isWaitingInputResponse)
             {
                 return;
@@ -244,6 +246,7 @@ namespace GameScene.Card
 
         public bool TrySendInput(Vector3 pos)
         {
+            if (GameMenu.BlocksGameplayInput) return false;
             if (!isFieldSelectMode || isWaitingInputResponse)
             {
                 return false;
