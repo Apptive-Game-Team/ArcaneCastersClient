@@ -246,15 +246,10 @@ namespace LobbyScene.SettingPage
 
         private static string Format(string key, params object[] arguments)
         {
-            string pattern = Text(key);
-            try
-            {
-                return string.Format(pattern, arguments);
-            }
-            catch (System.FormatException)
-            {
-                return pattern;
-            }
+            // Localization formats placeholders during lookup, so pass arguments in that call.
+            string localized = LocalizationSettings.StringDatabase.GetLocalizedString(
+                LobbyUiTable, key, arguments: arguments);
+            return string.IsNullOrWhiteSpace(localized) ? key : localized;
         }
     }
 }
