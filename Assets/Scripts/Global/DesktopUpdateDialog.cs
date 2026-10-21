@@ -15,7 +15,7 @@ using UnityEngine.UI;
 
 namespace Global
 {
-    /// <summary>Optional full-build updates. The existing installation is changed only by the external helper.</summary>
+    /// <summary>Full-build updates; newer major/minor releases must be installed before login.</summary>
     public sealed class DesktopUpdateDialog : MonoBehaviour
     {
         [SerializeField] private GameObject root;
@@ -25,6 +25,8 @@ namespace Global
         private int choice;
         private static bool checkedThisRun;
         private bool korean;
+        private readonly DesktopUpdatePolicy policy = new DesktopUpdatePolicy();
+        private string lastError;
 
         private void Awake()
         {
@@ -46,20 +48,10 @@ namespace Global
         {
 #if (UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX) && !UNITY_EDITOR
             if (checkedThisRun) yield break;
-            checkedThisRun = true;
             korean = UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale?.Identifier.Code.StartsWith("ko")
                      ?? Application.systemLanguage == SystemLanguage.Korean;
             string configPath = Path.Combine(Application.streamingAssetsPath, "desktop-update.json");
             if (!File.Exists(configPath)) yield break;
-            UpdateConfig config = null;
-            string error = Try(() =>
-            {
-                config = JsonCodec.Deserialize<UpdateConfig>(File.ReadAllText(configPath));
-                Require(config != null && IsHttps(config.manifestUrl), "Invalid update configuration");
-                Require(config.platform == Platform(), "Update platform mismatch");
-            });
-            if (error != null) yield break;
-
             // Lock the ordinary login/navigation controls while the modal owns startup.
             var controls = FindObjectsOfType<Selectable>()
                 .Where(control => !control.transform.IsChildOf(transform))
@@ -67,7 +59,34 @@ namespace Global
             foreach (var item in controls) item.control.interactable = false;
             try
             {
-                yield return Run(config);
+                while (true)
+                {
+                    policy.BeginCheck();
+                    lastError = null;
+                    UpdateConfig config = null;
+                    string error = Try(() =>
+                    {
+                        config = JsonCodec.Deserialize<UpdateConfig>(File.ReadAllText(configPath));
+                        Require(config != null && IsHttps(config.manifestUrl), "Invalid update configuration");
+                        Require(string.IsNullOrEmpty(config.releasesUrl) || IsHttps(config.releasesUrl), "Invalid release list URL");
+                        Require(config.platform == Platform(), "Update platform mismatch");
+                    });
+                    if (error == null) yield return Run(config);
+                    else lastError = Text("업데이트 설정을 읽을 수 없습니다.", "Cannot read the update configuration.");
+                    if (policy.CanContinue)
+                    {
+                        checkedThisRun = true;
+                        yield break;
+                    }
+                    string reason = policy.Required
+                        ? Text("플레이하려면 필수 업데이트를 완료해야 합니다.", "You must complete the required update to play.")
+                        : Text("버전 정보를 확인할 수 없습니다. 연결을 확인하고 다시 시도해 주세요.",
+                            "Cannot check the game version. Check your connection and try again.");
+                    Show((lastError == null ? "" : lastError + "\n") + reason,
+                        Text("재시도", "Retry"), Text("종료", "Exit"));
+                    while (choice == 0) yield return null;
+                    if (choice < 0) yield return QuitGame();
+                }
             }
             finally
             {
@@ -83,9 +102,36 @@ namespace Global
 #if (UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX) && !UNITY_EDITOR
         private IEnumerator Run(UpdateConfig config)
         {
-            Show(Text("업데이트 확인 중…", "Checking for updates…"), null, Text("건너뛰기", "Skip"));
+            Show(Text("업데이트 확인 중…", "Checking for updates…"), null, null);
             UpdateManifest manifest = null;
-            using (var request = UnityWebRequest.Get(config.manifestUrl))
+            string manifestUrl = config.manifestUrl;
+            string releaseVersion = null;
+            if (!string.IsNullOrEmpty(config.releasesUrl))
+            {
+                using (var releases = UnityWebRequest.Get(config.releasesUrl))
+                {
+                    releases.timeout = 15;
+                    releases.SetRequestHeader("Accept", "application/vnd.github+json");
+                    releases.SetRequestHeader("User-Agent", "ArcaneCasters-Updater");
+                    var operation = releases.SendWebRequest();
+                    while (!operation.isDone)
+                    {
+                        if (releases.downloadedBytes > 4 * 1024 * 1024) { releases.Abort(); yield break; }
+                        yield return null;
+                    }
+                    if (releases.result != UnityWebRequest.Result.Success) yield break;
+                    if (Try(() =>
+                    {
+                        Require(IsHttps(releases.url) && releases.downloadedBytes <= 4 * 1024 * 1024, "Invalid release list");
+                        var selected = DesktopUpdatePolicy.FindReadyRelease(
+                            JsonCodec.Deserialize<DesktopRelease[]>(releases.downloadHandler.text), config.platform);
+                        manifestUrl = selected.Url;
+                        releaseVersion = selected.Version;
+                        Require(IsHttps(manifestUrl), "Invalid manifest URL");
+                    }) != null) yield break;
+                }
+            }
+            using (var request = UnityWebRequest.Get(manifestUrl))
             {
                 request.timeout = 15;
                 var operation = request.SendWebRequest();
@@ -104,10 +150,10 @@ namespace Global
                     manifest = JsonCodec.Deserialize<UpdateManifest>(request.downloadHandler.text);
                     Require(manifest != null && manifest.schemaVersion == 1 && manifest.platform == config.platform,
                         "Invalid manifest");
+                    Require(releaseVersion == null || manifest.version == releaseVersion, "Release version mismatch");
                     Require(IsHttps(manifest.url) && Regex.IsMatch(manifest.sha256 ?? "", "^[0-9a-fA-F]{64}$")
                         && manifest.size > 0 && manifest.size <= 32L * 1024 * 1024 * 1024, "Invalid archive");
-                    ParseVersion(manifest.version);
-                    ParseVersion(Application.version);
+                    policy.Observe(ParseVersion(Application.version), ParseVersion(manifest.version));
                 }) != null) yield break;
             }
             if (ParseVersion(manifest.version) <= ParseVersion(Application.version)) yield break;
@@ -135,11 +181,18 @@ namespace Global
                 yield return Error(Text("이 설치본은 자동 업데이트를 지원하지 않습니다.", "This installation does not support automatic updates."));
                 yield break;
             }
-            Show(Text($"새 버전 {manifest.version} ({manifest.size / 1048576f:F0} MB)을 다운로드할까요?\n완료 후 게임이 재시작됩니다.",
-                $"Download version {manifest.version} ({manifest.size / 1048576f:F0} MB)?\nThe game will restart after installation."),
-                Text("업데이트", "Update"), Text("나중에", "Later"));
+            string prompt = policy.Required
+                ? Text($"플레이하려면 버전 {manifest.version} ({manifest.size / 1048576f:F0} MB)으로 업데이트해야 합니다.\n완료 후 게임이 재시작됩니다.",
+                    $"Version {manifest.version} ({manifest.size / 1048576f:F0} MB) is required to play.\nThe game will restart after installation.")
+                : Text($"새 버전 {manifest.version} ({manifest.size / 1048576f:F0} MB)을 다운로드할까요?\n완료 후 게임이 재시작됩니다.",
+                $"Download version {manifest.version} ({manifest.size / 1048576f:F0} MB)?\nThe game will restart after installation.");
+            Show(prompt, Text("업데이트", "Update"), policy.Required ? Text("종료", "Exit") : Text("나중에", "Later"));
             while (choice == 0) yield return null;
-            if (choice < 0) yield break;
+            if (choice < 0)
+            {
+                if (policy.Required) yield return QuitGame();
+                yield break;
+            }
 
             string work = Path.Combine(Application.persistentDataPath, "DesktopUpdates", Guid.NewGuid().ToString("N"));
             string archive = Path.Combine(work, "update.zip");
@@ -255,8 +308,7 @@ namespace Global
                 if (!File.Exists(ready) || helper.HasExited)
                 {
                     Try(() => File.WriteAllText(Path.Combine(work, "abort"), ""));
-                    yield return Error(Text("설치를 준비하지 못했습니다. 기존 버전으로 계속합니다.",
-                        "Could not prepare installation. Continuing with the current version."));
+                    yield return Error(Text("설치를 준비하지 못했습니다.", "Could not prepare installation."));
                     yield break;
                 }
                 if (Try(() => File.WriteAllText(Path.Combine(work, "commit"), "")) != null)
@@ -340,12 +392,29 @@ namespace Global
 
         private IEnumerator Error(string message)
         {
+            if (!policy.CanContinue)
+            {
+                lastError = message;
+                yield break;
+            }
             Show(message, Text("계속", "Continue"), null);
             while (choice == 0) yield return null;
         }
 
+        private IEnumerator QuitGame()
+        {
+            Show(Text("게임을 종료합니다…", "Exiting the game…"), null, Text("종료", "Exit"));
+            Application.Quit();
+            // A shutdown veto must never resume login. Allow another exit attempt.
+            while (true)
+            {
+                if (choice < 0) { choice = 0; Application.Quit(); }
+                yield return null;
+            }
+        }
+
         [Serializable, UnityEngine.Scripting.Preserve]
-        private sealed class UpdateConfig { public string manifestUrl; public string platform; }
+        private sealed class UpdateConfig { public string manifestUrl, releasesUrl, platform; }
         [Serializable, UnityEngine.Scripting.Preserve]
         private sealed class UpdateManifest
         {

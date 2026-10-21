@@ -55,7 +55,8 @@ def prepare(root, helper, repository):
     shutil.copytree(helper, destination)
     url = f"https://github.com/{repository}/releases/latest/download/desktop-update-{data['platform']}.json"
     (streaming / "desktop-update.json").write_text(
-        json.dumps({"manifestUrl": url, "platform": data["platform"]}, indent=2) + "\n", encoding="utf-8")
+        json.dumps({"manifestUrl": url, "platform": data["platform"],
+                    "releasesUrl": f"https://api.github.com/repos/{repository}/releases?per_page=20"}, indent=2) + "\n", encoding="utf-8")
     if data["platform"] != "win-x64":
         # Cross-compiling .NET on Windows may not preserve executable bits.
         (destination / helper_name).chmod(0o755)
@@ -64,12 +65,15 @@ def prepare(root, helper, repository):
 
 def pack(root, output, repository, tag):
     data = marker(root)
+    if tag not in (data["version"], "v" + data["version"]):
+        raise ValueError("Release tag must match bundleVersion (X.Y.Z or vX.Y.Z)")
     if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository):
         raise ValueError("Invalid public repository")
     streaming = root / PLATFORMS[data["platform"]][1]
     config = json.loads((streaming / "desktop-update.json").read_text(encoding="utf-8"))
     expected_url = f"https://github.com/{repository}/releases/latest/download/desktop-update-{data['platform']}.json"
-    if config != {"manifestUrl": expected_url, "platform": data["platform"]}:
+    if config != {"manifestUrl": expected_url, "platform": data["platform"],
+                  "releasesUrl": f"https://api.github.com/repos/{repository}/releases?per_page=20"}:
         raise ValueError("Prepare the build for the same repository/platform")
     helper_name = "ArcaneUpdater.exe" if data["platform"] == "win-x64" else "ArcaneUpdater"
     if not (streaming / "DesktopUpdater" / helper_name).is_file():

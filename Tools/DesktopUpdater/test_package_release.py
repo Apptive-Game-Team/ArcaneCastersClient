@@ -54,10 +54,10 @@ class PackagingTests(unittest.TestCase):
     def test_no_overwrite_or_output_inside_game(self):
         release.prepare(self.root, self.helper, "example/public-game")
         with self.assertRaises(ValueError):
-            release.pack(self.root, self.root / "out", "example/public-game", "v1")
-        release.pack(self.root, self.base / "out", "example/public-game", "v1")
+            release.pack(self.root, self.root / "out", "example/public-game", "v1.2.3")
+        release.pack(self.root, self.base / "out", "example/public-game", "v1.2.3")
         with self.assertRaises(ValueError):
-            release.pack(self.root, self.base / "out", "example/public-game", "v1")
+            release.pack(self.root, self.base / "out", "example/public-game", "v1.2.3")
 
     def test_missing_helper_and_wrong_repository(self):
         with self.assertRaises(ValueError):
@@ -68,7 +68,12 @@ class PackagingTests(unittest.TestCase):
     def test_mismatched_config(self):
         release.prepare(self.root, self.helper, "example/public-game")
         with self.assertRaises(ValueError):
-            release.pack(self.root, self.base / "out", "example/other", "v1")
+            release.pack(self.root, self.base / "out", "example/other", "v1.2.3")
+
+    def test_release_tag_must_match_bundle_version(self):
+        release.prepare(self.root, self.helper, "example/public-game")
+        with self.assertRaises(ValueError):
+            release.pack(self.root, self.base / "out", "example/public-game", "v2.0.0")
 
     def test_version_validation(self):
         marker = self.root / "arcane-install.json"

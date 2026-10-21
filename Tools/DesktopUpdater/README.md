@@ -1,10 +1,13 @@
 # Desktop full-build updates
 
-The login scene checks an optional HTTPS manifest, offers **Update / Later**,
+The login scene checks an HTTPS manifest before server checks or login,
 downloads the entire ZIP to disk, validates SHA256, and starts an external helper.
 The helper stages and validates the complete installation before telling Unity
 to quit, then swaps directories and starts the new game. Downloads can be
-cancelled. A failed check or skipped update allows ordinary login.
+cancelled. Only patch updates can be skipped. Newer major/minor updates require
+**Update / Exit**; cancellation or any installation failure returns to **Retry /
+Exit**, never login. Failed/invalid version checks also require retry or exit.
+There is no version-check Skip button. An exit veto keeps the login gate closed.
 
 The existing `release.yml` workflow now builds and packages all four desktop
 platforms from the requested release tag. It uploads every ZIP before publishing
@@ -43,8 +46,8 @@ python Tools/DesktopUpdater/package_release.py pack `
 
 Replace the repository and release tag with real values. The version comes from
 Unity's `PlayerSettings.bundleVersion`, recorded by `DesktopBuildScript`; do not
-maintain a second version. Only stable `X.Y.Z` versions are accepted. The tag can
-differ from the version, but must name the release hosting those ZIP assets.
+maintain a second version. Only stable `X.Y.Z` versions are accepted. The release tag must be `X.Y.Z` or
+`vX.Y.Z` matching that bundle version.
 
 On Linux/macOS the equivalent helper publish is:
 
@@ -73,13 +76,18 @@ upload each platform's three generated files:
 - `desktop-update-<platform>.json`
 
 Upload all supported platforms before marking a release as the latest stable
-release. The embedded configuration points to:
+release. The embedded configuration includes a public GitHub release-list URL and a
+legacy fallback manifest URL:
 
 ```text
 https://github.com/OWNER/REPO/releases/latest/download/desktop-update-win-x64.json
 ```
 
-Each manifest points to the immutable tagged ZIP URL, not the `latest` ZIP URL.
+The client selects the newest published stable release among the 20 most recent
+releases with all 12 expected assets fully uploaded, then checks its immutable
+platform manifest. Unfinished newer releases are ignored. The manifest version
+must match the selected release tag. Each manifest points to the immutable tagged
+ZIP URL, not the `latest` ZIP URL.
 GitHub's HTTPS asset redirects are supported. Do not replace an existing release
 ZIP without regenerating its manifest. These downloads use transport security
 and checksums; they are **not independently signed-update verification**.
@@ -107,7 +115,8 @@ The helper is copied outside the installation to
 `Application.persistentDataPath/DesktopUpdates/<session>/helper`. That session
 contains the downloaded ZIP, `job.json`, handshake files and `result.txt`.
 The client does not quit unless staging succeeds. If the helper cannot start or
-prepare the installation, the client offers Continue. A helper timeout/abort
+prepare the installation, optional patch updates offer Continue; required updates
+remain blocked with Retry / Exit. A helper timeout/abort
 cannot install later without the client's explicit commit and exit.
 
 Installation replaces the **whole dedicated directory**, so obsolete game files
@@ -145,6 +154,32 @@ and/or signed distribution route players will actually use.
 
 The desktop publish job deliberately refuses to overwrite existing assets. A
 partial upload requires operator inspection before retrying; never replace an
-already-advertised payload. During an incomplete latest release, missing manifest
-requests fail open and normal login continues. Existing v1.5.0 builds require one
+already-advertised payload. An incomplete newest release falls back to a previous ready release. If no ready
+release is found or requests fail, show Retry / Exit. GitHub availability and its
+unauthenticated API rate limits are therefore part of desktop login availability;
+clients sharing one public IP share that rate limit. Existing v1.5.0 builds require one
 manual installation of a release containing this feature.
+
+## Required release versioning
+
+Compare stable numeric versions, not strings: `1.5.0 -> 1.5.3` is optional,
+`1.5.x -> 1.6.0` and `1.x -> 2.0.0` are mandatory. Equal or older releases do
+not trigger an update. Once a required target is observed, a failed retry or an
+older manifest cannot unlock that running client. No separate minimum version is
+managed. This is a client login gate, not server-side rejection of modified clients.
+
+Any fix that every player must install must be released as MINOR, even if its
+Conventional Commit type is `fix:`. Include this trailer in that commit:
+
+```text
+fix: repair a protocol incompatibility
+
+Required-Update: true
+```
+
+The monorepo's `.agents/skills/deploy/scripts/plan-versions.sh` recognizes this
+trailer for the client only. `!` / `BREAKING CHANGE` still selects MAJOR; `feat:`
+still selects MINOR; ordinary fixes select PATCH. Preserve the trailer when
+squashing. Version bumps still happen once at promotion, never in a feature PR.
+The preserved deploy script expects independent component checkouts and does not
+run promotions from this Windows monorepo layout.

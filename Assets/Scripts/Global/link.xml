@@ -1,5 +1,7 @@
 <linker>
   <assembly fullname="Assembly-CSharp">
+    <type fullname="Global.DesktopRelease" preserve="all" />
+    <type fullname="Global.DesktopReleaseAsset" preserve="all" />
     <type fullname="Global.DesktopUpdateDialog/UpdateConfig" preserve="all" />
     <type fullname="Global.DesktopUpdateDialog/UpdateManifest" preserve="all" />
     <type fullname="Global.DesktopUpdateDialog/InstallInfo" preserve="all" />

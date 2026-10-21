@@ -5,6 +5,7 @@ on:
     paths:
       - 'Tools/DesktopUpdater/**'
       - 'Assets/Scripts/Global/DesktopUpdateDialog.cs'
+      - 'Assets/Scripts/Global/DesktopUpdatePolicy.cs'
       - 'Assets/Scripts/Editor/DesktopBuildScript.cs'
       - '.github/workflows/*desktop*'
       - '.github/workflows/release.yml'

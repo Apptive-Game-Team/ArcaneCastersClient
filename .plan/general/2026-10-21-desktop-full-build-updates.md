@@ -80,3 +80,24 @@ HTTPS plus SHA256 protects transport/integrity, not independently signed release
 - Medium PASS and heavy PASS; preserve product identity, verify executable and
   macOS signature, keep published payloads immutable, verify remote base.
 - Separate issue creation was rejected by automatic approval review, so omitted.
+
+## Mandatory update policy follow-up (2026-10-21)
+- User approved MAJOR/MINOR mandatory, PATCH optional; essential fixes bump MINOR.
+- Supersedes the original optional-only/no-blocking-login scope above.
+- Remove version-check skipping. Missing legacy config still disables updates;
+  malformed existing config and failed manifest checks show Retry / Exit.
+- Pure shared session policy retains a required target across cancellation,
+  failures and retries. Only CanContinue marks the session check complete.
+- Exit is a non-returning modal coroutine even if a shutdown handler vetoes quit.
+- Client-only Required-Update: true commit trailer selects MINOR in the preserved
+  root promotion classifier; no separate minimum supported version is maintained.
+- Fast corrections accepted: invalid config handling, sticky target and no early
+  session bypass. Medium PASS; heavy PASS. No server enforcement or deployment.
+- Root deploy classifier is locally committed; only client changes go to PR #362.
+
+- Readiness refinement: inspect the 20 most recent GitHub releases, skip draft,
+  prerelease and incomplete assets; require all 12 assets state=uploaded before
+  selecting by published_at. Enforce stable tag and manifest version agreement.
+  A previous complete release remains usable while newer builds run.
+- Public GitHub API rate limits/network errors can block login with Retry / Exit.
+  This is intentional fail-closed checking; no server-side enforcement added.

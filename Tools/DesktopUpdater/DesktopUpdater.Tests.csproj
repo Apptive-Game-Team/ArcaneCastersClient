@@ -10,5 +10,6 @@
   <ItemGroup>
     <Compile Include="Installer.cs" />
     <Compile Include="Tests.cs" />
+    <Compile Include="../../Assets/Scripts/Global/DesktopUpdatePolicy.cs" Link="DesktopUpdatePolicy.cs" />
   </ItemGroup>
 </Project>

@@ -25,7 +25,7 @@ public static class DesktopUpdateValidation
 
         // A normal Editor compilation excludes the actual standalone update coroutine.
         // Compile player scripts explicitly, without building all textures/audio.
-        string output = Path.GetFullPath(".utmp/desktop-update-player-scripts");
+        string output = Path.GetFullPath(".utmp/desktop-update-player-scripts-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(output);
         var result = PlayerBuildInterface.CompilePlayerScripts(new ScriptCompilationSettings {
             target = BuildTarget.StandaloneWindows64,

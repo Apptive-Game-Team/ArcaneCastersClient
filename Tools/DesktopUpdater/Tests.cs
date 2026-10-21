@@ -29,6 +29,66 @@ string sandbox = Path.Combine(Environment.GetEnvironmentVariable("ARCANE_TEST_RO
     "arcane-updater-test-" + Guid.NewGuid().ToString("N"));
 Directory.CreateDirectory(sandbox);
 int index = 0;
+Test("release policy uses numeric major/minor, patches stay optional", () => {
+    foreach (var item in new[] {
+        ("1.5.0", "1.5.1", false), ("1.5.9", "1.6.0", true),
+        ("1.9.9", "1.10.0", true), ("1.9.9", "2.0.0", true),
+        ("1.5.1", "1.5.1", false), ("2.0.0", "1.9.9", false)
+    })
+    {
+        var policy = new Global.DesktopUpdatePolicy();
+        policy.Observe(Version.Parse(item.Item1), Version.Parse(item.Item2));
+        if (policy.Required != item.Item3 || policy.CanContinue == item.Item3) throw new Exception();
+    }
+});
+Test("unknown version cannot enter login and successful retry can", () => {
+    var policy = new Global.DesktopUpdatePolicy();
+    if (policy.CanContinue) throw new Exception();
+    policy.BeginCheck(); // Failed/malformed config or HTTP response never calls Observe.
+    if (policy.CanContinue) throw new Exception();
+    policy.Observe(new Version(1, 5, 0), new Version(1, 5, 1));
+    if (!policy.CanContinue) throw new Exception();
+});
+Test("required release stays blocking after cancellation, failure and older retry", () => {
+    var policy = new Global.DesktopUpdatePolicy();
+    var current = new Version(1, 5, 0);
+    policy.Observe(current, new Version(1, 6, 0));
+    // Setup/download/verification/helper failure or cancellation returns to the same startup gate.
+    if (policy.CanContinue) throw new Exception();
+    policy.BeginCheck();
+    if (policy.CanContinue || !policy.Required) throw new Exception();
+    Reject(() => policy.Observe(current, new Version(1, 5, 2)));
+    if (policy.CanContinue || !policy.Required) throw new Exception();
+    policy.Observe(current, new Version(1, 6, 1));
+    if (policy.CanContinue || !policy.Required) throw new Exception();
+});
+Test("only fully uploaded stable releases can require an update", () => {
+    Global.DesktopRelease Release(string version, string published) => new Global.DesktopRelease {
+        tag_name = "v" + version, published_at = published,
+        assets = new[] { "win-x64", "linux-x64", "osx-x64", "osx-arm64" }.SelectMany(rid => new[] {
+            "ArcaneCasters-" + version + "-" + rid + ".zip",
+            "ArcaneCasters-" + version + "-" + rid + "-update.zip", "desktop-update-" + rid + ".json"
+        }).Select(name => new Global.DesktopReleaseAsset {
+            name = name, state = "uploaded", browser_download_url = "https://example.com/" + version + "/" + name
+        }).ToArray()
+    };
+    var old = Release("1.5.3", "2026-10-20T00:00:00Z");
+    var latest = Release("1.6.0", "2026-10-21T00:00:00Z");
+    string Selected() => Global.DesktopUpdatePolicy.FindReadyRelease(new[] { old, latest }, "osx-arm64").Version;
+    if (Selected() != "1.6.0") throw new Exception();
+    latest.assets.Last().state = "new";
+    if (Selected() != "1.5.3") throw new Exception();
+    latest.assets.Last().state = "uploaded";
+    latest.prerelease = true;
+    if (Selected() != "1.5.3") throw new Exception();
+    latest.prerelease = false;
+    latest.draft = true;
+    if (Selected() != "1.5.3") throw new Exception();
+    latest.draft = false;
+    latest.assets = latest.assets.Where(a => !a.name.EndsWith("osx-arm64-update.zip")).ToArray();
+    if (Selected() != "1.5.3") throw new Exception();
+    Reject(() => Global.DesktopUpdatePolicy.FindReadyRelease(new[] { latest }, "win-x64"));
+});
 (UpdateJob Job, string Stage) Fixture(Action<ZipArchive>? extra = null)
 {
     string test = Path.Combine(sandbox, (++index).ToString());
