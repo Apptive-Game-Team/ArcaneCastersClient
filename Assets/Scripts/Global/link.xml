@@ -1,0 +1,8 @@
+<linker>
+  <assembly fullname="Assembly-CSharp">
+    <type fullname="Global.DesktopUpdateDialog/UpdateConfig" preserve="all" />
+    <type fullname="Global.DesktopUpdateDialog/UpdateManifest" preserve="all" />
+    <type fullname="Global.DesktopUpdateDialog/InstallInfo" preserve="all" />
+    <type fullname="Global.DesktopUpdateDialog/UpdateJob" preserve="all" />
+  </assembly>
+</linker>
