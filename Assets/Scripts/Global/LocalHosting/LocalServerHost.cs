@@ -123,15 +123,14 @@ namespace Global.LocalHosting
         }
 
         /// <summary>
-        /// 묶음 root 의 java 로 로컬 서버를 띄운다. 이미 돌고 있으면 먼저 멈춘다.
+        /// 묶음 root 의 Rust 실행 파일로 로컬 서버를 띄운다. 이미 돌고 있으면 먼저 멈춘다.
         /// </summary>
         public void StartServer(string bundleRoot, string bundleVersion, string staticDataPath)
         {
             StopServer();
 
-            string java = Path.Combine(bundleRoot, LocalServerPlatform.JavaRelativePath);
-            string jar = Path.Combine(bundleRoot, "local-server.jar");
-            if (!File.Exists(java) || !File.Exists(jar))
+            string executable = Path.Combine(bundleRoot, LocalServerPlatform.ExecutableName);
+            if (!File.Exists(executable))
             {
                 Fail($"bundle is incomplete: {bundleRoot}");
                 return;
@@ -151,8 +150,8 @@ namespace Global.LocalHosting
 
             var startInfo = new ProcessStartInfo
             {
-                FileName = java,
-                Arguments = "-Xmx512m -jar local-server.jar --spring.profiles.active=local",
+                FileName = executable,
+                Arguments = LocalServerBundle.LaunchArguments,
                 WorkingDirectory = bundleRoot,
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -170,13 +169,13 @@ namespace Global.LocalHosting
             catch (Exception exception)
             {
                 process = null;
-                Fail($"could not start java: {exception.Message}");
+                Fail($"could not start Rust local server: {exception.Message}");
                 return;
             }
 
             if (process == null)
             {
-                Fail("could not start java");
+                Fail("could not start Rust local server");
                 return;
             }
 

@@ -1,4 +1,5 @@
 using System.IO;
+using LocalServer;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -53,10 +54,8 @@ namespace Global.LocalHosting
             }
         }
 
-        /// <summary>묶음 root 기준 java 실행 파일 경로.</summary>
-        public static string JavaRelativePath => IsWindows
-            ? Path.Combine("jre", "bin", "java.exe")
-            : Path.Combine("jre", "bin", "java");
+        /// <summary>묶음 root 기준 Rust 서버 실행 파일 이름.</summary>
+        public static string ExecutableName => LocalServerBundle.ExecutableName(IsWindows);
     }
 
     /// <summary>
@@ -67,8 +66,8 @@ namespace Global.LocalHosting
     {
         public static string Root { get; private set; }
 
-        /// <summary>압축을 푼 묶음. 한 version 이 한 폴더다.</summary>
-        public static string BundlesDir => Path.Combine(Root, "bundles");
+        /// <summary>Rust 묶음. Java와 version 번호가 겹쳐도 서로 덮어쓰지 않는다.</summary>
+        public static string BundlesDir => Path.Combine(Root, "bundles-rust");
 
         /// <summary>lobby 에서 내려받은 정적 데이터.</summary>
         public static string StaticDataPath => Path.Combine(Root, "static.json");

@@ -54,7 +54,7 @@ namespace LocalServer
                 return LocalHostingBlock.BelowMinimumVersion;
             if (!conditions.ServerReady) return LocalHostingBlock.ServerNotReady;
 
-            // 로컬 서버는 기동할 때 정적 데이터를 H2 에 한 번 넣는다. lobby 가 다른 version 을 요구하면
+            // 로컬 서버는 기동할 때 정적 데이터를 메모리에 한 번 적재한다. lobby 가 다른 version 을 요구하면
             // 밸런스가 공유 서버와 달라지므로 이번 경기는 공유 서버에서 한다.
             if (!string.IsNullOrEmpty(conditions.LobbyStaticVersion) &&
                 !string.Equals(conditions.ServerStaticVersion, conditions.LobbyStaticVersion, StringComparison.OrdinalIgnoreCase))

@@ -20,7 +20,7 @@ namespace Global.LocalHosting
     {
         public string Version;
 
-        /// <summary><c>local-server.jar</c> 와 <c>jre/</c> 가 있는 폴더. 로컬 서버의 작업 directory 다.</summary>
+        /// <summary><c>ac-game</c>(Windows는 <c>ac-game.exe</c>) 가 있는 폴더. 로컬 서버의 작업 directory 다.</summary>
         public string Root;
     }
 
@@ -29,15 +29,13 @@ namespace Global.LocalHosting
     ///
     /// <list type="bullet">
     /// <item>정적 데이터는 작으므로 lobby 의 <c>staticVersion</c> 이 다르면 로비에 들어올 때 자동으로 받는다.</item>
-    /// <item>서버 묶음(100MB 이상)은 설정 화면의 버튼으로만 받는다. zip 과 <c>.sha256</c> 을 받아 확인한 뒤
-    /// <c>bundles/&lt;version&gt;/</c> 에 풀고, 새 묶음이 확인될 때까지 이전 묶음을 지우지 않는다.</item>
+    /// <item>Rust 서버 묶음은 설정 화면의 버튼으로만 받는다. zip 과 <c>.sha256</c> 을 받아 확인한 뒤
+    /// <c>bundles-rust/&lt;version&gt;/</c> 에 풀고, 새 묶음이 확인될 때까지 이전 묶음을 지우지 않는다.</item>
     /// </list>
     /// </summary>
     public class LocalServerPackStore : MonoBehaviour
     {
         private const int PackTimeoutSeconds = 10;
-        private const string BundleJar = "local-server.jar";
-        private const string BundleFolder = "local-server";
 
         /// <summary>마지막으로 받은 offline-pack. 아직 못 받았으면 null 이고, 그동안 로컬 경기는 하지 않는다.</summary>
         public OfflinePackResponse Latest { get; private set; }
@@ -180,7 +178,7 @@ namespace Global.LocalHosting
         // ─── 설치된 묶음 ─────────────────────────────────────────────────────
 
         /// <summary>
-        /// <c>bundles/</c> 아래에서 가장 높은 version 의 온전한 묶음. 설치 중 임시 폴더(<c>.</c> 로 시작)는 보지 않는다.
+        /// <c>bundles-rust/</c> 아래에서 가장 높은 version 의 온전한 묶음. 설치 중 임시 폴더(<c>.</c> 로 시작)는 보지 않는다.
         /// </summary>
         public InstalledBundle FindInstalledBundle()
         {
@@ -194,7 +192,6 @@ namespace Global.LocalHosting
 
                 string root = ResolveBundleRoot(directory);
                 if (root == null) continue;
-                if (!File.Exists(Path.Combine(root, LocalServerPlatform.JavaRelativePath))) continue;
 
                 if (best == null || LocalHostingRules.CompareVersions(version, best.Version) > 0)
                 {
@@ -240,13 +237,8 @@ namespace Global.LocalHosting
             }
         }
 
-        private static string ResolveBundleRoot(string directory)
-        {
-            if (File.Exists(Path.Combine(directory, BundleJar))) return directory;
-
-            string nested = Path.Combine(directory, BundleFolder);
-            return File.Exists(Path.Combine(nested, BundleJar)) ? nested : null;
-        }
+        private static string ResolveBundleRoot(string directory) =>
+            LocalServerBundle.ResolveRoot(directory, LocalServerPlatform.IsWindows);
 
         // ─── 설치 ───────────────────────────────────────────────────────────
 
@@ -371,7 +363,7 @@ namespace Global.LocalHosting
                 string stagedRoot = ResolveBundleRoot(stagingPath);
                 if (stagedRoot == null)
                 {
-                    failure = "bundle has no local-server.jar";
+                    failure = $"bundle has no Rust server executable ({LocalServerPlatform.ExecutableName})";
                 }
                 else
                 {
@@ -389,10 +381,6 @@ namespace Global.LocalHosting
                     if (chmodFailure != null)
                     {
                         failure = $"chmod failed: {chmodFailure}";
-                    }
-                    else if (!File.Exists(Path.Combine(stagedRoot, LocalServerPlatform.JavaRelativePath)))
-                    {
-                        failure = "bundle has no java for this platform";
                     }
                     else
                     {
@@ -471,15 +459,13 @@ namespace Global.LocalHosting
         }
 
         /// <summary>
-        /// macOS 와 Linux 에서는 zip 이 실행 권한을 싣고 와도 Mono 의 압축 풀기가 그것을 버린다. <c>jre/bin</c> 과
-        /// <c>jre/lib/jspawnhelper</c> 에 실행 권한을 다시 준다. 실패하면 이유를 돌려준다.
+        /// macOS 와 Linux 에서는 zip 이 실행 권한을 싣고 와도 Mono 의 압축 풀기가 그것을 버린다.
+        /// Rust 서버 실행 파일에 실행 권한을 다시 준다. 실패하면 이유를 돌려준다.
         /// </summary>
         private static string MakeExecutable(string bundleRoot)
         {
-            string bin = Path.Combine(bundleRoot, "jre", "bin");
-            string spawnHelper = Path.Combine(bundleRoot, "jre", "lib", "jspawnhelper");
-            string arguments = $"-R u+x \"{bin}\"";
-            if (File.Exists(spawnHelper)) arguments += $" \"{spawnHelper}\"";
+            string executable = Path.Combine(bundleRoot, LocalServerBundle.ExecutableName(false));
+            string arguments = $"u+x \"{executable}\"";
 
             var startInfo = new ProcessStartInfo
             {

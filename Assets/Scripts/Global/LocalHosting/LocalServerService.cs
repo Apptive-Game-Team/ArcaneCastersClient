@@ -11,7 +11,7 @@ namespace Global.LocalHosting
     ///
     /// <list type="bullet">
     /// <item>로비에 들어오면 offline-pack 을 받고(정적 데이터 자동 갱신), 보고하지 못한 결과를 다시 보내고, 설치돼 있고
-    /// 설정이 켜져 있으면 로컬 서버를 background 로 미리 띄운다. 기동 시간(5~10초)을 경기 시작 전에 숨기기 위해서다.</item>
+    /// 설정이 켜져 있으면 로컬 서버를 background 로 미리 띄운다. 경기 시작 전에 준비를 마치기 위해서다.</item>
     /// <item>봇전과 모험 시작 앞의 로컬 경로(<see cref="LocalMatchRoute"/>)를 <see cref="LocalMatchRouter"/> 로 채운다.</item>
     /// <item>로컬 서버의 <c>matchStats</c> 로 다음 경기 tick rate 를 정하고, <c>matchResult</c> 를 lobby 에 보고한다.</item>
     /// </list>
