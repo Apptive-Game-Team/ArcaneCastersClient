@@ -21,11 +21,11 @@ namespace LobbyScene.Button
         {
             switch (state)
             {
-                case LobbySceneViewModel.LobbyState.Idle:
-                    buttonObject.SetActive(false);
-                    break;
                 case LobbySceneViewModel.LobbyState.Matching:
                     buttonObject.SetActive(true);
+                    break;
+                default:
+                    buttonObject.SetActive(false);
                     break;
             }
         }

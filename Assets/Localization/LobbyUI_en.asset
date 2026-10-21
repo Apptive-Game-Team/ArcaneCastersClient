@@ -472,6 +472,14 @@ MonoBehaviour:
     m_Localized: Friendly Match Invite
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000429
+    m_Localized: Setting up a practice match against a bot...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000430
+    m_Localized: Couldn't start the practice match. Please try again later.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
