@@ -69,7 +69,8 @@ namespace Global.LocalHosting
                 ["scenarioId"] = scenarioId.HasValue ? new JValue(scenarioId.Value) : JValue.CreateNull()
             };
 
-            ServerEndpoint lobbyEndpoint = ServerList.MatchingServer.Api.Path("api", "local-sessions");
+            ServerEndpoint lobby = ServerList.MatchingServer.Api;
+            ServerEndpoint lobbyEndpoint = lobby.Path("api", "local-sessions");
             using var lobbyRequest = CreateJsonPost(lobbyEndpoint, lobbyBody);
             Server.SetAcceptLanguage(lobbyRequest);
             Server.SetAuthorization(lobbyRequest);
@@ -90,6 +91,9 @@ namespace Global.LocalHosting
                 callback(null);
                 yield break;
             }
+
+            // Bind the result destination before starting the local session or waiting again.
+            service.Reporter.RegisterSession(sessionId, lobby.ToString());
 
             // 2. 로컬 서버 세션 생성
             if (host.State != LocalServerState.Ready || host.Port != port || host.Token != token)
@@ -155,6 +159,7 @@ namespace Global.LocalHosting
                     leftUser = left,
                     rightUser = right,
                     sessionId = string.IsNullOrEmpty(created.sessionId) ? (string)session["sessionId"] : created.sessionId,
+                    mapType = (string)session["mapType"],
                     localToken = token
                 };
             }

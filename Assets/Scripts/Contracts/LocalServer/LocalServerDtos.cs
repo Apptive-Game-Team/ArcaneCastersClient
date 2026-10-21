@@ -95,10 +95,13 @@ namespace LocalServer
     }
 
     /// <summary>
-    /// lobby 에 보고하지 못한 결과. <c>pending-results/&lt;sessionId&gt;.json</c> 에 저장하고 다음 로비 진입 때 다시 보낸다.
+    /// lobby 에 전송하기 전에 저장하는 결과. 서버별 파일에 보관하고 원래 lobby 로 재전송한다.
     /// </summary>
     public sealed class PendingLocalResult
     {
+        /// <summary>API base URL of the lobby that issued this session; absent in legacy records.</summary>
+        public string lobbyUrl;
+
         public string sessionId;
 
         /// <summary>저장한 시각(UTC, ISO-8601). 2시간이 지나면 lobby 세션 기록이 사라지므로 버린다.</summary>
