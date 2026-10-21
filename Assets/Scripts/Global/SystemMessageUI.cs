@@ -16,6 +16,7 @@ namespace Global
 
         private static readonly Queue<string> messageQueue = new Queue<string>();
         private Coroutine messageRoutine;
+        private Coroutine transientRoutine;
 
         protected override void Awake()
         {
@@ -48,12 +49,51 @@ namespace Global
     
         public void ShowMessage(string msg)
         {
+            ClearTransientMessage();
             messageQueue.Enqueue(msg);
 
             if (messageRoutine == null)
             {
                 messageRoutine = StartCoroutine(ProcessMessageQueue());
             }
+        }
+
+        // Live telemetry must never enter the static queue that survives scene changes.
+        public void ShowTransientMessage(string msg)
+        {
+            ClearTransientMessage();
+            if (messageRoutine != null || messageQueue.Count > 0 || !isActiveAndEnabled)
+                return;
+
+            transientRoutine = StartCoroutine(DisplayTransientMessage(msg));
+        }
+
+        public void ClearTransientMessage()
+        {
+            if (transientRoutine == null) return;
+
+            StopCoroutine(transientRoutine);
+            transientRoutine = null;
+            if (messageRoutine == null)
+            {
+                messagePanel.SetActive(false);
+                messageText.text = "";
+            }
+        }
+
+        private IEnumerator DisplayTransientMessage(string msg)
+        {
+            messageText.text = msg;
+            messagePanel.SetActive(true);
+            yield return new WaitForSecondsRealtime(duration);
+            messagePanel.SetActive(false);
+            messageText.text = "";
+            transientRoutine = null;
+        }
+
+        private void OnDisable()
+        {
+            ClearTransientMessage();
         }
 
         private IEnumerator ProcessMessageQueue()

@@ -1,5 +1,6 @@
 using GameScene.Dto;
 using Global;
+using Global.Util;
 
 namespace GameScene.Handler
 {
@@ -7,7 +8,9 @@ namespace GameScene.Handler
     {
         public void Handler(BotThoughtInfo thought)
         {
-            if (thought == null)
+            if (thought == null || GameEndEventController.Instance == null ||
+                GameEndEventController.Instance.HasEnded ||
+                !JwksService.IsFetched || !JwtHelper.IsAdmin(SceneContext.JwtToken))
             {
                 return;
             }
@@ -18,7 +21,7 @@ namespace GameScene.Handler
 
             if (SystemMessageUI.Instance != null)
             {
-                SystemMessageUI.Instance.ShowMessage(summary);
+                SystemMessageUI.Instance.ShowTransientMessage(summary);
             }
         }
     }
