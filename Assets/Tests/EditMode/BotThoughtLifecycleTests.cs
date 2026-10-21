@@ -8,6 +8,7 @@ using GameScene.Dto;
 using Global.Util;
 using NUnit.Framework;
 using TMPro;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -58,18 +59,13 @@ namespace WordOnline.Tests
                 IEnumerator fetch = JwksService.FetchJwks();
                 while (fetch.MoveNext()) { }
 
-                var uiObject = new GameObject("SystemMessage");
-                uiObject.transform.SetParent(root.transform);
-                uiObject.SetActive(false);
-                var panel = new GameObject("Panel");
-                panel.transform.SetParent(uiObject.transform);
-                var label = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI));
-                label.transform.SetParent(panel.transform);
-                var text = label.GetComponent<TextMeshProUGUI>();
-                Component ui = uiObject.AddComponent(uiType);
-                uiType.GetField("messagePanel", PrivateInstance).SetValue(ui, panel);
-                uiType.GetField("messageText", PrivateInstance).SetValue(ui, text);
-                uiObject.SetActive(true);
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SystemMessage.prefab");
+                var uiObject = Object.Instantiate(prefab, root.transform);
+                Component ui = uiObject.GetComponent(uiType);
+                var panel = (GameObject)uiType.GetField("messagePanel", PrivateInstance).GetValue(ui);
+                var text = (TMP_Text)uiType.GetField("messageText", PrivateInstance).GetValue(ui);
+                Assert.AreEqual(RenderMode.ScreenSpaceOverlay, uiObject.GetComponent<Canvas>().renderMode,
+                    "Notifications must not be depth-tested behind the battlefield.");
                 var queue = (ICollection)uiType.GetField("messageQueue", BindingFlags.Static | BindingFlags.NonPublic)
                     .GetValue(null);
                 Assert.AreEqual(0, queue.Count);
@@ -105,6 +101,13 @@ namespace WordOnline.Tests
                     thought.reason = "first";
                     handle.Invoke(thoughtHandler, new object[] { thought });
                     Assert.IsTrue(panel.activeSelf, "Admin thoughts must display, including in spectator mode.");
+                    Canvas.ForceUpdateCanvases();
+                    var corners = new Vector3[4];
+                    text.rectTransform.GetWorldCorners(corners);
+                    Assert.Greater(corners[2].x, 0f);
+                    Assert.Greater(corners[2].y, 0f);
+                    Assert.Less(corners[0].x, Screen.width);
+                    Assert.Less(corners[0].y, Screen.height);
                     StringAssert.Contains("first", text.text);
                     thought.reason = "latest";
                     handle.Invoke(thoughtHandler, new object[] { thought });
