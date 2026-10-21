@@ -8,8 +8,8 @@ namespace GameScene.Handler
     {
         public void Handler(BotThoughtInfo thought)
         {
-            if (thought == null || GameEndEventController.Instance == null ||
-                GameEndEventController.Instance.HasEnded ||
+            if (thought == null || StompConnector.Instance == null ||
+                StompConnector.Instance.HasMatchEnded ||
                 !JwksService.IsFetched || !JwtHelper.IsAdmin(SceneContext.JwtToken))
             {
                 return;

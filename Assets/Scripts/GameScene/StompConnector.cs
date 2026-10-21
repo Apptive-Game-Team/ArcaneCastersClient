@@ -80,6 +80,7 @@ namespace GameScene
         /// 결과 화면으로 넘어가기 전까지의 무음과 끊김은 연결 문제가 아니다.
         /// </summary>
         private bool _matchEnded;
+        public bool HasMatchEnded => _matchEnded;
 
         // ─── 생명주기 ────────────────────────────────────────────────────────
 
@@ -227,6 +228,8 @@ namespace GameScene
         public void NotifyMatchEnded()
         {
             _matchEnded = true;
+            if (SystemMessageUI.Instance != null)
+                SystemMessageUI.Instance.ClearTransientMessage();
             _reconnect.ResetRetries();
         }
 
