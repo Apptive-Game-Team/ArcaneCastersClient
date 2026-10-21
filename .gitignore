@@ -34,6 +34,9 @@
 ExportedObj/
 .consulo/
 *.csproj
+!Tools/DesktopUpdater/*.csproj
+Tools/DesktopUpdater/bin/
+Tools/DesktopUpdater/obj/
 *.unityproj
 *.sln
 *.suo

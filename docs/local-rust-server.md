@@ -40,6 +40,31 @@ Until a compatible bundle is installed and ready, practice and adventures keep
 using the existing shared-server fallback. A Java archive offered by a stale
 lobby is rejected as missing the native Rust executable.
 
+## Testing in Unity Editor
+
+Windows, macOS and Linux Editors are supported by `LocalServerPlatform`, even
+when the selected build target is WebGL. Open this PR's project with Unity
+2022.3.34f1; another checkout already open in the Editor will not use these files.
+
+1. Use a development lobby with `/api/offline-pack` and `/api/local-sessions`
+   enabled and its minimum server version configured for the Rust bundle.
+2. Install the Rust bundle from the local-server settings page. Before release
+   assets are published, extract a locally built `local-server-{platform}.zip`
+   into `Application.persistentDataPath/local-server/bundles-rust/<version>/`,
+   using the version from the bundle's `VERSION` file. Keep its `local-server/`
+   subdirectory. On macOS/Linux, give `ac-game` executable permission manually
+   when bypassing the installer.
+3. Enter Play Mode from the login scene and log in. The lobby supplies matching
+   static data; enable local hosting in settings and wait for the Console entry
+   `[LocalServer] ready on 127.0.0.1:...`.
+4. Start practice or an adventure. Confirm `[LocalServer] local ... session ...`
+   in the Console. A `[LocalServer] shared server for ...` entry instead means
+   a prerequisite failed and the match fell back to the shared server.
+
+This is online local hosting: login, session issuance and result reporting still
+use the lobby. A manually launched server on a fixed port is not used; the
+client starts its own child process and passes its token over stdin.
+
 ## Local verification (2026-10-21)
 
 - Client PR #315 baseline: `1b3bc37e5eaad4e2c5b1ff54be84fdde3fa3e5d8`.

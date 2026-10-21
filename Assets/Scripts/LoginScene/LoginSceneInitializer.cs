@@ -12,9 +12,11 @@ namespace LoginScene
     {
         [SerializeField] private GameObject penal;
         [SerializeField] private TMP_Text messageText;
+        [SerializeField] private DesktopUpdateDialog updateDialog;
 
         private IEnumerator Start()
         {
+            if (updateDialog != null) yield return updateDialog.CheckForUpdate();
             using LoadingHandle loadingHandle = LoadingPage.Begin(this);
 
             bool isHealthy = false;
