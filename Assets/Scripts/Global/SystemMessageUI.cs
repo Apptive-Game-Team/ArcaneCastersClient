@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.SceneManagement;
 
 namespace Global
 {
@@ -11,28 +12,42 @@ namespace Global
     {
         [SerializeField] private TMP_Text messageText;
         [SerializeField] private GameObject messagePanel;
-        [SerializeField] private float duration = 5f; 
-        [SerializeField] private float replaceDelay = 1f; 
+        [SerializeField] private float duration = 5f;
+        [SerializeField] private float replaceDelay = 1f;
 
-        private static readonly Queue<string> messageQueue = new Queue<string>();
+        private sealed class Message
+        {
+            public string Text;
+            public bool SceneScoped;
+            public SystemMessageUI Owner;
+            public Scene Scene;
+            public bool IsValid => !SceneScoped ||
+                (Owner != null && Owner.isActiveAndEnabled && Scene.IsValid() && Scene.isLoaded && Owner.gameObject.scene == Scene);
+        }
+
+        private static readonly Queue<Message> messageQueue = new Queue<Message>();
         private Coroutine messageRoutine;
-        private Coroutine transientRoutine;
 
         protected override void Awake()
         {
             base.Awake();
             if (messagePanel == null)
                 messagePanel = messageText.transform.parent.gameObject;
-            
             messagePanel.SetActive(false);
         }
 
-        private void Start()
+        private void OnDisable()
         {
-            if (messageQueue.Count > 0 && messageRoutine == null)
-            {
-                messageRoutine = StartCoroutine(ProcessMessageQueue());
-            }
+            if (messageRoutine != null)
+                StopCoroutine(messageRoutine);
+            messageRoutine = null;
+            if (messagePanel != null)
+                messagePanel.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            StartMessages();
         }
 
         public void ShowMessage(LocalizedString localizedString, Action callback = null)
@@ -40,86 +55,72 @@ namespace Global
             localizedString.GetLocalizedStringAsync().Completed += handle =>
             {
                 if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
-                {
                     ShowMessage(handle.Result);
-                }
                 callback?.Invoke();
             };
         }
-    
+
         public void ShowMessage(string msg)
         {
-            ClearTransientMessage();
-            messageQueue.Enqueue(msg);
+            messageQueue.Enqueue(new Message { Text = msg });
+            StartMessages();
+        }
 
-            if (messageRoutine == null)
+        // Lobby status belongs to its originating scene, including delayed localization results.
+        public void ShowSceneMessage(LocalizedString localizedString)
+        {
+            Scene ownerScene = gameObject.scene;
+            localizedString.GetLocalizedStringAsync().Completed += handle =>
             {
+                if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+                    EnqueueSceneMessage(handle.Result, ownerScene);
+            };
+        }
+
+        public void ShowSceneMessage(string msg)
+        {
+            EnqueueSceneMessage(msg, gameObject.scene);
+        }
+
+        private void EnqueueSceneMessage(string msg, Scene ownerScene)
+        {
+            var message = new Message { Text = msg, SceneScoped = true, Owner = this, Scene = ownerScene };
+            if (!message.IsValid) return;
+            messageQueue.Enqueue(message);
+            StartMessages();
+        }
+
+        private void StartMessages()
+        {
+            // Generic errors may finish localizing after their original UI was destroyed.
+            // They remain queued for the next scene's UI.
+            while (messageQueue.Count > 0 && !messageQueue.Peek().IsValid)
+                messageQueue.Dequeue();
+            if (this != null && isActiveAndEnabled && messageQueue.Count > 0 && messageRoutine == null)
                 messageRoutine = StartCoroutine(ProcessMessageQueue());
-            }
-        }
-
-        // Live telemetry must never enter the static queue that survives scene changes.
-        public void ShowTransientMessage(string msg)
-        {
-            ClearTransientMessage();
-            if (messageRoutine != null || messageQueue.Count > 0 || !isActiveAndEnabled)
-                return;
-
-            transientRoutine = StartCoroutine(DisplayTransientMessage(msg));
-        }
-
-        public void ClearTransientMessage()
-        {
-            if (transientRoutine == null) return;
-
-            StopCoroutine(transientRoutine);
-            transientRoutine = null;
-            if (messageRoutine == null)
-            {
-                messagePanel.SetActive(false);
-                messageText.text = "";
-            }
-        }
-
-        private IEnumerator DisplayTransientMessage(string msg)
-        {
-            messageText.text = msg;
-            messagePanel.SetActive(true);
-            yield return new WaitForSecondsRealtime(duration);
-            messagePanel.SetActive(false);
-            messageText.text = "";
-            transientRoutine = null;
-        }
-
-        private void OnDisable()
-        {
-            ClearTransientMessage();
         }
 
         private IEnumerator ProcessMessageQueue()
         {
             while (messageQueue.Count > 0)
             {
-                string msg = messageQueue.Peek();
-            
-                messageText.text = msg;
+                Message message = messageQueue.Peek();
+                if (!message.IsValid)
+                {
+                    messageQueue.Dequeue();
+                    continue;
+                }
+
+                messageText.text = message.Text;
                 messagePanel.SetActive(true);
-
                 float timer = 0f;
-                float currentDuration = duration;
-
-                while (timer < currentDuration)
+                while (timer < duration && message.IsValid)
                 {
                     timer += Time.deltaTime;
-                
                     if (messageQueue.Count > 1 && timer >= replaceDelay)
-                    {
-                        break; 
-                    }
-                
+                        break;
                     yield return null;
                 }
-            
                 messageQueue.Dequeue();
             }
 

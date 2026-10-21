@@ -19,10 +19,7 @@ namespace GameScene.Handler
             string cards = thought.cards == null ? "" : string.Join(",", thought.cards);
             WDebug.Log($"{summary} cards=[{cards}] target={thought.target}");
 
-            if (SystemMessageUI.Instance != null)
-            {
-                SystemMessageUI.Instance.ShowTransientMessage(summary);
-            }
+            BotThoughtLog.Append(thought);
         }
     }
 }
