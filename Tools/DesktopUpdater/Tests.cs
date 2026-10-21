@@ -181,7 +181,8 @@ try
             {
                 zip.GetEntry(job.Executable)!.Delete();
                 string binary = OperatingSystem.IsWindows()
-                    ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "whoami.exe") : "/bin/true";
+                    ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "whoami.exe")
+                    : OperatingSystem.IsMacOS() ? "/usr/bin/true" : "/bin/true";
                 zip.CreateEntryFromFile(binary, job.Executable);
             }
             job.Size = new FileInfo(job.Archive).Length;

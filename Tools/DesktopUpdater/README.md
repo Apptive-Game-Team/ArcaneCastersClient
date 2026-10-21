@@ -136,6 +136,8 @@ Tests use temporary installations, never the real game. In restricted Windows
 environments set `ARCANE_TEST_ROOT` to a writable workspace temporary directory.
 Set `ARCANE_UPDATER_EXECUTABLE` to a published helper to also run actual
 parent-process exit/commit/abort and restart integration tests.
+The restart fixture uses `/usr/bin/true` on macOS and `/bin/true` on Linux;
+do not assume the Linux path exists on macOS (both native Mac CI jobs caught this).
 Native release acceptance must additionally exercise a real `1.x.y -> 1.x.z`
 upgrade on each OS: Update, Later, cancel, lost network, read-only install,
 bad checksum, locked files, and actual application restart. Test the unsigned
