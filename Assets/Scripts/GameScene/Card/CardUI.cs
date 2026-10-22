@@ -57,6 +57,9 @@ namespace GameScene.Card
         /// </summary>
         private static readonly Color SelectedCardColor = new Color32(0xFF, 0xD2, 0x3F, 0xFF);
 
+        /// <summary>지금 고른 카드인가. gamepad 가 손패에서 이어 고를 슬롯을 정하는 데 쓴다.</summary>
+        public bool IsSelected => isActive;
+
         public void SetCardActive(bool isActive)
         {
             this.isActive = isActive;
