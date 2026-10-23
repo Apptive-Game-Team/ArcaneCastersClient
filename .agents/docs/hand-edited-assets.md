@@ -543,4 +543,3 @@ font and text references were valid even though typed glyphs were clipped.
 Keep enough line-height space, verify `ForceLabelUpdate` and generated text
 vertices in `AdminRoomSceneTests`, and check typed text in the Editor. The room
 list and its search now belong to `AdminRoomsScene`, not `AdminScene`.
-
