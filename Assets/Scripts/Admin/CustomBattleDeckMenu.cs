@@ -64,7 +64,7 @@ namespace Admin {
             }
             if (selected.Length != 15) return "15장 덱이어야 합니다.";
             var unsupported = selected.Where(c => !ids.Contains(c)).Distinct().ToArray();
-            if (unsupported.Length > 0) return "모델 미지원: " + string.Join(", ", unsupported.Select(id => owned.FirstOrDefault(c => c.id == id)?.name ?? id.ToString()));
+            if (unsupported.Length > 0) return "모델 카드 ID 불일치(버전 차이 또는 미지원): " + string.Join(", ", unsupported.Select(id => owned.FirstOrDefault(c => c.id == id)?.name ?? id.ToString()));
             if (selected.GroupBy(c => c).Any(g => !inventory.ContainsKey(g.Key) || g.Count() > inventory[g.Key]))
                 return "보유 수량을 초과한 카드가 있습니다.";
             return null;
