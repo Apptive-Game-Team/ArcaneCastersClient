@@ -134,6 +134,7 @@ namespace GameScene
 
         private void OnDestroy()
         {
+            if (CustomBattleConnection.IsLocalMatch) CustomBattleConnection.End();
             // 플래그를 먼저 세운다. 닫는 과정에서 올라오는 Disconnected는 끊김이 아니다.
             _intentionalDisconnect = true;
             _transport.Disconnect();
@@ -185,9 +186,10 @@ namespace GameScene
             // is logged before the token query is added.
             Debug.Log($"[Match] game server: {matchInfo.ConnectionSource}, session: {matchInfo.sessionId}");
 
-            string url = gameServer.Query("token", SceneContext.JwtToken);
+            string gameToken = CustomBattleConnection.TokenFor(matchInfo, SceneContext.JwtToken);
+            string url = gameServer.Query("token", gameToken);
             _connectGate.NoteHandshakeStarted(now);
-            _transport.Connect(url, SceneContext.JwtToken);
+            _transport.Connect(url, gameToken);
         }
 
         public void SendMessageToServer(string topic, string message)
@@ -226,6 +228,7 @@ namespace GameScene
         /// </summary>
         public void NotifyMatchEnded()
         {
+            if (CustomBattleConnection.IsLocalMatch) CustomBattleConnection.End();
             _matchEnded = true;
             _reconnect.ResetRetries();
         }

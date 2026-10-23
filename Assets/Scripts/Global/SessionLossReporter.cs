@@ -60,6 +60,11 @@ namespace Global
         /// </summary>
         public static IEnumerator ReportAndLeave(SessionLossReason reason, Action onSessionAlive = null)
         {
+            if (CustomBattleConnection.IsLocalMatch) {
+                CustomBattleConnection.End();
+                SceneManager.LoadScene("Scenes/AdminScene");
+                yield break;
+            }
             SessionLossVerdict verdict = SessionLossVerdict.NotReported;
             yield return Report(reason, v => verdict = v);
 
@@ -96,6 +101,11 @@ namespace Global
         /// </summary>
         public static IEnumerator Report(SessionLossReason reason, Action<SessionLossVerdict> onVerdict)
         {
+            if (CustomBattleConnection.IsLocalMatch) {
+                CustomBattleConnection.End();
+                onVerdict?.Invoke(SessionLossVerdict.Lost);
+                yield break;
+            }
             string sessionId = SceneContext.MatchInfo?.sessionId;
 
             if (string.IsNullOrEmpty(sessionId))
