@@ -14,9 +14,13 @@ namespace Admin {
         [SerializeField] private TMP_Text messageText;
         [SerializeField] private Button confirmButton;
         [SerializeField] private Button cancelButton;
+        [SerializeField] private CustomBattleDeckMenu deckMenu;
         private bool busy;
         private bool ready;
-        [System.Serializable] private sealed class Status { public string state; public bool active; }
+        [System.Serializable] private sealed class Status {
+            public string state; public bool active; public int deckSelectionVersion;
+            public CustomBattleDeckMenu.SupportedCard[] supportedCards;
+        }
         [System.Serializable] private sealed class Match {
             public string sessionId; public long humanId; public long botId;
             public string token; public string webSocketUrl; public string mapType;
@@ -38,7 +42,8 @@ namespace Admin {
                     string status = "로컬 봇이 실행되지 않았거나 연결이 차단되었습니다.\nBot 작업 폴더의 Start-CustomBattle.ps1을 실행해 주세요.";
                     if (request.result == UnityWebRequest.Result.Success
                         && JsonCodec.TryDeserialize(request.downloadHandler.text, out Status response)) {
-                        ready = response.state == "ready" && !response.active;
+                        ready = response.state == "ready" && !response.active && response.deckSelectionVersion == 1;
+                        deckMenu.SetSupported(response.supportedCards);
                         status = ready ? "로컬 게임 서버 준비 완료\n학습 모델과 정적 데이터 일치\n고정 테스트 덱으로 대전합니다."
                             : response.active ? "다른 로컬 대전이 진행 중입니다."
                             : response.state == "ended" ? "대전이 종료되었습니다. 다시 대전하려면 로컬 봇 서비스를 재실행해 주세요."
@@ -47,18 +52,23 @@ namespace Admin {
                             : "로컬 추론 또는 경기 연결에 실패했습니다. 서비스를 다시 실행해 주세요.";
                     }
                     messageText.text = "커스텀 봇 전투\n\n" + status;
-                    confirmButton.interactable = ready && SceneContext.User != null && !busy;
+                    if (!ready) messageText.text += "\n덱 선택 지원 서비스와 연결을 확인해 주세요.";
+                    messageText.text += "\n" + deckMenu.Notice + "\n" + (ready ? deckMenu.ValidationError() : "");
+                    confirmButton.interactable = ready && SceneContext.User != null && !busy && deckMenu.ValidationError() == null;
                 }
                 yield return new WaitForSecondsRealtime(2);
             }
         }
         private void StartBattle() {
-            if (!ready || busy || SceneContext.User == null) return;
+            if (!ready || busy || SceneContext.User == null || deckMenu.ValidationError() != null) return;
+            deckMenu.SetBusy(true);
             busy = true; confirmButton.interactable = false; cancelButton.interactable = false;
             StartCoroutine(Create());
         }
         private IEnumerator Create() {
-            using (var request = CustomBattleConnection.Request("/battle", JsonCodec.Serialize(new {humanId=SceneContext.UserID}))) {
+            using (var request = CustomBattleConnection.Request("/battle", JsonCodec.Serialize(new {
+                humanId=SceneContext.UserID, humanDeck=deckMenu.HumanDeck, botDeck=deckMenu.BotDeck, ownedCards=deckMenu.OwnedCards
+            }))) {
                 yield return request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.Success && JsonCodec.TryDeserialize(request.downloadHandler.text, out Match match)) {
                     bool entered = false;
@@ -75,6 +85,7 @@ namespace Admin {
                 }
             }
             busy = false; cancelButton.interactable = true;
+            deckMenu.SetBusy(false);
             messageText.text = "대전을 시작하지 못했습니다. 연결 상태를 다시 확인합니다.";
             StartCoroutine(Check());
         }
