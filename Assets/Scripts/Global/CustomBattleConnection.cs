@@ -14,6 +14,9 @@ namespace Global {
         private string token;
         private string socketUrl;
         private bool ending;
+        private LocalMagicIdMap magicIds;
+        public static string Incoming(string body) => IsLocalMatch ? instance.magicIds.Incoming(body) : body;
+        public static string Outgoing(string body) => IsLocalMatch ? instance.magicIds.Outgoing(body) : body;
         public static bool IsLocalMatch => instance != null && SceneContext.MatchInfo != null
             && instance.sessionId == SceneContext.MatchInfo.sessionId;
 
@@ -31,7 +34,8 @@ namespace Global {
             return request;
         }
 
-        public static void Begin(string session, string secret, string url) {
+        public static void Begin(string session, string secret, string url, LocalMagicIdMap ids) {
+            if (ids == null) throw new InvalidOperationException("Local magic identity map required");
             if (instance != null && instance.ending) {
                 Destroy(instance.gameObject);
                 instance = null;
@@ -46,6 +50,7 @@ namespace Global {
             instance.sessionId = session;
             instance.token = secret;
             instance.socketUrl = url;
+            instance.magicIds = ids;
             DontDestroyOnLoad(instance.gameObject);
             instance.StartCoroutine(instance.Heartbeat());
         }

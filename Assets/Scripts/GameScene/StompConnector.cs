@@ -200,7 +200,7 @@ namespace GameScene
                 WDebug.LogError("[STOMP] 미연결 상태에서 메시지 전송 시도: " + topic);
                 return;
             }
-            _transport.Send(topic, message);
+            _transport.Send(topic, CustomBattleConnection.Outgoing(message));
         }
 
         public void SubscribeToTopic(string topic, Action<string> callback, string subscriptionId)
@@ -211,7 +211,7 @@ namespace GameScene
                 WDebug.LogError("[STOMP] 미연결 상태에서 구독 시도: " + topic);
                 return;
             }
-            _registry.Register(topic, subscriptionId, callback);
+            _registry.Register(topic, subscriptionId, body => callback(CustomBattleConnection.Incoming(body)));
             _transport.Subscribe(topic, subscriptionId);
         }
 
