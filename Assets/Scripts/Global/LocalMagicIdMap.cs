@@ -18,7 +18,7 @@ namespace Global {
         public long Engine(long id) => Lookup(toEngine,id);
         public long Client(long id) => Lookup(toClient,id);
         private static long Lookup(Dictionary<long,long> map,long id) {
-            if (id==0) return 0; // Empty/invalid cast response sentinel, never a card.
+            if (id==0 || id==-1) return id; // Empty/failed cast response sentinels, never cards.
             if (!map.TryGetValue(id,out var result)) throw new InvalidOperationException("Unmapped local magic ID");
             return result;
         }

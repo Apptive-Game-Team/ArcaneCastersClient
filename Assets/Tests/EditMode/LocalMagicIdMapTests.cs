@@ -24,6 +24,7 @@ namespace WordOnline.Tests {
                 Assert.AreEqual(input,Run(map,"Incoming",outgoing));
             }
             Assert.AreEqual("{\"magicId\":0}",Run(map,"Incoming","{\"magicId\":0}"));
+            Assert.AreEqual("{\"magicId\":-1}",Run(map,"Incoming","{\"magicId\":-1}"));
         }
         [Test] public void SnapshotDeltaAndPublicEventsTranslateOnlyMagicIdentityFields() {
             var result=Run(Map(),"Incoming","{\"snapshotResponseDto\":{\"myCards\":[88,89,57],\"objects\":[{\"id\":88}]},\"cards\":{\"added\":[88]},\"events\":[{\"magicId\":89}]}" );
