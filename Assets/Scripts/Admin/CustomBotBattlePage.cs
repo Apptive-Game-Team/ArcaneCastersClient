@@ -18,7 +18,7 @@ namespace Admin {
         private bool busy;
         private bool ready;
         [System.Serializable] private sealed class Status {
-            public string state; public bool active; public int deckSelectionVersion;
+            public string state; public bool active; public bool canRestart; public int deckSelectionVersion;
             public CustomBattleDeckMenu.SupportedCard[] supportedCards;
         }
         [System.Serializable] private sealed class Match {
@@ -42,7 +42,7 @@ namespace Admin {
                     string status = "로컬 봇이 실행되지 않았거나 연결이 차단되었습니다.\nBot 작업 폴더의 Start-CustomBattle.ps1을 실행해 주세요.";
                     if (request.result == UnityWebRequest.Result.Success
                         && JsonCodec.TryDeserialize(request.downloadHandler.text, out Status response)) {
-                        ready = response.state == "ready" && !response.active && response.deckSelectionVersion == 1;
+                        ready = (response.state == "ready" || response.canRestart) && !response.active && response.deckSelectionVersion == 1;
                         deckMenu.SetSupported(response.supportedCards);
                         status = ready ? "로컬 게임 서버 준비 완료\n학습 모델과 정적 데이터 일치\n고정 테스트 덱으로 대전합니다."
                             : response.active ? "다른 로컬 대전이 진행 중입니다."
