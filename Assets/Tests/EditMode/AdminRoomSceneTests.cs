@@ -5,6 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 namespace WordOnline.Tests {
     public class AdminRoomSceneTests {
@@ -29,6 +30,33 @@ namespace WordOnline.Tests {
             var link = components.Single(c => c != null && c.GetType().Name == "AdminSceneLink");
             Assert.AreEqual("Scenes/AdminRoomsScene", new SerializedObject(link).FindProperty("sceneName").stringValue);
             Assert.IsTrue(PrefabUtility.IsPartOfPrefabInstance(link.gameObject));
+        }
+
+        [Test]
+        public void AdminNavigationButtonsHaveVisibleBoundsAndReadableLabels() {
+            var components = Open("AdminScene");
+            Canvas.ForceUpdateCanvases();
+            var buttons = components.OfType<Button>().Where(b => b.name == "LocalLearnedBotButton"
+                || b.name == "RoomNavigationButton" || b.name == "BackButton" || b.name == "Magic Playground").ToArray();
+            Assert.AreEqual(4, buttons.Length);
+            foreach (var button in buttons) {
+                var rect = (RectTransform)button.transform;
+                var canvas = button.GetComponentInParent<Canvas>();
+                var canvasRect = (RectTransform)canvas.transform;
+                var corners = new Vector3[4];
+                rect.GetWorldCorners(corners);
+                foreach (var corner in corners) {
+                    var point = canvasRect.InverseTransformPoint(corner);
+                    Assert.IsTrue(canvasRect.rect.Contains(point), button.name + " lies outside the canvas");
+                }
+                Assert.AreEqual(Vector3.one, rect.localScale, button.name);
+                var label = button.GetComponentInChildren<TMP_Text>();
+                Assert.IsNotNull(label);
+                label.ForceMeshUpdate(true, true);
+                Assert.Greater(label.textInfo.characterCount, 0, button.name);
+                Assert.GreaterOrEqual(label.fontSize, 12, button.name);
+                Assert.LessOrEqual(label.fontSize, 15, button.name);
+            }
         }
 
         [Test]

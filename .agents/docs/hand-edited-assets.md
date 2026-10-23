@@ -543,3 +543,5 @@ font and text references were valid even though typed glyphs were clipped.
 Keep enough line-height space, verify `ForceLabelUpdate` and generated text
 vertices in `AdminRoomSceneTests`, and check typed text in the Editor. The room
 list and its search now belong to `AdminRoomsScene`, not `AdminScene`.
+
+When repositioning UI prefab instances, normalize anchor, pivot and local scale together with anchored position and size. Admin navigation kept bottom-right anchors and moved offscreen; the lobby button retained scale 0.40005 and made its label unreadable. Test instantiated button corners against the Canvas bounds and generated label size, not merely component existence.
