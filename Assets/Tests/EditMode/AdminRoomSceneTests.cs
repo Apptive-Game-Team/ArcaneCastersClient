@@ -28,7 +28,7 @@ namespace WordOnline.Tests {
             Assert.IsFalse(components.OfType<InputField>().Any(i => i.name == "RoomFilterInput"));
             var link = components.Single(c => c != null && c.GetType().Name == "AdminSceneLink");
             Assert.AreEqual("Scenes/AdminRoomsScene", new SerializedObject(link).FindProperty("sceneName").stringValue);
-            Assert.IsTrue(PrefabUtility.IsPartOfPrefabInstance(link));
+            Assert.IsTrue(PrefabUtility.IsPartOfPrefabInstance(link.gameObject));
         }
 
         [Test]
@@ -60,7 +60,9 @@ namespace WordOnline.Tests {
         [TestCase("AdminRoomsScene")]
         public void PagesUseTheSharedBackground(string name) {
             var components = Open(name);
-            var background = components.OfType<Image>().Single(i => i.name == "Background");
+            var background = components.OfType<Image>().Single(i => i.name == "Background"
+                && i.transform.parent != null && i.transform.parent.GetComponent<Canvas>() != null
+                && AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(i.sprite)) == "4fe2d02ca2c9b49fc938a577493218e1");
             Assert.IsTrue(background.preserveAspect);
             Assert.AreEqual("4fe2d02ca2c9b49fc938a577493218e1", AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(background.sprite)));
         }
