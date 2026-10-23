@@ -533,3 +533,14 @@ new code side by side on real sprites from `Assets/Resources/Game/sprites` at ab
 screen pixels tall, enlarged 4x with nearest neighbour. #352 did this
 (`docs/pr-media/352/outline-before-after-90px.png`). The render does not prove the shader
 compiles for WebGL; say so in the pull request and leave that to an Editor check.
+# Admin room search text clipping
+
+When changing a legacy `InputField` height, inspect the nested text area's actual
+height after its negative `m_SizeDelta` padding. The former admin search field
+was 28 units high with 13 units of vertical padding, leaving only 15 units for
+a 14-point Pretendard line while vertical overflow was disabled. The serialized
+font and text references were valid even though typed glyphs were clipped.
+Keep enough line-height space, verify `ForceLabelUpdate` and generated text
+vertices in `AdminRoomSceneTests`, and check typed text in the Editor. The room
+list and its search now belong to `AdminRoomsScene`, not `AdminScene`.
+

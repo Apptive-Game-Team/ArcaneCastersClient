@@ -29,7 +29,7 @@ namespace Admin
 
         private void Start()
         {
-            SetCountText("Rooms: loading...");
+            SetCountText("방 목록을 불러오는 중입니다.");
             adminViewModel.FetchRoomList(OnRoomListFetched);
         }
 
@@ -39,7 +39,7 @@ namespace Admin
 
             if (roomList?.rooms == null)
             {
-                SetCountText("Rooms: fetch failed");
+                SetCountText("방 목록을 불러오지 못했습니다. 새로고침해 주세요.");
                 return;
             }
 
@@ -51,7 +51,7 @@ namespace Admin
         {
             fetchedRooms.Clear();
             ClearRows();
-            SetCountText("Rooms: loading...");
+            SetCountText("방 목록을 불러오는 중입니다.");
             adminViewModel.FetchRoomList(OnRoomListFetched);
         }
 
@@ -109,7 +109,7 @@ namespace Admin
         // missing room came from. Break it down whenever more than one source answered.
         private string FormatCount(int shown, string filter)
         {
-            var label = new StringBuilder("Rooms: ");
+            var label = new StringBuilder("방: ");
             label.Append(string.IsNullOrEmpty(filter) ? $"{fetchedRooms.Count}" : $"{shown} / {fetchedRooms.Count}");
 
             var countsBySource = new Dictionary<string, int>();
