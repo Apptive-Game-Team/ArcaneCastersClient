@@ -545,3 +545,16 @@ vertices in `AdminRoomSceneTests`, and check typed text in the Editor. The room
 list and its search now belong to `AdminRoomsScene`, not `AdminScene`.
 
 When repositioning UI prefab instances, normalize anchor, pivot and local scale together with anchored position and size. Admin navigation kept bottom-right anchors and moved offscreen; the lobby button retained scale 0.40005 and made its label unreadable. Test instantiated button corners against the Canvas bounds and generated label size, not merely component existence.
+## Custom battle deck selection
+
+The custom battle page uses two instances of `CustomBattleDeckDropdown.prefab`,
+derived from the matching-server dropdown without its server-selection or
+AdminOnly components. Keep both references wired in `CustomBattleDeckMenu` and
+keep their default selection at random. Owned cards and saved decks are read
+through `DeckApiClient`; do not use deck mutation endpoints for this flow.
+Require `deckSelectionVersion == 1` before sending the four-field battle request.
+Saved decks require 15 supported owned cards; the minimum three Spawn rule is
+specific to random generation. The source C# compile and serialized-reference
+checks do not replace the Editor dropdown/layout test or a real authenticated
+saved-deck retrieval check.
+
