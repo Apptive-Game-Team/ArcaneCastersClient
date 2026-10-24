@@ -20,6 +20,7 @@ namespace Admin {
         [System.Serializable] private sealed class Status {
             public string state; public bool active; public bool canRestart; public int deckSelectionVersion; public int magicIdentityVersion;
             public CustomBattleDeckMenu.SupportedCard[] supportedCards;
+            public string fixedBotDeckName;
         }
         [System.Serializable] private sealed class Match {
             public string sessionId; public long humanId; public long botId;
@@ -44,6 +45,7 @@ namespace Admin {
                         && JsonCodec.TryDeserialize(request.downloadHandler.text, out Status response)) {
                         ready = (response.state == "ready" || response.canRestart) && !response.active && response.deckSelectionVersion == 1 && response.magicIdentityVersion == 1;
                         deckMenu.SetSupported(response.supportedCards);
+                        deckMenu.SetFixedBotDeck(response.fixedBotDeckName);
                         status = ready ? "로컬 게임 서버 준비 완료\n학습 모델과 정적 데이터 일치\n고정 테스트 덱으로 대전합니다."
                             : response.active ? "다른 로컬 대전이 진행 중입니다."
                             : response.state == "ended" ? "대전이 종료되었습니다. 다시 대전하려면 로컬 봇 서비스를 재실행해 주세요."
