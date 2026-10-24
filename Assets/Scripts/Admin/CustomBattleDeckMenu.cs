@@ -18,10 +18,12 @@ namespace Admin {
         private SupportedCard[] supported = Array.Empty<SupportedCard>();
         private DeckResponseDto[] decks = Array.Empty<DeckResponseDto>();
         private CardDto[] owned;
+        private string fixedBotDeckName;
+        private bool isBusy;
         public string Notice { get; private set; } = "덱 정보를 불러오는 중입니다.";
         public long[] HumanDeck => Selected(human)?.Select(IdMap.Engine).ToArray();
-        public long[] BotDeck => Selected(bot)?.Select(IdMap.Engine).ToArray();
-        public object[] OwnedCards => owned?.Where(c => IdMap.Supports(c.id)).Select(c => (object)new {id=IdMap.Engine(c.id),count=c.count}).ToArray();
+        public long[] BotDeck => fixedBotDeckName != null ? null : Selected(bot)?.Select(IdMap.Engine).ToArray();
+        public object[] OwnedCards => owned?.Where(c => supported.Any(s => s.id == c.id)).Select(c => (object)new {id=IdMap.Engine(c.id),count=c.count}).ToArray();
         public void SetSupported(SupportedCard[] cards) {
             var map=new LocalMagicIdMap();
             var compatible=new List<SupportedCard>();
@@ -30,13 +32,33 @@ namespace Admin {
                 var matches=catalog.Where(c => c.name==model.name).ToArray();
                 if (matches.Length!=1 || string.IsNullOrEmpty(model.name)) continue;
                 var current=matches[0];
+                map.Add(current.id,model.id); // Stable name identity is needed for opponent casts too.
                 if (current.manaCost!=model.cost || current.castKind!=model.kind) continue;
-                map.Add(current.id,model.id);
                 compatible.Add(new SupportedCard {id=current.id,kind=model.kind,name=model.name,cost=model.cost});
             }
             supported=compatible.ToArray(); IdMap=map;
         }
-        public void SetBusy(bool busy) { human.interactable = bot.interactable = !busy && owned != null; }
+        public void SetBusy(bool busy) {
+            isBusy = busy;
+            human.interactable = !busy && owned != null;
+            bot.interactable = !busy && owned != null && fixedBotDeckName == null;
+        }
+        public void SetFixedBotDeck(string name) {
+            name = string.IsNullOrWhiteSpace(name) ? null : name;
+            if (fixedBotDeckName != name) {
+                fixedBotDeckName = name;
+                PopulateBot();
+            }
+            SetBusy(isBusy);
+        }
+        private void PopulateBot() {
+            bot.ClearOptions();
+            bot.AddOptions(fixedBotDeckName != null
+                ? new List<string> { "봇 덱: " + fixedBotDeckName + " (고정)" }
+                : new List<string> { "봇 덱: 랜덤" }.Concat(decks.Select(d => "봇 덱: " + d.name)).ToList());
+            bot.SetValueWithoutNotify(0);
+            bot.RefreshShownValue();
+        }
         private void Awake() { Populate(); SetBusy(true); StartCoroutine(Load()); }
         private IEnumerator Load() {
             var api = new DeckApiClient();
@@ -49,12 +71,13 @@ namespace Admin {
             Populate(); SetBusy(false);
         }
         private void Populate() {
-            foreach (var pair in new[] { (human, "내 덱"), (bot, "봇 덱") }) {
+            foreach (var pair in new[] { (human, "내 덱") }) {
                 pair.Item1.ClearOptions();
                 pair.Item1.AddOptions(new List<string> { pair.Item2 + ": 랜덤" }.Concat(decks.Select(d => pair.Item2 + ": " + d.name)).ToList());
                 pair.Item1.SetValueWithoutNotify(0);
                 pair.Item1.RefreshShownValue();
             }
+            PopulateBot();
         }
         private long[] Selected(TMP_Dropdown dropdown) {
             if (dropdown.value == 0) return null;
@@ -64,6 +87,7 @@ namespace Admin {
             if (owned == null) return "보유 카드 정보를 기다리는 중입니다.";
             var problem = Check(Selected(human));
             if (problem != null) return "내 덱: " + problem;
+            if (fixedBotDeckName != null) return null;
             problem = Check(Selected(bot));
             return problem == null ? null : "봇 덱: " + problem;
         }
