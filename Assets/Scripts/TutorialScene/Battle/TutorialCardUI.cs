@@ -1,6 +1,7 @@
 using Data;
 using Data.Localization;
 using Data.Magic;
+using GameScene.Card;
 using Global.Sound;
 using Sound;
 using TMPro;
@@ -16,6 +17,7 @@ namespace TutorialScene
         [SerializeField] private TextMeshProUGUI cardManaText;
         [SerializeField] private AudioSource cardSound;
         [SerializeField] private Image cardImage;
+        [SerializeField] private MagicCastKindBadge castKindBadge;
 
         [SerializeField] private Outline outline;
         
@@ -54,6 +56,7 @@ namespace TutorialScene
         {
             CardName = magicName;
             Magic = LocalCombinedMagicData.GetCombinedMagicData(magicName);
+            castKindBadge.Bind(Magic?.castKind ?? MagicCastKind.Unknown);
             cardManaText.text = CardManaCost.Of(Magic).ToString();
             cardNameText.text = await LocaleUtils.GetStringAsync("Magic", Magic?.localizationKey ?? magicName);
         }
