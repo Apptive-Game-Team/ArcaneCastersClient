@@ -534,6 +534,30 @@ MonoBehaviour:
     m_Localized: Auto
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000501
+    m_Localized: "Continue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000502
+    m_Localized: "Settings"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000503
+    m_Localized: "Surrender"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000504
+    m_Localized: "Surrender and end this match? This counts as a defeat."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000505
+    m_Localized: "Surrender could not be confirmed. Please try again."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000506
+    m_Localized: "Waiting for the surrender result..."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
