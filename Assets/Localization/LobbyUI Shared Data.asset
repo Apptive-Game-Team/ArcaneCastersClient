@@ -481,6 +481,30 @@ MonoBehaviour:
     m_Key: PracticeFail
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000501
+    m_Key: "InGameContinue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000502
+    m_Key: "InGameSettings"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000503
+    m_Key: "InGameSurrender"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000504
+    m_Key: "SurrenderConfirm"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000505
+    m_Key: "SurrenderRetry"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000506
+    m_Key: "SurrenderPending"
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

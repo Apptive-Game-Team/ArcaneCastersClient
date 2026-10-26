@@ -10,11 +10,26 @@ namespace LobbyScene.SettingPage
         [SerializeField] private GameObject settingPage;
         [SerializeField] private GameObject guestRegisterPage;
         [SerializeField] private GameObject creditsPage;
+        [SerializeField] private bool gameplayOnly;
+        [SerializeField] private Transform settingsContent;
+        [SerializeField] private GameObject soundSettings;
+        [SerializeField] private GameObject coachSettings;
+
+        public bool IsOpen => pageStack.Count > 0;
     
         private readonly Stack<GameObject> pageStack = new Stack<GameObject>();
     
         public void OpenPage(string pageName = "Setting")
         {
+            if (gameplayOnly)
+            {
+                if (pageName != "Setting") return;
+                // An allowlist keeps newly added account/navigation controls out of a live match.
+                foreach (Transform row in settingsContent)
+                    row.gameObject.SetActive(row.gameObject == soundSettings);
+                coachSettings.SetActive(false);
+            }
+            if (pageStack.Count > 0 && pageStack.Peek() == settingPage && pageName == "Setting") return;
             switch (pageName)
             {
                 case "Setting":

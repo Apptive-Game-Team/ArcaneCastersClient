@@ -82,6 +82,17 @@ namespace GameScene
         private bool _matchEnded;
         public bool HasMatchEnded => _matchEnded;
 
+        public bool MatchEnded => _matchEnded;
+
+        public bool TrySurrender()
+        {
+            if (isSpectator || _matchEnded || _transport == null || !_transport.IsConnected ||
+                string.IsNullOrEmpty(SceneContext.MatchInfo?.sessionId)) return false;
+            SendMessageToServer($"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}",
+                "{\"type\":\"surrender\"}");
+            return true;
+        }
+
         // ─── 생명주기 ────────────────────────────────────────────────────────
 
         protected override void Awake()
