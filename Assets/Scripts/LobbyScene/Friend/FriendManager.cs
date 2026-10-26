@@ -136,6 +136,7 @@ namespace LobbyScene
                     HandleInviteReceived(payload.invite);
                     break;
 
+                case "FRIEND_MATCH_READY":
                 case "FRIEND_INVITE_ACCEPTED":
                     HandleInviteAccepted(payload);
                     break;
@@ -184,7 +185,7 @@ namespace LobbyScene
             MatchedInfoDto matchInfo = payload.ResolveMatchInfo();
             if (matchInfo == null)
             {
-                Debug.LogWarning("[FriendManager] FRIEND_INVITE_ACCEPTED event received but no matchInfo found.");
+                Debug.LogWarning($"[FriendManager] {payload.type} 이벤트에 matchInfo가 없습니다.");
                 return;
             }
 
