@@ -18,6 +18,9 @@ namespace LobbyScene
         {
             Idle,
             Matching,
+            // A practice match against a bot is being requested. It has no ticket and
+            // no opponent search, so the matching page must stay hidden.
+            PreparingPractice,
         }
 
         public StateEvent<LobbyState> CurrentState = new (LobbyState.Idle);
@@ -30,6 +33,8 @@ namespace LobbyScene
         public event Action OnMatchingStop;
         public event Action OnMatchingFailed;
         public event Action OnMatchingCanceled;
+        public event Action OnPracticeStart;
+        public event Action OnPracticeFailed;
         protected override void Awake()
         {
             base.Awake();
@@ -57,13 +62,18 @@ namespace LobbyScene
         public void PlayPracticeMatch()
         {
             Debug.Log("Practice button clicked: Starting practice match.");
-            StartMatching();
+            CurrentState.UpdateData(LobbyState.PreparingPractice);
+            OnPracticeStart?.Invoke();
             StartCoroutine(_matchQueueApi.MatchPractice(dto =>
             {
                 if (dto != null)
+                {
                     OnMatched(dto);
-                else
-                    StopMatchingAsFailed();
+                    return;
+                }
+
+                CurrentState.UpdateData(LobbyState.Idle);
+                OnPracticeFailed?.Invoke();
             }));
         }
 
