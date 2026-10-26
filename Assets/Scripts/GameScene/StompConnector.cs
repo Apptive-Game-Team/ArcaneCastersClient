@@ -200,7 +200,11 @@ namespace GameScene
             // is logged before the token query is added.
             Debug.Log($"[Match] game server: {matchInfo.ConnectionSource}, session: {matchInfo.sessionId}");
 
-            string gameToken = CustomBattleConnection.TokenFor(matchInfo, SceneContext.JwtToken);
+            // 로컬 서버 경기는 사용자 JWT 대신 로컬 서버를 띄울 때 만든 init token 으로 인증한다.
+            // 커스텀 전투 로컬 연결이 활성화된 경우에는 그 연결의 토큰을 우선 사용한다.
+            string gameToken = CustomBattleConnection.TokenFor(
+                matchInfo,
+                matchInfo.GameServerToken(SceneContext.JwtToken));
             string url = gameServer.Query("token", gameToken);
             _connectGate.NoteHandshakeStarted(now);
             _transport.Connect(url, gameToken);

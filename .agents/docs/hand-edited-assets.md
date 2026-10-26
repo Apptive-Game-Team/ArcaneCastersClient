@@ -558,3 +558,23 @@ specific to random generation. The source C# compile and serialized-reference
 checks do not replace the Editor dropdown/layout test or a real authenticated
 saved-deck retrieval check.
 
+## A copied button still calls the component you dropped
+
+`LocalServerPanel.prefab` (#314) copies `KoreanButton` from `Panal.prefab` six times
+for the tick rate buttons and drops its `LocaleSetButton`. The `Button`'s
+`m_OnClick` still listed `m_Target: {fileID: <the dropped LocaleSetButton>}`, so the
+copy pointed at an anchor that no longer existed in the file. The unresolved-reference
+check above caught it. When you drop a component from a copied subtree, empty every
+`m_PersistentCalls.m_Calls` that targeted it in the same pass. A regex that clears a
+call list up to the next two-space field misses the last field of a document, because
+the next line there is `--- !u!`.
+
+## `Button` inside `namespace LobbyScene.*` is a namespace
+
+`Assets/Scripts/LobbyScene/Button/` declares `namespace LobbyScene.Button`, so a field
+typed `Button` in any `LobbyScene.*` file fails with `CS0118: 'Button' is a namespace
+but is used like a type`, even with `using UnityEngine.UI;` or a `using Button = ...`
+alias at the top of the file: name lookup walks the enclosing namespaces before the
+file's using directives. Write `UnityEngine.UI.Button`, as
+`LobbyScene/SettingPage/LocalServerPage.cs` does.
+

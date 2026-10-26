@@ -7,6 +7,7 @@ using Global;
 using UnityEngine;
 using UnityEngine.Networking;
 using Global.Serialization;
+using LocalServer;
 
 namespace Adventures
 {
@@ -16,6 +17,15 @@ namespace Adventures
 
         public IEnumerator RequestPVE(long scenarioId, Action<MatchedInfoDto> callback)
         {
+            // 봇전과 같은 로컬 경로. 실패하면 null 이 오고 공유 서버로 간다.
+            MatchedInfoDto local = null;
+            yield return LocalMatchRoute.TryStart(LocalSessionRequest.Pve, scenarioId, dto => local = dto);
+            if (local != null)
+            {
+                callback?.Invoke(local);
+                yield break;
+            }
+
             List<ServerPing> pings = null;
             yield return GameServerPinger.Measure(result => pings = result);
 

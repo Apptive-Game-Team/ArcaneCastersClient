@@ -10,6 +10,7 @@ namespace LobbyScene.SettingPage
         [SerializeField] private GameObject settingPage;
         [SerializeField] private GameObject guestRegisterPage;
         [SerializeField] private GameObject creditsPage;
+        [SerializeField] private GameObject localServerPage;
         [SerializeField] private bool gameplayOnly;
         [SerializeField] private Transform settingsContent;
         [SerializeField] private GameObject soundSettings;
@@ -40,6 +41,9 @@ namespace LobbyScene.SettingPage
                     break;
                 case "Credits":
                     pageStack.Push(creditsPage);
+                    break;
+                case "LocalServer":
+                    pageStack.Push(localServerPage);
                     break;
                 case "Profile":
                     SceneManager.LoadScene("ProfileScene");

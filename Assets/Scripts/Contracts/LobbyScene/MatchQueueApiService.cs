@@ -7,6 +7,7 @@ using Global;
 using UnityEngine;
 using UnityEngine.Networking;
 using Global.Serialization;
+using LocalServer;
 
 namespace LobbyScene
 {
@@ -115,6 +116,16 @@ namespace LobbyScene
 
         public IEnumerator MatchPractice(Action<MatchedInfoDto> callback)
         {
+            // desktop 에서 로컬 서버가 준비돼 있으면 자기 PC 에서 경기한다. 조건이 하나라도 맞지 않거나
+            // 중간에 실패하면 null 이 오고, 아래 공유 서버 경로로 그대로 간다.
+            MatchedInfoDto local = null;
+            yield return LocalMatchRoute.TryStart(LocalSessionRequest.Practice, null, dto => local = dto);
+            if (local != null)
+            {
+                callback(local);
+                yield break;
+            }
+
             List<ServerPing> pings = null;
             yield return GameServerPinger.Measure(result => pings = result);
 
