@@ -80,6 +80,41 @@ jobs:
           path: Library
           key: Library-${{ matrix.rid }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-${{ matrix.rid }}-
+
+      # 로컬 game server 가 처음 쓸 정적 데이터를 설치본에 넣는다. client 는 이 파일과 내려받은
+      # static.json 중 lobby 가 요구하는 staticVersion 과 같은 것을 쓴다. 주소는
+      # MatchingServerCatalog.Deploy 와 같다. Library cache key 를 흔들지 않도록 cache 단계 뒤에 쓴다.
+      # 받지 못하면 경고만 남기고 static.json 없이 build 한다. 설치본에 없어도 client 가 로비에
+      # 들어갈 때 lobby 에서 받으므로 로컬 경기가 처음에 조금 늦게 켜질 뿐이고, 배포 lobby 가
+      # 이 API 를 갖기 전에도 release 가 막히지 않는다.
+      - name: Fetch offline static data
+        env:
+          DEPLOY_LOBBY_URL: https://lobby.ac.yunseong.dev
+        run: |
+          set -uo pipefail
+          mkdir -p Assets/StreamingAssets/Offline
+          if ! curl -fsS --retry 3 --max-time 60 "$DEPLOY_LOBBY_URL/api/offline-pack" -o offline-pack.json; then
+            echo "::warning::offline-pack not available from $DEPLOY_LOBBY_URL; building without static.json"
+            rm -f offline-pack.json
+            exit 0
+          fi
+          python3 - <<'PY'
+          import json
+          try:
+              pack = json.load(open('offline-pack.json'))
+          except ValueError as e:
+              print(f"::warning::offline-pack is not JSON ({e}); building without static.json")
+              raise SystemExit(0)
+          data = pack.get('staticData')
+          if pack.get('schemaVersion') != 1 or not isinstance(data, dict) or data.get('schemaVersion') != 1:
+              print(f"::warning::offline-pack schemaVersion {pack.get('schemaVersion')} has no staticData this client reads; building without static.json")
+              raise SystemExit(0)
+          with open('Assets/StreamingAssets/Offline/static.json', 'w', encoding='utf-8') as out:
+              json.dump(data, out, ensure_ascii=False, separators=(',', ':'))
+          print(f"static.json staticVersion {pack.get('staticVersion')}")
+          PY
+          rm -f offline-pack.json
+
       - uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}

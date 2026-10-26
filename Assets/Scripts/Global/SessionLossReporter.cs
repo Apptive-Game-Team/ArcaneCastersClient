@@ -116,6 +116,18 @@ namespace Global
                 yield break;
             }
 
+            if (SceneContext.MatchInfo.IsLocal)
+            {
+                // 로컬 서버 경기는 lobby 티켓이 없고 공유 game server 도 모르는 세션이다. 신고해도 404 만 오므로
+                // 보내지 않는다. 경기가 끝났으면 결과는 로컬 서버 stdout 으로 따로 보고하고, 연결이 끊겼으면
+                // 다시 붙을 곳도 같은 로컬 서버뿐이라 소실로 판정한다.
+                WDebug.Log($"[SessionLoss] 로컬 경기라 신고를 건너뜁니다. reason={reason}, sessionId={sessionId}");
+                onVerdict?.Invoke(reason == SessionLossReason.MatchCompleted
+                    ? SessionLossVerdict.NotReported
+                    : SessionLossVerdict.Lost);
+                yield break;
+            }
+
             WDebug.Log($"[SessionLoss] 세션 소실 신고: reason={reason}, sessionId={sessionId}");
 
             ServerEndpoint endpoint = ServerList.MatchingServer.Api
