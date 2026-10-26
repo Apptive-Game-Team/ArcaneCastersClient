@@ -14,6 +14,7 @@ namespace GameScene.Handler
                 return;
             }
 
+            Card.CardUIZoom.Instance?.ApplyServerPause(data.practicePaused);
             // 마나 UI 업데이트
             GameSceneUIController.Instance.UpdateMana(data.updatedMana);
 

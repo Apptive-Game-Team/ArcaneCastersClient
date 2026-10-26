@@ -7,6 +7,7 @@ namespace GameScene.Dto
     public class FrameInfoDto : ServerMessage
     {
         public int remainingTime;
+        public bool practicePaused;
 
         public int updatedMana;
         public int leftPlayerHp;

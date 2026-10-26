@@ -21,6 +21,7 @@ namespace GameScene.Handler
 
             GameConfig.SetTickRate(syncFrameInfo.tickRate);
 
+            Card.CardUIZoom.Instance?.ApplyServerPause(syncFrameInfo.practicePaused);
             // 마나 UI 업데이트
             GameSceneUIController.Instance.UpdateMana(syncFrameInfo.updatedMana);
             

@@ -5853,6 +5853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoomedCardUI: {fileID: 555827903}
+  detailPrefab: {fileID: 9001, guid: f8b8cb18db054ed59e4f0f54cc442d5e, type: 3}
   audioSource: {fileID: 2065755163}
 --- !u!82 &2065755163
 AudioSource:

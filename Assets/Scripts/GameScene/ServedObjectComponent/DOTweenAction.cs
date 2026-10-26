@@ -115,7 +115,6 @@ namespace GameScene.ServedObjectComponent
                 .From(new Vector3(0, 0, -tiltAngle)) 
                 .SetLoops(-1, LoopType.Yoyo)
                 .SetEase(Ease.InOutSine)
-                .SetUpdate(true)
                 .SetLink(tr.gameObject);
         }
 

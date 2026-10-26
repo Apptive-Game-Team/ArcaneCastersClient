@@ -71,6 +71,8 @@ namespace GameScene.Card
                 return;
             }
 
+            CardUIZoom.Instance?.Hide(this);
+
             if (isActive)
             {
                 cardSound.PlayOneShot(SoundAssets.CardDeselect);
@@ -98,12 +100,17 @@ namespace GameScene.Card
         }
         public void OnPointerEnter(PointerEventData eventData)
         {
-            CardUIZoom.Instance.Show(this);
+            CardUIZoom.Instance?.Show(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            CardUIZoom.Instance.Hide();
+            CardUIZoom.Instance?.Hide(this);
+        }
+
+        private void OnDisable()
+        {
+            CardUIZoom.Instance?.Hide(this);
         }
     }
 }
