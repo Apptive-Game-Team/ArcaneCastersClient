@@ -60,6 +60,7 @@ namespace GameScene.Handler
             ServedObject actor = PresentationWorld.Find(hit.actorId, world);
             if (actor != null)
             {
+                actor.FaceTowards(target.transform.position);
                 HitKnockback.Play(target, actor.transform.position);
             }
 
