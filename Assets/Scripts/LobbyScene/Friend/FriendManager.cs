@@ -40,6 +40,8 @@ namespace LobbyScene
             EnsureAccount();
             if (apiClient == null || !sending.Add(friend.userId)) return;
             bool cancel = CanCancelInvite(friend.userId);
+            string previousInviteId = sentInvites.TryGetValue(friend.userId, out var previousInvite)
+                ? previousInvite.inviteId : null;
             sendMessages[friend.userId] = cancel ? "취소 중" : "전송 중";
             InviteStateChanged?.Invoke();
             long userId = SceneContext.UserID;
@@ -54,7 +56,11 @@ namespace LobbyScene
                 }
                 else
                 {
-                    sendMessages[friend.userId] = cancel ? "취소 확인 실패" : "전송 확인 실패";
+                    // 요청 응답이 유실돼도 먼저 도착한 이벤트나 조회 결과는 유효하다.
+                    bool confirmed = sentInvites.TryGetValue(friend.userId, out var known) &&
+                        (cancel ? known.status == "CANCELED" : known.inviteId != previousInviteId);
+                    if (confirmed) sendMessages.Remove(friend.userId);
+                    else sendMessages[friend.userId] = cancel ? "취소 확인 실패" : "전송 확인 실패";
                 }
                 InviteStateChanged?.Invoke();
                 RecoverSnapshot();
