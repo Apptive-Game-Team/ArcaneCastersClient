@@ -126,12 +126,26 @@ namespace LobbyScene
             yield return SendRequest<List<FriendInviteItem>>(webRequest, callback, "GetPendingInvites");
         }
 
+        public IEnumerator GetSentInvites(Action<bool, List<FriendInviteItem>> callback)
+        {
+            using var request = UnityWebRequest.Get(FriendsEndpoint.Path("invites", "sent"));
+            yield return SendRequest<List<FriendInviteItem>>(request, callback, "GetSentInvites");
+        }
+
+        public IEnumerator AcknowledgeInvite(string inviteId, Action<bool, FriendInviteItem> callback)
+        {
+            using var request = new UnityWebRequest(FriendsEndpoint.Path("invites", inviteId, "received"), "POST");
+            request.downloadHandler = new DownloadHandlerBuffer();
+            yield return SendRequest<FriendInviteItem>(request, callback, "AcknowledgeInvite");
+        }
+
         private static IEnumerator SendRequest<T>(
             UnityWebRequest webRequest,
             Action<bool, T> callback,
             string operation)
         {
             Server.SetAcceptLanguage(webRequest);
+            webRequest.timeout = 10;
             Server.SetAuthorization(webRequest);
             yield return webRequest.SendWebRequest();
 
