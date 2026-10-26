@@ -38,6 +38,7 @@ Not every magic needs a `MagicBook` row — the `Magic` table is larger than the
 | --- | --- | --- |
 | `Magic` | camelCase magic name | 마법 이름. 도감, 덱 화면, 손패 카드 이름 전부 |
 | `MagicBook` | snake_case magic name | 마법 설명. 도감과 덱 팝업 |
+| `MagicBook` | `summary.<snake_case serverName>` | 게임씬 카드의 1초 호버 간단 설명 |
 | `Element` | `None`, `Fire`, `Water`, `Nature`, `Lightning`, `Rock`, `Wind` | 원소 이름. 도감 필터 |
 
 카드 한 장이 마법 하나가 되면서 `Card` 표는 없어졌다. 카드 이름은 이제 `Magic`
@@ -45,6 +46,16 @@ Not every magic needs a `MagicBook` row — the `Magic` table is larger than the
 덱 화면에 raw key 가 그대로 보인다. 마법을 추가할 때 `Magic` 표는 선택이 아니다.
 
 ## What a MagicBook description says
+
+`summary.*` entries are separate, authored short descriptions for the game hand.
+Keep them to one core-action sentence plus a critical limitation when needed,
+at most 80 Korean characters or 180 English characters, without numeric values
+or parameter placeholders. Preserve ally damage and air/ground restrictions.
+Use the normalized `serverName`, not the server's optional `magic.text` alias.
+Add both locales for every valid `Magic` name, including legacy entries; the
+PVE-only `pve_nature_slime_nest` also has a summary. Run
+`CardHoverSummaryTests.EveryMagicHasShortNumericFreeTextInBothLocales` after edits.
+Do not replace the original detailed rows or copy these summaries to the bot.
 
 A `MagicBook` row describes what the magic does in the game, read from the game
 server code: how a spell reaches its target (a shot hits the first enemy in its
@@ -105,6 +116,9 @@ that an Editor pass would fix but review will not:
 
 - `Magic Shared Data.asset` has a dead key `'emberSpiritSwarm` with a leading
   apostrophe alongside the real `emberSpiritSwarm`. It can never be looked up.
+  Unity's imported version of the surviving `emberSpiritSwarm` entry also has
+  trailing whitespace. Trim imported name keys in coverage checks; do not copy
+  that whitespace into new `summary.*` keys.
 - The Korean value for `treeGolem` ends with a stray `\n`.
 - `chicken_commando` stores raw Hangul instead of `\uXXXX` escapes, so the
   encoding is not uniform.
@@ -139,6 +153,11 @@ which is the hardest version of this failure to notice.
 opened in the Editor.
 
 ## What still needs the Editor
+
+When testing localized lookups in EditMode, explicitly set `SelectedLocale` to
+an authored locale and restore it afterwards. Unity Localization does not run
+the player startup selectors there; without an Editor preview locale,
+`GetTableAsync` returns null even though the imported table has every row.
 
 Hand-edited tables are not loaded until someone opens the project. An Editor
 pass should confirm the Localization Tables window shows the new row in both
