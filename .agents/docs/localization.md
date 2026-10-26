@@ -76,6 +76,11 @@ After editing, verify that the shared-data key count equals each locale file's
 entry count, and that the new id occurs exactly once in each of the three files
 and nowhere else in that table.
 
+`LobbyUI Shared Data.asset` already contains an unused `New Entry` placeholder
+(`76055400473034752`) absent from both locale files. For an existing-text edit,
+compare each file's ID set with the base branch rather than treating that old
+one-row count difference as a regression. Do not add unrelated placeholder text.
+
 ## YAML string encoding
 
 - Korean is stored as `\uXXXX` escapes inside a double-quoted scalar, uppercase
