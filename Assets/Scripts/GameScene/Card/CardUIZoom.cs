@@ -7,6 +7,7 @@ namespace GameScene.Card
     public class CardUIZoom : MonoBehaviour
     {
         private const float HoverSoundCooldown = 0.12f;
+        private const float DescriptionHoverDelay = 1f;
         public static CardUIZoom Instance { get; private set; }
     
         [SerializeField] private ZoomedCardUI zoomedCardUI;
@@ -18,6 +19,7 @@ namespace GameScene.Card
         private bool locallyPaused;
         private float previousTimeScale;
         private float nextHoverRefresh;
+        private float hoverReadyTime;
     
         private void Awake()
         {
@@ -36,9 +38,17 @@ namespace GameScene.Card
         public void Show(CardUI cardUI)
         {
             if (cardUI == null || cardUI.Magic == null || !Application.isFocused) return;
+            if (hoveredCard == cardUI) return;
+            Hide();
             hoveredCard = cardUI;
+            hoverReadyTime = Time.unscaledTime + DescriptionHoverDelay;
+            if (detailPrefab == null) ShowDetails();
+        }
+
+        private void ShowDetails()
+        {
             hasHover = true;
-            zoomedCardUI.Show(cardUI);
+            zoomedCardUI.Show(hoveredCard);
             RefreshHover();
             if (Time.unscaledTime - lastHoverSoundTime >= HoverSoundCooldown)
             {
@@ -80,9 +90,13 @@ namespace GameScene.Card
 
         private void Update()
         {
-            if (!hasHover) return;
+            if (hoveredCard is null) return;
             if (hoveredCard == null || !hoveredCard.isActiveAndEnabled) {
                 Hide();
+                return;
+            }
+            if (!hasHover) {
+                if (Time.unscaledTime >= hoverReadyTime) ShowDetails();
                 return;
             }
             if (Time.unscaledTime >= nextHoverRefresh) RefreshHover();

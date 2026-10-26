@@ -440,6 +440,499 @@ MonoBehaviour:
       can move again.
     m_Metadata:
       m_Items: []
+  - m_Id: 1864750230507533
+    m_Localized: Summons a swarm of fire slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507534
+    m_Localized: Summons ranged slimes that attack ground enemies and leave wet trails.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507535
+    m_Localized: Summons a swarm of lightning slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507536
+    m_Localized: Summons nature slimes that fight ground enemies and leave leaf fields.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507537
+    m_Localized: Summons a swarm of rock slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507538
+    m_Localized: Summons wind slimes that fight ground enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507539
+    m_Localized: Fires a shot that explodes on a ground enemy and sets it on fire.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507540
+    m_Localized: Fires a water shot that damages and wets the first enemy it hits.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507541
+    m_Localized: Fires a lightning shot at enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507542
+    m_Localized: Fires a nature shot at enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507543
+    m_Localized: Fires a rock shot at enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507544
+    m_Localized: Fires a wind shot at enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507545
+    m_Localized: Builds a nest that keeps spawning fire slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507546
+    m_Localized: Builds a nest that keeps spawning water slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507547
+    m_Localized: Builds a nest that keeps spawning lightning slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507548
+    m_Localized: Builds a nest that keeps spawning nature slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507549
+    m_Localized: Builds a nest that keeps spawning rock slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507550
+    m_Localized: Builds a nest that keeps spawning wind slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507551
+    m_Localized: Builds a nest that keeps spawning nature slimes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507552
+    m_Localized: Creates a fire explosion at the chosen spot.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507553
+    m_Localized: Erupts a geyser that damages nearby targets and launches ground
+      units. Also hurts allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507554
+    m_Localized: Creates a lightning blast that stuns enemies. The blast also hurts
+      allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507555
+    m_Localized: Creates a nature explosion at the chosen spot.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507556
+    m_Localized: Creates a rock explosion at the chosen spot.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507557
+    m_Localized: Creates a wind explosion at the chosen spot. Allies can be caught
+      in it too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507558
+    m_Localized: Builds a cannon that shells ground enemies and leaves blocking rubble
+      when destroyed.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507559
+    m_Localized: Builds a tower that attacks flying enemies only.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507560
+    m_Localized: Builds a well that speeds up mana regeneration while it stands.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507561
+    m_Localized: Summons a water archer that shoots ground and flying enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507562
+    m_Localized: Summons a golem that punches ground enemies back and leaves rubble
+      when defeated.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507563
+    m_Localized: Summons a fast rider that rushes toward the enemy base.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507564
+    m_Localized: Summons a flying lightning spirit that shoots ground enemies, but
+      cannot attack flyers.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507565
+    m_Localized: Summons flame-spraying demons. Their aura can also burn non-fire
+      allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507566
+    m_Localized: Places a fire rune that bursts when an enemy touches it. Also hurts
+      nearby allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507567
+    m_Localized: Places a water rune that bursts when an enemy touches it. Also hurts
+      nearby allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507568
+    m_Localized: Places a lightning rune that bursts when an enemy touches it. Also
+      hurts nearby allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507569
+    m_Localized: Places a rock rune that bursts when an enemy touches it. Also hurts
+      nearby allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507570
+    m_Localized: Places a wind rune that bursts when an enemy touches it. Also hurts
+      nearby allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507571
+    m_Localized: Places a nature rune that bursts when an enemy touches it. Also
+      hurts nearby allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507572
+    m_Localized: Drops a fireball that damages the first enemy it hits.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507573
+    m_Localized: Drops water onto enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507574
+    m_Localized: Repeatedly strikes a narrow area with lightning. Charges allied
+      lightning units.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507575
+    m_Localized: Drops a boulder that damages the first ground or flying enemy it
+      hits.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507576
+    m_Localized: Drops a nature projectile that damages the first enemy it hits.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507577
+    m_Localized: Drops a wind projectile that damages the first enemy it hits.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507578
+    m_Localized: Periodically heals nearby allies. Follows an allied unit if placed
+      on it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507579
+    m_Localized: Summons a heavy demon that blasts and burns ground enemies. Its
+      aura also burns non-fire allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507580
+    m_Localized: Fires lightning that stuns its first target and chains to nearby
+      enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507581
+    m_Localized: Creates a lingering sandstorm that repeatedly damages ground enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507582
+    m_Localized: Sends a moving tornado that catches, lifts and damages ground enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507583
+    m_Localized: Sends a tide that pushes ground enemies and leaves wet trails.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507584
+    m_Localized: Rains meteors at random nearby spots, hitting ground and flying
+      enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507585
+    m_Localized: Summons a cloud dragon that shoots enemies, casts chain lightning
+      and wets nearby units.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507586
+    m_Localized: Summons thunderbirds that dive onto ground enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507587
+    m_Localized: Summons a sturdy golem that heals itself. Its leaf trail can heal
+      enemies too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507588
+    m_Localized: Summons spirits that shoot and snare ground and flying enemies.
+      Nature enemies are immune to the snare.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507589
+    m_Localized: Plants a colony that raises vines under nearby ground enemies, damaging
+      and slowing them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507590
+    m_Localized: Summons a rock shaman that throws rocks at ground and flying enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507591
+    m_Localized: Summons small seed spirits that fight on the ground and leave leaf
+      trails.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507592
+    m_Localized: Summons small demons that fight ground enemies and leave fire trails.
+      The trails can burn allies too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507593
+    m_Localized: Summons sturdy little rocks that fight ground enemies in melee.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507594
+    m_Localized: Summons a wind spirit that dives into flying enemies and explodes.
+      Cannot attack ground targets.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507595
+    m_Localized: Builds a temporary turret that throws rocks at nearby ground enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507596
+    m_Localized: Erupts magma that burns ground enemies. The explosion also hurts
+      allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507597
+    m_Localized: Plants a tree that periodically heals nearby ground allies and buildings.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507598
+    m_Localized: Fires a wisp that permanently converts the first enemy unit it touches
+      to your side.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507599
+    m_Localized: Makes nearby units attack faster in a frenzy, turning on allies
+      and enemies alike.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507600
+    m_Localized: Drops a fairy that heals the first ally it touches, or damages and
+      snares an enemy instead.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507601
+    m_Localized: Raises a line of vines that damages and slows ground enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507602
+    m_Localized: Rolls a boulder that damages ground enemies and bounces off enemies
+      and walls.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507603
+    m_Localized: Fires a wind blade that pierces through ground enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507604
+    m_Localized: Places a totem that pushes ground enemies ahead of it back without
+      dealing damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507605
+    m_Localized: Summons a cloud that rains over the battlefield.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507606
+    m_Localized: Deploys a paratrooper that fights ground enemies in melee after
+      landing.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507607
+    m_Localized: Damages and slows nearby enemies. Turns allied seed spirits into
+      tree golems, or summons seeds if none are there.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507608
+    m_Localized: Creates a crater that spits fireballs in random directions. Its
+      fire patches can burn allies too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507609
+    m_Localized: Summons lightning mice that ignore enemy units and rush buildings
+      and the base.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507610
+    m_Localized: Places a beacon that gathers nearby allies and speeds up their attacks
+      while close.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507611
+    m_Localized: Creates a gale that repeatedly cuts the area. Also hurts allied
+      units and buildings.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507612
+    m_Localized: Builds a generator that shields nearby allies with bubbles that
+      block the next hit.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507613
+    m_Localized: Builds a tower that chains lightning between ground and flying enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507614
+    m_Localized: Summons a flying commander that sends out lesser demons instead
+      of attacking itself.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507615
+    m_Localized: Summons a toad that avoids enemies and releases fire and lightning
+      tadpoles in turn.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507616
+    m_Localized: Summons a spirit that only attacks flying enemies, bursting bubbles
+      to hurt nearby flyers too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507617
+    m_Localized: Shocks enemies in an area, then makes shocked targets burst to hurt
+      enemies around them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507618
+    m_Localized: Summons a little rock carrying an anti-air tower. Prefers nearby
+      flying enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507619
+    m_Localized: Spreads vines that damage enemies and create seed spirits. Turns
+      allied seed spirits into vine spirits.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507620
+    m_Localized: Builds a nest that keeps spawning seed spirits that fight on the
+      ground and leave leaf trails.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507621
+    m_Localized: Summons a storm cloud that repeatedly strikes with lightning.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507622
+    m_Localized: Summons a giant that pulls light ground enemies in, stuns them and
+      burns them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507623
+    m_Localized: Summons a stag that rams ground enemies harder as it speeds up and
+      zaps nearby foes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507624
+    m_Localized: Builds a titan remnant that raises stone fists beneath enemies to
+      damage the surrounding area.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507625
+    m_Localized: Summons a tough golem that knocks ground enemies back and leaves
+      a rock remnant when defeated.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507626
+    m_Localized: Places a single-use trap that stuns nearby enemies shortly after
+      an enemy approaches.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507627
+    m_Localized: Places a totem that pauses nearby allied buildings' expiry timers.
+      Does not heal them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507628
+    m_Localized: Builds a tower that keeps firing explosive fireworks at a fixed
+      spot ahead.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507629
+    m_Localized: Grows fields that snare enemies and heal allies. Nearby allied seed
+      spirits sprout attacking vines.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507630
+    m_Localized: Builds a tower that fires straight ahead, burning ground enemies
+      with flame shots.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507631
+    m_Localized: Summons a serpent that leaves wet trails and fires a beam through
+      ground and flying enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507632
+    m_Localized: Drains health from your units and turns it into a beam that strikes
+      enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507633
+    m_Localized: Launches a homing warhead that prefers flying enemies and explodes
+      on impact.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507634
+    m_Localized: Hurls a boulder that knocks enemies back and stuns them. Collisions
+      deal extra damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507635
+    m_Localized: Summons a flying sprite that drops bombs onto ground enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507636
+    m_Localized: Turns nearby rock remnants into allied little rocks or rock golems.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507637
+    m_Localized: Detonates nearby rock remnants. The explosions also hurt allies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507638
+    m_Localized: Summons a bean shooter that fires at the nearest ground enemy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507639
+    m_Localized: Summons an arcane infantry soldier that fights ground enemies in
+      melee.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507640
+    m_Localized: Summons artillery that sets up before firing. Shells explode at
+      the spot aimed at when fired.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

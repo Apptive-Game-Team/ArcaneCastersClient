@@ -1,8 +1,11 @@
+using System.Threading.Tasks;
 using Data.Localization;
 using Data.Magic;
+using Data.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 
 namespace GameScene.Card
 {
@@ -41,15 +44,29 @@ namespace GameScene.Card
             PlaceAbove(cardUI.transform as RectTransform);
             CombinedMagicData magic = cardUI.Magic;
             string name = await LocaleUtils.GetStringAsync("Magic", magic.localizationKey ?? cardUI.CardName);
-            string description = await MagicBookDetailText.BuildAsync(magic, compactStats: true);
+            string description = await GetSummaryAsync(magic);
             if (this == null || cardUI == null || version != renderVersion || !gameObject.activeSelf) return;
             cardNameText.text = name;
             descriptionText.text = description;
             float bodyHeight = Mathf.Clamp(descriptionText.GetPreferredValues(description,
-                descriptionText.rectTransform.rect.width, 0f).y, 120f, 432f);
+                descriptionText.rectTransform.rect.width, 0f).y, 48f, 168f);
             descriptionText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, bodyHeight);
             ((RectTransform)transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, bodyHeight + 168f);
             PlaceAbove(cardUI.transform as RectTransform);
+        }
+
+        private static async Task<string> GetSummaryAsync(CombinedMagicData magic)
+        {
+            if (string.IsNullOrWhiteSpace(magic?.serverName)) return string.Empty;
+            try {
+                await LocalizationSettings.InitializationOperation.Task;
+                var table = await LocalizationSettings.StringDatabase.GetTableAsync("MagicBook").Task;
+                string key = "summary." + StringUtils.ToSnakeCase(magic.serverName);
+                return table?.GetEntry(key)?.GetLocalizedString() ?? string.Empty;
+            } catch (System.Exception exception) {
+                Debug.LogException(exception);
+                return string.Empty;
+            }
         }
     
         public void Hide()
