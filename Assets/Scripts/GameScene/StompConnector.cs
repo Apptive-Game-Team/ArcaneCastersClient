@@ -221,6 +221,17 @@ namespace GameScene
             _transport.Send(topic, CustomBattleConnection.Outgoing(message));
         }
 
+        public bool TrySendCardHover(bool hovering)
+        {
+            if (isSpectator || _matchEnded || _transport == null || !_transport.IsConnected
+                || string.IsNullOrEmpty(SceneContext.MatchInfo?.sessionId)) return false;
+            string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
+            _transport.Send(destination, hovering
+                ? "{\"type\":\"cardHover\",\"hovering\":true}"
+                : "{\"type\":\"cardHover\",\"hovering\":false}");
+            return true;
+        }
+
         public void SubscribeToTopic(string topic, Action<string> callback, string subscriptionId)
         {
             if (!_transport.IsConnected)

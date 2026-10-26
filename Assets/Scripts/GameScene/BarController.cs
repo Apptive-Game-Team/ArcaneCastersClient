@@ -104,7 +104,7 @@ namespace GameScene
             while (elapsedTime < duration)
             {
                 _rectTransform.anchoredPosition = Vector2.Lerp(startPosition, endPosition, elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
+                elapsedTime += Time.unscaledDeltaTime;
                 yield return null;
             }
 

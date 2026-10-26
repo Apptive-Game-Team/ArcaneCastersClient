@@ -1,5 +1,11 @@
 # Hand-Edited Assets, Prefabs and Scenes
 
+`ZoomedCardUI` serves both the legacy zoomed card in `GameScene` and
+`InteractiveTutorialScene` and the `GameCardDetails.prefab` description panel.
+Before adding child-component bindings, inspect both shapes: the legacy card has
+a `MagicCastKindBadge`, while the description panel does not. Guard optional
+badge bindings; an unconditional `Bind` throws before the hover description loads.
+
 The Unity Editor cannot run in this environment, so `.asset`, `.prefab`, `.unity`
 and `.meta` files are edited as YAML by hand. Read this before changing a
 serialized type or deleting a script. Nothing here fails the build; every trap
