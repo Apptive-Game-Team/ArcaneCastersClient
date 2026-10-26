@@ -51,6 +51,16 @@ namespace GameScene.ServedObjectComponent
             UpdateFlip();
         }
 
+        internal void FaceTowards(Vector3 targetPosition)
+        {
+            float deltaX = targetPosition.x - transform.position.x;
+            if (Mathf.Abs(deltaX) < 0.001f) return;
+
+            // 공격 대상은 확정된 방향이므로 이동 방향의 전환 지연을 적용하지 않는다.
+            spriteRenderer.flipX = deltaX < 0f;
+            flipCounter = 0;
+        }
+
         private void UpdateFlip()
         {
             if (nextPosition?.x == null)
