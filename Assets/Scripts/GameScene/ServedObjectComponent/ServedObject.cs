@@ -314,6 +314,11 @@ namespace GameScene.ServedObjectComponent
             }
         }
 
+        public void FaceTowards(Vector3 targetPosition)
+        {
+            _positionUpdater?.FaceTowards(targetPosition);
+        }
+
         public void PlayAttackPresentation()
         {
             OnAttack?.Invoke();

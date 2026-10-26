@@ -534,6 +534,14 @@ MonoBehaviour:
     m_Localized: Auto
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000429
+    m_Localized: Preparing practice mode...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000430
+    m_Localized: Couldn't start the practice match. Please try again later.
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000501
     m_Localized: "Continue"
     m_Metadata:

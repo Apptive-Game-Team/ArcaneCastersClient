@@ -1,15 +1,25 @@
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 
 namespace LobbyScene.Matching
 {
     /// <summary>
-    /// Full screen page shown while a match ticket is alive.
-    /// The page itself only handles visibility; leaving it is a normal cancel
-    /// request, which the coordinator ignores once the ticket is no longer cancelable.
+    /// 일반 매칭과 연습경기 준비가 끝날 때까지 대기 화면을 표시한다.
     /// </summary>
     public sealed class MatchingPage : MonoBehaviour
     {
         [SerializeField] private GameObject content;
+        [SerializeField] private LocalizeStringEvent titleLabel;
+        [SerializeField] private GameObject[] matchmakingOnly;
+
+        private LocalizedString matchingTitle;
+        private readonly LocalizedString practiceTitle = new LocalizedString("LobbyUI", "PracticePreparing");
+
+        private void Awake()
+        {
+            matchingTitle = titleLabel.StringReference;
+        }
 
         private void Start()
         {
@@ -25,7 +35,10 @@ namespace LobbyScene.Matching
 
         private void ApplyLobbyState(LobbySceneViewModel.LobbyState state)
         {
-            content.SetActive(state == LobbySceneViewModel.LobbyState.Matching);
+            bool practice = state == LobbySceneViewModel.LobbyState.PreparingPractice;
+            titleLabel.StringReference = practice ? practiceTitle : matchingTitle;
+            foreach (GameObject widget in matchmakingOnly) widget.SetActive(!practice);
+            content.SetActive(practice || state == LobbySceneViewModel.LobbyState.Matching);
         }
     }
 }

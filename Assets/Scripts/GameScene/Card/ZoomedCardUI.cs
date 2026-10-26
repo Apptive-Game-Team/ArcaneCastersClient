@@ -13,6 +13,12 @@ namespace GameScene.Card
         [SerializeField] private Image cardImage;
         [SerializeField] private TMP_Text descriptionText;
         private int renderVersion;
+        private MagicCastKindBadge castKindBadge;
+
+        private void Awake() {
+            // 확대 카드는 CardUI를 제거한 프리팹 인스턴스다. 숨긴 배지도 다시 찾는다.
+            castKindBadge = GetComponentInChildren<MagicCastKindBadge>(true);
+        }
         
         public async void Show(CardUI cardUI)
         {
@@ -21,6 +27,10 @@ namespace GameScene.Card
             cardManaText.text = cardUI.Mana;
             cardImage.sprite = cardUI.CardSprite;
             cardNameText.text = cardUI.DisplayName;
+            // 새 설명 패널에는 배지가 없고 기존 확대 카드에는 배지가 있다.
+            if (castKindBadge != null) {
+                castKindBadge.Bind(cardUI.Magic?.castKind ?? MagicCastKind.Unknown);
+            }
             if (descriptionText == null) {
                 Vector3 position = transform.position;
                 position.x = cardUI.transform.position.x;

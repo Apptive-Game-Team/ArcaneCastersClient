@@ -16,6 +16,7 @@ namespace GameScene.Card
         [SerializeField] private TextMeshProUGUI cardNameText;
         [SerializeField] private TextMeshProUGUI cardManaText;
         [SerializeField] private Image image;
+        [SerializeField] private MagicCastKindBadge castKindBadge;
         [SerializeField] private AudioSource cardSound;
         
         [SerializeField] private Outline outline;
@@ -46,6 +47,7 @@ namespace GameScene.Card
         public async void Init(CombinedMagicData magic, Sprite cardSprite)
         {
             Magic = magic;
+            castKindBadge.Bind(magic?.castKind ?? MagicCastKind.Unknown);
             CardName = magic?.serverName;
             image.sprite = cardSprite != null ? cardSprite : magic?.GetSprite();
             cardManaText.text = CardManaCost.Of(magic).ToString();

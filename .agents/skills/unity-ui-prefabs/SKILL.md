@@ -38,6 +38,13 @@ Use the default project background for new UI scenes/pages. In this client, that
 
 ## Scene Wiring
 
+`GameScene.unity` and `InteractiveTutorialScene.unity` instance `CardImage.prefab`
+for their enlarged cards but remove its `CardUI` component and add `ZoomedCardUI`.
+When adding a card decoration, put its layout in the card prefab and bind it from
+both controllers. Do not retrieve it through `CardUI` on the enlarged instance:
+that component is absent. Include inactive children when caching a badge that
+hides for unknown data, or it cannot reappear on the next known card.
+
 - Scene buttons should be scene-authored prefab instances.
 - Wire button `OnClick` to an existing `ButtonBase` subclass or scene controller method.
 - Do not create UI buttons from `Awake`, `Start`, or other runtime code unless the UI is truly dynamic and repeated.

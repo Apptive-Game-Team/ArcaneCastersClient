@@ -88,6 +88,8 @@ namespace WordOnline.Tests
         }
 
         [TestCase("ArcaneInfantry", "ArcaneInfantryAttacking")]
+        [TestCase("ArcaneInfantry", "ArcaneInfantryWalkLeft")]
+        [TestCase("ArcaneInfantry", "ArcaneInfantryWalkRight")]
         [TestCase("CraterCarrier", "CraterCarrierDeployed")]
         [TestCase("CraterCarrier", "CraterCarrierRecovering")]
         public void PoseImportsKeepTheSameCanvasScaleAndFootPivot(string idle, string other)
