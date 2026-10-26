@@ -33,17 +33,17 @@ namespace LobbyScene
 
         private void ShowMatchingStartMessage()
         {
-            SystemMessageUI.Instance.ShowMessage(matchingStartMessage);
+            SystemMessageUI.Instance.ShowSceneMessage(matchingStartMessage);
         }
 
         private void ShowMatchingFailMessage()
         {
-            SystemMessageUI.Instance.ShowMessage(matchingFailMessage);
+            SystemMessageUI.Instance.ShowSceneMessage(matchingFailMessage);
         }
 
         private void ShowMatchingCancelMessage()
         {
-            SystemMessageUI.Instance.ShowMessage(matchingCancelMessage);
+            SystemMessageUI.Instance.ShowSceneMessage(matchingCancelMessage);
         }
 
         private void ShowPracticePreparingMessage()

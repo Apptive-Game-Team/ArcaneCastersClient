@@ -80,6 +80,7 @@ namespace GameScene
         /// 결과 화면으로 넘어가기 전까지의 무음과 끊김은 연결 문제가 아니다.
         /// </summary>
         private bool _matchEnded;
+        public bool HasMatchEnded => _matchEnded;
 
         // ─── 생명주기 ────────────────────────────────────────────────────────
 
@@ -87,6 +88,8 @@ namespace GameScene
         {
             gameObject.name = "StompConnector";
             base.Awake();
+
+            BotThoughtLog.BeginMatch();
 
             _frameInfoHandler = new GeneralHandler(_pveSync);
             // 새 경기마다 tick rate 를 기본값으로 되돌린다. 실제 값은 첫 sync 가 알려 준다.
@@ -134,6 +137,7 @@ namespace GameScene
 
         private void OnDestroy()
         {
+            if (CustomBattleConnection.IsLocalMatch) CustomBattleConnection.End();
             // 플래그를 먼저 세운다. 닫는 과정에서 올라오는 Disconnected는 끊김이 아니다.
             _intentionalDisconnect = true;
             _transport.Disconnect();
@@ -185,9 +189,10 @@ namespace GameScene
             // is logged before the token query is added.
             Debug.Log($"[Match] game server: {matchInfo.ConnectionSource}, session: {matchInfo.sessionId}");
 
-            string url = gameServer.Query("token", SceneContext.JwtToken);
+            string gameToken = CustomBattleConnection.TokenFor(matchInfo, SceneContext.JwtToken);
+            string url = gameServer.Query("token", gameToken);
             _connectGate.NoteHandshakeStarted(now);
-            _transport.Connect(url, SceneContext.JwtToken);
+            _transport.Connect(url, gameToken);
         }
 
         public void SendMessageToServer(string topic, string message)
@@ -198,7 +203,7 @@ namespace GameScene
                 WDebug.LogError("[STOMP] 미연결 상태에서 메시지 전송 시도: " + topic);
                 return;
             }
-            _transport.Send(topic, message);
+            _transport.Send(topic, CustomBattleConnection.Outgoing(message));
         }
 
         public void SubscribeToTopic(string topic, Action<string> callback, string subscriptionId)
@@ -209,7 +214,7 @@ namespace GameScene
                 WDebug.LogError("[STOMP] 미연결 상태에서 구독 시도: " + topic);
                 return;
             }
-            _registry.Register(topic, subscriptionId, callback);
+            _registry.Register(topic, subscriptionId, body => callback(CustomBattleConnection.Incoming(body)));
             _transport.Subscribe(topic, subscriptionId);
         }
 
@@ -226,7 +231,9 @@ namespace GameScene
         /// </summary>
         public void NotifyMatchEnded()
         {
+            if (CustomBattleConnection.IsLocalMatch) CustomBattleConnection.End();
             _matchEnded = true;
+            BotThoughtLog.EndMatch();
             _reconnect.ResetRetries();
         }
 

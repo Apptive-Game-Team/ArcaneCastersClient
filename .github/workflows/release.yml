@@ -21,7 +21,7 @@ env:
   # ProjectSettings/ProjectVersion.txt 기준. deploy-itch.yml 과 deploy-test.yml 은
   # 아직 2022.3.22f1 로 고정되어 있어 프로젝트 버전과 어긋난다.
   UNITY_VERSION: 2022.3.34f1
-  BUILD_NAME: WordOnlineClient
+  BUILD_NAME: ArcaneCasters
 
 jobs:
   prepare:
@@ -51,22 +51,19 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
   desktop:
-    name: Build ${{ matrix.label }}
+    name: Build ${{ matrix.rid }}
     needs: prepare
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - targetPlatform: StandaloneOSX
-            label: macOS
-          - targetPlatform: StandaloneWindows64
-            label: Windows
-          - targetPlatform: StandaloneLinux64
-            label: Linux
+          - { rid: win-x64, target: StandaloneWindows64, folder: ArcaneCasters }
+          - { rid: linux-x64, target: StandaloneLinux64, folder: ArcaneCasters }
+          - { rid: osx-x64, target: StandaloneOSX, folder: ArcaneCasters.app }
+          - { rid: osx-arm64, target: StandaloneOSX, folder: ArcaneCasters.app }
     steps:
-      - name: Free disk space
-        uses: jlumbroso/free-disk-space@v1.3.1
+      - uses: jlumbroso/free-disk-space@v1.3.1
         with:
           tool-cache: false
           android: true
@@ -75,78 +72,121 @@ jobs:
           large-packages: true
           docker-images: true
           swap-storage: true
-
-      - name: Docker prune
-        run: docker system prune -af
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Cache Library folder
-        uses: actions/cache@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.tag }}
+      - uses: actions/cache@v4
         with:
           path: Library
-          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-${{ matrix.targetPlatform }}-
-            Library-
-
-      # 데스크톱은 BuildScript 에 대응하는 메서드가 없어 game-ci 기본 빌드를 쓴다.
-      # BuildScript 의 DEV_BUILD 심볼은 WebGL 그룹에만 적용되므로 영향이 없다.
-      - name: Build ${{ matrix.label }}
-        uses: game-ci/unity-builder@v4
+          key: Library-${{ matrix.rid }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-${{ matrix.rid }}-
+      - uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: ${{ env.UNITY_VERSION }}
-          targetPlatform: ${{ matrix.targetPlatform }}
+          targetPlatform: ${{ matrix.target }}
           buildName: ${{ env.BUILD_NAME }}
           buildsPath: build
-          customParameters: -logFile -
+          buildMethod: DesktopBuildScript.Build
+          versioning: None
+          customParameters: -desktopPlatform ${{ matrix.rid }} -desktopBuildPath build/desktop/${{ matrix.folder }} -logFile -
+      - name: Preserve executable modes and framework links
+        run: |
+          sudo chown -R "$(id -u):$(id -g)" build
+          tar -czf desktop.tar.gz -C build/desktop .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-raw-${{ matrix.rid }}
+          path: desktop.tar.gz
+          retention-days: 2
 
-      - name: Package build
-        id: package
+  package-desktop:
+    name: Package ${{ matrix.rid }}
+    needs: [prepare, desktop]
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { rid: win-x64, runner: ubuntu-latest, folder: ArcaneCasters }
+          - { rid: linux-x64, runner: ubuntu-latest, folder: ArcaneCasters }
+          - { rid: osx-x64, runner: macos-latest, folder: ArcaneCasters.app }
+          - { rid: osx-arm64, runner: macos-latest, folder: ArcaneCasters.app }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.tag }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: desktop-raw-${{ matrix.rid }}
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare whole-build updater
         env:
-          TAG: ${{ needs.prepare.outputs.tag }}
-          TARGET: ${{ matrix.targetPlatform }}
-          LABEL: ${{ matrix.label }}
+          RID: ${{ matrix.rid }}
+          FOLDER: ${{ matrix.folder }}
         run: |
           set -euo pipefail
-          sudo chown -R "$(id -u):$(id -g)" build
-          if [ "$TARGET" = "StandaloneOSX" ]; then
-            # .app 번들의 실행 권한이 유지되도록 보정
-            chmod -R +x "build/$TARGET/$BUILD_NAME.app/Contents/MacOS" || true
-          fi
-          if [ "$TARGET" = "StandaloneLinux64" ]; then
-            # Unity 2022 Linux standalone 은 buildName 그대로이거나 .x86_64 가
-            # 붙은 실행 파일을 낸다. 둘 중 어느 이름이 나오는지 확인하지 못해
-            # 둘 다 본다. 하나도 없으면 실행 권한 없는 zip 이 릴리스에 올라가므로
-            # 조용히 넘어가지 않고 경고를 남긴다.
-            CHMODDED=0
-            for CANDIDATE in "$BUILD_NAME" "$BUILD_NAME.x86_64"; do
-              if [ -f "build/$TARGET/$CANDIDATE" ]; then
-                chmod +x "build/$TARGET/$CANDIDATE"
-                CHMODDED=1
-              fi
-            done
-            if [ "$CHMODDED" != 1 ]; then
-              echo "::warning::build/$TARGET 에서 실행 파일을 찾지 못했다. 받은 사람이 chmod +x 를 직접 걸어야 한다."
-              ls -la "build/$TARGET"
-            fi
-          fi
-          ARCHIVE="$BUILD_NAME-$TAG-$LABEL.zip"
-          (cd "build/$TARGET" && zip -r -y -q "$GITHUB_WORKSPACE/$ARCHIVE" .)
-          echo "archive=$ARCHIVE" >> "$GITHUB_OUTPUT"
+          mkdir -p build/desktop
+          tar -xzf desktop.tar.gz -C build/desktop
+          dotnet publish Tools/DesktopUpdater/DesktopUpdater.csproj -c Release -r "$RID" --self-contained true -o build/helper
+          printf %s "$RID" > build/helper/updater-platform.txt
+          python Tools/DesktopUpdater/package_release.py prepare --install-root "build/desktop/$FOLDER" --helper build/helper --repository "$GITHUB_REPOSITORY"
+      - name: Ad-hoc sign macOS bundle after embedding updater
+        if: startsWith(matrix.rid, 'osx-')
+        run: |
+          set -euo pipefail
+          APP=build/desktop/ArcaneCasters.app
+          test "$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$APP/Contents/Info.plist")" = ArcaneCasters
+          codesign --force --deep --sign - "$APP"
+          codesign --verify --deep --strict "$APP"
+      - name: Package installer and update payload
+        env:
+          FOLDER: ${{ matrix.folder }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+        run: python Tools/DesktopUpdater/package_release.py pack --install-root "build/desktop/$FOLDER" --output release-assets --repository "$GITHUB_REPOSITORY" --tag "$TAG"
+      - name: Verify signature survives ZIP extraction
+        if: startsWith(matrix.rid, 'osx-')
+        run: |
+          mkdir verify-app
+          unzip -q release-assets/*-update.zip -d verify-app
+          mv verify-app ArcaneCasters.app
+          codesign --verify --deep --strict ArcaneCasters.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-release-${{ matrix.rid }}
+          path: release-assets/*
+          retention-days: 7
 
-      - name: Upload build to release
+  publish-desktop:
+    name: Publish complete desktop update set
+    needs: [prepare, package-desktop]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: desktop-release-*
+          path: release-assets
+          merge-multiple: true
+      - name: Upload payloads before advertising updates
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           TAG: ${{ needs.prepare.outputs.tag }}
-          ARCHIVE: ${{ steps.package.outputs.archive }}
-        run: gh release upload "$TAG" "$ARCHIVE" --clobber
+        run: |
+          set -euo pipefail
+          test "$(find release-assets -name '*.zip' | wc -l)" -eq 8
+          test "$(find release-assets -name '*.json' | wc -l)" -eq 4
+          # No --clobber: published payloads must remain immutable.
+          gh release upload "$TAG" release-assets/*.zip
+          gh release upload "$TAG" release-assets/*.json
 
   webgl:
     name: Build WebGL
@@ -169,6 +209,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.tag }}
 
       - name: Cache Library folder
         uses: actions/cache@v4
@@ -279,7 +321,7 @@ jobs:
 
   links:
     name: Link builds on release
-    needs: [prepare, desktop, webgl, publish-play]
+    needs: [prepare, publish-desktop, webgl, publish-play]
     if: always() && needs.prepare.result == 'success'
     runs-on: ubuntu-latest
     steps:
@@ -302,9 +344,10 @@ jobs:
             fi
           }
 
-          MAC=$(asset_url "-macOS.zip")
-          WIN=$(asset_url "-Windows.zip")
-          LINUX=$(asset_url "-Linux.zip")
+          MAC=$(asset_url "-osx-x64.zip")
+          ARM=$(asset_url "-osx-arm64.zip")
+          WIN=$(asset_url "-win-x64.zip")
+          LINUX=$(asset_url "-linux-x64.zip")
           WEB=$(asset_url "-WebGL.zip")
           FAILED="빌드 실패 — [로그 보기]($RUN_URL)"
 
@@ -314,7 +357,8 @@ jobs:
             echo
             echo '| 플랫폼 | 링크 |'
             echo '| --- | --- |'
-            echo "| 🍎 macOS | ${MAC:-$FAILED} |"
+            echo "| 🍎 macOS Intel | ${MAC:-$FAILED} |"
+            echo "| 🍎 macOS Apple Silicon | ${ARM:-$FAILED} |"
             echo "| 🪟 Windows | ${WIN:-$FAILED} |"
             echo "| 🐧 Linux | ${LINUX:-$FAILED} |"
             if [ -n "$PLAY_URL" ]; then
@@ -324,7 +368,7 @@ jobs:
             fi
             echo "| 🌐 웹 빌드 (직접 호스팅용) | ${WEB:-$FAILED} |"
             echo
-            echo '> macOS 빌드는 코드 서명이 되어 있지 않습니다. 실행이 막히면 압축을 푼 뒤'
+            echo '> macOS 빌드는 임시 서명만 적용되며 Apple 공증은 되어 있지 않습니다. 실행이 막히면 압축을 푼 뒤'
             echo '> `xattr -dr com.apple.quarantine '"$BUILD_NAME"'.app` 을 실행해 주세요.'
             echo '<!-- release-links:end -->'
           } > links.md
