@@ -11,7 +11,8 @@ namespace GameScene.Handler
             SceneContext.MatchResult = data;
             // 서버는 결과를 보낸 뒤 FrameInfo를 멈춘다. 결과 화면까지의 무음을 끊김으로 보지 않게 한다.
             StompConnector.Instance.NotifyMatchEnded();
-            GameEndEventController.Instance.TriggerGameEnd();
+            if (GameEndEventController.Instance != null)
+                GameEndEventController.Instance.TriggerGameEnd();
             if (BGMPlayer.Instance != null) BGMPlayer.Instance.RestoreSceneDefault();
         }
     }

@@ -8,7 +8,8 @@
         "WordOnline.GameContracts",
         "WordOnline.Net",
         "WordOnline.Contracts",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [
         "Editor"
