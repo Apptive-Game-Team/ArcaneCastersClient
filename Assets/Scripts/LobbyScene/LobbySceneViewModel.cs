@@ -124,6 +124,7 @@ namespace LobbyScene
 
         private void HandleMatchmakingState(MatchTicketState state, MatchTicket ticket)
         {
+            MatchTicketState previousState = TicketState.Data;
             TicketState.UpdateData(state);
 
             switch (state)
@@ -142,7 +143,13 @@ namespace LobbyScene
                     StopMatchingAsFailed();
                     break;
                 case MatchTicketState.Idle:
-                    CurrentState.UpdateData(LobbyState.Idle);
+                    // Idle right after CancelPending is a cancel the server resolved with no
+                    // active ticket. Any other Idle (a practice or friend match holds no ticket)
+                    // is not a cancel and must not show the cancel message.
+                    if (previousState == MatchTicketState.CancelPending)
+                        StopMatchingAsCanceled();
+                    else
+                        CurrentState.UpdateData(LobbyState.Idle);
                     break;
             }
         }

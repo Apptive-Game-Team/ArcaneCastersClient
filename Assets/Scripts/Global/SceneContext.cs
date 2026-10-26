@@ -168,6 +168,7 @@ namespace Global
 
         public static void ClearContext()
         {
+            GameScene.BotThoughtLog.Clear();
             Data.Magic.MagicPreviewDataSource.Clear();
             JwtToken = null;
             _user = null;
