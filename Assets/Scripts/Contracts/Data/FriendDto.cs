@@ -37,6 +37,8 @@ namespace LobbyScene
         public string status; // PENDING, ACCEPTED, REJECTED, CANCELED, EXPIRED
         public string createdAt;
         public string expiresAt;
+        public string deliveredAt;
+        public long revision;
         public MatchedInfoDto matchInfo;
     }
 

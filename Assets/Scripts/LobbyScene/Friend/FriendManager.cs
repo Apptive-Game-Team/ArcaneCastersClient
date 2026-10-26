@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Data;
 using Global;
 using UnityEngine;
@@ -15,6 +17,61 @@ namespace LobbyScene
         [SerializeField] private FriendMatchInviteDialog inviteDialog;
 
         public FriendApiClient ApiClient => apiClient;
+        private readonly Dictionary<long, FriendInviteItem> sentInvites = new();
+        private readonly Dictionary<long, string> sendMessages = new();
+        private readonly HashSet<long> sending = new();
+        private readonly HashSet<string> acknowledging = new();
+        private bool snapshotInFlight;
+        private int receivedVersion;
+        private long ownerUserId = -1;
+        public event Action InviteStateChanged;
+
+        public string InviteMessage(long friendId) => sendMessages.TryGetValue(friendId, out var message)
+            ? message : sentInvites.TryGetValue(friendId, out var invite) ? FriendInviteState.Message(invite) : null;
+
+        public bool IsSending(long friendId) => sending.Contains(friendId);
+
+        public bool CanCancelInvite(long friendId) => sentInvites.TryGetValue(friendId, out var invite) &&
+            FriendInviteState.IsPending(invite) && FriendInviteState.RemainingSeconds(invite, DateTimeOffset.UtcNow) > 0;
+
+        public void SendOrCancelInvite(FriendSummary friend)
+        {
+            if (SceneContext.User == null) return;
+            EnsureAccount();
+            if (apiClient == null || !sending.Add(friend.userId)) return;
+            bool cancel = CanCancelInvite(friend.userId);
+            sendMessages[friend.userId] = cancel ? "취소 중" : "전송 중";
+            InviteStateChanged?.Invoke();
+            long userId = SceneContext.UserID;
+            Action<bool, FriendInviteItem> completed = (success, invite) =>
+            {
+                if (SceneContext.User == null || SceneContext.UserID != userId) return;
+                sending.Remove(friend.userId);
+                if (success && invite != null)
+                {
+                    sendMessages.Remove(friend.userId);
+                    RememberSentInvite(invite);
+                }
+                else
+                {
+                    sendMessages[friend.userId] = cancel ? "취소 확인 실패" : "전송 확인 실패";
+                }
+                InviteStateChanged?.Invoke();
+                RecoverSnapshot();
+            };
+            StartCoroutine(cancel ? apiClient.CancelInvite(sentInvites[friend.userId].inviteId, completed)
+                : apiClient.InviteFriend(friend.userId, completed));
+        }
+
+        private void RememberSentInvite(FriendInviteItem invite)
+        {
+            if (invite == null || SceneContext.User == null || invite.inviterId != SceneContext.UserID) return;
+            sentInvites.TryGetValue(invite.inviteeId, out var current);
+            if (!FriendInviteState.IsNewer(current, invite)) return;
+            sentInvites[invite.inviteeId] = invite;
+            if (!sending.Contains(invite.inviteeId)) sendMessages.Remove(invite.inviteeId);
+            InviteStateChanged?.Invoke();
+        }
 
         private void Awake()
         {
@@ -47,6 +104,30 @@ namespace LobbyScene
         private void Start()
         {
             ConnectEventStream();
+            StartCoroutine(PollInvites());
+        }
+
+        private IEnumerator PollInvites()
+        {
+            while (true)
+            {
+                RecoverSnapshot();
+                yield return new WaitForSecondsRealtime(5f);
+            }
+        }
+
+        private void EnsureAccount()
+        {
+            long userId = SceneContext.User != null ? SceneContext.UserID : -1;
+            if (ownerUserId == userId) return;
+            ownerUserId = userId;
+            sentInvites.Clear();
+            sendMessages.Clear();
+            sending.Clear();
+            acknowledging.Clear();
+            receivedVersion++;
+            if (inviteDialog != null) inviteDialog.Close();
+            InviteStateChanged?.Invoke();
         }
 
         private void OnDestroy()
@@ -127,6 +208,8 @@ namespace LobbyScene
         private void HandleFriendEvent(FriendEventPayload payload)
         {
             if (payload == null || string.IsNullOrEmpty(payload.type)) return;
+            receivedVersion++;
+            RememberSentInvite(payload.invite);
 
             Debug.Log($"[FriendManager] Received SSE Event: {payload.type}");
 
@@ -142,6 +225,7 @@ namespace LobbyScene
                     break;
 
                 case "FRIEND_INVITE_CANCELED":
+                case "FRIEND_INVITE_REJECTED":
                 case "FRIEND_INVITE_EXPIRED":
                     if (inviteDialog != null && payload.invite != null)
                     {
@@ -165,6 +249,13 @@ namespace LobbyScene
         private void HandleInviteReceived(FriendInviteItem invite)
         {
             if (invite == null || inviteDialog == null) return;
+            if (SceneContext.User == null || invite.inviteeId != SceneContext.UserID) return;
+            if (FriendInviteState.RemainingSeconds(invite, DateTimeOffset.UtcNow) <= 0) return;
+            if (inviteDialog.IsShowing)
+            {
+                if (inviteDialog.CurrentInviteId == invite.inviteId) AcknowledgeInvite(invite);
+                return;
+            }
 
             inviteDialog.ShowInvite(
                 invite,
@@ -178,6 +269,16 @@ namespace LobbyScene
                     }
                 }
             );
+            AcknowledgeInvite(invite);
+        }
+
+        private void AcknowledgeInvite(FriendInviteItem invite)
+        {
+            if (!string.IsNullOrEmpty(invite.deliveredAt) || !acknowledging.Add(invite.inviteId)) return;
+            StartCoroutine(apiClient.AcknowledgeInvite(invite.inviteId, (success, updated) =>
+            {
+                acknowledging.Remove(invite.inviteId);
+            }));
         }
 
         private void HandleInviteAccepted(FriendEventPayload payload)
@@ -222,27 +323,51 @@ namespace LobbyScene
 
         public void RecoverSnapshot()
         {
-            if (apiClient == null) return;
+            EnsureAccount();
+            if (apiClient == null || SceneContext.User == null || snapshotInFlight) return;
+            StartCoroutine(RecoverInvites());
+        }
+
+        private IEnumerator RecoverInvites()
+        {
+            snapshotInFlight = true;
+            long userId = SceneContext.UserID;
+            int version = receivedVersion;
 
             // 1. 대기 중인 친선전 초대 복구
-            StartCoroutine(apiClient.GetPendingInvites((success, invites) =>
+            yield return apiClient.GetPendingInvites((success, invites) =>
             {
-                if (!success || invites == null || invites.Count == 0) return;
+                if (SceneContext.User == null || SceneContext.UserID != userId || version != receivedVersion) return;
+                if (!success || invites == null) return;
+                if (inviteDialog != null && inviteDialog.IsShowing &&
+                    !invites.Exists(item => item.inviteId == inviteDialog.CurrentInviteId)) inviteDialog.Close();
+                if (invites.Count == 0) return;
 
                 // 유효한 첫 번째 대기 초대를 다이얼로그로 복구
                 FriendInviteItem firstPending = invites[0];
-                if (inviteDialog != null && !inviteDialog.IsShowing)
+                if (inviteDialog != null)
                 {
                     Debug.Log($"[FriendManager] Recovered pending invite: {firstPending.inviteId} from {firstPending.inviterName}");
                     HandleInviteReceived(firstPending);
                 }
-            }));
+            });
 
-            // 2. 친구 모달이 열려 있는 상태라면 현재 탭 갱신
-            if (friendModal != null && friendModal.IsOpen)
+            yield return apiClient.GetSentInvites((success, invites) =>
             {
-                friendModal.RefreshCurrentTab();
-            }
+                if (SceneContext.User == null || SceneContext.UserID != userId || !success || invites == null) return;
+                foreach (var invite in invites)
+                {
+                    bool wasPending = sentInvites.TryGetValue(invite.inviteeId, out var previous) &&
+                        previous.inviteId == invite.inviteId && FriendInviteState.IsPending(previous);
+                    RememberSentInvite(invite);
+                    if (wasPending && invite.status == "ACCEPTED" && invite.matchInfo != null)
+                        HandleInviteAccepted(new FriendEventPayload { matchInfo = invite.matchInfo });
+                }
+            });
+            snapshotInFlight = false;
+
+            // 초대 만료 시각도 서버 응답 여부와 별개로 화면에 반영한다.
+            InviteStateChanged?.Invoke();
         }
 
         private void HandleStreamDisconnected()

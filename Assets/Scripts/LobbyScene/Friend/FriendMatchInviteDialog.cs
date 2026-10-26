@@ -53,6 +53,7 @@ namespace LobbyScene
             StopTimer();
 
             currentInvite = invite;
+            SetButtonsInteractable(true);
             apiClient = client;
             onMatchAccepted = onAccepted;
 
@@ -67,7 +68,7 @@ namespace LobbyScene
                 root.SetActive(true);
             }
 
-            timerCoroutine = StartCoroutine(CountdownRoutine(30f));
+            timerCoroutine = StartCoroutine(CountdownRoutine());
         }
 
         public void DismissIfMatching(string inviteId)
@@ -97,9 +98,9 @@ namespace LobbyScene
             }
         }
 
-        private IEnumerator CountdownRoutine(float durationSeconds)
+        private IEnumerator CountdownRoutine()
         {
-            float remaining = durationSeconds;
+            float remaining = (float)FriendInviteState.RemainingSeconds(currentInvite, DateTimeOffset.UtcNow);
             while (remaining > 0f)
             {
                 if (timerText != null)
@@ -107,7 +108,7 @@ namespace LobbyScene
                     timerText.text = $"{Mathf.CeilToInt(remaining)}초 남음";
                 }
                 yield return new WaitForSecondsRealtime(1f);
-                remaining -= 1f;
+                remaining = (float)FriendInviteState.RemainingSeconds(currentInvite, DateTimeOffset.UtcNow);
             }
 
             if (timerText != null)
@@ -127,21 +128,22 @@ namespace LobbyScene
             }
 
             string inviteId = currentInvite.inviteId;
+            Action<MatchedInfoDto> accepted = onMatchAccepted;
             SetButtonsInteractable(false);
 
-            StartCoroutine(apiClient.AcceptInvite(inviteId, (success, matchInfo) =>
+            apiClient.StartCoroutine(apiClient.AcceptInvite(inviteId, (success, matchInfo) =>
             {
-                SetButtonsInteractable(true);
+                if (this == null) return;
+                if (CurrentInviteId == inviteId) SetButtonsInteractable(true);
                 if (success && matchInfo != null)
                 {
-                    Action<MatchedInfoDto> callback = onMatchAccepted;
-                    Close();
-                    callback?.Invoke(matchInfo);
+                    DismissIfMatching(inviteId);
+                    accepted?.Invoke(matchInfo);
                 }
                 else
                 {
                     Debug.LogWarning($"[FriendMatchInviteDialog] Failed to accept invite {inviteId}");
-                    Close();
+                    DismissIfMatching(inviteId);
                 }
             }));
         }
@@ -157,10 +159,12 @@ namespace LobbyScene
             string inviteId = currentInvite.inviteId;
             SetButtonsInteractable(false);
 
-            StartCoroutine(apiClient.RejectInvite(inviteId, (success, _) =>
+            apiClient.StartCoroutine(apiClient.RejectInvite(inviteId, (success, _) =>
             {
+                if (this == null || CurrentInviteId != inviteId) return;
                 SetButtonsInteractable(true);
-                Close();
+                if (success) Close();
+                else if (messageText != null) messageText.text = "거절하지 못했습니다. 다시 시도해 주세요.";
             }));
         }
 

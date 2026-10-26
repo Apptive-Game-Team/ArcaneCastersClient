@@ -22,6 +22,7 @@ namespace LobbyScene
         private FriendSummary data;
         private Action<FriendSummary> onInviteClicked;
         private Action<FriendSummary> onDeleteClicked;
+        public long UserId => data?.userId ?? 0;
 
         private void Awake()
         {
@@ -66,6 +67,36 @@ namespace LobbyScene
             {
                 inviteButton.gameObject.SetActive(isOnline);
             }
+            RefreshInviteState();
+        }
+
+        public void MarkPresenceUnknown()
+        {
+            if (data == null) return;
+            data.status = "Unknown";
+            RefreshInviteState();
+        }
+
+        public void RefreshInviteState()
+        {
+            if (data == null) return;
+            var manager = FriendManager.Instance;
+            string message = manager?.InviteMessage(data.userId);
+            bool cancel = manager != null && manager.CanCancelInvite(data.userId);
+            bool sending = manager != null && manager.IsSending(data.userId);
+            bool online = IsStatus(data.status, "Online");
+            if (statusText != null)
+            {
+                statusText.text = FormatStatus(data.status) + (string.IsNullOrEmpty(message) ? "" : "\n<size=80%>" + message + "</size>");
+                statusText.color = online ? TealColor : MutedTextColor;
+            }
+            if (inviteButton != null)
+            {
+                inviteButton.gameObject.SetActive(online || cancel || sending);
+                inviteButton.interactable = !sending;
+                var label = inviteButton.GetComponentInChildren<TMP_Text>(true);
+                if (label != null) label.text = cancel ? "취소" : "초대";
+            }
         }
 
         private static bool IsStatus(string status, string expected)
@@ -82,6 +113,7 @@ namespace LobbyScene
                 "ONMATCHING" => "매칭 중",
                 "ONPLAYING" => "게임 중",
                 "OFFLINE" => "오프라인",
+                "UNKNOWN" => "확인 불가",
                 _ => status
             };
         }

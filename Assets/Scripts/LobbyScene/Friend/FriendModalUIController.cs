@@ -71,6 +71,38 @@ namespace LobbyScene
         private FriendApiClient apiClient;
         private Tab currentTab = Tab.Search;
         private bool wired;
+        private bool friendsLoading;
+        private float nextFriendsRefresh;
+        private FriendManager subscribedManager;
+
+        private void Update()
+        {
+            if (subscribedManager != FriendManager.Instance)
+            {
+                if (subscribedManager != null) subscribedManager.InviteStateChanged -= RefreshInviteRows;
+                subscribedManager = FriendManager.Instance;
+                if (subscribedManager != null) subscribedManager.InviteStateChanged += RefreshInviteRows;
+            }
+            if (currentTab == Tab.Friends && Time.unscaledTime >= nextFriendsRefresh && !friendsLoading)
+                RefreshFriends();
+        }
+
+        private void OnDisable()
+        {
+            friendsVersion++;
+            friendsLoading = false;
+        }
+
+        private void OnDestroy()
+        {
+            if (subscribedManager != null) subscribedManager.InviteStateChanged -= RefreshInviteRows;
+        }
+
+        private void RefreshInviteRows()
+        {
+            foreach (var row in friendRows)
+                if (row != null) row.GetComponent<FriendItemView>().RefreshInviteState();
+        }
 
         // Each refresh bumps its counter, so a response that arrives after a newer request is dropped.
         private int searchVersion;
@@ -245,23 +277,33 @@ namespace LobbyScene
         public void ShowFriendsTab()
         {
             SelectTab(Tab.Friends);
+            RefreshFriends();
+        }
+
+        private void RefreshFriends()
+        {
+            if (apiClient == null || friendsLoading) return;
+            friendsLoading = true;
+            nextFriendsRefresh = Time.unscaledTime + 5f;
             int version = ++friendsVersion;
-            ClearRows(friendRows);
-            ShowStatus(friendStatusText, "친구 목록 불러오는 중...", PrimaryOrange);
+            if (friendRows.Count == 0) ShowStatus(friendStatusText, "친구 목록 불러오는 중...", PrimaryOrange);
 
             if (apiClient == null) return;
             StartCoroutine(apiClient.GetFriends((success, friends) =>
             {
                 if (version != friendsVersion) return;
+                friendsLoading = false;
 
                 if (!success)
                 {
+                    foreach (var row in friendRows) row.GetComponent<FriendItemView>().MarkPresenceUnknown();
                     ShowStatus(friendStatusText, "친구 목록을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.", SlateTextColor);
                     return;
                 }
 
                 if (friends == null || friends.Count == 0)
                 {
+                    ClearRows(friendRows);
                     ShowStatus(friendStatusText, "등록된 친구가 없습니다. [친구 검색]에서 친구를 추가해보세요!", SlateTextColor);
                     return;
                 }
@@ -271,9 +313,17 @@ namespace LobbyScene
 
                 foreach (FriendSummary friend in friends)
                 {
-                    FriendItemView row = Instantiate(friendRowPrefab, friendListContainer);
+                    GameObject existing = friendRows.Find(item => item.GetComponent<FriendItemView>().UserId == friend.userId);
+                    FriendItemView row = existing != null ? existing.GetComponent<FriendItemView>() : Instantiate(friendRowPrefab, friendListContainer);
                     row.Bind(friend, OnInviteFriend, OnDeleteFriend);
-                    friendRows.Add(row.gameObject);
+                    if (existing == null) friendRows.Add(row.gameObject);
+                }
+                for (int i = friendRows.Count - 1; i >= 0; i--)
+                {
+                    long id = friendRows[i].GetComponent<FriendItemView>().UserId;
+                    if (friends.Exists(friend => friend.userId == id)) continue;
+                    Destroy(friendRows[i]);
+                    friendRows.RemoveAt(i);
                 }
             }));
         }
@@ -281,7 +331,7 @@ namespace LobbyScene
         private void OnInviteFriend(FriendSummary friend)
         {
             if (apiClient == null) return;
-            StartCoroutine(apiClient.InviteFriend(friend.userId, (success, invite) => { }));
+            FriendManager.Instance?.SendOrCancelInvite(friend);
         }
 
         private void OnDeleteFriend(FriendSummary friend)
