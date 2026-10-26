@@ -80,6 +80,7 @@ namespace GameScene
         /// 결과 화면으로 넘어가기 전까지의 무음과 끊김은 연결 문제가 아니다.
         /// </summary>
         private bool _matchEnded;
+        public bool HasMatchEnded => _matchEnded;
 
         // ─── 생명주기 ────────────────────────────────────────────────────────
 
@@ -87,6 +88,8 @@ namespace GameScene
         {
             gameObject.name = "StompConnector";
             base.Awake();
+
+            BotThoughtLog.BeginMatch();
 
             _frameInfoHandler = new GeneralHandler(_pveSync);
             // 새 경기마다 tick rate 를 기본값으로 되돌린다. 실제 값은 첫 sync 가 알려 준다.
@@ -230,6 +233,7 @@ namespace GameScene
         {
             if (CustomBattleConnection.IsLocalMatch) CustomBattleConnection.End();
             _matchEnded = true;
+            BotThoughtLog.EndMatch();
             _reconnect.ResetRetries();
         }
 
