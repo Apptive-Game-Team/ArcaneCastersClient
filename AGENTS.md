@@ -47,6 +47,10 @@ Follow [webgl-auth-hosting.md](.agents/docs/webgl-auth-hosting.md) before changi
 Follow [hand-edited-assets.md](.agents/docs/hand-edited-assets.md) before changing a serialized type, renaming a serialized field, or deleting a `MonoBehaviour`. The Editor cannot run here, so `.asset`, `.prefab`, `.unity` and `.meta` files are edited as YAML by hand. A serialized enum stores its integer, so reordering one silently remaps every stored row, and deleting a script takes three edits across the script, its prefab and every scene that instances it.
 
 ## Testing Guidelines
+
+Before changing in-game card hover, gameplay pause, or ping timing, read
+[card-hover-pause.md](.agents/docs/card-hover-pause.md). Freezing scaled time
+also freezes a scaled ping timer, while the authoritative server keeps running.
 `com.unity.test-framework` is installed, but there are no dedicated `Tests` assemblies in the current tree. For new automated tests, create Edit Mode or Play Mode test assemblies under `Assets/Tests` and name files `*Tests.cs`. At minimum, validate scene flow and WebGL-specific behavior manually in the Editor before opening a PR.
 
 `WordOnline.Tests.EditMode` cannot reference `Assembly-CSharp` (no asmdef can), so a test there
@@ -161,3 +165,18 @@ MAJOR for a `!` marker or a `BREAKING CHANGE` trailer, MINOR for `feat:`, PATCH
 otherwise, so write accurate commit types.
 
 Do not maintain a second client version value.
+
+## Code Review Rules
+
+- Write all code review titles, descriptions, comments, and summaries in Korean.
+- Preserve code identifiers, file paths, commands, error messages, and technical terms in their original form.
+- For each finding, concisely explain the cause, impact, and suggested fix.
+
+## Writing Style
+
+Follow [`.agents/docs/writing-style.md`](.agents/docs/writing-style.md) for chat
+replies, reviews, plans, handoffs, issues, commit titles and bodies, pull
+requests, release notes, source comments, and all frontend copy (including
+localization, errors, labels, and accessibility text).
+Its wording and title rules take precedence over older style examples;
+preserve project-specific technical constraints and workflows.

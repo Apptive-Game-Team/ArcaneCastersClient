@@ -471,6 +471,100 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000428
     m_Key: FriendInviteDialogTitle
+  - m_Id: 76060000000000601
+    m_Key: LocalServer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000602
+    m_Key: LocalServerRunOnPc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000603
+    m_Key: LocalServerInstall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000604
+    m_Key: LocalServerUpdate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000605
+    m_Key: LocalServerCancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000606
+    m_Key: LocalServerStatusNotInstalled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000607
+    m_Key: LocalServerStatusNoRelease
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000608
+    m_Key: LocalServerStatusInstalled
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000609
+    m_Key: LocalServerStatusUpdateAvailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000610
+    m_Key: LocalServerStatusStarting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000611
+    m_Key: LocalServerStatusRunning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000612
+    m_Key: LocalServerStatusFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000613
+    m_Key: LocalServerStatusDownloading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000614
+    m_Key: LocalServerStatusInstallFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000615
+    m_Key: LocalServerTickRateNext
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000616
+    m_Key: LocalServerTickRateAuto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000429
+    m_Key: PracticePreparing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000430
+    m_Key: PracticeFail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000501
+    m_Key: "InGameContinue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000502
+    m_Key: "InGameSettings"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000503
+    m_Key: "InGameSurrender"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000504
+    m_Key: "SurrenderConfirm"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000505
+    m_Key: "SurrenderRetry"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000506
+    m_Key: "SurrenderPending"
     m_Metadata:
       m_Items: []
   m_Metadata:

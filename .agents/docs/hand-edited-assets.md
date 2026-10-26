@@ -1,5 +1,11 @@
 # Hand-Edited Assets, Prefabs and Scenes
 
+`ZoomedCardUI` serves both the legacy zoomed card in `GameScene` and
+`InteractiveTutorialScene` and the `GameCardDetails.prefab` description panel.
+Before adding child-component bindings, inspect both shapes: the legacy card has
+a `MagicCastKindBadge`, while the description panel does not. Guard optional
+badge bindings; an unconditional `Bind` throws before the hover description loads.
+
 The Unity Editor cannot run in this environment, so `.asset`, `.prefab`, `.unity`
 and `.meta` files are edited as YAML by hand. Read this before changing a
 serialized type or deleting a script. Nothing here fails the build; every trap
@@ -533,3 +539,48 @@ new code side by side on real sprites from `Assets/Resources/Game/sprites` at ab
 screen pixels tall, enlarged 4x with nearest neighbour. #352 did this
 (`docs/pr-media/352/outline-before-after-90px.png`). The render does not prove the shader
 compiles for WebGL; say so in the pull request and leave that to an Editor check.
+# Admin room search text clipping
+
+When changing a legacy `InputField` height, inspect the nested text area's actual
+height after its negative `m_SizeDelta` padding. The former admin search field
+was 28 units high with 13 units of vertical padding, leaving only 15 units for
+a 14-point Pretendard line while vertical overflow was disabled. The serialized
+font and text references were valid even though typed glyphs were clipped.
+Keep enough line-height space, verify `ForceLabelUpdate` and generated text
+vertices in `AdminRoomSceneTests`, and check typed text in the Editor. The room
+list and its search now belong to `AdminRoomsScene`, not `AdminScene`.
+
+When repositioning UI prefab instances, normalize anchor, pivot and local scale together with anchored position and size. Admin navigation kept bottom-right anchors and moved offscreen; the lobby button retained scale 0.40005 and made its label unreadable. Test instantiated button corners against the Canvas bounds and generated label size, not merely component existence.
+## Custom battle deck selection
+
+The custom battle page uses two instances of `CustomBattleDeckDropdown.prefab`,
+derived from the matching-server dropdown without its server-selection or
+AdminOnly components. Keep both references wired in `CustomBattleDeckMenu` and
+keep their default selection at random. Owned cards and saved decks are read
+through `DeckApiClient`; do not use deck mutation endpoints for this flow.
+Require `deckSelectionVersion == 1` before sending the four-field battle request.
+Saved decks require 15 supported owned cards; the minimum three Spawn rule is
+specific to random generation. The source C# compile and serialized-reference
+checks do not replace the Editor dropdown/layout test or a real authenticated
+saved-deck retrieval check.
+
+## A copied button still calls the component you dropped
+
+`LocalServerPanel.prefab` (#314) copies `KoreanButton` from `Panal.prefab` six times
+for the tick rate buttons and drops its `LocaleSetButton`. The `Button`'s
+`m_OnClick` still listed `m_Target: {fileID: <the dropped LocaleSetButton>}`, so the
+copy pointed at an anchor that no longer existed in the file. The unresolved-reference
+check above caught it. When you drop a component from a copied subtree, empty every
+`m_PersistentCalls.m_Calls` that targeted it in the same pass. A regex that clears a
+call list up to the next two-space field misses the last field of a document, because
+the next line there is `--- !u!`.
+
+## `Button` inside `namespace LobbyScene.*` is a namespace
+
+`Assets/Scripts/LobbyScene/Button/` declares `namespace LobbyScene.Button`, so a field
+typed `Button` in any `LobbyScene.*` file fails with `CS0118: 'Button' is a namespace
+but is used like a type`, even with `using UnityEngine.UI;` or a `using Button = ...`
+alias at the top of the file: name lookup walks the enclosing namespaces before the
+file's using directives. Write `UnityEngine.UI.Button`, as
+`LobbyScene/SettingPage/LocalServerPage.cs` does.
+

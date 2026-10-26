@@ -25,7 +25,7 @@
 
 | 런타임 리소스 | 웹사이트/검수 근거 | 비고 |
 |---|---|---|
-| `ArcaneInfantry.png`, `ArcaneInfantryAttacking.png` | 클라이언트 이슈 #334, Unity EditMode 검증 | 비전 보병. master-v2 앵커로 생성한 128x81 RGBA 공통 캔버스, PPU 70, Bottom Center. 준비·타격 프레임. 64px 및 두 배경 시트 검수 |
+| `ArcaneInfantry.png`, `ArcaneInfantryAttacking.png`, `ArcaneInfantryWalkLeft.png`, `ArcaneInfantryWalkRight.png` | 클라이언트 이슈 #372, 2026-10-26 C안 선택 | 양손 마력 칼날 보병. 기본·공격·걷기 2프레임, 128x81 RGBA, PPU 70, Bottom Center. InfantryPoseController가 이동과 공격 우선순위를 관리 |
 | `CraterCarrier.png`, `CraterCarrierDeployed.png`, `CraterCarrierRecovering.png` | 클라이언트 이슈 #334, Unity EditMode 검증 | 분화구 운반수. 192x162 RGBA 공통 캔버스, PPU 110, Bottom Center. 운반·설치 완료·설치/회수 자세. 서버 상태로 전환하며 기본 hopping/attack swap 제거 |
 | `AquaArcher.png` | `concept-art/aqua-archer-drawn.webp` | 물의 궁수 기본 프레임 |
 | `AquaArcherAttack.png` | `concept-art/aqua-archer-release.webp` | 화살을 놓은 공격 프레임 |

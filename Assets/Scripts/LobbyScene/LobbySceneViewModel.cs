@@ -18,6 +18,8 @@ namespace LobbyScene
         {
             Idle,
             Matching,
+            // 연습경기는 티켓 없이 준비하며, 전용 안내를 게임씬 전환까지 유지한다.
+            PreparingPractice,
         }
 
         public StateEvent<LobbyState> CurrentState = new (LobbyState.Idle);
@@ -30,6 +32,8 @@ namespace LobbyScene
         public event Action OnMatchingStop;
         public event Action OnMatchingFailed;
         public event Action OnMatchingCanceled;
+        public event Action OnPracticeStart;
+        public event Action OnPracticeFailed;
         protected override void Awake()
         {
             base.Awake();
@@ -57,13 +61,18 @@ namespace LobbyScene
         public void PlayPracticeMatch()
         {
             Debug.Log("Practice button clicked: Starting practice match.");
-            StartMatching();
+            CurrentState.UpdateData(LobbyState.PreparingPractice);
+            OnPracticeStart?.Invoke();
             StartCoroutine(_matchQueueApi.MatchPractice(dto =>
             {
                 if (dto != null)
+                {
                     OnMatched(dto);
-                else
-                    StopMatchingAsFailed();
+                    return;
+                }
+
+                CurrentState.UpdateData(LobbyState.Idle);
+                OnPracticeFailed?.Invoke();
             }));
         }
 
@@ -124,6 +133,9 @@ namespace LobbyScene
 
         private void HandleMatchmakingState(MatchTicketState state, MatchTicket ticket)
         {
+            // 연습 요청 중에는 일반 매칭 복구 응답이 대기 화면을 덮어쓰지 않게 한다.
+            if (CurrentState.Data == LobbyState.PreparingPractice) return;
+            MatchTicketState previousState = TicketState.Data;
             TicketState.UpdateData(state);
 
             switch (state)
@@ -142,7 +154,13 @@ namespace LobbyScene
                     StopMatchingAsFailed();
                     break;
                 case MatchTicketState.Idle:
-                    CurrentState.UpdateData(LobbyState.Idle);
+                    // Idle right after CancelPending is a cancel the server resolved with no
+                    // active ticket. Any other Idle (a practice or friend match holds no ticket)
+                    // is not a cancel and must not show the cancel message.
+                    if (previousState == MatchTicketState.CancelPending)
+                        StopMatchingAsCanceled();
+                    else
+                        CurrentState.UpdateData(LobbyState.Idle);
                     break;
             }
         }

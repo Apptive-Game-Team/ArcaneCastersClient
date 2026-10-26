@@ -25,6 +25,20 @@ namespace Data
         [JsonIgnore]
         public MapKind MapKind => MapKinds.Parse(mapType);
 
+        /// <summary>
+        /// 자기 PC 의 로컬 서버에서 하는 경기일 때 로컬 서버를 띄우며 만든 init token. 공유 서버 경기는 null 이다.
+        /// 로컬 서버는 사용자 JWT 를 검증할 수 없으므로 경기 WebSocket 의 <c>?token=</c> 과 STOMP
+        /// <c>Authorization</c> 에 JWT 대신 이 값을 넣는다. 서버가 보내는 값이 아니므로 직렬화하지 않는다.
+        /// </summary>
+        [JsonIgnore]
+        public string localToken;
+
+        [JsonIgnore]
+        public bool IsLocal => !string.IsNullOrEmpty(localToken);
+
+        /// <summary>경기 WebSocket 인증에 쓸 값. 로컬 경기면 init token, 아니면 넘겨받은 사용자 JWT.</summary>
+        public string GameServerToken(string userJwt) => IsLocal ? localToken : userJwt;
+
         /// <summary>접속 주소를 어느 필드에서 가져왔는지. 진단 로그용이다.</summary>
         public string ConnectionSource => string.IsNullOrEmpty(webSocketUrl) ? server : webSocketUrl;
 

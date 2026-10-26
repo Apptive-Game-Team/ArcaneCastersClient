@@ -59,7 +59,7 @@ namespace LobbyScene.Coach
         {
             LobbySceneViewModel viewModel = LobbySceneViewModel.Instance;
             return viewModel != null
-                   && viewModel.CurrentState.Data == LobbySceneViewModel.LobbyState.Matching;
+                   && viewModel.CurrentState.Data != LobbySceneViewModel.LobbyState.Idle;
         }
 
         /// <summary>

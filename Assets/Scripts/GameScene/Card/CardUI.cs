@@ -16,6 +16,7 @@ namespace GameScene.Card
         [SerializeField] private TextMeshProUGUI cardNameText;
         [SerializeField] private TextMeshProUGUI cardManaText;
         [SerializeField] private Image image;
+        [SerializeField] private MagicCastKindBadge castKindBadge;
         [SerializeField] private AudioSource cardSound;
         
         [SerializeField] private Outline outline;
@@ -46,6 +47,7 @@ namespace GameScene.Card
         public async void Init(CombinedMagicData magic, Sprite cardSprite)
         {
             Magic = magic;
+            castKindBadge.Bind(magic?.castKind ?? MagicCastKind.Unknown);
             CardName = magic?.serverName;
             image.sprite = cardSprite != null ? cardSprite : magic?.GetSprite();
             cardManaText.text = CardManaCost.Of(magic).ToString();
@@ -70,6 +72,8 @@ namespace GameScene.Card
             {
                 return;
             }
+
+            CardUIZoom.Instance?.Hide(this);
 
             if (isActive)
             {
@@ -98,12 +102,17 @@ namespace GameScene.Card
         }
         public void OnPointerEnter(PointerEventData eventData)
         {
-            CardUIZoom.Instance.Show(this);
+            CardUIZoom.Instance?.Show(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            CardUIZoom.Instance.Hide();
+            CardUIZoom.Instance?.Hide(this);
+        }
+
+        private void OnDisable()
+        {
+            CardUIZoom.Instance?.Hide(this);
         }
     }
 }

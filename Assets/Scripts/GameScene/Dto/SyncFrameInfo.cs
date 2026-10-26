@@ -10,6 +10,7 @@ namespace GameScene.Dto
         // 서버 tick rate. 옛 서버는 보내지 않아 0 으로 들어오며, 이때는 기본값 20 으로 본다.
         public int tickRate;
         public int remainingTime;
+        public bool practicePaused;
 
         public int updatedMana;
         public int leftPlayerHp;

@@ -1,5 +1,6 @@
 using GameScene.Dto;
 using Global;
+using Global.Util;
 
 namespace GameScene.Handler
 {
@@ -7,7 +8,9 @@ namespace GameScene.Handler
     {
         public void Handler(BotThoughtInfo thought)
         {
-            if (thought == null)
+            if (thought == null || StompConnector.Instance == null ||
+                StompConnector.Instance.HasMatchEnded ||
+                !JwksService.IsFetched || !JwtHelper.IsAdmin(SceneContext.JwtToken))
             {
                 return;
             }
@@ -16,10 +19,7 @@ namespace GameScene.Handler
             string cards = thought.cards == null ? "" : string.Join(",", thought.cards);
             WDebug.Log($"{summary} cards=[{cards}] target={thought.target}");
 
-            if (SystemMessageUI.Instance != null)
-            {
-                SystemMessageUI.Instance.ShowMessage(summary);
-            }
+            BotThoughtLog.Append(thought);
         }
     }
 }

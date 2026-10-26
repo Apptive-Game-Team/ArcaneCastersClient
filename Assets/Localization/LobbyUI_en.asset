@@ -470,6 +470,100 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000428
     m_Localized: Friendly Match Invite
+  - m_Id: 76060000000000601
+    m_Localized: Local server
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000602
+    m_Localized: Run matches on my PC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000603
+    m_Localized: Install
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000604
+    m_Localized: Update
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000605
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000606
+    m_Localized: Not installed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000607
+    m_Localized: No version is available to install
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000608
+    m_Localized: 'Version {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000609
+    m_Localized: 'New version available: {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000610
+    m_Localized: "Version {0} - starting"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000611
+    m_Localized: "Version {0} - running"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000612
+    m_Localized: 'Could not start: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000613
+    m_Localized: 'Downloading {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000614
+    m_Localized: 'Install failed: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000615
+    m_Localized: "Tick rate - next match {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000616
+    m_Localized: Auto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000429
+    m_Localized: Preparing practice mode...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000430
+    m_Localized: Couldn't start the practice match. Please try again later.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000501
+    m_Localized: "Continue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000502
+    m_Localized: "Settings"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000503
+    m_Localized: "Surrender"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000504
+    m_Localized: "Surrender and end this match? This counts as a defeat."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000505
+    m_Localized: "Surrender could not be confirmed. Please try again."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000506
+    m_Localized: "Waiting for the surrender result..."
     m_Metadata:
       m_Items: []
   references:

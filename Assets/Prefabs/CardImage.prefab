@@ -380,6 +380,7 @@ RectTransform:
   - {fileID: 6551007188411672151}
   - {fileID: 5446933121454283733}
   - {fileID: 2051263742682273708}
+  - {fileID: 4710000000000101}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -440,6 +441,7 @@ MonoBehaviour:
   cardNameText: {fileID: 6377028756291647707}
   cardManaText: {fileID: 2828232940413020160}
   image: {fileID: 146713146040752173}
+  castKindBadge: {fileID: 4710000000000104}
   cardSound: {fileID: 0}
   outline: {fileID: 2171650917416182166}
   CardName: 
@@ -792,3 +794,32 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3716317277013807043, guid: 6c9dd9b617c1043b59bd19c9fd20c95a, type: 3}
   m_PrefabInstance: {fileID: 8648149400051880982}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &4710000000000100
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5526873467941897972}
+    m_Modifications: []
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 67fd29e9fb324ffcb8e92610a91c682b, type: 3}
+--- !u!224 &4710000000000101 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 100101, guid: 67fd29e9fb324ffcb8e92610a91c682b, type: 3}
+  m_PrefabInstance: {fileID: 4710000000000100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4710000000000104 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 100104, guid: 67fd29e9fb324ffcb8e92610a91c682b, type: 3}
+  m_PrefabInstance: {fileID: 4710000000000100}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 768edb7135e04d42a3b079d7a2a82ef0, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:

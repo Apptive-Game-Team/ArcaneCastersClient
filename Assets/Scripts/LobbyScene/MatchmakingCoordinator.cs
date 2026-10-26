@@ -15,6 +15,8 @@ namespace LobbyScene
         private MatchQueueApiService api;
         private MatchEventStream eventStream;
         private bool snapshotRequestInFlight;
+        private bool enqueueInFlight;
+        private bool cancelRequestedDuringEnqueue;
         private bool stopping;
         private Coroutine reconnectCoroutine;
         private Coroutine fallbackCoroutine;
@@ -42,24 +44,58 @@ namespace LobbyScene
 
         public void Enqueue(string deckMode)
         {
+            enqueueInFlight = true;
+            cancelRequestedDuringEnqueue = false;
             StartCoroutine(api.CreateTicket(deckMode, ticket =>
             {
+                enqueueInFlight = false;
                 if (ticket == null)
                 {
-                    PublishLocalState(MatchTicketState.Failed);
+                    bool cancelRequested = cancelRequestedDuringEnqueue;
+                    cancelRequestedDuringEnqueue = false;
+                    // No ticket was created, so a pending cancel has nothing left to cancel.
+                    PublishLocalState(cancelRequested ? MatchTicketState.Canceled : MatchTicketState.Failed);
                     return;
                 }
+                // ApplyTicket starts the pending cancel itself when the ticket is Queued or Allocating,
+                // so the flag is cleared only after it ran.
                 ApplyTicket(ticket);
+                cancelRequestedDuringEnqueue = false;
             }));
         }
 
         public void Cancel()
         {
             MatchTicket ticket = reducer.Current;
-            if (ticket == null || (ticket.ParsedState != MatchTicketState.Queued &&
-                                   ticket.ParsedState != MatchTicketState.Allocating))
+            if (IsCancelable(ticket))
+            {
+                RequestCancel(ticket);
                 return;
+            }
 
+            // The create request has not returned yet, so there is no ticket id to cancel.
+            // Remember the request; the ticket is canceled as soon as it is applied.
+            if (enqueueInFlight)
+            {
+                cancelRequestedDuringEnqueue = true;
+                PublishLocalState(MatchTicketState.CancelPending);
+            }
+        }
+
+        private static bool IsCancelable(MatchTicket ticket)
+        {
+            return ticket != null && (ticket.ParsedState == MatchTicketState.Queued ||
+                                      ticket.ParsedState == MatchTicketState.Allocating);
+        }
+
+        private static bool IsSameTicket(MatchTicket left, MatchTicket right)
+        {
+            return left != null && right != null && left.ticketId == right.ticketId &&
+                   left.version == right.version;
+        }
+
+        private void RequestCancel(MatchTicket ticket)
+        {
             PublishLocalState(MatchTicketState.CancelPending);
             StartCoroutine(api.CancelTicket(ticket.ticketId, result =>
             {
@@ -78,6 +114,9 @@ namespace LobbyScene
         {
             if (snapshotRequestInFlight || api == null) return;
             snapshotRequestInFlight = true;
+            // A 404 only describes the ticket held when the request went out. A ticket applied
+            // while it was in flight (the create response arriving first) must not be cleared by it.
+            MatchTicket requestedFor = reducer.Current;
             StartCoroutine(api.GetActiveTicket((requestSucceeded, ticket) =>
             {
                 snapshotRequestInFlight = false;
@@ -90,7 +129,21 @@ namespace LobbyScene
                 }
                 if (ticket == null)
                 {
-                    if (reducer.Current == null) PublishLocalState(MatchTicketState.Idle);
+                    // The create request may not have reached the server yet.
+                    if (enqueueInFlight) return;
+                    MatchTicket local = reducer.Current;
+                    if (local == null)
+                    {
+                        PublishLocalState(MatchTicketState.Idle);
+                    }
+                    else if (IsSameTicket(local, requestedFor) &&
+                             (IsCancelable(local) || State == MatchTicketState.CancelPending))
+                    {
+                        // The server has no active ticket, so the player is not matching.
+                        // A local Matched ticket is left alone for the game scene reconnect.
+                        reducer.Clear();
+                        PublishLocalState(MatchTicketState.Idle);
+                    }
                     return;
                 }
                 if (!ApplyTicket(ticket)) RestoreServerStateFromTransientState();
@@ -171,6 +224,14 @@ namespace LobbyScene
         {
             if (!reducer.Apply(ticket)) return false;
             MatchTicketState parsedState = ticket.ParsedState;
+            if (cancelRequestedDuringEnqueue && IsCancelable(ticket))
+            {
+                // Whichever path (event stream or create response) applies the ticket first
+                // starts the cancel; the flag makes sure it happens once.
+                cancelRequestedDuringEnqueue = false;
+                RequestCancel(ticket);
+                return true;
+            }
             PublishLocalState(parsedState);
             if (parsedState == MatchTicketState.Matched && ticket.matchInfo != null)
                 Matched?.Invoke(ticket.matchInfo);
