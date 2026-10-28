@@ -92,13 +92,13 @@ namespace Editor
                 }
 
                 ComicPanelView[] panels = {
-                    Panel(pages[0].transform, 0, 1, new Rect(24, 44, 600, 218)),
-                    Panel(pages[0].transform, 0, 2, new Rect(640, 44, 288, 192)),
-                    Panel(pages[0].transform, 0, 3, new Rect(944, 44, 312, 208)),
-                    Panel(pages[0].transform, 0, 4, new Rect(368, 250, 240, 135)),
-                    Panel(pages[0].transform, 0, 5, new Rect(24, 354, 600, 294)),
-                    Panel(pages[0].transform, 0, 6, new Rect(640, 270, 616, 348)),
-                    Panel(pages[0].transform, 0, 7, new Rect(1016, 488, 240, 160))
+                    Panel(pages[0].transform, 0, 1, new Rect(20, 48, 750, 230)),
+                    Panel(pages[0].transform, 0, 2, new Rect(746, 48, 514, 355)),
+                    Panel(pages[0].transform, 0, 3, new Rect(20, 254, 480, 245)),
+                    Panel(pages[0].transform, 0, 4, new Rect(400, 240, 480, 179)),
+                    Panel(pages[0].transform, 0, 5, new Rect(20, 368, 760, 280)),
+                    Panel(pages[0].transform, 0, 6, new Rect(760, 350, 500, 298)),
+                    Panel(pages[0].transform, 0, 7, new Rect(938, 500, 322, 148))
                 };
 
                 string[] keys = { "mage", "tree", "invasion", "attack", "destroy", "defend", "war", "continue" };
@@ -142,9 +142,16 @@ namespace Editor
 
                 GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root.gameObject, PrefabPath);
                 Object.DestroyImmediate(root.gameObject);
-                PrefabUtility.InstantiatePrefab(prefab, scene);
-                new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-                EditorSceneManager.SaveScene(scene, ScenePath);
+                // 열린 씬은 그대로 두고 프리팹만 갱신한다. 같은 경로의 열린 씬을 덮어쓸 수 없다.
+                if (!File.Exists(ScenePath))
+                {
+                    PrefabUtility.InstantiatePrefab(prefab, scene);
+                    new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+                    if (!EditorSceneManager.SaveScene(scene, ScenePath))
+                    {
+                        throw new InvalidOperationException("Could not save motion comic scene.");
+                    }
+                }
                 if (!EditorBuildSettings.scenes.Any(s => s.path == ScenePath))
                 {
                     EditorBuildSettings.scenes = EditorBuildSettings.scenes.Concat(new[] { new EditorBuildSettingsScene(ScenePath, true) }).ToArray();
@@ -166,31 +173,28 @@ namespace Editor
             CanvasGroup group = root.gameObject.AddComponent<CanvasGroup>();
             group.blocksRaycasts = false;
 
-            RectTransform shadow = Surface("Shadow", root, Ink);
+            RectTransform shadow = Shape("Shadow", root, Ink, RectanglePoints(), 0);
             Stretch(shadow);
-            shadow.GetComponent<Image>().sprite = null;
-            shadow.anchoredPosition = new Vector2(0, -6);
-            RectTransform frame = Surface("Frame", root, new Color32(249, 238, 213, 255));
+            shadow.anchoredPosition = new Vector2(0, -3);
+            RectTransform frame = Shape("Frame", root, new Color32(255, 248, 228, 255), RectanglePoints(), 3);
             Stretch(frame);
-            frame.GetComponent<Image>().sprite = null;
-            RectTransform viewport = Rect("Viewport", root);
-            Stretch(viewport, 5);
-            viewport.gameObject.AddComponent<RectMask2D>();
+            RectTransform viewport = Shape("Viewport", root, Color.white, RectanglePoints(), 0, 8);
+            Stretch(viewport);
+            viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;
             RectTransform art = Rect("Artwork", viewport);
             Stretch(art);
             Image image = art.gameObject.AddComponent<Image>();
             image.raycastTarget = false;
             AspectRatioFitter fit = art.gameObject.AddComponent<AspectRatioFitter>();
-            fit.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
-            Image backdrop = viewport.gameObject.AddComponent<Image>();
-            backdrop.color = Ink;
-            backdrop.raycastTarget = false;
+            fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
 
             CanvasGroup[] groups = new CanvasGroup[2];
             TMP_Text[] labels = new TMP_Text[2];
             for (int i = 0; i < 2; i++)
             {
-                RectTransform caption = Surface("Caption" + i, root, new Color32(249, 238, 213, 255));
+                RectTransform caption = Shape("Caption" + i, root,
+                    i == 0 ? new Color32(249, 238, 213, 255) : Color.white,
+                    i == 0 ? ParchmentPoints() : SpeechPoints(), 2.5f);
                 caption.anchorMin = caption.anchorMax = new Vector2(i == 0 ? 0 : 1, i == 0 ? 1 : 0);
                 caption.pivot = new Vector2(i == 0 ? 0 : 1, i == 0 ? 1 : 0);
                 caption.anchoredPosition = i == 0 ? new Vector2(20, -18) : new Vector2(-20, 18);
@@ -198,7 +202,7 @@ namespace Editor
                 groups[i] = caption.gameObject.AddComponent<CanvasGroup>();
                 groups[i].blocksRaycasts = false;
                 labels[i] = Label("Dialogue", caption, 22);
-                Stretch(labels[i].rectTransform, 10);
+                Stretch(labels[i].rectTransform, 14);
                 labels[i].color = Ink;
             }
             var serialized = new SerializedObject(view);
@@ -220,60 +224,134 @@ namespace Editor
             Image image = root.transform.Find("Viewport/Artwork").GetComponent<Image>();
             image.sprite = sprite;
             image.GetComponent<AspectRatioFitter>().aspectRatio = sprite.rect.width / sprite.rect.height;
+            if (number == 1 || number == 7)
+            {
+                image.rectTransform.pivot = new Vector2(.5f, 1f);
+            }
+            Vector2[] outline = PanelPoints(number);
+            foreach (string name in new[] { "Shadow", "Frame", "Viewport" })
+            {
+                SetShape(root.transform.Find(name).GetComponent<ComicShapeGraphic>(), outline);
+            }
             var serialized = new SerializedObject(view);
             serialized.FindProperty("page").intValue = page;
             serialized.FindProperty("drift").vector2Value = new Vector2(number % 2 == 0 ? 5 : -5, 2);
             serialized.ApplyModifiedPropertiesWithoutUndo();
             RectTransform caption = (RectTransform)root.transform.Find("Caption0");
-            caption.sizeDelta = new Vector2(Mathf.Min(300, bounds.width - 24), 74);
-            caption.anchoredPosition = new Vector2(12, -12);
-            if (number == 1)
+            Rect[] captionBounds = {
+                new Rect(440, 18, 270, 86), new Rect(130, 16, 340, 84),
+                new Rect(12, 42, 260, 92), new Rect(290, 20, 170, 66),
+                new Rect(16, 198, 242, 78), new Rect(24, 50, 260, 84),
+                new Rect(170, 70, 144, 66)
+            };
+            Position(caption, captionBounds[number - 1]);
+            if (number == 4 || number == 5 || number == 7)
             {
-                caption.anchorMin = caption.anchorMax = Vector2.one;
-                caption.pivot = Vector2.one;
-                caption.anchoredPosition = new Vector2(-12, -12);
-            }
-            if (number == 3)
-            {
-                caption.sizeDelta = new Vector2(280, 90);
-                caption.anchorMin = caption.anchorMax = Vector2.zero;
-                caption.pivot = Vector2.zero;
-                caption.anchoredPosition = new Vector2(12, 12);
-            }
-            if (number == 4 || number == 7)
-            {
-                caption.anchorMin = caption.anchorMax = number == 4 ? Vector2.up : Vector2.one;
-                caption.pivot = number == 4 ? Vector2.up : Vector2.one;
-                caption.anchoredPosition = new Vector2(number == 4 ? 12 : -12, -12);
-                caption.sizeDelta = new Vector2(140, 44);
                 EnemyCaption(caption);
             }
             if (number == 5)
             {
-                caption.sizeDelta = new Vector2(200, 64);
-                caption.anchorMin = caption.anchorMax = Vector2.zero;
-                caption.pivot = Vector2.zero;
-                caption.anchoredPosition = new Vector2(12, 12);
-                EnemyCaption(caption);
                 RectTransform defender = (RectTransform)root.transform.Find("Caption1");
-                defender.sizeDelta = new Vector2(230, 64);
-                defender.anchorMin = defender.anchorMax = Vector2.one;
-                defender.pivot = Vector2.one;
-                defender.anchoredPosition = new Vector2(-12, -12);
+                Position(defender, new Rect(470, 36, 260, 104));
+                TMP_Text label = defender.GetComponentInChildren<TMP_Text>();
+                label.alignment = TextAlignmentOptions.Center;
+                label.rectTransform.offsetMin = new Vector2(24, 26);
+                label.rectTransform.offsetMax = new Vector2(-24, -14);
             }
             return view;
         }
 
         private static void EnemyCaption(RectTransform caption)
         {
-            caption.GetComponent<Image>().color = new Color32(60, 12, 22, 255);
+            ComicShapeGraphic shape = caption.GetComponent<ComicShapeGraphic>();
+            shape.color = new Color32(24, 5, 11, 255);
+            SetShape(shape, ShoutPoints());
+            var serialized = new SerializedObject(shape);
+            serialized.FindProperty("strokeColor").colorValue = new Color32(255, 50, 45, 255);
+            serialized.FindProperty("strokeWidth").floatValue = 2.5f;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
             TMP_Text text = caption.GetComponentInChildren<TMP_Text>();
             text.color = Color.white;
             text.alignment = TextAlignmentOptions.Center;
             text.fontSize = text.fontSizeMax = 22;
-            Outline outline = caption.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color32(240, 68, 58, 255);
-            outline.effectDistance = new Vector2(2, -2);
+            text.rectTransform.offsetMin = new Vector2(22, 14);
+            text.rectTransform.offsetMax = new Vector2(-22, -14);
+        }
+
+        private static Vector2[] RectanglePoints()
+        {
+            return new[] { Vector2.zero, Vector2.right, Vector2.one, Vector2.up };
+        }
+
+        private static Vector2[] PanelPoints(int number)
+        {
+            switch (number)
+            {
+                case 1: return new[] { Vector2.zero, new Vector2(1, 0.12f), Vector2.one, Vector2.up };
+                case 2: return new[] { new Vector2(0.16f, 0.12f), Vector2.right, Vector2.one, Vector2.up };
+                case 3: return new[] { Vector2.zero, new Vector2(1, 0.17f), new Vector2(0.72f, 1), new Vector2(0, 0.92f) };
+                case 4: return new[] { new Vector2(0.1f, 0), new Vector2(1, 0.28f), new Vector2(0.83f, 1), new Vector2(0, 0.8f) };
+                case 5: return new[] { Vector2.zero, new Vector2(1, 0.04f), Vector2.one, new Vector2(0, 0.84f) };
+                case 6: return new[] { new Vector2(0, 0.08f), Vector2.right, Vector2.one, new Vector2(0, 0.84f) };
+                default: return new[] { Vector2.zero, Vector2.right, Vector2.one, new Vector2(0, 0.6f) };
+            }
+        }
+
+        private static Vector2[] ParchmentPoints()
+        {
+            return new[] {
+                new Vector2(.015f, .04f), new Vector2(.16f, .02f), new Vector2(.28f, .035f),
+                new Vector2(.43f, .015f), new Vector2(.6f, .04f), new Vector2(.78f, .015f),
+                new Vector2(.985f, .045f), new Vector2(.98f, .28f), new Vector2(.99f, .5f),
+                new Vector2(.975f, .7f), new Vector2(.99f, .96f), new Vector2(.78f, .985f),
+                new Vector2(.6f, .97f), new Vector2(.4f, .99f), new Vector2(.22f, .97f),
+                new Vector2(.02f, .985f), new Vector2(.025f, .75f), new Vector2(.01f, .55f),
+                new Vector2(.025f, .32f)
+            };
+        }
+
+        private static Vector2[] ShoutPoints()
+        {
+            return Enumerable.Range(0, 32).Select(i => {
+                float angle = i * Mathf.PI * 2 / 32;
+                float radius = i % 2 == 0 ? .5f : .41f;
+                return new Vector2(.5f + Mathf.Cos(angle) * radius, .5f + Mathf.Sin(angle) * radius);
+            }).ToArray();
+        }
+
+        private static Vector2[] SpeechPoints()
+        {
+            return Enumerable.Range(0, 48).Select(i => {
+                if (i == 40) return new Vector2(.88f, .015f);
+                float angle = i * Mathf.PI * 2 / 48;
+                return new Vector2(.5f + Mathf.Cos(angle) * .49f, .57f + Mathf.Sin(angle) * .4f);
+            }).ToArray();
+        }
+
+        private static RectTransform Shape(string name, Transform parent, Color color, Vector2[] points,
+            float stroke, float inset = 0)
+        {
+            RectTransform rect = Rect(name, parent);
+            ComicShapeGraphic shape = rect.gameObject.AddComponent<ComicShapeGraphic>();
+            shape.raycastTarget = false;
+            shape.color = color;
+            var serialized = new SerializedObject(shape);
+            serialized.FindProperty("strokeColor").colorValue = Ink;
+            serialized.FindProperty("strokeWidth").floatValue = stroke;
+            serialized.FindProperty("inset").floatValue = inset;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            SetShape(shape, points);
+            return rect;
+        }
+
+        private static void SetShape(ComicShapeGraphic shape, Vector2[] points)
+        {
+            var serialized = new SerializedObject(shape);
+            SerializedProperty array = serialized.FindProperty("vertices");
+            array.arraySize = points.Length;
+            for (int i = 0; i < points.Length; i++) array.GetArrayElementAtIndex(i).vector2Value = points[i];
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            shape.SetVerticesDirty();
         }
 
         private static RectTransform Surface(string name, Transform parent, Color color)

@@ -606,3 +606,22 @@ changes from a UI feature commit; do not discard pre-existing user edits.
 A PlayMode `[SetUp]` can be followed by `Start` before a `[UnityTest]` iterator
 first runs. To test skip before localization initialization, instantiate the comic
 inside the iterator immediately before invoking skip, rather than in `[SetUp]`.
+
+## Custom comic UI geometry
+
+A custom `MaskableGraphic` must explicitly require `CanvasRenderer`. The first
+comic mask compiled and imported but its serialized Viewport had no renderer,
+so EditMode instantiation and Play Mode threw `MissingComponentException`.
+Keep `[RequireComponent(typeof(CanvasRenderer))]` and verify the saved prefab.
+When reflecting `OnPopulateMesh`, select its `VertexHelper` parameter explicitly;
+Graphic also retains a Mesh overload and a name-only lookup is ambiguous.
+
+Test `GraphicRaycaster` routes on a rendered PlayMode canvas. A newly instantiated
+EditMode canvas can still have graphic depth -1 after ForceUpdateCanvases, so an
+empty hit list there does not prove the UI blocks input. Test the actual hit
+object through ExecuteEvents.ExecuteHierarchy as well as checking target flags.
+
+`ComicIntroSetup.Build` updates the reusable prefabs when the comic scene already
+exists. Do not save its temporary additive scene over an open ComicIntroScene:
+Unity rejects that write even though the prefab update succeeded. Create the
+scene only when its asset is absent, and treat SaveScene=false as a failure.

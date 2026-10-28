@@ -1,13 +1,16 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace WordOnline.Tests
@@ -97,6 +100,55 @@ namespace WordOnline.Tests
             while (tutorialLoads == 0 && Time.realtimeSinceStartup < deadline) yield return null;
             Assert.That(tutorialLoads, Is.EqualTo(1));
             Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("InteractiveTutorialScene"));
+        }
+
+        [UnityTest]
+        public IEnumerator ArtworkAndCaptionsRaycastToAdvanceAndSkipRemainsClickable()
+        {
+            CreatePlayer();
+            float deadline = Time.realtimeSinceStartup + 15;
+            while (!(bool)Get("ready") && Time.realtimeSinceStartup < deadline) yield return null;
+            Assert.That(Get("ready"), Is.True);
+            yield return new WaitForSecondsRealtime(.2f);
+            Canvas.ForceUpdateCanvases();
+            var eventRoot = new GameObject("comic-raycast-test");
+            eventRoot.SetActive(false);
+            EventSystem events = eventRoot.AddComponent<EventSystem>();
+            try
+            {
+                var raycaster = root.GetComponent<GraphicRaycaster>();
+                var advance = (Button)Get("advanceButton");
+                var skip = (Button)Get("skipButton");
+                var targets = root.GetComponentsInChildren<Graphic>(true)
+                    .Where(g => g.name == "Artwork" || g.name == "Dialogue")
+                    .Select(g => g.rectTransform).Concat(new[] { (RectTransform)skip.transform });
+                PointerEventData pointer = null;
+                PointerEventData advancePointer = null;
+                GameObject advanceHit = null;
+                GameObject lastHit = null;
+                foreach (RectTransform target in targets)
+                {
+                    pointer = new PointerEventData(events) {
+                        position = RectTransformUtility.WorldToScreenPoint(null, target.TransformPoint(target.rect.center))
+                    };
+                    var hits = new List<RaycastResult>();
+                    raycaster.Raycast(pointer, hits);
+                    Assert.That(hits.Count, Is.GreaterThan(0), target.name);
+                    GameObject handler = ExecuteEvents.GetEventHandler<IPointerClickHandler>(hits[0].gameObject);
+                    Assert.That(handler, Is.EqualTo(target == skip.transform ? skip.gameObject : advance.gameObject), target.name);
+                    if (advanceHit == null)
+                    {
+                        advanceHit = hits[0].gameObject;
+                        advancePointer = pointer;
+                    }
+                    lastHit = hits[0].gameObject;
+                }
+                ExecuteEvents.ExecuteHierarchy(advanceHit, advancePointer, ExecuteEvents.pointerClickHandler);
+                Assert.That(Get("lastInputFrame"), Is.EqualTo(Time.frameCount));
+                ExecuteEvents.ExecuteHierarchy(lastHit, pointer, ExecuteEvents.pointerClickHandler);
+                Assert.That(Get("finishing"), Is.True);
+            }
+            finally { Object.Destroy(eventRoot); }
         }
 
         [UnityTest]

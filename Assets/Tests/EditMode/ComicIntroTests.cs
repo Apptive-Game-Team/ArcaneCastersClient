@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -56,7 +57,12 @@ namespace WordOnline.Tests
                 Assert.That(art.sprite, Is.Not.Null);
                 Assert.That(AssetDatabase.GetAssetPath(art.sprite), Does.EndWith($"intro_{i + 1:00}.png"));
                 Assert.That(art.GetComponent<AspectRatioFitter>().aspectMode,
-                    Is.EqualTo(AspectRatioFitter.AspectMode.FitInParent));
+                    Is.EqualTo(AspectRatioFitter.AspectMode.EnvelopeParent));
+                Mask mask = art.transform.parent.GetComponent<Mask>();
+                Assert.That(mask, Is.Not.Null);
+                Assert.That(mask.showMaskGraphic, Is.False);
+                Assert.That(mask.GetComponent<Graphic>().GetType().Name, Is.EqualTo("ComicShapeGraphic"));
+                Assert.That(mask.GetComponent<RectMask2D>(), Is.Null);
             }
         }
 
@@ -95,24 +101,94 @@ namespace WordOnline.Tests
                 var beat = beats.GetArrayElementAtIndex(i);
                 var source = (Component)beat.FindPropertyRelative("panel").objectReferenceValue;
                 var sourceData = new SerializedObject(source);
-                var caption = (Component)sourceData.FindProperty("captionGroups")
+                var caption = (Component)sourceData.FindProperty("captionTexts")
                     .GetArrayElementAtIndex(beat.FindPropertyRelative("captionIndex").intValue).objectReferenceValue;
                 for (int j = i + 1; j < beats.arraySize; j++)
                 {
                     var later = (Component)beats.GetArrayElementAtIndex(j).FindPropertyRelative("panel").objectReferenceValue;
                     if (later == source || new SerializedObject(later).FindProperty("page").intValue
                         != sourceData.FindProperty("page").intValue) continue;
-                    Assert.That(WorldRect((RectTransform)caption.transform).Overlaps(WorldRect((RectTransform)later.transform)),
+                    var frame = later.transform.Find("Frame").GetComponent<Graphic>();
+                    Assert.That(PolygonsOverlap(WorldCorners((RectTransform)caption.transform), ShapeWorldPoints(frame)),
                         Is.False, source.name + " caption is covered by " + later.name);
                 }
             }
         }
 
-        private static Rect WorldRect(RectTransform rect)
+        private static Vector2[] WorldCorners(RectTransform rect)
         {
             var corners = new Vector3[4];
             rect.GetWorldCorners(corners);
-            return Rect.MinMaxRect(corners[0].x, corners[0].y, corners[2].x, corners[2].y);
+            return corners.Select(p => (Vector2)p).ToArray();
+        }
+
+        private static Vector2[] ShapeWorldPoints(Graphic shape)
+        {
+            var data = new SerializedObject(shape);
+            var points = data.FindProperty("vertices");
+            float inset = data.FindProperty("inset").floatValue;
+            Rect rect = shape.rectTransform.rect;
+            Vector2 size = rect.size - Vector2.one * inset * 2;
+            Vector2 origin = rect.min + Vector2.one * inset;
+            return Enumerable.Range(0, points.arraySize).Select(i => (Vector2)shape.rectTransform.TransformPoint(
+                origin + Vector2.Scale(points.GetArrayElementAtIndex(i).vector2Value, size))).ToArray();
+        }
+
+        private static bool PolygonsOverlap(Vector2[] a, Vector2[] b)
+        {
+            foreach (Vector2[] polygon in new[] { a, b })
+            {
+                for (int i = 0; i < polygon.Length; i++)
+                {
+                    Vector2 edge = polygon[(i + 1) % polygon.Length] - polygon[i];
+                    Vector2 axis = new Vector2(-edge.y, edge.x).normalized;
+                    float[] projectedA = a.Select(p => Vector2.Dot(p, axis)).ToArray();
+                    float[] projectedB = b.Select(p => Vector2.Dot(p, axis)).ToArray();
+                    if (projectedA.Max() <= projectedB.Min() || projectedB.Max() <= projectedA.Min()) return false;
+                }
+            }
+            return true;
+        }
+
+        [Test]
+        public void AuthoredShapesHaveValidFanMeshesAndDoNotInterceptPointerInput()
+        {
+            var shapes = root.GetComponentsInChildren<Graphic>(true)
+                .Where(g => g.GetType().Name == "ComicShapeGraphic");
+            foreach (Graphic shape in shapes)
+            {
+                Assert.That(shape.raycastTarget, Is.False, shape.name);
+                Assert.That(shape.GetComponent<CanvasRenderer>(), Is.Not.Null, shape.name);
+                Assert.That(shape.GetComponents<Graphic>().Length, Is.EqualTo(1), shape.name);
+                using (var helper = new VertexHelper())
+                {
+                    var mesh = new Mesh();
+                    try
+                    {
+                        shape.GetType().GetMethod("OnPopulateMesh", BindingFlags.Instance | BindingFlags.NonPublic,
+                            null, new[] { typeof(VertexHelper) }, null)
+                            .Invoke(shape, new object[] { helper });
+                        helper.FillMesh(mesh);
+                        Assert.That(mesh.vertexCount, Is.GreaterThan(3), shape.name);
+                        Vector3[] vertices = mesh.vertices;
+                        foreach (Vector3 vertex in vertices)
+                        {
+                            Assert.That(float.IsNaN(vertex.x) || float.IsNaN(vertex.y), Is.False);
+                            Rect bounds = shape.rectTransform.rect;
+                            Assert.That(vertex.x, Is.InRange(bounds.xMin - 0.001f, bounds.xMax + 0.001f), shape.name);
+                            Assert.That(vertex.y, Is.InRange(bounds.yMin - 0.001f, bounds.yMax + 0.001f), shape.name);
+                        }
+                        int[] triangles = mesh.triangles;
+                        for (int i = 0; i < triangles.Length; i += 3)
+                        {
+                            float area = Vector3.Cross(vertices[triangles[i + 1]] - vertices[triangles[i]],
+                                vertices[triangles[i + 2]] - vertices[triangles[i]]).z;
+                            Assert.That(area, Is.GreaterThan(0.001f), shape.name + " fan folds over itself");
+                        }
+                    }
+                    finally { UnityEngine.Object.DestroyImmediate(mesh); }
+                }
+            }
         }
 
         [Test]
