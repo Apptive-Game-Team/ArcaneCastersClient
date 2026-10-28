@@ -146,12 +146,12 @@ MonoBehaviour:
   - panel: {fileID: 7650252146334985354}
     captionIndex: 1
     localizationKey: onboarding.comic.defend
-  - panel: {fileID: 8056712110912115764}
-    captionIndex: 0
-    localizationKey: onboarding.comic.war
   - panel: {fileID: 2548024212967557174}
     captionIndex: 0
     localizationKey: onboarding.comic.continue
+  - panel: {fileID: 8056712110912115764}
+    captionIndex: 0
+    localizationKey: onboarding.comic.war
   advanceButton: {fileID: 2558384491721097808}
   skipButton: {fileID: 8616817010197962455}
   skipLabel: {fileID: 416801325580762176}
@@ -515,18 +515,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 522278071116857813}
     m_Modifications:
-    - target: {fileID: 2340506121478742591, guid: 1128af5ddb12905458b613631749447b, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -48
-      objectReference: {fileID: 0}
-    - target: {fileID: 2340506121478742591, guid: 1128af5ddb12905458b613631749447b, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -40
-      objectReference: {fileID: 0}
-    - target: {fileID: 2340506121478742591, guid: 1128af5ddb12905458b613631749447b, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 2457635970908433695, guid: 1128af5ddb12905458b613631749447b, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -583,9 +571,29 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2758615369706297437, guid: 1128af5ddb12905458b613631749447b, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 2758615369706297437, guid: 1128af5ddb12905458b613631749447b, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3225031267008759327, guid: 1128af5ddb12905458b613631749447b, type: 3}
       propertyPath: m_Name
       value: Panel5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4064936028773323261, guid: 1128af5ddb12905458b613631749447b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -48
+      objectReference: {fileID: 0}
+    - target: {fileID: 4064936028773323261, guid: 1128af5ddb12905458b613631749447b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4064936028773323261, guid: 1128af5ddb12905458b613631749447b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4225425186055444445, guid: 1128af5ddb12905458b613631749447b, type: 3}
       propertyPath: vertices.Array.data[1].y
@@ -722,14 +730,6 @@ PrefabInstance:
     - target: {fileID: 6886673705974176967, guid: 1128af5ddb12905458b613631749447b, type: 3}
       propertyPath: m_SizeDelta.x
       value: -44
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319372248078363408, guid: 1128af5ddb12905458b613631749447b, type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 7319372248078363408, guid: 1128af5ddb12905458b613631749447b, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7627992596176213187, guid: 1128af5ddb12905458b613631749447b, type: 3}
       propertyPath: drift.x

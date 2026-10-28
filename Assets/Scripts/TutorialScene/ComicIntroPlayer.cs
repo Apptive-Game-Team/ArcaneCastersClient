@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
@@ -44,6 +45,7 @@ namespace TutorialScene
         private bool ready;
         private bool finishing;
         private bool textComplete;
+        private readonly HashSet<ComicPanelView> revealedPanels = new HashSet<ComicPanelView>();
 
         private void Awake()
         {
@@ -179,12 +181,13 @@ namespace TutorialScene
             {
                 beat.panel.Reveal();
             }
+            revealedPanels.Add(beat.panel);
             currentText = beat.panel.PrepareCaption(beat.captionIndex, GetText(beat.localizationKey));
             beatStartedAt = Time.unscaledTime;
             inputReadyAt = beatStartedAt + InputBufferSeconds;
             textComplete = false;
             nextLabel.text = string.Empty;
-            pageLabel.text = $"{Array.IndexOf(panels, beat.panel) + 1} / {panels.Length}";
+            pageLabel.text = $"{revealedPanels.Count} / {panels.Length}";
         }
 
         private void CompleteText()

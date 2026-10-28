@@ -40,7 +40,7 @@ namespace WordOnline.Tests
             Assert.That(player.FindProperty("panels").arraySize, Is.EqualTo(7));
             var beats = player.FindProperty("beats");
             Assert.That(beats.arraySize, Is.EqualTo(8));
-            string[] keys = { "mage", "tree", "invasion", "attack", "destroy", "defend", "war", "continue" };
+            string[] keys = { "mage", "tree", "invasion", "attack", "destroy", "defend", "continue", "war" };
             for (int i = 0; i < beats.arraySize; i++)
             {
                 Assert.That(beats.GetArrayElementAtIndex(i).FindPropertyRelative("localizationKey").stringValue,
@@ -49,6 +49,10 @@ namespace WordOnline.Tests
             Assert.That(beats.GetArrayElementAtIndex(4).FindPropertyRelative("panel").objectReferenceValue,
                 Is.SameAs(beats.GetArrayElementAtIndex(5).FindPropertyRelative("panel").objectReferenceValue));
             Assert.That(beats.GetArrayElementAtIndex(5).FindPropertyRelative("captionIndex").intValue, Is.EqualTo(1));
+            Assert.That(beats.GetArrayElementAtIndex(6).FindPropertyRelative("panel").objectReferenceValue,
+                Is.SameAs(player.FindProperty("panels").GetArrayElementAtIndex(6).objectReferenceValue));
+            Assert.That(beats.GetArrayElementAtIndex(7).FindPropertyRelative("panel").objectReferenceValue,
+                Is.SameAs(player.FindProperty("panels").GetArrayElementAtIndex(5).objectReferenceValue));
             var panels = player.FindProperty("panels");
             for (int i = 0; i < panels.arraySize; i++)
             {
@@ -108,6 +112,7 @@ namespace WordOnline.Tests
                     var later = (Component)beats.GetArrayElementAtIndex(j).FindPropertyRelative("panel").objectReferenceValue;
                     if (later == source || new SerializedObject(later).FindProperty("page").intValue
                         != sourceData.FindProperty("page").intValue) continue;
+                    if (later.transform.GetSiblingIndex() <= source.transform.GetSiblingIndex()) continue;
                     var frame = later.transform.Find("Frame").GetComponent<Graphic>();
                     Assert.That(PolygonsOverlap(WorldCorners((RectTransform)caption.transform), ShapeWorldPoints(frame)),
                         Is.False, source.name + " caption is covered by " + later.name);

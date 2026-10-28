@@ -179,7 +179,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000046
-    m_Localized: "Long ago, a great archmage lived on the continent of Wid."
+    m_Localized: "Long ago, a great archmage lived on the continent of Word."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000047
@@ -203,7 +203,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000052
-    m_Localized: "And so, war began on the continent of Wid."
+    m_Localized: "And so, war began on the continent of Word."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000053

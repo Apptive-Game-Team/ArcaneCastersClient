@@ -66,6 +66,9 @@ namespace WordOnline.Tests
                 Invoke("Advance");
                 Assert.That(Get("beatIndex"), Is.EqualTo(i), "타이핑 중 입력은 현재 대사만 완성해야 한다.");
                 Assert.That(Get("textComplete"), Is.True);
+                string progress = (string)Get("pageLabel").GetType().GetProperty("text").GetValue(Get("pageLabel"));
+                int expectedCount = i < 5 ? i + 1 : i;
+                Assert.That(progress, Is.EqualTo($"{expectedCount} / 7"), "컷 파일 번호가 바뀌어도 진행 수가 역행하면 안 된다.");
                 Invoke("Advance");
                 Assert.That(Get("beatIndex"), Is.EqualTo(i), "같은 프레임의 중복 입력으로 컷을 넘기면 안 된다.");
                 if (i == 1)

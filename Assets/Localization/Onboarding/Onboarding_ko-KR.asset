@@ -179,7 +179,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000046
-    m_Localized: "오래전, 위드 대륙에는\n한 대마법사가 살았다."
+    m_Localized: "오래전, 워드 대륙에는\n한 대마법사가 살았다."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000047
@@ -203,7 +203,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000052
-    m_Localized: "그렇게, 위드 대륙에\n전쟁이 시작됐다."
+    m_Localized: "그렇게, 워드 대륙에\n전쟁은 시작됐다."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000053

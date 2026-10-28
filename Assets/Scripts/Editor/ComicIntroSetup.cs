@@ -101,8 +101,8 @@ namespace Editor
                     Panel(pages[0].transform, 0, 7, new Rect(938, 500, 322, 148))
                 };
 
-                string[] keys = { "mage", "tree", "invasion", "attack", "destroy", "defend", "war", "continue" };
-                int[] panelIndices = { 0, 1, 2, 3, 4, 4, 5, 6 };
+                string[] keys = { "mage", "tree", "invasion", "attack", "destroy", "defend", "continue", "war" };
+                int[] panelIndices = { 0, 1, 2, 3, 4, 4, 6, 5 };
                 var serialized = new SerializedObject(player);
                 BindArray(serialized, "pages", pages);
                 BindArray(serialized, "panels", panels);
