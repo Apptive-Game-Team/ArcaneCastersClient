@@ -53,6 +53,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AdminRoomsScene.unity
     guid: 03f66092e727428ba56b770d529a951b
+  - enabled: 1
+    path: Assets/Scenes/ComicIntroScene.unity
+    guid: 1aaea0966be44824bac441cf7310a07d
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d5ac7d2c0eb114acf823685c7079a8f7, type: 2}
     com.unity.localization.settings: {fileID: 11400000, guid: cd2023339e910421c9fc21cab4d3e343, type: 2}

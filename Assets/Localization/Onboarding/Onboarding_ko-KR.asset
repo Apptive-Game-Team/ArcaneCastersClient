@@ -178,6 +178,50 @@ MonoBehaviour:
     m_Localized: "덱을 바꿨다면 여기를 눌러 저장해요"
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000046
+    m_Localized: "오래전, 위드 대륙에는\n한 대마법사가 살았다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000047
+    m_Localized: "만 년 전, 그가 죽은 자리에서\n세계수가 자라났다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000048
+    m_Localized: "그리고 지금,\n다른 차원으로 통하는\n문이 열렸다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000049
+    m_Localized: "공격해라."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000050
+    m_Localized: "눈앞의 적을 없애라."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000051
+    m_Localized: "모두 물러서!\n세계수를 지켜!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000052
+    m_Localized: "그렇게, 위드 대륙에\n전쟁이 시작됐다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000053
+    m_Localized: "계속해라."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000054
+    m_Localized: "건너뛰기"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000055
+    m_Localized: "클릭 / Space로 계속"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000056
+    m_Localized: "튜토리얼 시작"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

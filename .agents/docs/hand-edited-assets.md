@@ -584,3 +584,25 @@ alias at the top of the file: name lookup walks the enclosing namespaces before 
 file's using directives. Write `UnityEngine.UI.Button`, as
 `LobbyScene/SettingPage/LocalServerPage.cs` does.
 
+
+## Motion comic entry and UI validation
+
+`TutorialScene.unity` retained a `sceneName` override for a `SceneChangeButton`
+that was already listed in `m_RemovedComponents` (#391). Before diagnosing two
+scene transitions, inspect both the persistent calls and the removed-component
+list; an override alone does not prove a component still runs.
+
+`ComicIntroScene` must finish before loading `InteractiveTutorialScene`: the
+battle scene starts its mana and object timers in `Start`. Keep both comic
+completion and skip pointed at the battle scene, not at `SkipOnboardingTutorial`,
+which skips the entire onboarding. The fifth illustration has two dialogue beats.
+
+TMP `ForceMeshUpdate` and Play Mode UI checks populate dynamic font atlases and
+can dirty `Jua SDF.asset` and `LilitaOne SDF.asset`. `AssetDatabase.SaveAssets`
+then persists those glyph caches even when the font was not intentionally edited.
+Compare with the pre-test Git state and exclude only known test-generated font
+changes from a UI feature commit; do not discard pre-existing user edits.
+
+A PlayMode `[SetUp]` can be followed by `Start` before a `[UnityTest]` iterator
+first runs. To test skip before localization initialization, instantiate the comic
+inside the iterator immediately before invoking skip, rather than in `[SetUp]`.
