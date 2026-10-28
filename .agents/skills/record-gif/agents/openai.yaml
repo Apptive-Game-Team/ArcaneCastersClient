@@ -1,0 +1,4 @@
+interface:
+  display_name: "녹화 → GIF"
+  short_description: "실제 재생 화면을 녹화하고 지정 용량 이하의 GIF로 변환"
+  default_prompt: "$record-gif 현재 재생 화면을 녹화해서 3MB 이하 GIF로 만들어줘."

@@ -1,6 +1,6 @@
 {
     "name": "WordOnline.Tests.Preview",
-    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "WordOnline.Serialization"],
+    "references": ["UnityEngine.TestRunner", "UnityEditor.TestRunner", "WordOnline.Serialization", "UnityEngine.UI"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "overrideReferences": true,

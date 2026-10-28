@@ -175,6 +175,50 @@ MonoBehaviour:
     m_Key: onboarding.deck.saveButton
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000046
+    m_Key: onboarding.comic.mage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000047
+    m_Key: onboarding.comic.tree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000048
+    m_Key: onboarding.comic.invasion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000049
+    m_Key: onboarding.comic.attack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000050
+    m_Key: onboarding.comic.destroy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000051
+    m_Key: onboarding.comic.defend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000052
+    m_Key: onboarding.comic.war
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000053
+    m_Key: onboarding.comic.continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000054
+    m_Key: onboarding.comic.skip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000055
+    m_Key: onboarding.comic.next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000056
+    m_Key: onboarding.comic.begin
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
