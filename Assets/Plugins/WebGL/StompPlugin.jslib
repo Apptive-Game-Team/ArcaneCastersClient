@@ -8,14 +8,17 @@ mergeInto(LibraryManager.library, {
   //             옛 소켓이 뒤늦게 올리는 콜백을 걸러내는 데 쓴다.
   $stompState: {
     client: null,
+    target: 'StompConnector',
     generation: 0
   },
 
   // STOMP 서버에 WebSocket으로 연결
   ConnectStompSocket__deps: ['$stompState'],
-  ConnectStompSocket: function (urlPtr, tokenPtr) {
+  ConnectStompSocket: function (urlPtr, tokenPtr, targetPtr) {
     const url = UTF8ToString(urlPtr);
     const token = UTF8ToString(tokenPtr);
+    const target = UTF8ToString(targetPtr);
+    stompState.target = target;
 
     // 세대를 먼저 올린다. 바로 아래에서 옛 소켓을 닫을 때 터지는 콜백은 옛 세대를
     // 들고 있으므로 여기서부터 걸러진다.
@@ -41,12 +44,12 @@ mergeInto(LibraryManager.library, {
       { Authorization: 'Bearer ' + token },
       function (frame) {
         if (generation !== stompState.generation) return;
-        SendMessage('StompConnector', 'OnConnected', JSON.stringify(frame.headers));
+        SendMessage(target, 'OnConnected', JSON.stringify(frame.headers));
       },
       function (error) {
         if (generation !== stompState.generation) return;
         console.error('STOMP error:', error);
-        SendMessage('StompConnector', 'OnError', String(error));
+        SendMessage(target, error && error.command === 'ERROR' ? 'OnRejected' : 'OnError', String(error));
       }
     );
   },
@@ -59,11 +62,14 @@ mergeInto(LibraryManager.library, {
 
     if (!stompState.client || !stompState.client.connected) {
       console.warn('SubscribeStomp: STOMP client is not connected.');
-      SendMessage('StompConnector', 'OnError', 'STOMP client is not connected.');
+      SendMessage(stompState.target, 'OnError', 'STOMP client is not connected.');
       return;
     }
 
+    const target = stompState.target;
+    const generation = stompState.generation;
     stompState.client.subscribe(topic, function (message) {
+      if (generation !== stompState.generation) return;
       var bodyStr;
       if (typeof message.body === 'string') {
         bodyStr = message.body;
@@ -75,7 +81,7 @@ mergeInto(LibraryManager.library, {
       }
 
       var payload = JSON.stringify({ id: subscriptionId, body: bodyStr });
-      SendMessage('StompConnector', 'OnSubscriptionMessage', payload);
+      SendMessage(target, 'OnSubscriptionMessage', payload);
     }, { id: subscriptionId });
   },
 
@@ -87,7 +93,7 @@ mergeInto(LibraryManager.library, {
 
     if (!stompState.client || !stompState.client.connected) {
       console.warn('SendStomp: STOMP client is not connected.');
-      SendMessage('StompConnector', 'OnError', 'STOMP client is not connected.');
+      SendMessage(stompState.target, 'OnError', 'STOMP client is not connected.');
       return;
     }
 
@@ -111,16 +117,17 @@ mergeInto(LibraryManager.library, {
     // 세대를 올려 종료 과정에서 터지는 옛 소켓 콜백을 막는다.
     const stale = stompState.client;
     stompState.client = null;
-    stompState.generation++;
+    const generation = ++stompState.generation;
+    const target = stompState.target;
 
     try {
       stale.disconnect(function () {
-        SendMessage('StompConnector', 'OnDisconnected', 'Disconnected');
+        if (generation === stompState.generation) SendMessage(target, 'OnDisconnected', 'Disconnected');
       });
     } catch (e) {
       // 핸드셰이크 도중이면 DISCONNECT 프레임 전송이 실패한다. 소켓만 닫고 알린다.
       try { if (stale.ws) stale.ws.close(); } catch (closeError) {}
-      SendMessage('StompConnector', 'OnDisconnected', 'Disconnected');
+      if (generation === stompState.generation) SendMessage(target, 'OnDisconnected', 'Disconnected');
     }
   }
 });

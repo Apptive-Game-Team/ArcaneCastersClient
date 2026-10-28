@@ -17,6 +17,7 @@ namespace Global.Stomp
 
         /// <summary>에러 발생 시 (error: 에러 메시지)</summary>
         event Action<string> Errored;
+        event Action<string> Rejected;
 
         /// <summary>구독한 토픽에서 메시지 수신 시 (subscriptionId, body)</summary>
         event Action<string, string> MessageReceived;

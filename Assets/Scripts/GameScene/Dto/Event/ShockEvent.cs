@@ -4,5 +4,6 @@ namespace GameScene.Dto.Event
     public class ShockEvent : GameEvent
     {
         public int actorId;
+        public int targetId;
     }
 }

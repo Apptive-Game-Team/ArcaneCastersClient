@@ -255,7 +255,7 @@ namespace GameScene.Handler
             bubbleSprite = Resources.Load<Sprite>("UI/SpeechBubble");
             backgroundImage.sprite = bubbleSprite != null
                 ? bubbleSprite
-                : Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+                : Resources.Load<Sprite>("UI/Flat/FlatCard");
             backgroundImage.type = bubbleSprite != null ? Image.Type.Simple : Image.Type.Sliced;
             backgroundImage.color = new Color(1f, 1f, 1f, 0.96f);
             backgroundImage.raycastTarget = false;

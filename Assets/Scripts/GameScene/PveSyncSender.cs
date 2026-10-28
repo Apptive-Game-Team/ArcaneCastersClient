@@ -1,6 +1,4 @@
-using GameScene.Dto;
 using Global;
-using Global.Serialization;
 
 namespace GameScene
 {
@@ -27,10 +25,7 @@ namespace GameScene
                 return false;
             }
 
-            string json = JsonCodec.Serialize(new PveSyncInput(lastEventSeq));
-            string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
-            StompConnector.Instance.SendMessageToServer(destination, json);
-            return true;
+            return StompConnector.Instance.TrySendPveSync(lastEventSeq);
         }
     }
 }

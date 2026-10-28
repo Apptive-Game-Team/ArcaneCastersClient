@@ -1,6 +1,4 @@
-using Data;
 using Global;
-using Global.Serialization;
 
 namespace GameScene.Emote
 {
@@ -30,10 +28,7 @@ namespace GameScene.Emote
                 return false;
             }
 
-            string json = JsonCodec.Serialize(new EmoteInput(wireName));
-            string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
-            StompConnector.Instance.SendMessageToServer(destination, json);
-            return true;
+            return StompConnector.Instance.TrySendEmote(wireName);
         }
     }
 }

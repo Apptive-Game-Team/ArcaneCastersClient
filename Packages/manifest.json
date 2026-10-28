@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.arcanecasters.lockstep": "file:../LocalPackages/com.arcanecasters.lockstep",
     "com.coplaydev.unity-mcp": "file:../LocalPackages/com.coplaydev.unity-mcp",
     "com.unity.collab-proxy": "2.7.1",
     "com.unity.feature.2d": "2.0.1",

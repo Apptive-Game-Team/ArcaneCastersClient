@@ -1,0 +1,6 @@
+{
+  "name": "ArcaneCasters.FixedPhysics",
+  "noEngineReferences": true,
+  "allowUnsafeCode": true,
+  "autoReferenced": true
+}

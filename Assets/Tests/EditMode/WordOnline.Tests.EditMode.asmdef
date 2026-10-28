@@ -8,6 +8,8 @@
         "WordOnline.GameContracts",
         "WordOnline.Net",
         "WordOnline.Contracts",
+        "ArcaneCasters.Simulation",
+        "ArcaneCasters.FixedPhysics",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [

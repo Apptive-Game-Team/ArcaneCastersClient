@@ -23,6 +23,30 @@
   <assembly fullname="Newtonsoft.Json" preserve="all" />
   <assembly fullname="WordOnline.Serialization" preserve="all" />
   <assembly fullname="WordOnline.GameContracts" preserve="all" />
+  <!-- lockstep 초기 상태와 입력은 Json.NET 리플렉션으로 역직렬화한다. -->
+  <assembly fullname="ArcaneCasters.Simulation">
+    <type fullname="ArcaneCasters.Simulation.BattleInitialState" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattlePveSnapshot" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattlePveInstaller" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattlePveAction" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattlePveEvent" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattlePveShield" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattlePveRules" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattlePersonaSnapshot" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattleParticipantSnapshot" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattleContentSnapshot" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattleParameterRow" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattleMagicRow" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattleTagSnapshot" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattleMagicTags" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattleObjectTags" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.BattleCounterRule" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.SessionStart" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.HistoryPage" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.ConfirmedFrame" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.InputBatch" preserve="all" />
+    <type fullname="ArcaneCasters.Simulation.CastCommand" preserve="all" />
+  </assembly>
   <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.Object" preserve="all" />
   </assembly>

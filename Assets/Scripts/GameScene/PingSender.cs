@@ -21,6 +21,12 @@ namespace GameScene
     
         private void Awake()
         {
+            // lockstep 연결은 매 틱 입력과 확정 프레임으로 생존 여부를 검사한다.
+            if (SceneContext.MatchInfo != null && SceneContext.MatchInfo.IsLockstep)
+            {
+                enabled = false;
+                return;
+            }
             pingMessage = JsonCodec.Serialize(new PingDto());
             destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
         }

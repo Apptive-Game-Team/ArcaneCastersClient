@@ -1,5 +1,4 @@
 using GameScene.ServedObjectComponent;
-using Global;
 using UnityEngine;
 
 namespace GameScene.Player
@@ -9,15 +8,21 @@ namespace GameScene.Player
         [SerializeField] private ServedObject servedObject;
         [SerializeField] private PlayerFallDownController playerFallDownController;
         
+        private void Awake()
+        {
+            if (servedObject == null) servedObject = GetComponent<ServedObject>();
+            if (servedObject != null) servedObject.OnDestroyed += FallPlayer;
+        }
+
         private void OnDestroy()
         {
-            WDebug.Log("OnPlayerDestroyController OnDestroy");
-            FallPlayer();
+            // 장면 종료는 전투 중 사망이 아니므로 새 tween을 만들지 않는다.
+            if (servedObject != null) servedObject.OnDestroyed -= FallPlayer;
         }
 
         private void FallPlayer()
         {
-            playerFallDownController.FallDown();
+            if (playerFallDownController != null) playerFallDownController.FallDown();
         }
     }
 }

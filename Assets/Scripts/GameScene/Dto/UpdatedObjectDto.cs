@@ -18,6 +18,7 @@ namespace GameScene.Dto
         public UpdatedObjectDto(SnapshotObjectDto snapshotObjectDto)
         {
             id = snapshotObjectDto.id;
+            master = snapshotObjectDto.master;
             position = new Vector3(snapshotObjectDto.x, snapshotObjectDto.y, snapshotObjectDto.z);
             status = snapshotObjectDto.status;
             effects = snapshotObjectDto.effects;

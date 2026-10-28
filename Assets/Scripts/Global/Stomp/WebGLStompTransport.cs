@@ -11,8 +11,7 @@ namespace Global.Stomp
     /// WebGL 빌드 전용 STOMP 전송 구현.
     /// JavaScript(StompPlugin.jslib)와 Unity SendMessage로 통신.
     ///
-    /// JS → C# 콜백 메서드: OnConnected, OnError, OnDisconnected, OnSubscriptionMessage
-    /// (StompConnector GameObject에 SendMessage로 전달됨)
+    /// JS → C# 콜백은 이 컴포넌트를 소유한 GameObject로 전달된다.
     /// </summary>
     public class WebGLStompTransport : MonoBehaviour, IStompTransport
     {
@@ -21,11 +20,12 @@ namespace Global.Stomp
         public event Action Connected;
         public event Action<string> Disconnected;
         public event Action<string> Errored;
+        public event Action<string> Rejected;
         public event Action<string, string> MessageReceived;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")]
-        private static extern void ConnectStompSocket(string url, string token);
+        private static extern void ConnectStompSocket(string url, string token, string callbackTarget);
 
         [DllImport("__Internal")]
         private static extern void SubscribeStomp(string topic, string subscriptionId);
@@ -43,7 +43,7 @@ namespace Global.Stomp
         public void Connect(string url, string token)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            ConnectStompSocket(url, token);
+            ConnectStompSocket(url, token, gameObject.name);
 #endif
         }
 
@@ -77,7 +77,7 @@ namespace Global.Stomp
 
         // ─── JS → C# 콜백 (Unity SendMessage로 호출됨) ───────────────────────
 
-        /// <summary>JS: SendMessage("StompConnector", "OnConnected", frame)</summary>
+        /// <summary>STOMP 연결 완료 콜백.</summary>
         private void OnConnected(string frame)
         {
             WDebug.Log("[STOMP:WebGL] 연결됨");
@@ -85,7 +85,7 @@ namespace Global.Stomp
             Connected?.Invoke();
         }
 
-        /// <summary>JS: SendMessage("StompConnector", "OnError", error)</summary>
+        /// <summary>네트워크 오류 콜백.</summary>
         private void OnError(string error)
         {
             WDebug.LogError("[STOMP:WebGL] 에러: " + error);
@@ -93,7 +93,13 @@ namespace Global.Stomp
             Errored?.Invoke(error);
         }
 
-        /// <summary>JS: SendMessage("StompConnector", "OnDisconnected", message)</summary>
+        private void OnRejected(string error) {
+            IsConnected = false;
+            Rejected?.Invoke(error);
+            Errored?.Invoke(error);
+        }
+
+        /// <summary>연결 종료 콜백.</summary>
         private void OnDisconnected(string message)
         {
             WDebug.Log("[STOMP:WebGL] 연결 종료: " + message);
@@ -102,7 +108,7 @@ namespace Global.Stomp
         }
 
         /// <summary>
-        /// JS: SendMessage("StompConnector", "OnSubscriptionMessage", json)
+        /// 구독 메시지 콜백.
         /// json 형식: {"id":"frame-sub","body":"..."}
         /// </summary>
         private void OnSubscriptionMessage(string json)

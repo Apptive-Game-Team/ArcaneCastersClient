@@ -67,6 +67,13 @@ The guid must be new — grep it across `Assets/`, `Packages/` and
 replacing: scenes and prefabs resolve components by guid, so a reused guid makes
 every old reference silently bind to the new type.
 
+`LocalPackages/com.arcanecasters.lockstep`의 소스를 추가하거나 수정하면
+`Tools/LockstepProbe/Prepare-UnityProbe.ps1`의 GUID 검사를 실행하고 실제 클라이언트도
+Unity에서 컴파일한다. 소스만 복사하는 독립 probe의 통과로 패키지 import를 검증했다고
+판단하지 않는다. lockstep 이관 중 `.cs.meta` 4개의 GUID가 32자보다 길어 Unity가
+해당 소스를 제외했지만, 복사본 테스트는 통과했다. 실제 프로젝트 로그에
+`does not have a valid GUID` 또는 관련 타입의 `CS0246`이 있으면 metadata부터 확인한다.
+
 ## Adding a UI button to a prefab is twelve documents, not one
 
 `LogoutButton` was added to `Assets/Prefabs/UI/Lobby/Panal.prefab` by copying the

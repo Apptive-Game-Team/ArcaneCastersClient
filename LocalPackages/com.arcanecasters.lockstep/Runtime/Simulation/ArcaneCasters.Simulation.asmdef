@@ -1,0 +1,5 @@
+{
+  "name": "ArcaneCasters.Simulation",
+  "references": ["ArcaneCasters.FixedPhysics"],
+  "noEngineReferences": true
+}

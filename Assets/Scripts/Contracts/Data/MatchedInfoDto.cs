@@ -13,6 +13,10 @@ namespace Data
         public User leftUser;
         public User rightUser;
         public string sessionId;
+        public string lockstepSimulationVersion;
+
+        [JsonIgnore]
+        public bool IsLockstep => !string.IsNullOrEmpty(lockstepSimulationVersion);
 
         /// <summary>
         /// Map kind the game server picked, as the server spells it (<c>GRASSLAND</c>, <c>RIVER</c>,
@@ -92,7 +96,8 @@ namespace Data
                 leftUser = new User(roomInfo.leftUserId, "debugger_left", "debugger_left@team6515.com", -1),
                 rightUser = new User(roomInfo.rightUserId, "debugger_right", "debugger_right@team6515.com", -1),
                 sessionId = roomInfo.sessionId,
-                mapType = roomInfo.mapType
+                mapType = roomInfo.mapType,
+                lockstepSimulationVersion = roomInfo.lockstepSimulationVersion
             };
         }
     }

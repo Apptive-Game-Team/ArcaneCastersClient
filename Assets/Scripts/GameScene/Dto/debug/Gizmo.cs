@@ -7,7 +7,8 @@ namespace GameScene.Dto.debug
     {
         public Vector3 relativePosition;
         public float radius;
-        public Vector3 boxSize;
+        [Newtonsoft.Json.JsonProperty(NullValueHandling = Newtonsoft.Json.NullValueHandling.Include)]
+        public Vector3? boxSize;
         public string type; // Circle, Box
         public string category; // Collider, AttackRange, AreaOfEffect, DetectionRange, SpawnArea
     }

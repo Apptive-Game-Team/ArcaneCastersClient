@@ -29,6 +29,11 @@ namespace GameScene.Handler
                 return;
             }
 
+            Handler(message);
+        }
+
+        public void Handler(ServerMessage message)
+        {
             switch (message)
             {
                 case FrameInfoDto frame:

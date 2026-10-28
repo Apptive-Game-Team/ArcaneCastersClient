@@ -1,0 +1,32 @@
+using UnityEngine;
+
+public static class UnityProbeRunner {
+    public static void Run() {
+        Debug.Log(LockstepPhysicsProbe.Run());
+    }
+
+#if UNITY_EDITOR
+    public static void BuildWebGL() {
+        var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene);
+        UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene, "Assets/Probe.unity");
+        UnityEditor.PlayerSettings.WebGL.compressionFormat = UnityEditor.WebGLCompressionFormat.Disabled;
+        UnityEditor.PlayerSettings.WebGL.dataCaching = false;
+        var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions {
+            scenes = new[] { "Assets/Probe.unity" },
+            locationPathName = "WebGL",
+            target = UnityEditor.BuildTarget.WebGL,
+            options = UnityEditor.BuildOptions.CleanBuildCache | UnityEditor.BuildOptions.Development
+        });
+        if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded)
+            throw new System.InvalidOperationException("WebGL 검증 빌드 실패");
+    }
+#endif
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void StartPlayer() {
+        if (Application.isEditor) return;
+        try { Debug.Log(LockstepPhysicsProbe.Run()); }
+        catch (System.Exception exception) { Debug.LogError("FAIL " + exception); }
+    }
+}
+

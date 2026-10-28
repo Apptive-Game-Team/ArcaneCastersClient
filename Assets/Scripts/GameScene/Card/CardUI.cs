@@ -66,7 +66,7 @@ namespace GameScene.Card
         public void OnCardClicked()
         {
             CardInputSender cardInputSender = CardInputSender.Instance;
-            if (cardInputSender.IsWaitingInputResponse())
+            if (cardInputSender.IsWaitingInputResponse() || !cardInputSender.CanChangeSelection(this, !isActive))
             {
                 return;
             }

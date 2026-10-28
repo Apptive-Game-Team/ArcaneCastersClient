@@ -157,7 +157,7 @@ namespace GameScene.Handler
             panel.sizeDelta = new Vector2(width, height);
 
             Image image = panel.gameObject.AddComponent<Image>();
-            image.sprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+            image.sprite = Resources.Load<Sprite>("UI/Flat/FlatCard");
             image.type = Image.Type.Sliced;
             image.color = background;
             image.raycastTarget = false;

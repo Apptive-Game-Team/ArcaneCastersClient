@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.arcanecasters.lockstep": {
+      "version": "file:../LocalPackages/com.arcanecasters.lockstep",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.coplaydev.unity-mcp": {
       "version": "file:../LocalPackages/com.coplaydev.unity-mcp",
       "depth": 0,

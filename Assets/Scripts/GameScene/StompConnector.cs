@@ -58,7 +58,19 @@ namespace GameScene
         /// <summary>화면에 보인 PVE 대사 번호. 재연결 때 pveSync 에 실어 보낸다.</summary>
         private readonly PveSyncState _pveSync = new PveSyncState();
 
-        private IFrameInfoHandler<string> _frameInfoHandler;
+        private GeneralHandler _frameInfoHandler;
+        private LockstepConnection _lockstepPresentation;
+        public bool IsLockstep => SceneContext.MatchInfo != null && SceneContext.MatchInfo.IsLockstep;
+        public bool IsLockstepStopped => _lockstepPresentation == null || _lockstepPresentation.IsStopped;
+        public bool CanQueueBattleInputs(int count) => !IsLockstep || _lockstepPresentation != null && _lockstepPresentation.CanQueueCommands(count);
+
+        public void BindLockstepPresentation(LockstepConnection connection)
+        {
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            if (_lockstepPresentation != null) _lockstepPresentation.PresentationReceived -= _frameInfoHandler.Handler;
+            _lockstepPresentation = connection;
+            _lockstepPresentation.PresentationReceived += _frameInfoHandler.Handler;
+        }
 
         /// <summary>frame 구독을 걸었는지. 그 전에 연결되는 것은 최초 연결이라 pveSync 를 보내지 않는다.</summary>
         private bool _frameSubscribed;
@@ -128,12 +140,95 @@ namespace GameScene
 
         private void Start()
         {
+            if (IsLockstep)
+            {
+                StartLockstep();
+                return;
+            }
             ConnectToServer();
             StartCoroutine(GameFlowCoroutine(SceneContext.MatchInfo.sessionId));
         }
 
+        private void StartLockstep()
+        {
+            var match = SceneContext.MatchInfo;
+            try
+            {
+                _pveSync.Reset();
+                var connection = gameObject.AddComponent<LockstepConnection>();
+                if (isSpectator) connection.ConfigureSpectator();
+                BindLockstepPresentation(connection);
+                connection.Stopped += OnLockstepStopped;
+                connection.BattleCompleted += OnLockstepCompleted;
+                connection.Recovered += OnLockstepRecovered;
+                connection.Begin(match.server, SceneContext.JwtToken, match.sessionId, SceneContext.UserID, match.lockstepSimulationVersion);
+            }
+            catch (System.Exception error) { OnLockstepStopped(error.Message); }
+        }
+
+        private void OnLockstepStopped(string reason)
+        {
+            WDebug.LogError("[Lockstep] " + reason);
+            if (SystemMessageUI.Instance != null) SystemMessageUI.Instance.ShowMessage(connectionClosed);
+        }
+
+        private void OnLockstepCompleted(ArcaneCasters.Simulation.BattleSessionRuntime _) => NotifyMatchEnded();
+        private void OnLockstepRecovered() => PveSyncSender.Send(_pveSync.LastEventSeq);
+
+        public bool TrySendPveSync(int lastEventSeq)
+        {
+            if (IsLockstep) return _lockstepPresentation != null && _lockstepPresentation.TrySendPveSync(lastEventSeq);
+            if (!_transport.IsConnected) return false;
+            SendMessageToServer($"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}", Global.Serialization.JsonCodec.Serialize(new PveSyncInput(lastEventSeq)));
+            return true;
+        }
+
+        public bool TrySendCardUse(CardUseInput input)
+        {
+            if (IsLockstep)
+            {
+                if (input == null || input.type != "useMagic" || !CanQueueBattleInputs(1) || float.IsNaN(input.position.x) || float.IsInfinity(input.position.x)
+                    || float.IsNaN(input.position.z) || float.IsInfinity(input.position.z)
+                    || input.position.x < 0 || input.position.x > 18 || input.position.z < 0 || input.position.z > 10) return false;
+                return _lockstepPresentation.QueueCast(input.magicId, ((FixMath.NET.Fix64)input.position.x).RawValue,
+                    ((FixMath.NET.Fix64)input.position.z).RawValue, input.id);
+            }
+            if (!_transport.IsConnected) return false;
+            SendMessageToServer($"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}", Global.Serialization.JsonCodec.Serialize(input));
+            return true;
+        }
+
+        public bool TrySendCardSelection(object input)
+        {
+            if (IsLockstep)
+            {
+                if (!CanQueueBattleInputs(1)) return false;
+                if (input is CardSelectRequestDto selected) return selected.type == "selectCard" && _lockstepPresentation.QueueCardSelection(selected.magicId, true);
+                if (input is CardUnselectRequestDto unselected) return unselected.type == "unselectCard" && _lockstepPresentation.QueueCardSelection(unselected.magicId, false);
+                return false;
+            }
+            if (!_transport.IsConnected) return false;
+            SendMessageToServer($"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}", Global.Serialization.JsonCodec.Serialize(input));
+            return true;
+        }
+
+        public bool TrySendEmote(string name)
+        {
+            if (IsLockstep) return _lockstepPresentation != null && _lockstepPresentation.QueueEmote(name);
+            if (!_transport.IsConnected) return false;
+            SendMessageToServer($"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}", Global.Serialization.JsonCodec.Serialize(new EmoteInput(name)));
+            return true;
+        }
+
         private void OnDestroy()
         {
+            if (_lockstepPresentation != null)
+            {
+                _lockstepPresentation.PresentationReceived -= _frameInfoHandler.Handler;
+                _lockstepPresentation.Stopped -= OnLockstepStopped;
+                _lockstepPresentation.BattleCompleted -= OnLockstepCompleted;
+                _lockstepPresentation.Recovered -= OnLockstepRecovered;
+            }
             // 플래그를 먼저 세운다. 닫는 과정에서 올라오는 Disconnected는 끊김이 아니다.
             _intentionalDisconnect = true;
             _transport.Disconnect();
@@ -153,6 +248,7 @@ namespace GameScene
 
         public void ConnectToServer()
         {
+            if (IsLockstep) return;
             if (_intentionalDisconnect || _matchEnded) return;
 
             float now = Time.unscaledTime;

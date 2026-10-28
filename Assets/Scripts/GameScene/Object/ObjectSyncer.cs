@@ -9,7 +9,7 @@ namespace GameScene.Object
     {
         private bool hasCompletedInitialSync;
 
-        public void Sync(SnapshotObjectDto[] snapshotObjects)
+        public void Sync(SnapshotObjectDto[] snapshotObjects, bool suppressSpawnPresentation = false)
         {
             if (snapshotObjects == null)
             {
@@ -19,7 +19,7 @@ namespace GameScene.Object
             }
             
             // WDebug.Log("ObjectSyncer Sync called with " + string.Join(" | ", snapshotObjects.Select(dto => $"id: {dto.id}, {dto.prefab}")) + " objects.");
-            bool playSpawnPresentation = hasCompletedInitialSync;
+            bool playSpawnPresentation = hasCompletedInitialSync && !suppressSpawnPresentation;
             foreach (var snapshotObject in snapshotObjects)
             {
                 if (!ObjectContainer.Instance.IsExist(snapshotObject.id))

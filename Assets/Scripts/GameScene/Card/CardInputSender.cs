@@ -48,9 +48,17 @@ namespace GameScene.Card
             return isWaitingInputResponse;
         }
 
+        public bool CanChangeSelection(CardUI card, bool selected)
+        {
+            int count = card != null && card.Magic != null ? 1 : 0;
+            if (selected) foreach (var previous in _currentCardList)
+                if (previous != null && previous != card && previous.Magic != null) count++;
+            return StompConnector.Instance == null || StompConnector.Instance.CanQueueBattleInputs(count);
+        }
+
         public void CancelUseCard(CardUI cardObj)
         {
-            if (isWaitingInputResponse)
+            if (isWaitingInputResponse || !CanChangeSelection(cardObj, false))
             {
                 return;
             }
@@ -145,6 +153,8 @@ namespace GameScene.Card
     
         private void CancelAll()
         {
+            int count = _currentCardList.FindAll(card => card != null && card.Magic != null).Count;
+            if (StompConnector.Instance != null && !StompConnector.Instance.CanQueueBattleInputs(count)) return;
             WDebug.Log("CancelAll");
             foreach (var card in _currentCardList)
             {
@@ -163,7 +173,7 @@ namespace GameScene.Card
 
         public void TryUseCard(CardUI cardObj)
         {
-            if (isWaitingInputResponse)
+            if (isWaitingInputResponse || !CanChangeSelection(cardObj, true))
             {
                 return;
             }
@@ -221,10 +231,7 @@ namespace GameScene.Card
             }
 
             var input = new CardUseInput(magic.id, pos);
-            string json = JsonCodec.Serialize(input);
-        
-            string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
-            StompConnector.Instance.SendMessageToServer(destination, json);
+            if (!StompConnector.Instance.TrySendCardUse(input)) return;
             inputRequestDict[input.id] = new PendingInputRequest(new List<CardUI>(_currentCardList));
             isWaitingInputResponse = true;
             _currentCardNameList.Clear();
@@ -255,7 +262,12 @@ namespace GameScene.Card
 
         private System.Collections.IEnumerator WaitInputResponseTimeout()
         {
-            yield return new WaitForSeconds(3f);
+            if (StompConnector.Instance != null && StompConnector.Instance.IsLockstep)
+            {
+                // 확정 입력은 재연결 후에도 실행될 수 있어 시간만으로 선택을 되살리지 않는다.
+                while (isWaitingInputResponse && StompConnector.Instance != null && !StompConnector.Instance.IsLockstepStopped) yield return null;
+            }
+            else yield return new WaitForSeconds(3f);
             if (isWaitingInputResponse)
             {
                 WDebug.LogWarning("[CardInputSender] Input response timeout. Releasing lock.");
@@ -380,9 +392,7 @@ namespace GameScene.Card
 
         private static void SendCardSelectionInput(object input)
         {
-            string json = JsonCodec.Serialize(input);
-            string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
-            StompConnector.Instance.SendMessageToServer(destination, json);
+            StompConnector.Instance.TrySendCardSelection(input);
         }
 
         public void SetExpectedMagicUI()

@@ -226,7 +226,7 @@ namespace GameScene.ServedObjectComponent
             Vector3 center = gizmo.relativePosition + Vector3.up * (index * GizmoNormalOffsetStep);
             if (string.Equals(gizmo.type, "Box", StringComparison.OrdinalIgnoreCase))
             {
-                return BuildBoxPoints(center, gizmo.boxSize);
+                return BuildBoxPoints(center, gizmo.boxSize.GetValueOrDefault());
             }
 
             return BuildCirclePoints(center, gizmo.radius);

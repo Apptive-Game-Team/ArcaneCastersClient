@@ -1,0 +1,7 @@
+{
+  "name": "com.arcanecasters.lockstep",
+  "version": "0.1.0",
+  "displayName": "ArcaneCasters Lockstep Simulation",
+  "unity": "2022.3",
+  "description": "고정 소수점 전투 시뮬레이션과 확정 입력 처리"
+}

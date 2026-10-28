@@ -73,7 +73,7 @@ namespace GameScene.Handler
             gameEventHandler.Handler(syncFrameInfo.events);
 
             // 동기화
-            ObjectSyncer.Instance.Sync(syncFrameInfo.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>());
+            ObjectSyncer.Instance.Sync(syncFrameInfo.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>(),syncFrameInfo.suppressSpawnPresentation);
             
             TimerController.Instance.UpdateTimer(syncFrameInfo.remainingTime);
         }

@@ -124,14 +124,18 @@ namespace WordOnline.Tests
         public void RoomInfoCarriesMapTypeAndSpectatingSessionKeepsIt()
         {
             List<RoomInfo> rooms = JsonCodec.Deserialize<List<RoomInfo>>(
-                @"[ { ""sessionId"": ""r1"", ""leftUserId"": 1, ""rightUserId"": 2, ""serverUrl"": ""http://x"", ""mapType"": ""RIVER"" },
+                @"[ { ""sessionId"": ""r1"", ""leftUserId"": 1, ""rightUserId"": 2, ""serverUrl"": ""http://x"", ""mapType"": ""RIVER"", ""lockstepSimulationVersion"": ""lockstep-v1"" },
                     { ""sessionId"": ""r2"", ""leftUserId"": 3, ""rightUserId"": 4, ""serverUrl"": ""http://x"" } ]");
 
             MatchedInfoDto withMap = MatchedInfoDto.CreateSpectatingSession(rooms[0]);
             MatchedInfoDto withoutMap = MatchedInfoDto.CreateSpectatingSession(rooms[1]);
 
             Assert.AreEqual(MapKind.River, withMap.MapKind);
+            Assert.IsTrue(withMap.IsLockstep);
+            Assert.AreEqual("lockstep-v1", withMap.lockstepSimulationVersion);
+            Assert.AreEqual("lockstep-v1", JsonCodec.Deserialize<RoomInfo>(JsonCodec.Serialize(rooms[0])).lockstepSimulationVersion);
             Assert.AreEqual(MapKind.Unspecified, withoutMap.MapKind);
+            Assert.IsFalse(withoutMap.IsLockstep);
         }
     }
 }
