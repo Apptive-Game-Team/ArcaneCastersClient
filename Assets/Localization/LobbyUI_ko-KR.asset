@@ -546,6 +546,10 @@ MonoBehaviour:
     m_Localized: "성장 상자"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000515
+    m_Localized: 보상을 불러오고 있어요.
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000601
     m_Localized: "\uB85C\uCEEC \uC11C\uBC84"
     m_Metadata:

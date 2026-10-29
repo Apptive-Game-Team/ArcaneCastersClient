@@ -10,6 +10,34 @@ namespace WordOnline.Tests
     /// </summary>
     public class ChestPayloadsTests
     {
+        [Test]
+        public void ProgressionChestKeepsSlotCountAndCurrencyOnlyResult()
+        {
+            Assert.IsTrue(ChestPayloads.TryParseChestList(
+                "[{\"id\":9,\"chestKey\":\"progression_chest\",\"rewardSlots\":7,\"rewards\":[]}]",
+                out ChestDto[] chests, out string error), error);
+            Assert.AreEqual(7, chests[0].rewardSlots);
+            Assert.IsEmpty(chests[0].rewards);
+            Assert.IsTrue(ChestPayloads.TryParseOpenResponse(
+                "{\"rewards\":[{\"rewardType\":\"CURRENCY\",\"rewardId\":0,\"rewardKey\":\"gold\",\"amount\":90}]}",
+                out List<RewardView> rewards, out error), error);
+            Assert.AreEqual("CURRENCY", rewards[0].Type);
+            Assert.AreEqual("gold", rewards[0].Key);
+            Assert.AreEqual(90, rewards[0].Amount);
+        }
+
+        [Test]
+        public void ProgressionPayloadPreservesLargeCurrencyAndMaxLevel()
+        {
+            Assert.IsTrue(Global.Serialization.JsonCodec.TryDeserialize(
+                "{\"faction\":\"NATURE\",\"level\":50,\"xp\":12500,\"levelXp\":0,\"nextLevelXp\":0,\"currency\":3000000000,\"gainedXp\":100,\"grantedChests\":2}",
+                out Data.PlayerProgressionDto state, out string error), error);
+            Assert.AreEqual(3000000000L, state.currency);
+            Assert.AreEqual(50, state.level);
+            Assert.AreEqual(0, state.nextLevelXp);
+            Assert.AreEqual(2, state.grantedChests);
+        }
+
         private const string ChestListJson = @"[
             {
                 ""id"": 7,
