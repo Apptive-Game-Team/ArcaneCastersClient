@@ -11,6 +11,21 @@ namespace WordOnline.Tests
     public class ChestPayloadsTests
     {
         [Test]
+        public void LevelRewardsPreserveCardNamesAndChestSlotsWithoutAnUnlockPool()
+        {
+            const string json = "{\"faction\":\"NATURE\",\"levels\":[{\"level\":1,\"requiredXp\":0,\"chestCount\":0,\"rewardSlots\":0,\"cards\":[{\"magicId\":5,\"magicName\":\"chain_lightning\",\"amount\":3}]},{\"level\":50,\"requiredXp\":12500,\"chestCount\":1,\"rewardSlots\":7,\"cards\":[{\"magicId\":90,\"magicName\":\"sea_serpent\",\"amount\":2}]}]}";
+            Assert.IsTrue(Global.Serialization.JsonCodec.TryDeserialize(json, out Data.ProgressionRewardsDto catalog, out string error), error);
+            Assert.AreEqual("NATURE", catalog.faction);
+            Assert.AreEqual(0, catalog.levels[0].chestCount);
+            Assert.AreEqual("chain_lightning", catalog.levels[0].cards[0].magicName);
+            Assert.AreEqual(3, catalog.levels[0].cards[0].amount);
+            Assert.AreEqual(12500L, catalog.levels[1].requiredXp);
+            Assert.AreEqual(1, catalog.levels[1].chestCount);
+            Assert.AreEqual(7, catalog.levels[1].rewardSlots);
+            Assert.AreEqual(2, catalog.levels[1].cards[0].amount);
+        }
+
+        [Test]
         public void ProgressionChestKeepsSlotCountAndCurrencyOnlyResult()
         {
             Assert.IsTrue(ChestPayloads.TryParseChestList(
