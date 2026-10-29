@@ -16,11 +16,14 @@ namespace LobbyScene
         [SerializeField] private UnityEngine.UI.Button confirmButton;
         [SerializeField] private UnityEngine.UI.Button cancelButton;
         [SerializeField] private TMP_Text statusText;
+        [SerializeField] private PlayerProgressionView view;
         private PlayerProgressionDto state;
         private string selection;
 
         public IEnumerator Initialize()
         {
+            if (view == null) view = Instantiate(Resources.Load<GameObject>("UI/Progression/PlayerProgressionView")).GetComponent<PlayerProgressionView>();
+            if (statusText != null) statusText.gameObject.SetActive(false);
             foreach (var localized in GetComponentsInChildren<LocalizeStringEvent>(true)) localized.enabled = false;
             root.SetActive(true);
             SetButtons(false);
@@ -53,6 +56,7 @@ namespace LobbyScene
             }
             root.SetActive(false);
             ShowStatus();
+            if (view != null) StartCoroutine(view.RefreshChests());
             GetComponent<Canvas>().sortingOrder = 19;
             yield return UserInfoGetter.RefreshGameUser();
             LobbyUIController.ClearCachedDecks();
@@ -73,16 +77,18 @@ namespace LobbyScene
                     SceneContext.OwnedCards = null;
                 }
                 ShowStatus();
+                if (view != null) yield return view.RefreshChests();
             }
         }
 
         private async void ShowStatus()
         {
             var current = state;
+            if (view != null) view.Bind(current);
             string gold = await LocaleUtils.GetStringAsync("LobbyUI", "ProgressionGold");
-            if (this == null || statusText == null || current == null) return;
+            if (this == null || current == null) return;
             string xp = current.nextLevelXp == 0 ? "MAX" : $"{current.levelXp}/{current.nextLevelXp} XP";
-            statusText.text = $"Lv. {current.level} · {xp} · {gold} {current.currency}";
+            if (statusText != null) statusText.text = $"Lv. {current.level} · {xp} · {gold} {current.currency}";
             if (current.gainedXp > 0 || current.grantedChests > 0)
             {
                 string reward = await LocaleUtils.GetStringAsync("LobbyUI", "ProgressionReceived");

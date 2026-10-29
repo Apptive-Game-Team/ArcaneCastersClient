@@ -17,6 +17,7 @@ namespace RewardChest
         {
             string url = $"{ServerList.MatchingServer.url}/api/users/mine/chests";
             using UnityWebRequest webRequest = UnityWebRequest.Get(url);
+            webRequest.timeout = 15;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
             webRequest.downloadHandler = new DownloadHandlerBuffer();

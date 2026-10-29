@@ -10,6 +10,19 @@ namespace LobbyScene
 {
     public static class PlayerProgressionApi
     {
+        public static IEnumerator Rewards(Action<ProgressionRewardsDto> complete)
+        {
+            using var request = UnityWebRequest.Get($"{ServerList.MatchingServer.url}/api/users/mine/progression/rewards");
+            request.timeout = 15;
+            Server.SetAuthorization(request);
+            Server.SetAcceptLanguage(request);
+            yield return request.SendWebRequest();
+            ProgressionRewardsDto result = null;
+            if (request.result == UnityWebRequest.Result.Success)
+                JsonCodec.TryDeserialize(request.downloadHandler.text, out result, out _);
+            complete(result);
+        }
+
         public static IEnumerator Sync(Action<PlayerProgressionDto> complete) => Request("sync", "{}", complete);
 
         public static IEnumerator Choose(string faction, Action<PlayerProgressionDto> complete) =>

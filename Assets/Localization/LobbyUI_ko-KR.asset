@@ -613,7 +613,47 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 76060000000000514
-    m_Localized: "성장 상자"
+    m_Localized: "마법 상자"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000520
+    m_Localized: "레벨 보상"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000521
+    m_Localized: "지급 완료"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000522
+    m_Localized: "미도달"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000523
+    m_Localized: "보유 상자 {0}개"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000524
+    m_Localized: "보유 상자 보기"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000525
+    m_Localized: "다시 시도"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000526
+    m_Localized: "보상 정보를 불러오지 못했어요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000527
+    m_Localized: "Lv. {0} 보상"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000528
+    m_Localized: "레벨 달성 보상"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000529
+    m_Localized: "상자 보상 {0}칸\n카드 또는 골드를 받아요."
     m_Metadata:
       m_Items: []
   references:

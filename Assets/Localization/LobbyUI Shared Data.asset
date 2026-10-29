@@ -603,6 +603,46 @@ MonoBehaviour:
     m_Key: ProgressionChest
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000520
+    m_Key: ProgressionRewards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000521
+    m_Key: ProgressionPaid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000522
+    m_Key: ProgressionLocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000523
+    m_Key: ProgressionOwnedChests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000524
+    m_Key: ProgressionViewChests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000525
+    m_Key: ProgressionRetryButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000526
+    m_Key: ProgressionLoadFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000527
+    m_Key: ProgressionLevelTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000528
+    m_Key: ProgressionFixed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000529
+    m_Key: ProgressionChestSlots
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
