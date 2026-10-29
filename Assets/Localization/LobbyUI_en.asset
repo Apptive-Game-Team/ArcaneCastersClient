@@ -566,6 +566,10 @@ MonoBehaviour:
     m_Localized: "Waiting for the surrender result..."
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000507
+    m_Localized: Coming soon..
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
