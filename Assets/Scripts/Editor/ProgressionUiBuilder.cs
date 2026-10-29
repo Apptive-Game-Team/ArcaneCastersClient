@@ -49,9 +49,9 @@ public static class ProgressionUiBuilder {
         Ref(fields, "hud", hud.gameObject);
         // 프로필 이름과 아바타는 로비의 기존 객체가 계속 담당한다.
         Ref(fields, "levelText", Text("Level", hud, "", 18, 210, 27, 95, 25));
-        var xp = Progress(hud, "Xp", 88, 56, 205, 13);
+        var xp = Progress(hud, "Xp", 88, 54, 205, 18);
         Ref(fields, "xpFill", xp);
-        Ref(fields, "xpText", Text("XpValue", hud, "", 13, 88, 72, 205, 20));
+        Ref(fields, "xpText", Text("XpValue", hud, "", 13, 88, 74, 205, 20));
         var gold = Panel("Gold", hud, 1024, 20, 165, 52, "FlatPill");
         Icon("Coin", gold, AssetDatabase.LoadAssetAtPath<Sprite>(Folder + "Gold.png"), 2, 0, 60, 50);
         Ref(fields, "goldText", Text("Value", gold, "", 23, 62, 7, 85, 32));
@@ -188,10 +188,36 @@ public static class ProgressionUiBuilder {
     private static Image Icon(string name, Transform parent, Sprite sprite, float x, float y, float w, float h) {
         var r = Rect(name, parent); Position(r, x, y, w, h); var i = r.gameObject.AddComponent<Image>(); i.sprite = sprite; i.preserveAspect = true; i.raycastTarget = false; return i;
     }
+    // 작은 막대에 둥근 칩의 9-slice 테두리를 압축하지 않는다.
+    private static void ConfigureProgress(RectTransform track) {
+        var border = track.GetComponent<Image>();
+        border.sprite = null; border.type = Image.Type.Simple; border.color = Ink;
+        border.raycastTarget = false;
+        var area = (RectTransform)track.Find("FillArea");
+        Stretch(area); area.offsetMin = new Vector2(3, 3); area.offsetMax = new Vector2(-3, -3);
+        var background = area.GetComponent<Image>() ?? area.gameObject.AddComponent<Image>();
+        background.color = new Color32(238, 243, 248, 255); background.raycastTarget = false;
+    }
+
+    public static void RepairXpBars() {
+        var path = Folder + "PlayerProgressionView.prefab";
+        var root = PrefabUtility.LoadPrefabContents(path);
+        try {
+            foreach (var track in root.GetComponentsInChildren<RectTransform>(true).Where(t => t.name == "Xp")) {
+                if (track.parent.name == "Hud") Position(track, 88, 54, 205, 18);
+                ConfigureProgress(track);
+            }
+            Position((RectTransform)root.transform.Find("Hud/XpValue"), 88, 74, 205, 20);
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+        } finally { PrefabUtility.UnloadPrefabContents(root); }
+        AssetDatabase.SaveAssets();
+        ProgressionUiPreview.Capture();
+    }
     private static Image Progress(Transform parent, string name, float x, float y, float w, float h) {
         var track = Panel(name, parent, x, y, w, h, "FlatChip");
         track.GetComponent<Image>().raycastTarget = false;
-        var area = Rect("FillArea", track); Position(area, 4, 3, w - 8, h - 8);
+        var area = Rect("FillArea", track); Position(area, 3, 3, w - 6, h - 6);
+        ConfigureProgress(track);
         var fillRect = Rect("Fill", area); Stretch(fillRect);
         var fill = fillRect.gameObject.AddComponent<Image>(); fill.color = Green; fill.raycastTarget = false; return fill;
     }
