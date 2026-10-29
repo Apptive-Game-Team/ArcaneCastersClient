@@ -566,6 +566,82 @@ MonoBehaviour:
     m_Localized: "Waiting for the surrender result..."
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000507
+    m_Localized: "Could not load rewards. Retrying..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000508
+    m_Localized: "Choose your starting faction. Receive 5 spells, 3 copies each. Both factions can be collected later."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000509
+    m_Localized: "Inferno & Stone"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000510
+    m_Localized: "Nature & Water"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000511
+    m_Localized: "Gold"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000512
+    m_Localized: "XP +{0} · Chests +{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000513
+    m_Localized: "Cards or gold · {0} draws"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000515
+    m_Localized: Loading rewards...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000514
+    m_Localized: "Magic chest"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000520
+    m_Localized: "Level rewards"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000521
+    m_Localized: "Granted"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000522
+    m_Localized: "Locked"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000523
+    m_Localized: "Chests: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000524
+    m_Localized: "View chests"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000525
+    m_Localized: "Retry"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000526
+    m_Localized: "Could not load rewards."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000527
+    m_Localized: "Lv. {0} rewards"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000528
+    m_Localized: "Level rewards"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000529
+    m_Localized: "{0} chest reward slots\nEach gives a card or gold."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

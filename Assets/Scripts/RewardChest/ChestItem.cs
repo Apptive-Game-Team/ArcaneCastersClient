@@ -47,6 +47,7 @@ namespace RewardChest
             if (acquiredText != null)
             {
                 acquiredText.text = FormatAcquiredAt(chest?.acquiredAt);
+                if (chest != null && chest.rewardSlots > 0) SetRandomPreview(chest.rewardSlots);
             }
 
             if (chestIcon != null && RewardSpriteResolver.TryResolveChestIcon(chest?.chestKey, out Sprite sprite))
@@ -91,6 +92,14 @@ namespace RewardChest
         private void OnOpenButtonClicked()
         {
             openRequested?.Invoke(this);
+        }
+
+        private async void SetRandomPreview(int slots)
+        {
+            string text = await Data.Localization.LocaleUtils.GetStringAsync("LobbyUI", "ProgressionSlots");
+            if (this != null && acquiredText != null) acquiredText.text = string.Format(text, slots);
+            string title = await Data.Localization.LocaleUtils.GetStringAsync("LobbyUI", "ProgressionChest");
+            if (this != null && nameText != null) nameText.text = title;
         }
 
         /// <summary>

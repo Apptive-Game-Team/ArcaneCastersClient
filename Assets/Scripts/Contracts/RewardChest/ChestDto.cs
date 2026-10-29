@@ -16,6 +16,7 @@ namespace RewardChest
         public long chestId;
 
         public string chestKey;
+        public int rewardSlots;
 
         /// <summary>ISO-8601 timestamp, kept as the server sent it.</summary>
         public string acquiredAt;

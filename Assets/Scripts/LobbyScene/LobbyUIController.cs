@@ -77,6 +77,10 @@ namespace LobbyScene
 
             lobbyUserNameUI.SetUserName(SceneContext.User.name);
             ApplyOwnAppearance(SceneContext.User.appearance);
+            loadingHandle?.Dispose();
+            var progressionPrefab = Resources.Load<GameObject>("UI/PlayerProgressionPanel");
+            var progressionPanel = Instantiate(progressionPrefab).GetComponent<PlayerProgressionPanel>();
+            yield return progressionPanel.Initialize();
             yield return QuestRewardTracker.CheckAndShowRewards(rewardUiPrefab, rewardTilePrefab);
             yield return FetchDecks();
         }
