@@ -11,7 +11,7 @@ namespace BEPUphysics.Constraints
     /// Superclass of objects types which require solving by the velocity solver.
     /// These are updated within the internal iterative solver when owned by a space.
     /// </summary>
-    public abstract class SolverUpdateable : ISimulationIslandConnectionOwner, ISpaceObject
+    public abstract partial class SolverUpdateable : ISimulationIslandConnectionOwner, ISpaceObject
     {
 
         internal int solverIndex;

@@ -13,7 +13,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
     ///<summary>
     /// Manages persistent contacts for two convex collidables.
     ///</summary>
-    public class GeneralConvexContactManifold : ContactManifold
+    public partial class GeneralConvexContactManifold : ContactManifold
     {
         RawValueList<ContactSupplementData> supplementData = new RawValueList<ContactSupplementData>(4);
         GeneralConvexPairTester pairTester;

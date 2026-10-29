@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -14,6 +14,7 @@ public static class LockstepPhysicsProbe {
 
     private static int Main(string[] args) {
         try {
+            if (args.Length == 1 && args[0] == "--checkpoint-only") { ArcaneCasters.Parity.CheckpointChecks.Run(); return 0; }
 #if NET8_0_OR_GREATER
             if (args.Length == 1 && (args[0] == "--network-battle" || args[0] == "--network-model-battle")) {
                 Console.WriteLine(NetworkBattleProbe.Run(requireModel: args[0] == "--network-model-battle").GetAwaiter().GetResult());

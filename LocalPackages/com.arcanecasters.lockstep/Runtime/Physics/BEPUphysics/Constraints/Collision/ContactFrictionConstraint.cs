@@ -11,7 +11,7 @@ namespace BEPUphysics.Constraints.Collision
     /// <summary>
     /// Computes the friction force for a contact when central friction cannot be used.
     /// </summary>
-    public class ContactFrictionConstraint : SolverUpdateable
+    public partial class ContactFrictionConstraint : SolverUpdateable
     {
         private ContactManifoldConstraint contactManifoldConstraint;
         ///<summary>

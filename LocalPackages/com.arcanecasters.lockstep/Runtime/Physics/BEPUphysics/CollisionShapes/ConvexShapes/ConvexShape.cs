@@ -9,7 +9,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
     ///<summary>
     /// Superclass of convex collision shapes.
     ///</summary>
-    public abstract class ConvexShape : EntityShape
+    public abstract partial class ConvexShape : EntityShape
     {
 
         protected void UpdateConvexShapeInfo(ConvexShapeDescription description)

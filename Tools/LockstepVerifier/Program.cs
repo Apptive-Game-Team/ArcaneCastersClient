@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +9,7 @@ internal static class Program {
     private sealed class Request {
         public SessionStart start;
         public ConfirmedFrame[] frames;
+        public StateCheckpoint[] checkpoints;
     }
     private sealed class PveSink : IPveSessionSink {
         public long LeftUserId { get; }
@@ -31,7 +32,7 @@ internal static class Program {
             var chunk = new byte[8192];
             int count;
             while ((count = input.Read(chunk, 0, chunk.Length)) != 0) {
-                if (buffer.Length + count > 3 * 1024 * 1024) throw new InvalidDataException("Replay exceeds size limit.");
+                if (buffer.Length + count > 5 * 1024 * 1024) throw new InvalidDataException("Replay exceeds size limit.");
                 buffer.Write(chunk, 0, count);
             }
             var json = new JsonSerializerOptions { IncludeFields = true };
@@ -50,12 +51,17 @@ internal static class Program {
                 magicUses.TryGetValue(key, out int previous);
                 magicUses[key] = checked(previous + 1);
             };
-            var driver = new LockstepBattleDriver(runtime, modelProtocol: LockstepVersion.UsesModelProtocol(start.simulationVersion));
+            var driver = new LockstepBattleDriver(runtime, modelProtocol: LockstepVersion.UsesModelProtocol(start.simulationVersion)) { CaptureCheckpoints = start.stateHashVersion.HasValue };
+            if (start.stateHashVersion.HasValue && (request.checkpoints == null || request.checkpoints.Length != request.frames.Length))
+                throw new InvalidDataException("Missing state checkpoints.");
             for (int i = 0; i < request.frames.Length; i++) {
                 var frame = request.frames[i];
                 if (frame == null || frame.tick != (uint)i || runtime.Loop.StopRequested)
                     throw new InvalidDataException("Replay must contain consecutive frames through battle completion only.");
                 driver.Receive(frame);
+                if (start.stateHashVersion.HasValue && (request.checkpoints[i] == null || request.checkpoints[i].tick != frame.tick
+                    || request.checkpoints[i].hash != driver.LastCheckpoint.hash))
+                    throw new InvalidDataException("Replay state checkpoint mismatch.");
                 if (runtime.Failure != null) throw new InvalidOperationException("Battle simulation failed.", runtime.Failure);
             }
             if (!runtime.Loop.StopRequested || !runtime.Context.Result.Ended || driver.Failed)

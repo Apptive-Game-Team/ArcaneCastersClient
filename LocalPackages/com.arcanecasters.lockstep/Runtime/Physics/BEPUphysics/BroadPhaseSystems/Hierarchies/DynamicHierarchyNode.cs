@@ -224,7 +224,8 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
                     newChildA.childA = this.childA;
                     newChildA.childB = node;
                     newChildA.currentVolume = mergedAVolume;
-                    //newChildA.maximumVolume = newChildA.currentVolume * MaximumVolumeScale;
+                    // 이전 world의 pool 캐시가 새 tree의 재구성 조건에 섞이지 않게 한다.
+                    newChildA.maximumVolume = Fix64.Zero;
                     childA = newChildA;
                     treeNode = null;
                     return true;
@@ -250,7 +251,8 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
                     newChildB.childA = node;
                     newChildB.childB = this.childB;
                     newChildB.currentVolume = mergedBVolume;
-                    //newChildB.maximumVolume = newChildB.currentVolume * MaximumVolumeScale;
+                    // 새 allocation과 동일하게 첫 Refit에서 재구성한다.
+                    newChildB.maximumVolume = Fix64.Zero;
                     childB = newChildB;
                     treeNode = null;
                     return true;
@@ -746,7 +748,8 @@ namespace BEPUphysics.BroadPhaseSystems.Hierarchies
             Vector3 offset;
             Vector3.Subtract(ref newTreeNode.BoundingBox.Max, ref newTreeNode.BoundingBox.Min, out offset);
             newTreeNode.currentVolume = Fix64.SafeMul(Fix64.SafeMul(offset.X, offset.Y), offset.Z);
-            //newTreeNode.maximumVolume = newTreeNode.currentVolume * InternalNode.MaximumVolumeScale;
+            // pool에서 온 node도 새 allocation과 같은 재구성 기준으로 시작한다.
+            newTreeNode.maximumVolume = Fix64.Zero;
             newTreeNode.childA = this;
             newTreeNode.childB = node;
             treeNode = newTreeNode;

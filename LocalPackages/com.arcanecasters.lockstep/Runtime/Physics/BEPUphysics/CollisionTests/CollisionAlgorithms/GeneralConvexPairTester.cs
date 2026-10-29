@@ -11,7 +11,7 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
     ///<summary>
     /// Tests convex shapes against other convex shapes for contact generation.
     ///</summary>
-    public class GeneralConvexPairTester
+    public partial class GeneralConvexPairTester
     {
         //TODO: warmstarted calculations like those within this tester will carry over bad information if the shape of an object is changed.
         //Need to notify the system to take appropriate action when a shape changes...
@@ -339,6 +339,8 @@ namespace BEPUphysics.CollisionTests.CollisionAlgorithms
             previousState = CollisionState.Separated;
             cachedSimplex = new CachedSimplex();
             localSeparatingAxis = new Vector3();
+            // 다른 pair의 pool 잔여 방향을 새 경기 checkpoint에 섞지 않는다.
+            localDirection = Vector3.Zero;
             collidableA = null;
             collidableB = null;
         }

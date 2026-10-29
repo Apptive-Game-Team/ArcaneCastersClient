@@ -22,7 +22,7 @@ namespace BEPUphysics.Entities
     /// Superclass of movable rigid bodies.  Contains information for
     /// both dynamic and kinematic simulation.
     ///</summary>
-    public class Entity :
+    public partial class Entity :
         IBroadPhaseEntryOwner,
         IDeferredEventCreatorOwner,
         ISimulationIslandMemberOwner,

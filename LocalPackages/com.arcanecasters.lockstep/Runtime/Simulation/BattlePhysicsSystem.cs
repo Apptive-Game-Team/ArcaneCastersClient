@@ -71,6 +71,23 @@ namespace ArcaneCasters.Simulation {
                 } catch (Exception exception) { if (failedCallbacks.Add(a.Id)) CollisionFailed?.Invoke(a, exception); }
             }
         }
+        public void WriteCheckpoint(System.IO.BinaryWriter writer) {
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            writer.Write(nextBody); writer.Write(bindings.Count);
+            foreach (var entry in bindings) {
+                var binding = entry.Value;
+                writer.Write(entry.Key); writer.Write(binding.Owner.Id); writer.Write(binding.Sphere);
+                writer.Write(binding.Radius.RawValue); writer.Write(binding.Mass); writer.Write(binding.Edges.Count);
+                foreach (var edge in binding.Edges) {
+                    writer.Write(edge.Value);
+                    PhysicsStateValue.Write(writer, edge.Key.Point1); PhysicsStateValue.Write(writer, edge.Key.Point2);
+                }
+            }
+            var failed = failedCallbacks.OrderBy(id => id).ToArray(); writer.Write(failed.Length);
+            foreach (int id in failed) writer.Write(id);
+            world.WriteCheckpoint(writer);
+        }
+
         public void Update(SimulationContext context) {
             var active = context.Objects.Where(owner => owner.IsActive).ToArray(); Synchronize(active);
             foreach (var owner in active) if (bindings.TryGetValue(owner.Id, out var binding) && binding.Sphere != 0) world.SetVelocity(binding.Sphere, owner.GetComponent<RigidBody>()?.ConsumeVelocity() ?? Vector3.Zero);

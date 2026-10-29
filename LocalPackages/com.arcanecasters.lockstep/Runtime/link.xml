@@ -1,0 +1,7 @@
+<linker>
+  <assembly fullname="ArcaneCasters.Simulation" preserve="all" />
+  <assembly fullname="mscorlib" ignoreIfMissing="1">
+    <type fullname="System.Collections.Generic.KeyValuePair`2" preserve="all" />
+    <type fullname="System.ValueTuple`2" preserve="all" />
+  </assembly>
+</linker>

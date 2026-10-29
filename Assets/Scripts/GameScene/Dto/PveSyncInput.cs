@@ -11,6 +11,9 @@ namespace GameScene.Dto
         public string type = "pveSync";
         public int lastEventSeq;
 
+        // Json.NET이 매개변수 생성자에 null을 Int32로 바인딩하지 않고 필드 기본값을 유지하게 한다.
+        public PveSyncInput() { }
+
         public PveSyncInput(int lastEventSeq)
         {
             this.lastEventSeq = lastEventSeq;

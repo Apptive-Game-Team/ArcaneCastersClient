@@ -9,7 +9,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
     ///<summary>
     /// Convex shape with width, length, and height.
     ///</summary>
-    public class BoxShape : ConvexShape
+    public partial class BoxShape : ConvexShape
     {
         internal Fix64 halfWidth;
         internal Fix64 halfHeight;

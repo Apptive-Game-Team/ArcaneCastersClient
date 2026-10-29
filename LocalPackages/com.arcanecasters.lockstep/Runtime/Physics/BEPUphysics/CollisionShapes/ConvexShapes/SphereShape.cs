@@ -9,7 +9,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
     ///<summary>
     /// Ball-like shape.
     ///</summary>
-    public class SphereShape : ConvexShape
+    public partial class SphereShape : ConvexShape
     {
 
         //This is a convenience method.  People expect to see a 'radius' of some kind.

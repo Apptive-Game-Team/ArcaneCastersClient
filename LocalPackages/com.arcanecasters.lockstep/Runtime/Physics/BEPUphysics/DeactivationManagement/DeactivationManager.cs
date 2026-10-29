@@ -11,7 +11,7 @@ namespace BEPUphysics.DeactivationManagement
     ///<summary>
     /// Manages the sleeping states of objects.
     ///</summary>
-    public class DeactivationManager : MultithreadedProcessingStage
+    public partial class DeactivationManager : MultithreadedProcessingStage
     {
         private int maximumDeactivationAttemptsPerFrame = 100;
         private int deactivationIslandIndex;

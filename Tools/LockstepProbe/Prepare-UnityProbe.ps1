@@ -13,7 +13,7 @@ $project = Join-Path $PSScriptRoot '.generated/UnityProbe'
 if (!(Test-Path "$project/ProjectSettings/ProjectVersion.txt")) { throw 'Unity -createProject로 검증 프로젝트를 먼저 생성하세요.' }
 $assets = Join-Path $project 'Assets'
 $engine = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../LocalPackages/com.arcanecasters.lockstep/Runtime/Physics'))
-foreach ($part in @('BEPUphysics','BEPUutilities','FixedMath.Net/src')) {
+foreach ($part in @('BEPUphysics','BEPUutilities','FixedMath.Net/src','Checkpoint')) {
     $root = Join-Path $engine $part
     foreach ($source in Get-ChildItem -LiteralPath $root -Recurse -Filter '*.cs') {
         if ($source.FullName -match '[/\\](Properties|obj|bin)[/\\]') { continue }
@@ -32,7 +32,7 @@ New-Item -ItemType Directory -Path "$assets/Resources/LockstepFixtures" -Force |
 foreach ($fixture in Get-ChildItem "$PSScriptRoot/Fixtures/*.sql") {
     Copy-Item $fixture.FullName (Join-Path "$assets/Resources/LockstepFixtures" ($fixture.BaseName + '.txt'))
 }
-Set-Content "$assets/PortedTests/link.xml" '<linker><assembly fullname="Assembly-CSharp"><type fullname="ArcaneCasters.Parity.*" preserve="all" /></assembly></linker>'
+Set-Content "$assets/PortedTests/link.xml" '<linker><assembly fullname="Assembly-CSharp" preserve="all" /></linker>'
 New-Item -ItemType Directory -Path "$assets/Simulation" -Force | Out-Null
 Copy-Item "$PSScriptRoot/../../LocalPackages/com.arcanecasters.lockstep/Runtime/Simulation/*.cs" "$assets/Simulation/"
 Copy-Item "$PSScriptRoot/UnityProbeRunner.cs.txt" "$assets/UnityProbeRunner.cs"

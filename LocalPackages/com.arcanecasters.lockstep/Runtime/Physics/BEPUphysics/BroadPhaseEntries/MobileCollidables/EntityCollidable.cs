@@ -13,7 +13,7 @@ namespace BEPUphysics.BroadPhaseEntries.MobileCollidables
     ///<summary>
     /// Mobile collidable acting as a collision proxy for an entity.
     ///</summary>
-    public abstract class EntityCollidable : MobileCollidable
+    public abstract partial class EntityCollidable : MobileCollidable
     {
         protected EntityCollidable()
         {

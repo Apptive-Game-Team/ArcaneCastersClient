@@ -12,7 +12,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
     ///<summary>
     /// Manages persistent contact data between two boxes.
     ///</summary>
-    public class SphereContactManifold : ContactManifold
+    public partial class SphereContactManifold : ContactManifold
     {
         protected ConvexCollidable<SphereShape> sphereA;
         protected ConvexCollidable<SphereShape> sphereB;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace ArcaneCasters.Simulation {
@@ -8,6 +8,7 @@ namespace ArcaneCasters.Simulation {
         private readonly bool spectator;
         private readonly Func<SessionStart, BattleSessionRuntime> create;
         private string initialHash;
+        private int? stateHashVersion;
         private long left, right;
         public LockstepBattleDriver Driver { get; private set; }
         public LockstepBattleSession(string sessionId, long memberId, string version, Func<SessionStart, BattleSessionRuntime> create, bool spectator = false) {
@@ -20,16 +21,16 @@ namespace ArcaneCasters.Simulation {
             initial.Validate(sessionId, memberId, version, spectator);
             long nextLeft = initial.participants[0], nextRight = initial.participants[1];
             string nextHash = initial.initialHash;
-            if (initialHash != null && (initialHash != nextHash || left != nextLeft || right != nextRight))
+            if (initialHash != null && (initialHash != nextHash || left != nextLeft || right != nextRight || stateHashVersion != initial.stateHashVersion))
                 throw new InvalidDataException("Lockstep initial state changed during recovery.");
             var runtime = create(initial);
             if (runtime == null || runtime.Definition.SessionId != sessionId || runtime.Definition.LeftUserId != nextLeft
                 || runtime.Definition.RightUserId != nextRight || runtime.Context.TickRate != initial.tickRate)
                 throw new InvalidDataException("Battle runtime does not match the lockstep session.");
-            var driver = new LockstepBattleDriver(runtime, LockstepVersion.UsesModelProtocol(version));
+            var driver = new LockstepBattleDriver(runtime, LockstepVersion.UsesModelProtocol(version)) { CaptureCheckpoints = initial.stateHashVersion.HasValue };
             if (Driver != null && ReferenceEquals(Driver.Runtime, runtime)) throw new InvalidOperationException("Recovery requires a new battle runtime.");
             Driver?.Runtime.Close();
-            Driver = driver; initialHash = nextHash; left = nextLeft; right = nextRight;
+            Driver = driver; stateHashVersion = initial.stateHashVersion; initialHash = nextHash; left = nextLeft; right = nextRight;
         }
         public void Receive(ConfirmedFrame frame) {
             if (Driver == null) throw new InvalidOperationException("Lockstep battle is not initialized.");

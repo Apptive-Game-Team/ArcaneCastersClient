@@ -8,7 +8,7 @@ namespace BEPUutilities
     /// <summary>
     /// Maps indices to permuted versions of the indices.
     /// </summary>
-    public class PermutationMapper
+    public partial class PermutationMapper
     {
         /// <summary>
         /// Constructs a new permutation mapper.

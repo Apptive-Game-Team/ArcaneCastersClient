@@ -6,7 +6,7 @@ namespace BEPUphysics.Materials
     ///<summary>
     /// Material properties for collidable objects.
     ///</summary>
-    public class Material
+    public partial class Material
     {
         // 전투의 매 틱 속도 요청에는 이전 틱 충격량과 겹침 보정을 누적하지 않는다.
         // 양쪽 재질이 켠 접촉에만 적용하며 기본 엔진 동작은 유지한다.

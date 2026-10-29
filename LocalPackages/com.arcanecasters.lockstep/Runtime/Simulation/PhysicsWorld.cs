@@ -69,6 +69,13 @@ namespace ArcaneCasters.Simulation {
         public void SetVelocity(int id, Vector3 velocity) { bodies[id].LinearVelocity = velocity; }
         public void Move(int id, Vector3 position) { bodies[id].Position = position; }
 
+        public void WriteCheckpoint(System.IO.BinaryWriter writer) {
+            if (writer == null) throw new ArgumentNullException(nameof(writer));
+            writer.Write("physics-state-v1"); writer.Write(lastId);
+            writer.Write(contacts.Count); foreach (long pair in contacts) writer.Write(pair);
+            new PhysicsStateEngineWriter(writer, bodies).World(space);
+        }
+
         public BodyContact[] Step() => Step(StepDuration);
         public BodyContact[] Step(Fix64 duration, Action beforePositionUpdate = null) {
             if (duration <= Fix64.Zero) throw new ArgumentOutOfRangeException(nameof(duration));

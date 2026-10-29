@@ -9,7 +9,7 @@ namespace BEPUphysics.DeactivationManagement
     /// A collection of simulation island members bound together with connections.
     /// An island is activated and deactivated as a group.
     ///</summary>
-    public class SimulationIsland
+    public partial class SimulationIsland
     {
         internal SimulationIsland immediateParent;
 

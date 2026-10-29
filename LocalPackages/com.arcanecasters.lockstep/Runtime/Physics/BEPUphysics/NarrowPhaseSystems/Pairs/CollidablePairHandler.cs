@@ -16,7 +16,7 @@ namespace BEPUphysics.NarrowPhaseSystems.Pairs
     ///<summary>
     /// Superclass of pairs between collidables that generate contact points.
     ///</summary>
-    public abstract class CollidablePairHandler : NarrowPhasePair
+    public abstract partial class CollidablePairHandler : NarrowPhasePair
     {
         /// <summary>
         /// Gets the first collidable associated with the pair.

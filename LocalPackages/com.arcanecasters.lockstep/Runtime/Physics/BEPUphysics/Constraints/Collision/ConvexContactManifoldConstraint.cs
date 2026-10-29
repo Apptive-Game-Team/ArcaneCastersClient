@@ -11,7 +11,7 @@ namespace BEPUphysics.Constraints.Collision
     /// Contact manifold constraint that is used by manifolds whose normals are assumed to be
     /// essentially the same.  This assumption can only be maintained between two convex objects.
     ///</summary>
-    public class ConvexContactManifoldConstraint : ContactManifoldConstraint
+    public partial class ConvexContactManifoldConstraint : ContactManifoldConstraint
     {
         //This contact manifold constraint covers a single, 4-contact pair.
 

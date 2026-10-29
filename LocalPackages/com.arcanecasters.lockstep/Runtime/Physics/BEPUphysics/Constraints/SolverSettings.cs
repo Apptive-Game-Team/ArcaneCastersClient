@@ -7,7 +7,7 @@ namespace BEPUphysics.Constraints
     /// <summary>
     /// Contains information about how a wheel solves its constraints.
     /// </summary>
-    public class SolverSettings
+    public partial class SolverSettings
     {
         /// <summary>
         /// Used to count how many iterations have taken place so far.

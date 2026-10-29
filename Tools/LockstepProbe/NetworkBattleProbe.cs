@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -147,6 +147,11 @@ internal static class NetworkBattleProbe {
             var confirmed = JsonSerializer.Deserialize<ConfirmedFrame>(message.Body, Json);
             if (confirmed.tick != tick) throw new InvalidDataException("Unexpected confirmed tick");
             battle.Receive(confirmed);
+            if (initial.stateHashVersion.HasValue) {
+                using var checkpoint = new StringContent(JsonSerializer.Serialize(battle.Driver.LastCheckpoint, Json), Encoding.UTF8, "application/json");
+                using var checkpointResponse = await http.PostAsync(server + "/api/lockstep/" + id + "/checkpoint", checkpoint, ct);
+                checkpointResponse.EnsureSuccessStatusCode();
+            }
             foreach (var item in confirmed.modelEvents ?? Array.Empty<ModelEvent>()) {
                 if (item.kind == ModelProtocol.Accepted) modelAccepted++;
                 if (item.kind == ModelProtocol.Completed) modelCompleted++;

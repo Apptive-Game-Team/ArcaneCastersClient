@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -50,8 +50,10 @@ namespace ArcaneCasters.Simulation {
         public string initialStateJson;
         public string initialHash;
         public int tickRate;
+        public int? stateHashVersion;
 
         public int Validate(string expectedSession, long memberId, string expectedVersion, bool spectator = false) {
+            if (stateHashVersion.HasValue && stateHashVersion.Value != SimulationCheckpoint.Version) throw new InvalidDataException("Unsupported state checkpoint version");
             if (!LockstepVersion.IsSupported(expectedVersion) || sessionId != expectedSession || simulationVersion != expectedVersion || tickRate != 20
                 || participants == null || participants.Length != 2 || participants[0] == 0
                 || participants[1] == 0 || participants[0] == participants[1] || memberId <= 0

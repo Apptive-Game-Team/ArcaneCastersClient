@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using ArcaneCasters.Simulation;
@@ -163,6 +163,8 @@ internal static class CoreTests {
         ArcaneCasters.Parity.BotCounterParityTests.CheckSnapshot();
         ArcaneCasters.Parity.InitialStateChecks.Run();
         ArcaneCasters.Parity.ModelPolicyChecks.Run();
+        ArcaneCasters.Parity.CheckpointChecks.Run();
+        ArcaneCasters.Parity.PhysicsCheckpointChecks.Run();
         var registrationContext = new ArcaneCasters.Simulation.SimulationContext(1);
         ArcaneCasters.Simulation.StandardPrefabs.Register(registrationContext);
         foreach (var prefabName in ArcaneCasters.Simulation.PrefabCatalog.Names) if (!registrationContext.HasPrefab(prefabName)) throw new System.InvalidOperationException("UNREGISTERED PREFAB " + prefabName);

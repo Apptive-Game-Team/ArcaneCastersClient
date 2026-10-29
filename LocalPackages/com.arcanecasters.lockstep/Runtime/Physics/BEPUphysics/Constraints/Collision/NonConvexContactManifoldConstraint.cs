@@ -12,7 +12,7 @@ namespace BEPUphysics.Constraints.Collision
     /// where the contacts are coming from multiple objects or from non-convex objects.  The normals
     /// will likely face more than one direction.
     ///</summary>
-    public class NonConvexContactManifoldConstraint : ContactManifoldConstraint
+    public partial class NonConvexContactManifoldConstraint : ContactManifoldConstraint
     {
         //Unlike the convex manifold constraint, this constraint enforces no requirements
         //on the contact data.  The collisions can form a nonconvex patch.  They can have differing normals.

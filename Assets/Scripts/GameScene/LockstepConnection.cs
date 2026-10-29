@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using ArcaneCasters.Simulation;
@@ -34,6 +34,8 @@ namespace GameScene {
         private string baseUrl, token, sessionId, version;
         private long memberId;
         private bool recovering, stopped, begun;
+        private bool checkpointSending, checkpointFailed, abortReporting;
+        private readonly SortedDictionary<uint, StateCheckpoint> checkpoints = new SortedDictionary<uint, StateCheckpoint>();
         private bool reconnectPending;
         private float retryDeadline;
         private float connectDeadline;
@@ -236,12 +238,27 @@ namespace GameScene {
 
         private void OnMessage(string subscription, string body) {
             if (subscription != "lockstep" || recovering || stopped || stream == null) return;
-            try { stream.Enqueue(JsonCodec.Deserialize<ConfirmedFrame>(body)); Drain(); SendNext(); }
+            try {
+                var envelope = Newtonsoft.Json.Linq.JObject.Parse(body);
+                if (envelope["ended"] != null) {
+                    if ((string)envelope["sessionId"] != sessionId || envelope["ended"].Type != Newtonsoft.Json.Linq.JTokenType.String)
+                        throw new InvalidOperationException("Invalid lockstep terminal event");
+                    Fail((string)envelope["ended"]); return;
+                }
+                stream.Enqueue(JsonCodec.Deserialize<ConfirmedFrame>(body)); Drain(); SendNext();
+            }
             catch (System.Exception exception) { Fail(exception.Message); }
         }
         private void Drain() {
             while (!stopped && stream.TryTake(out var frame)) {
                 battleSession?.Receive(frame);
+                var checkpoint = battleSession?.Driver?.LastCheckpoint;
+                if (!spectator && checkpoint != null) {
+                    if (checkpoints.TryGetValue(checkpoint.tick, out var pending) && pending.hash != checkpoint.hash)
+                        throw new InvalidOperationException("Recovered state checkpoint mismatch");
+                    checkpoints[checkpoint.tick] = checkpoint;
+                    if (!checkpointSending) StartCoroutine(FlushCheckpoints());
+                }
                 Confirmed?.Invoke(frame);
                 if (Battle != null && Battle.Loop.StopRequested) {
                     CompleteRecovery();
@@ -258,8 +275,36 @@ namespace GameScene {
             var batch = localInputs.Prepare(stream.NextTick, memberSlot, manifest);
             if (batch != null) transport.Send("/app/lockstep/" + sessionId + "/input", JsonCodec.Serialize(batch));
         }
+        private IEnumerator FlushCheckpoints() {
+            checkpointSending = true;
+            float deadline = Time.realtimeSinceStartup + 25;
+            while (checkpoints.Count > 0 && !checkpointFailed && Time.realtimeSinceStartup < deadline) {
+                StateCheckpoint checkpoint = null;
+                foreach (var entry in checkpoints) { checkpoint = entry.Value; break; }
+                using (var request = Request("/api/lockstep/" + sessionId + "/checkpoint")) {
+                    request.method = UnityWebRequest.kHttpVerbPOST;
+                    request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(JsonCodec.Serialize(checkpoint)));
+                    request.SetRequestHeader("Content-Type", "application/json");
+                    yield return request.SendWebRequest();
+                    if (request.result == UnityWebRequest.Result.Success) { checkpoints.Remove(checkpoint.tick); deadline = Time.realtimeSinceStartup + 25; continue; }
+                    if (request.responseCode >= 400 && request.responseCode < 500 && request.responseCode != 408 && request.responseCode != 429) {
+                        checkpointFailed = true; break;
+                    }
+                }
+                yield return new WaitForSecondsRealtime(0.25f);
+            }
+            checkpointSending = false;
+            if (checkpoints.Count > 0 || checkpointFailed) {
+                checkpointFailed = true; completionPending = false;
+                Battle?.Fail(new InvalidOperationException("State checkpoint rejected or timed out"));
+                if (!stopped) Fail("State checkpoint rejected or timed out");
+                else { ReportSimulationFailure(); Stopped?.Invoke("State checkpoint rejected or timed out"); }
+            }
+        }
         private IEnumerator CompleteBattle() {
             float deadline = Time.realtimeSinceStartup + 90;
+            while (!checkpointFailed && (checkpointSending || checkpoints.Count > 0)) yield return null;
+            if (checkpointFailed) { completionPending = false; yield break; }
             while (completionPending && Time.realtimeSinceStartup < deadline) {
                 using (var request = Request("/api/lockstep/" + sessionId + (spectator ? "/result" : "/complete"))) {
                     request.method = spectator ? UnityWebRequest.kHttpVerbGET : UnityWebRequest.kHttpVerbPOST;
@@ -295,8 +340,26 @@ namespace GameScene {
             // 화면 처리 오류를 서버 응답 형식 오류로 숨기지 않는다.
             resultReceived = true; PresentationReceived?.Invoke(result); return true;
         }
+        private void ReportSimulationFailure() {
+            if (spectator || !begun || Battle?.Failure == null || abortReporting) return;
+            abortReporting = true; StartCoroutine(ReportAbort());
+        }
+        private IEnumerator ReportAbort() {
+            float deadline = Time.realtimeSinceStartup + 15;
+            while (Time.realtimeSinceStartup < deadline) {
+                using (var request = Request("/api/lockstep/" + sessionId + "/abort")) {
+                    request.method = UnityWebRequest.kHttpVerbPOST;
+                    request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"reason\":\"simulationFailure\"}"));
+                    request.SetRequestHeader("Content-Type", "application/json"); request.timeout = 5;
+                    yield return request.SendWebRequest();
+                    if (request.result == UnityWebRequest.Result.Success || request.responseCode == 403 || request.responseCode == 409) yield break;
+                }
+                yield return new WaitForSecondsRealtime(1);
+            }
+        }
         private void Fail(string reason) {
             if (stopped) return;
+            ReportSimulationFailure();
             stopped = true; Battle?.Close(); localInputs.Clear(); transport.Disconnect(); Stopped?.Invoke(reason);
         }
         private void HttpFailed(UnityWebRequest request) {

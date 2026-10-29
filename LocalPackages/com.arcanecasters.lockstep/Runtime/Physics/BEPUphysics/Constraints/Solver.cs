@@ -9,7 +9,7 @@ namespace BEPUphysics.Constraints
     ///<summary>
     /// Iteratively solves solver updateables, converging to a solution for simulated joints and collision pair contact constraints.
     ///</summary>
-    public class Solver : MultithreadedProcessingStage
+    public partial class Solver : MultithreadedProcessingStage
     {
         RawList<SolverUpdateable> solverUpdateables = new RawList<SolverUpdateable>();
         internal int iterationLimit = 10;

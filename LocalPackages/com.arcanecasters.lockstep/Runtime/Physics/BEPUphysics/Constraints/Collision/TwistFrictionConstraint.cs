@@ -11,7 +11,7 @@ namespace BEPUphysics.Constraints.Collision
     /// <summary>
     /// Computes the forces necessary to slow down and stop twisting motion in a collision between two entities.
     /// </summary>
-    public class TwistFrictionConstraint : SolverUpdateable
+    public partial class TwistFrictionConstraint : SolverUpdateable
     {
         private readonly Fix64[] leverArms = new Fix64[4];
         private ConvexContactManifoldConstraint contactManifoldConstraint;

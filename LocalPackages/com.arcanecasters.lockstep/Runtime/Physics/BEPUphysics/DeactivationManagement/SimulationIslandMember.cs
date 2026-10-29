@@ -10,7 +10,7 @@ namespace BEPUphysics.DeactivationManagement
     /// Object owned by an entity which lives in a simulation island.
     /// Can be considered the entity's deactivation system proxy, just as the CollisionInformation property stores the collision pipeline proxy.
     /// </summary>
-    public class SimulationIslandMember
+    public partial class SimulationIslandMember
     {
         //This system could be expanded to allow non-entity simulation island members.
         //However, there are no such objects on the near horizon, and it is unlikely that anyone will be interested in developing custom simulation island members.

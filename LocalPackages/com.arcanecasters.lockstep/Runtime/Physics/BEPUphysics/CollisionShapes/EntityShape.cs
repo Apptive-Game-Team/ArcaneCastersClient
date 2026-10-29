@@ -8,7 +8,7 @@ namespace BEPUphysics.CollisionShapes
     ///<summary>
     /// Superclass of all collision shapes that are used by Entities.
     ///</summary>
-    public abstract class EntityShape : CollisionShape
+    public abstract partial class EntityShape : CollisionShape
     {
 
         protected void UpdateEntityShapeVolume(EntityShapeVolumeDescription volume)

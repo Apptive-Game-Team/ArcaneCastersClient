@@ -9,7 +9,7 @@ namespace BEPUphysics.CollisionTests.Manifolds
     ///<summary>
     /// Superclass of manifolds which manage persistent contacts over multiple frames.
     ///</summary>
-    public abstract class ContactManifold
+    public abstract partial class ContactManifold
     {
         /// <summary>
         /// Gets or sets whether this pair handler should avoid doing any prefiltering on contacts that might destroy information for the user.

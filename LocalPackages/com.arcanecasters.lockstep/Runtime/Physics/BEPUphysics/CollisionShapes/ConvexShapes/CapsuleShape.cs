@@ -9,7 +9,7 @@ namespace BEPUphysics.CollisionShapes.ConvexShapes
     ///<summary>
     /// Sphere-expanded line segment.  Another way of looking at it is a cylinder with half-spheres on each end.
     ///</summary>
-    public class CapsuleShape : ConvexShape
+    public partial class CapsuleShape : ConvexShape
     {
         Fix64 halfLength;
         ///<summary>

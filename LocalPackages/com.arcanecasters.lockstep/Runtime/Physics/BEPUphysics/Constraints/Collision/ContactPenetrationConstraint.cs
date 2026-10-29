@@ -11,7 +11,7 @@ namespace BEPUphysics.Constraints.Collision
     /// <summary>
     /// Computes the forces necessary to keep two entities from going through each other at a contact point.
     /// </summary>
-    public class ContactPenetrationConstraint : SolverUpdateable
+    public partial class ContactPenetrationConstraint : SolverUpdateable
     {
         internal Contact contact;
 

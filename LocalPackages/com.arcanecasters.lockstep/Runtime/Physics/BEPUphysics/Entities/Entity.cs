@@ -11,7 +11,7 @@ namespace BEPUphysics.Entities
     ///</summary>
     /// <remarks>If the collidable needs to be changed after construction, consider using the MorphableEntity.</remarks>
     ///<typeparam name="T">Type of EntityCollidable to use for the entity.</typeparam>
-    public class Entity<T> : Entity where T : EntityCollidable
+    public partial class Entity<T> : Entity where T : EntityCollidable
     {
         ///<summary>
         /// Gets the collidable used by the entity.

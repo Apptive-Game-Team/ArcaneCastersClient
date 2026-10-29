@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using BEPUutilities;
 using FixMath.NET;
 
@@ -8,6 +8,9 @@ namespace ArcaneCasters.Simulation {
         private readonly ConfirmedInputStream stream;
         public BattleSessionRuntime Runtime { get; }
         public bool Failed { get; private set; }
+        public bool CaptureCheckpoints { get; set; }
+        public StateCheckpoint LastCheckpoint { get; private set; }
+        public event Action<StateCheckpoint> CheckpointCreated;
         public event Action<long, InputResponse> InputHandled;
         public LockstepBattleDriver(BattleSessionRuntime runtime, bool modelProtocol = false) {
             Runtime = runtime ?? throw new ArgumentNullException(nameof(runtime));
@@ -44,6 +47,10 @@ namespace ArcaneCasters.Simulation {
                     })) throw new InvalidOperationException("Lockstep input queue is full.");
                     Runtime.AdvanceConfirmedFrame(checked((int)frame.tick + 1));
                     if (inputFailure != null) throw new InvalidOperationException("Lockstep input execution failed.", inputFailure);
+                    if (CaptureCheckpoints) {
+                        LastCheckpoint = new StateCheckpoint { tick = frame.tick, hash = SimulationCheckpoint.Hash(Runtime) };
+                        CheckpointCreated?.Invoke(LastCheckpoint);
+                    }
                 }
             } catch (Exception error) { Failed = true; Runtime.Fail(error); throw; }
         }

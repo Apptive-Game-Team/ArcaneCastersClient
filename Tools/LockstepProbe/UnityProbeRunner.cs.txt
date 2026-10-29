@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public static class UnityProbeRunner {
+    public static void Checkpoints() { ArcaneCasters.Parity.CheckpointChecks.Run(); }
     public static void Run() {
         Debug.Log(LockstepPhysicsProbe.Run());
     }

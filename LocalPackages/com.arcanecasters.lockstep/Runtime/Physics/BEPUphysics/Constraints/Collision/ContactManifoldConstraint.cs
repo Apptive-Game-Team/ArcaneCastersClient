@@ -13,7 +13,7 @@ namespace BEPUphysics.Constraints.Collision
     ///<summary>
     /// Superclass of collision constraints that include multiple contact subconstraints.
     ///</summary>
-    public abstract class ContactManifoldConstraint : SolverGroup
+    public abstract partial class ContactManifoldConstraint : SolverGroup
     {
 
         internal InteractionProperties materialInteraction;

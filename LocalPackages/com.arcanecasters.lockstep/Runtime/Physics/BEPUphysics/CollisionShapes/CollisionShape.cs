@@ -7,7 +7,7 @@ namespace BEPUphysics.CollisionShapes
     /// Collision shapes are composed entirely of local space information.
     /// Collidables provide the world space information needed to use the shapes to do collision detection.
     ///</summary>
-    public abstract class CollisionShape
+    public abstract partial class CollisionShape
     {
         ///<summary>
         /// Fires when some of the local space information in the shape changes.

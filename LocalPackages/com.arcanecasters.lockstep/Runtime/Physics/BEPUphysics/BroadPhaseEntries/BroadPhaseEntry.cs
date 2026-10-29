@@ -11,7 +11,7 @@ namespace BEPUphysics.BroadPhaseEntries
     /// Superclass of all objects which live inside the broad phase.
     /// The BroadPhase will generate pairs between BroadPhaseEntries.
     /// </summary>
-    public abstract class BroadPhaseEntry : IBoundingBoxOwner, ICollisionRulesOwner
+    public abstract partial class BroadPhaseEntry : IBoundingBoxOwner, ICollisionRulesOwner
     {
         internal int hashCode;
         protected BroadPhaseEntry()
