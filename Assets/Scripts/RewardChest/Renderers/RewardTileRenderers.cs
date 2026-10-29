@@ -15,6 +15,7 @@ namespace RewardChest.Renderers
                     new DecorationRewardTileRenderer(),
                     new AppearanceRewardTileRenderer(),
                     new ChestRewardTileRenderer(),
+                    new CurrencyRewardTileRenderer(),
                 },
                 new FallbackRewardTileRenderer());
         }
