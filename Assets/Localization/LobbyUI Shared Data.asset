@@ -595,6 +595,10 @@ MonoBehaviour:
     m_Key: ProgressionSlots
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000515
+    m_Key: ProgressionLoading
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000514
     m_Key: ProgressionChest
     m_Metadata:

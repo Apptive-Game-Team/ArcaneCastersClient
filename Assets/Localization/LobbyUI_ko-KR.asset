@@ -608,6 +608,10 @@ MonoBehaviour:
     m_Localized: "카드 또는 골드 · {0}회 추첨"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000515
+    m_Localized: 보상을 불러오고 있어요.
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000514
     m_Localized: "성장 상자"
     m_Metadata:

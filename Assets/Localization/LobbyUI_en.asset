@@ -594,6 +594,10 @@ MonoBehaviour:
     m_Localized: "Cards or gold · {0} draws"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000515
+    m_Localized: Loading rewards...
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000514
     m_Localized: "Growth Chest"
     m_Metadata:

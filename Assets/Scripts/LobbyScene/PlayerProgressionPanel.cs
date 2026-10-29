@@ -22,7 +22,9 @@ namespace LobbyScene
         public IEnumerator Initialize()
         {
             foreach (var localized in GetComponentsInChildren<LocalizeStringEvent>(true)) localized.enabled = false;
-            root.SetActive(false);
+            root.SetActive(true);
+            SetButtons(false);
+            SetText(messageText, "ProgressionLoading", "Loading rewards...");
             confirmButton.onClick.RemoveAllListeners();
             cancelButton.onClick.RemoveAllListeners();
             confirmButton.onClick.AddListener(() => selection = "HELL");
