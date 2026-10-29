@@ -567,6 +567,38 @@ MonoBehaviour:
     m_Key: "SurrenderPending"
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000507
+    m_Key: ProgressionRetry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000508
+    m_Key: ProgressionChoose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000509
+    m_Key: ProgressionHell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000510
+    m_Key: ProgressionNature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000511
+    m_Key: ProgressionGold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000512
+    m_Key: ProgressionReceived
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000513
+    m_Key: ProgressionSlots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000514
+    m_Key: ProgressionChest
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

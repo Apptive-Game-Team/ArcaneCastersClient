@@ -580,6 +580,38 @@ MonoBehaviour:
     m_Localized: "\uD56D\uBCF5 \uACB0\uACFC\uB97C \uAE30\uB2E4\uB9AC\uB294 \uC911\uC785\uB2C8\uB2E4..."
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000507
+    m_Localized: "보상을 불러오지 못했어요. 다시 연결하고 있어요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000508
+    m_Localized: "시작 세력을 선택하세요. 마법 5종을 3장씩 받아요. 이후에는 양쪽 세력의 마법을 모두 모을 수 있어요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000509
+    m_Localized: "지옥불 정령 · 돌 부족"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000510
+    m_Localized: "자연 정령 · 물 슬라임"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000511
+    m_Localized: "골드"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000512
+    m_Localized: "경험치 +{0} · 상자 +{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000513
+    m_Localized: "카드 또는 골드 · {0}회 추첨"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000514
+    m_Localized: "성장 상자"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

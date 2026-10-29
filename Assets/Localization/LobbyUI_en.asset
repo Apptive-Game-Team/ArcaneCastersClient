@@ -566,6 +566,38 @@ MonoBehaviour:
     m_Localized: "Waiting for the surrender result..."
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000507
+    m_Localized: "Could not load rewards. Retrying..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000508
+    m_Localized: "Choose your starting faction. Receive 5 spells, 3 copies each. Both factions can be collected later."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000509
+    m_Localized: "Inferno & Stone"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000510
+    m_Localized: "Nature & Water"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000511
+    m_Localized: "Gold"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000512
+    m_Localized: "XP +{0} · Chests +{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000513
+    m_Localized: "Cards or gold · {0} draws"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000514
+    m_Localized: "Growth Chest"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
