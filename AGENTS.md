@@ -141,6 +141,10 @@ For Unity Editor automation through MCP, use the project skill at
 
 ## Configuration Notes
 
+Before changing account onboarding, tutorial scenes or their card input, read
+[faction-tutorial.md](.agents/docs/faction-tutorial.md) for checkpoint ownership,
+step transitions, server API dependencies and the dedicated battle fixture.
+
 Read [developer-playground.md](.agents/docs/developer-playground.md) before changing
 the editor playground or build scene/asset selection. UNITY_EDITOR only removes
 code; even its MonoScript asset entered a real player build. Use the constrained

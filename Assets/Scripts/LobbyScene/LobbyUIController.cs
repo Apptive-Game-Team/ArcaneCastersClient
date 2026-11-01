@@ -75,6 +75,13 @@ namespace LobbyScene
                 yield return UserInfoGetter.RefreshGameUser();
             }
 
+            if (SceneContext.User == null) yield break;
+            TutorialScene.FactionTutorialProgress.AdoptNewAccountIntent(SceneContext.UserID);
+            if (TutorialScene.FactionTutorialProgress.IsPending(SceneContext.UserID))
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(TutorialScene.FactionTutorialProgress.ResumeScene(SceneContext.UserID));
+                yield break;
+            }
             lobbyUserNameUI.SetUserName(SceneContext.User.name);
             ApplyOwnAppearance(SceneContext.User.appearance);
             loadingHandle?.Dispose();
