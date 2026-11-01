@@ -27,11 +27,14 @@ namespace WordOnline.Tests
         {
             var ready = JsonCodec.Deserialize<TutorialReadyDto>("{\"battleId\":\"tutorial-test\",\"ownerId\":7,\"faction\":\"HELL\",\"server\":\"http://localhost:7001\",\"expiresAt\":\"2030-01-01T00:00:00Z\"}");
             Assert.That(JsonCodec.Deserialize<TutorialReadyDto>(JsonCodec.Serialize(ready)).ownerId, Is.EqualTo(7));
-            var state = JsonCodec.Deserialize<TutorialStateDto>("{\"battleId\":\"tutorial-test\",\"revision\":3,\"stage\":\"future-stage\",\"status\":\"FUTURE_STATUS\",\"cards\":[1,2],\"frames\":[{\"frame\":42,\"objects\":{\"create\":[],\"update\":[],\"projectile\":[]},\"events\":[]}],\"snapshot\":[],\"lastFrame\":42}");
+            var state = JsonCodec.Deserialize<TutorialStateDto>("{\"battleId\":\"tutorial-test\",\"revision\":3,\"stage\":\"future-stage\",\"status\":\"FUTURE_STATUS\",\"cards\":[1,2],\"frames\":[{\"frame\":42,\"tick\":35,\"objects\":{\"create\":[],\"update\":[],\"projectile\":[]},\"events\":[]}],\"snapshot\":[],\"lastFrame\":42,\"tick\":35,\"tickRate\":20}");
             var copy = JsonCodec.Deserialize<TutorialStateDto>(JsonCodec.Serialize(state));
             Assert.That(copy.stage, Is.EqualTo("future-stage"));
             Assert.That(copy.status, Is.EqualTo("FUTURE_STATUS"));
             Assert.That(copy.frames.Single().frame, Is.EqualTo(42));
+            Assert.That(copy.frames.Single().tick, Is.EqualTo(35));
+            Assert.That(copy.tick, Is.EqualTo(35));
+            Assert.That(copy.tickRate, Is.EqualTo(20));
         }
 
         [Test]
