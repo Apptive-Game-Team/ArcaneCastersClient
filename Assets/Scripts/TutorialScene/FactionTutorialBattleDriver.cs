@@ -19,6 +19,10 @@ namespace TutorialScene
         public static FactionTutorialBattleDriver Instance { get; private set; }
         private TutorialReadyDto ready;
         private TutorialStateDto state;
+        private TutorialStateDto presentedState;
+        private TutorialStateDto pendingTerminal;
+        private readonly TutorialPlaybackBuffer playback = new TutorialPlaybackBuffer();
+        private double lastRenderRealtime;
         private long owner;
         private string jwt => SceneContext.JwtToken;
         private string matchingServer;
@@ -46,8 +50,11 @@ namespace TutorialScene
             panel.Show("FactionTutorial.title", "FactionTutorial.connecting");
             while (Current && !finishing)
             {
+                float started = Time.realtimeSinceStartup;
                 if (!busy && !commandPending && !suspended) yield return Poll();
-                yield return new WaitForSecondsRealtime(0.15f);
+                float remaining = 0.05f - (Time.realtimeSinceStartup - started);
+                if (remaining > 0) yield return new WaitForSecondsRealtime(remaining);
+                else yield return null;
             }
         }
 
@@ -86,20 +93,57 @@ namespace TutorialScene
         {
             if (state == null || state.revision != result.revision || result.status != "RUNNING")
                 CardInputSender.Instance?.Cancel();
-            bool changed = state == null || state.revision != result.revision || state.status != result.status
-                || state.wave != result.wave || state.recommended != result.recommended;
             state = result;
-            foreach (var frame in result.frames ?? Array.Empty<TutorialFrameDto>())
+            if (playback.Receive(result, Time.timeAsDouble))
             {
-                if (frame.frame <= watermark) continue;
-                PresentationFramePlayer.Apply(frame.objects, frame.events);
-                watermark = frame.frame;
+                pendingTerminal = null;
+                ObjectSyncer.Instance.Sync(result.snapshot ?? Array.Empty<SnapshotObjectDto>());
+                GameConfig.SetTickRate(playback.TickRate);
             }
-            ObjectSyncer.Instance.Sync(result.snapshot ?? Array.Empty<SnapshotObjectDto>());
-            watermark = result.lastFrame;
+            watermark = playback.ReceivedFrame;
             GameSceneUIController.Instance.UpdateMana(result.mana);
             GameScene.UI.TimerController.Instance?.UpdateTimer(result.remainingSeconds);
             SynchronizeCards(result.cards ?? Array.Empty<long>());
+            if (result.status != "RUNNING")
+            {
+                ClearPointer();
+                pendingTerminal = presentedState?.revision == result.revision && presentedState.status == result.status
+                    ? null : result;
+                return;
+            }
+            pendingTerminal = null;
+            ShowState(result);
+        }
+
+        private void Update()
+        {
+            if (state == null || !Current || finishing || suspended) return;
+            double realtime = Time.realtimeSinceStartupAsDouble;
+            // Time.time은 maximumDeltaTime으로 제한되므로 앱 정지는 실제 시계로 감지한다.
+            if (lastRenderRealtime > 0 && realtime - lastRenderRealtime > 0.5)
+            {
+                playback.Invalidate();
+                pendingTerminal = null;
+            }
+            lastRenderRealtime = realtime;
+            double now = Time.timeAsDouble;
+            playback.BeginUpdate(now);
+            while (playback.TryTake(now, out var frame))
+                PresentationFramePlayer.Apply(frame.objects, frame.events);
+            if (pendingTerminal != null && pendingTerminal.revision == state.revision
+                && playback.IsSettled(now))
+            {
+                var terminal = pendingTerminal;
+                pendingTerminal = null;
+                ShowState(terminal);
+            }
+        }
+
+        private void ShowState(TutorialStateDto result)
+        {
+            bool changed = presentedState == null || presentedState.revision != result.revision || presentedState.status != result.status
+                || presentedState.wave != result.wave || presentedState.recommended != result.recommended;
+            presentedState = result;
             if (!changed) return;
             ClearPointer();
             if (result.status == "RUNNING")
@@ -199,6 +243,9 @@ namespace TutorialScene
             panel.Hide();
             suspended = false;
             state = null;
+            presentedState = null;
+            pendingTerminal = null;
+            playback.Invalidate();
         }
 
         private void LateUpdate()
@@ -231,6 +278,8 @@ namespace TutorialScene
         private IEnumerator Finish()
         {
             finishing = true;
+            pendingTerminal = null;
+            playback.Invalidate();
             yield return TutorialBattleApi.Request<Reply>("DELETE", Api(""), jwt, null, (_, _) => { });
             if (!Current) yield break;
             SceneContext.MatchInfo = null;
@@ -247,6 +296,8 @@ namespace TutorialScene
 
         private void OnDestroy()
         {
+            playback.Invalidate();
+            pendingTerminal = null;
             ClearPointer();
             TutorialHint.HideCurrent();
             if (Instance == this) Instance = null;

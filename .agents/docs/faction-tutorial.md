@@ -39,7 +39,29 @@ latest JWT for each request. Reject a response after the account/server changes.
 prefabs and object presentation. `StompConnector`, `PingSender` and fever-time
 components are removed from that scene. Merely disabling them still runs Awake
 and creates a second transport. The driver sends authenticated HTTP commands
-and applies the normal object/event DTOs, then reconciles a full snapshot.
+and plays the normal object/event DTOs through `TutorialPlaybackBuffer`. Apply a
+full snapshot only on initial entry, revision changes, reconnect, missing frames,
+or excessive backlog/stall. A full snapshot after every poll interrupts movement
+tweens and repeats transient Attack/Damaged presentation.
+
+Keep received and displayed frame watermarks separate. HTTP can deliver several
+simulation ticks at once; never dispatch all of them in one render frame. Use the
+server's `tick` and `tickRate`, not capture sequence numbers: CAST creates another
+capture without advancing simulation time. The buffer starts with 100ms of delay,
+then plays one tick group per render update with the ordinary frame duration.
+New captures at an already displayed tick still play once, deduplicated by frame.
+Poll on a 50ms budget including request time; presentation continues while a
+request is in flight. Use the same Unity time clock as the movement tweens.
+Detect app/render stalls separately with realtimeSinceStartupAsDouble: Unity
+clamps Time.time increments to maximumDeltaTime (333ms here), so that clock
+cannot detect a 500ms stall. On return discard queued combat and pending terminal
+panels before accepting a recovery snapshot.
+
+A recovery snapshot discards queued history and resets both watermarks to its
+lastFrame/tick. Do not replay the historical events in that response. Block input
+on terminal server states immediately, but show their panel only after the final
+queued frame and its movement tween finish. Cancel that pending panel on revision
+changes, recovery and teardown.
 
 Card selection/unselection stays local. Only casts go to the tutorial API.
 Clear CardInputSender selection and expected mana before replacing a step's
@@ -69,6 +91,11 @@ images are UI fixture renders, not a live account/server playthrough.
 Run `FactionTutorialTests`, `FactionTutorialPlayModeTests` and
 `ComicIntroPlayModeTests`. The Play Mode fixture disables the HTTP driver before
 Start and checks real GameScene card selection across a revision change.
+The buffer EditMode tests cover burst delivery, duplicate/late CAST captures,
+revision and gap recovery, bounded backlog, stalls and underrun. The PlayMode
+fixture also moves a real ServedObject through intermediate positions, checks
+one attack presentation and waits for the final tween before showing success.
+Completing a server lesson alone does not validate visual playback cadence.
 Game's TutorialBattleTest separately runs all lessons against production magic,
 prefab and physics code with a captured gameplay-parameter fixture.
 

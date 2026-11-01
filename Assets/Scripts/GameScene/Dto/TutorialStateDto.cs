@@ -24,6 +24,8 @@ namespace GameScene.Dto
         public TutorialFrameDto[] frames;
         public SnapshotObjectDto[] snapshot;
         public int lastFrame;
+        public int tick;
+        public int tickRate;
     }
 
     [Serializable, UnityEngine.Scripting.Preserve]
@@ -31,6 +33,7 @@ namespace GameScene.Dto
     {
         [UnityEngine.Scripting.Preserve] public TutorialFrameDto() { }
         public int frame;
+        public int tick;
         public ObjectsInfo objects;
         public List<GameEvent> events;
     }
