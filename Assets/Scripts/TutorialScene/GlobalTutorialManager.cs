@@ -6,7 +6,7 @@ namespace TutorialScene
     public class GlobalTutorialManager : SingletonObject<GlobalTutorialManager>
     {
         private const string LobbySceneName = "LobbyScene";
-        private const string BattleTutorialSceneName = "InteractiveTutorialScene";
+        private const string ComicIntroSceneName = "ComicIntroScene";
 
         private ITutorialState currentState;
 
@@ -33,7 +33,7 @@ namespace TutorialScene
         public void StartOnboardingTutorial()
         {
             SetProgress(OnboardingProgress.Battle);
-            LoadSceneIfNeeded(BattleTutorialSceneName);
+            LoadSceneIfNeeded(ComicIntroSceneName);
             CompleteTask(new BattleState());
         }
 

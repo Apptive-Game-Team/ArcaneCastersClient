@@ -81,6 +81,8 @@ This repository keeps its own skills under `.agents/skills/`. Read the one that 
 - `.agents/skills/pr-media/SKILL.md` — puts screenshots, renders, or diagrams into a pull request by committing them under `docs/pr-media/<issue-num>/` and linking them by commit SHA; use for any PR that a picture would make easier to review.
 - `.agents/skills/magick/SKILL.md` — ImageMagick CLI reference for inspecting, converting, resizing, cropping, compositing, and batch-processing images with the `magick` command.
 - `.agents/skills/make-game-art/SKILL.md` — creates, edits, reviews, or standardizes WordOnline visual assets under one project-wide art style; use for character, creature, faction, building, environment, VFX, icon, sprite, or art-direction work.
+- `.agents/skills/make-motion-comic/SKILL.md` — turns one comic-page image into a playable single-board Unity motion-comic scene, with separate panel artwork, editable dialogue, comic framing and verified scene handoff.
+- `.agents/skills/record-gif/SKILL.md` — records actual app or Unity playback and converts local video/frame recordings into an animated GIF under a measured size limit.
 - `.agents/skills/make-magic/SKILL.md` — adds or scaffolds a new magic's client-side localization text and generated icon/sprite art for server-derived magic data; use `make-prefab` separately for prefab wiring.
 - `.agents/skills/make-prefab/SKILL.md` — adds or validates a runtime magic prefab and icon sprite under `Assets/Resources/Prefabs` and `Assets/Resources/Game`.
 - `.agents/skills/plan-review/SKILL.md` — plan review protocol that runs fast and medium first-pass reviews then a heavy verification pass before folding findings back into the plan; use before non-trivial implementation.

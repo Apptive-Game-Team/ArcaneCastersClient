@@ -753,10 +753,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: TutorialScene.GlobalTutorialManager, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 7974076722091544636, guid: d0840718a7aae4552af6aeb3b83d5dbe, type: 3}
-      propertyPath: sceneName
-      value: InteractiveTutorialScene
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7974076722091544636, guid: d0840718a7aae4552af6aeb3b83d5dbe, type: 3}
     m_RemovedGameObjects: []

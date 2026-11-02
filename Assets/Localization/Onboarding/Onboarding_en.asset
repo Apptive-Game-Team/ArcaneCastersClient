@@ -178,6 +178,50 @@ MonoBehaviour:
     m_Localized: "Changed your deck? Save it here"
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000046
+    m_Localized: "Long ago, a great archmage lived on the continent of Word."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000047
+    m_Localized: "Ten thousand years ago, the World Tree grew where he died."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000048
+    m_Localized: "And now, a gate to another dimension has opened."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000049
+    m_Localized: "Attack."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000050
+    m_Localized: "Destroy the enemy before you."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000051
+    m_Localized: "Everyone, fall back!\nProtect the World Tree!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000052
+    m_Localized: "And so, war began on the continent of Word."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000053
+    m_Localized: "Keep going."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000054
+    m_Localized: "Skip"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000055
+    m_Localized: "Click / Space to continue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000056
+    m_Localized: "Start tutorial"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
