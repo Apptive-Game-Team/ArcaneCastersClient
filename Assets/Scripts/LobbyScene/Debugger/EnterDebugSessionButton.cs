@@ -58,7 +58,7 @@ namespace LobbyScene.Debugger
             SceneContext.ClearAdventureMatch();
             SceneContext.PrepareMap(response.mapType, null);
             yield return GameDataRefresh.Refresh();
-            SceneManager.LoadScene("GameScene");
+            yield return GameSceneEntry.PrepareAndLoad(this);
         }
 
         private IEnumerator EnterDebugSession()
@@ -92,7 +92,7 @@ namespace LobbyScene.Debugger
             SceneContext.ClearAdventureMatch();
             SceneContext.PrepareMap(response.mapType, null);
             yield return GameDataRefresh.Refresh();
-            SceneManager.LoadScene("GameScene");
+            yield return GameSceneEntry.PrepareAndLoad(this);
         }
     }
 }
