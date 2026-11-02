@@ -1,19 +1,25 @@
-name: Build and Deploy WebGL
+name: Build and Publish WebGL Image
 
 on:
   push:
     branches:
       - dev
+  workflow_dispatch:
 
-# Serialize pushes to ArcaneCastersPlay: two concurrent runs clone the same base
-# commit and the later push is rejected as non-fast-forward.
 concurrency:
-  group: arcane-casters-play-push
-  cancel-in-progress: true
+  group: webgl-image-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
   buildWebGL:
+    if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -48,27 +54,33 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          unityVersion: 2022.3.22f1
+          unityVersion: auto
           targetPlatform: WebGL
           buildName: WebGL
           buildMethod: BuildScript.BuildDevWebGL
           customParameters: -logFile -
 
-      - name: Push to another repo
+      - name: Build and verify Nginx image
+        env:
+          IMAGE: ghcr.io/${{ github.repository_owner }}/arcanecasters-play
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone --branch dev --single-branch https://x-access-token:${{ secrets.WORD_ONLINE_PLAY_TOKEN }}@github.com/Apptive-Game-Team/ArcaneCastersPlay.git
-          ls -R build
-          cd ArcaneCastersPlay
-          rm -rf ./Build
-          rm -rf ./index.html
-          cp -r ../build/WebGL/WebGL/* ./
-          ls -R
-          git add .
-          if git diff --cached --quiet; then
-            echo "build output identical to ArcaneCastersPlay dev - nothing to push"
-            exit 0
-          fi
-          git commit -m "Update WebGL build from dev"
-          git push origin dev
+          set -euo pipefail
+          image="${IMAGE,,}"
+          echo "PLAY_IMAGE=$image" >> "$GITHUB_ENV"
+          bash deploy/web/build-image.sh "$image:sha-$GITHUB_SHA" build/WebGL/WebGL
+          bash deploy/web/check-image.sh "$image:sha-$GITHUB_SHA" build/WebGL/WebGL
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish image
+        run: |
+          set -euo pipefail
+          docker push "$PLAY_IMAGE:sha-$GITHUB_SHA"
+          docker tag "$PLAY_IMAGE:sha-$GITHUB_SHA" "$PLAY_IMAGE:dev"
+          docker push "$PLAY_IMAGE:dev"
+          echo "Play image: \`$PLAY_IMAGE:sha-$GITHUB_SHA\`" >> "$GITHUB_STEP_SUMMARY"
