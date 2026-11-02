@@ -30,10 +30,10 @@ namespace Data
                 new Server("magic-card", "lobby.magic-card.ac.theevilent.com", 443, true));
 
         public static readonly MatchingServerOption Dev =
-            new MatchingServerOption("dev", "dev", new Server("dev", "dev.lobby.ac.yunseong.dev", 443, true));
+            new MatchingServerOption("dev", "dev", new Server("dev", "lobby.dev.ac.theevilent.com", 443, true));
 
         public static readonly MatchingServerOption Deploy =
-            new MatchingServerOption("deploy", "deploy", new Server("deploy", "lobby.ac.yunseong.dev", 443, true));
+            new MatchingServerOption("deploy", "deploy", new Server("deploy", "lobby.ac.theevilent.com", 443, true));
 
         /// <summary>
         /// Options in auto-select priority order: the first healthy one wins when the admin
@@ -42,10 +42,8 @@ namespace Data
         public static readonly IReadOnlyList<MatchingServerOption> Options = new[] { Local, MagicCard, Dev, Deploy };
 
         /// <summary>
-        /// Server used before an admin picks anything. On this branch that is the magic-card
-        /// environment, because a build from this branch only works against the magic-card data
-        /// model. The dropdown is still the way to reach the other servers, and `main` keeps
-        /// pointing at dev.
+        /// 관리자 선택 전에는 운영 서버를 사용한다. 개발 빌드도 같은 기본값을 쓰며,
+        /// 관리자는 드롭다운에서 다른 서버를 선택할 수 있다.
         /// </summary>
         private static readonly MatchingServerOption BuildDefault = Deploy;
 
