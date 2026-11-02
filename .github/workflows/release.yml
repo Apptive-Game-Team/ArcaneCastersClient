@@ -89,7 +89,7 @@ jobs:
       # 이 API 를 갖기 전에도 release 가 막히지 않는다.
       - name: Fetch offline static data
         env:
-          DEPLOY_LOBBY_URL: https://lobby.ac.yunseong.dev
+          DEPLOY_LOBBY_URL: https://lobby.theevilent.com
         run: |
           set -uo pipefail
           mkdir -p Assets/StreamingAssets/Offline
