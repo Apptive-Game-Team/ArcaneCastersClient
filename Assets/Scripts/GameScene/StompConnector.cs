@@ -52,6 +52,7 @@ namespace GameScene
             { TableReference = MessageTable, TableEntryReference = "sessionReconnecting" };
 
         private IStompTransport _transport;
+        private GameServerConnection _connection;
         private StompSubscriptionRegistry _registry;
         private StompReconnectController _reconnect;
 
@@ -115,11 +116,9 @@ namespace GameScene
                     ? inGameReconnectDelays
                     : DefaultReconnectDelays);
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-            _transport = gameObject.AddComponent<WebGLStompTransport>();
-#else
-            _transport = gameObject.AddComponent<NativeStompTransport>();
-#endif
+            _connection = GameServerConnection.ForMatch(SceneContext.MatchInfo);
+            _connection.ClaimForGameplay();
+            _transport = _connection.Transport;
 
             _transport.Connected += HandleConnected;
             _transport.Disconnected += HandleDisconnected;
@@ -151,7 +150,14 @@ namespace GameScene
             if (CustomBattleConnection.IsLocalMatch) CustomBattleConnection.End();
             // 플래그를 먼저 세운다. 닫는 과정에서 올라오는 Disconnected는 끊김이 아니다.
             _intentionalDisconnect = true;
-            _transport.Disconnect();
+            if (_transport != null)
+            {
+                _transport.Connected -= HandleConnected;
+                _transport.Disconnected -= HandleDisconnected;
+                _transport.Errored -= HandleError;
+                _transport.MessageReceived -= _registry.Dispatch;
+            }
+            if (_connection != null) _connection.Close();
         }
 
         /// <summary>

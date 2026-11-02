@@ -570,6 +570,22 @@ MonoBehaviour:
     m_Localized: Coming soon..
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000617
+    m_Localized: Preparing the game...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000618
+    m_Localized: Planting trees...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000619
+    m_Localized: Making a river...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000620
+    m_Localized: Connecting to the game server...
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

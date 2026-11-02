@@ -102,5 +102,18 @@ namespace WordOnline.Tests
             Assert.That(StompConnectGate.DefaultHandshakeSeconds,
                 Is.EqualTo(ConnectAttemptSchedule.DefaultAttemptSeconds));
         }
+
+        [Test]
+        public void DefaultGate_DoesNotReplaceFiveSecondHandshakeAndExpiresAtTenSeconds()
+        {
+            var gate = new StompConnectGate();
+            gate.NoteHandshakeStarted(0f);
+            Assert.That(gate.Decide(transportConnected: false, now: 5.1f),
+                Is.EqualTo(ConnectGateDecision.HandshakeInFlight));
+            Assert.That(gate.Decide(transportConnected: false, now: 9.99f),
+                Is.EqualTo(ConnectGateDecision.HandshakeInFlight));
+            Assert.That(gate.Decide(transportConnected: false, now: 10f),
+                Is.EqualTo(ConnectGateDecision.Connect));
+        }
     }
 }

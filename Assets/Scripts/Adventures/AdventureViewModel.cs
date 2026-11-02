@@ -94,7 +94,8 @@ namespace Adventures
                 : null;
             SceneContext.PrepareMap(matchedInfoDto.mapType, adventureTheme);
 
-            SceneManager.LoadScene(targetSceneName);
+            StartCoroutine(GameSceneEntry.PrepareAndLoad(this,
+                () => CurrentState.UpdateData(AdventureState.Idle), targetSceneName));
         }
     }
 }

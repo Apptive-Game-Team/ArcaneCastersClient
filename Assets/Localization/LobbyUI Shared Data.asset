@@ -571,6 +571,22 @@ MonoBehaviour:
     m_Key: AdventureComingSoon
     m_Metadata:
       m_Items: []
+  - m_Id: 76060000000000617
+    m_Key: GameSessionPreparing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000618
+    m_Key: PreparingTrees
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000619
+    m_Key: PreparingRiver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000620
+    m_Key: GameServerConnecting
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
