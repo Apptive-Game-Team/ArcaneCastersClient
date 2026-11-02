@@ -5510,6 +5510,10 @@ PrefabInstance:
       propertyPath: m_overflowMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1254884346060698375, guid: df06919de6bf14dec8704fbbaef2d66a, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5596,10 +5600,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2006500131}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 603e33c5b072c0f49a0649350ce7c769, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ac96da934684704af001394c1eac994, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: AdventuresScene
 --- !u!114 &2065755170
 MonoBehaviour:
   m_ObjectHideFlags: 0
