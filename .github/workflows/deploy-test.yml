@@ -78,14 +78,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
       - name: Publish image
+        env:
+          PUSH_IMAGE: 'true'
         run: |
           set -euo pipefail
-          docker push "$PLAY_IMAGE:sha-$GITHUB_SHA"
-          docker tag "$PLAY_IMAGE:sha-$GITHUB_SHA" "$PLAY_IMAGE:$GITHUB_REF_NAME"
-          docker push "$PLAY_IMAGE:$GITHUB_REF_NAME"
+          tags=("$PLAY_IMAGE:$GITHUB_REF_NAME")
           if [ "$GITHUB_REF_NAME" = deploy ]; then
-            docker tag "$PLAY_IMAGE:sha-$GITHUB_SHA" "$PLAY_IMAGE:latest"
-            docker push "$PLAY_IMAGE:latest"
+            tags+=("$PLAY_IMAGE:latest")
           fi
+          bash deploy/web/build-image.sh "$PLAY_IMAGE:sha-$GITHUB_SHA" build/WebGL/WebGL "${tags[@]}"
           echo "Play image: \`$PLAY_IMAGE:sha-$GITHUB_SHA\`" >> "$GITHUB_STEP_SUMMARY"
