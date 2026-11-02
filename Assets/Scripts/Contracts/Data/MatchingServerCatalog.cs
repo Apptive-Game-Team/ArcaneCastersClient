@@ -30,10 +30,10 @@ namespace Data
                 new Server("magic-card", "lobby.magic-card.ac.theevilent.com", 443, true));
 
         public static readonly MatchingServerOption Dev =
-            new MatchingServerOption("dev", "dev", new Server("dev", "dev.lobby.theevilent.com", 443, true));
+            new MatchingServerOption("dev", "dev", new Server("dev", "lobby.dev.ac.theevilent.com", 443, true));
 
         public static readonly MatchingServerOption Deploy =
-            new MatchingServerOption("deploy", "deploy", new Server("deploy", "lobby.theevilent.com", 443, true));
+            new MatchingServerOption("deploy", "deploy", new Server("deploy", "lobby.ac.theevilent.com", 443, true));
 
         /// <summary>
         /// Options in auto-select priority order: the first healthy one wins when the admin
