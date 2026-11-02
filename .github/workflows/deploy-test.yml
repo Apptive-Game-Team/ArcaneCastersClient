@@ -58,7 +58,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone https://x-access-token:${{ secrets.WORD_ONLINE_PLAY_TOKEN }}@github.com/Apptive-Game-Team/ArcaneCastersPlay.git
+          git clone --branch dev --single-branch https://x-access-token:${{ secrets.WORD_ONLINE_PLAY_TOKEN }}@github.com/Apptive-Game-Team/ArcaneCastersPlay.git
           ls -R build
           cd ArcaneCastersPlay
           rm -rf ./Build
