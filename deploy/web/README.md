@@ -1,14 +1,19 @@
 # WebGL Nginx 이미지 게시
 
-`dev`에 push하면 기존 Unity WebGL 빌드 후 Nginx 이미지를 검사하고 GHCR에 게시합니다.
-`workflow_dispatch`도 `dev`에서만 게시합니다. Unity 버전은 `ProjectVersion.txt`를 읽습니다.
+`dev` 또는 `deploy`에 push하면 Unity WebGL 빌드 후 Nginx 이미지를 검사하고 GHCR에 게시합니다.
+`workflow_dispatch`도 두 브랜치에서만 게시합니다. Unity 버전은 `ProjectVersion.txt`를 읽습니다.
+`dev`는 `BuildDevWebGL`, `deploy`는 `BuildWebGL`로 빌드합니다.
 `ArcaneCastersPlay`와 `WORD_ONLINE_PLAY_TOKEN`은 이 workflow에서 사용하지 않습니다.
 다른 track과 itch.io workflow는 변경하지 않습니다.
 
 - 이미지: `ghcr.io/apptive-game-team/arcanecasters-play`
-- `dev`: 최근 게시 이미지. 서버 자동 갱신 기능은 포함하지 않습니다.
+- `dev`: dev 브랜치의 최근 게시 이미지.
+- `deploy`, `latest`: deploy 브랜치의 최근 게시 이미지. dev 빌드는 이 태그를 변경하지 않습니다.
 - `sha-<전체 커밋 SHA>`: 배포 및 롤백에 사용할 태그. Actions summary에서 확인합니다.
 - 대상 플랫폼: `linux/amd64` (GitHub의 `ubuntu-latest` runner).
+
+서버 자동 갱신 기능은 포함하지 않습니다. dev에서 설정을 병합한 후 기존 승격 절차로
+deploy에도 이 workflow를 반영해야 deploy 이미지 게시가 실행됩니다.
 
 ## GitHub 설정
 
