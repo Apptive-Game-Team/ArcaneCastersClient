@@ -25,22 +25,43 @@ namespace LobbyScene
             if (view == null) view = Instantiate(Resources.Load<GameObject>("UI/Progression/PlayerProgressionView")).GetComponent<PlayerProgressionView>();
             if (statusText != null) statusText.gameObject.SetActive(false);
             foreach (var localized in GetComponentsInChildren<LocalizeStringEvent>(true)) localized.enabled = false;
-            root.SetActive(true);
+            root.SetActive(false);
             SetButtons(false);
-            SetText(messageText, "ProgressionLoading", "Loading rewards...");
             confirmButton.onClick.RemoveAllListeners();
             cancelButton.onClick.RemoveAllListeners();
             confirmButton.onClick.AddListener(() => selection = "HELL");
             cancelButton.onClick.AddListener(() => selection = "NATURE");
+            yield return PlayerProgressionApi.Sync(result => state = result);
+            if (state == null)
+            {
+                StartCoroutine(InitializeWhenAvailable());
+                yield break;
+            }
+            yield return CompleteInitialization();
+        }
+
+        private IEnumerator InitializeWhenAvailable()
+        {
+            while (state == null)
+            {
+                yield return new WaitForSecondsRealtime(30);
+                yield return PlayerProgressionApi.Sync(result => state = result);
+            }
+            yield return CompleteInitialization();
+            var lobby = FindObjectOfType<LobbyUIController>();
+            if (lobby != null) yield return lobby.FetchDecks();
+        }
+
+        private IEnumerator CompleteInitialization()
+        {
             while (state == null || string.IsNullOrEmpty(state.faction))
             {
-                yield return PlayerProgressionApi.Sync(result => state = result);
                 if (state == null)
                 {
-                    SetText(messageText, "ProgressionRetry", "Could not load rewards. Retrying...");
-                    root.SetActive(true);
+                    root.SetActive(false);
                     SetButtons(false);
-                    yield return new WaitForSecondsRealtime(3);
+                    yield return new WaitForSecondsRealtime(30);
+                    yield return PlayerProgressionApi.Sync(result => state = result);
                     continue;
                 }
                 if (!string.IsNullOrEmpty(state.faction)) break;
