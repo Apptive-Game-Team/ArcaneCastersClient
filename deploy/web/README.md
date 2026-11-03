@@ -10,9 +10,9 @@
 - `dev`: dev 브랜치의 최근 게시 이미지.
 - `deploy`, `latest`: deploy 브랜치의 최근 게시 이미지. dev 빌드는 이 태그를 변경하지 않습니다.
 - `sha-<전체 커밋 SHA>`: 배포 및 롤백에 사용할 태그. Actions summary에서 확인합니다.
-- 대상 플랫폼: `linux/amd64` (GitHub의 `ubuntu-latest` runner).
+- 대상 플랫폼: `linux/amd64`, `linux/arm64`. 게시 시 buildx로 두 아키텍처를 함께 빌드합니다.
 
-서버 자동 갱신 기능은 포함하지 않습니다. dev에서 설정을 병합한 후 기존 승격 절차로
+서버 갱신은 기존 Watchtower에 맡깁니다. dev에서 설정을 병합한 후 기존 승격 절차로
 deploy에도 이 workflow를 반영해야 deploy 이미지 게시가 실행됩니다.
 
 ## GitHub 설정
@@ -33,15 +33,15 @@ Actions summary의 실제 SHA 태그를 지정합니다.
 export PLAY_IMAGE_TAG=sha-<전체-커밋-SHA>
 docker compose -f compose.yaml pull
 docker compose -f compose.yaml up -d
-curl -I http://127.0.0.1:8081/
+docker compose -f compose.yaml exec -T play wget --spider -q http://127.0.0.1:8080/
 ```
 
-기존 서버 Nginx의 HTTPS virtual host에서 다음 upstream으로 전달합니다.
-인증서와 DNS는 서버에서 별도로 관리합니다. 이미지는 HTTP 80 포트만 제공합니다.
+서버의 기존 external Docker 네트워크 `net`에 연결합니다. 컨테이너 이름은 `ac-client`이고 Nginx 내부 포트는 `8080`입니다. 호스트 포트는 공개하지 않습니다. Nginx Proxy Manager에서 `http`, `ac-client`, `8080`으로 전달합니다.
+인증서와 DNS는 서버에서 별도로 관리합니다. 이미지는 HTTP 8080 포트를 제공합니다.
 
 ```nginx
 location / {
-    proxy_pass http://127.0.0.1:8081;
+    proxy_pass http://ac-client:8080;
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -68,3 +68,5 @@ bash deploy/web/check-image.sh play-local build/WebGL/WebGL
 
 롤백은 `PLAY_IMAGE_TAG`를 이전 게시 SHA로 바꾼 후 같은 pull/up 명령을 실행합니다.
 운영에 쓰는 이전 이미지 태그는 GHCR에서 삭제하지 않습니다.
+
+Compose는 기본으로 latest를 사용하고 Watchtower 갱신 라벨과 healthcheck를 포함합니다. SHA 태그로 고정하면 해당 태그를 사용하는 동안 최신 운영 태그로 자동 전환되지 않습니다.
