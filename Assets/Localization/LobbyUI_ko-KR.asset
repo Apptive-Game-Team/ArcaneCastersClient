@@ -676,6 +676,90 @@ MonoBehaviour:
     m_Localized: "\uC900\uBE44\uC911\uC785\uB2C8\uB2E4.."
     m_Metadata:
       m_Items: []
+  - m_Id: 76110341300000100
+    m_Localized: "\ucef4\ud4e8\ud130 \ub300\uc804"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000101
+    m_Localized: "\ub4a4\ub85c"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000102
+    m_Localized: "\ube60\ub978 \uc5f0\uc2b5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000103
+    m_Localized: "\ub300\uc804 \uc2dc\uc791"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000104
+    m_Localized: "\uc804\uc801\uc744 \ubd88\ub7ec\uc624\ub294 \uc911"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000105
+    m_Localized: "\ub09c\uc774\ub3c4\ub97c \ubd88\ub7ec\uc624\uc9c0 \ubabb\ud588\uc5b4\uc694."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000106
+    m_Localized: "\ub2e4\uc2dc \uc2dc\ub3c4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000107
+    m_Localized: "\ucd94\ucc9c \ub09c\uc774\ub3c4  {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000108
+    m_Localized: "\ucd5c\uadfc \ub300\uc804  {0}/5\ud310"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000109
+    m_Localized: "\ub09c\uc774\ub3c4\ub97c \uc120\ud0dd\ud558\uc138\uc694."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000110
+    m_Localized: "\uc0c1\ub300 \uc5c6\uc74c"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000111
+    m_Localized: "\uae30\ub85d \uc5c6\uc74c"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000112
+    m_Localized: "{0}\uc2b9 {1}\ud328"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000113
+    m_Localized: " {0}\ubb34"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000114
+    m_Localized: "\uc785\ubb38"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000115
+    m_Localized: "\uae30\ubcf8"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000116
+    m_Localized: "\uc219\ub828"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000117
+    m_Localized: "\uace0\uae09"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000118
+    m_Localized: "\ucd5c\uc0c1\uae09"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000119
+    m_Localized: "{0}\ubd80\ud130 \uc2dc\uc791"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000120
+    m_Localized: "\uc9c0\uae08 \ub300\uc804\ud560 \uc0c1\ub300\uac00 \uc5c6\uc5b4\uc694."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
