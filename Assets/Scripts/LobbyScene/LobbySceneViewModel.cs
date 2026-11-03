@@ -69,28 +69,39 @@ namespace LobbyScene
             coordinator.Enqueue(DeckMode);
         }
 
-        public void PlayPracticeMatch()
+        public IEnumerator LoadPracticeDifficulties(Action<PracticeDifficultiesDto> callback)
         {
-            if (RetryEntry(StartPracticeMatch)) return;
-            StartPracticeMatch();
+            return _matchQueueApi.PracticeDifficulties(callback);
         }
 
-        private void StartPracticeMatch()
+        public void PlayPracticeMatch() => PlayPracticeMatch(null);
+
+        public void PlayPracticeMatch(string difficultyId)
         {
-            Debug.Log("Practice button clicked: Starting practice match.");
+            if (CurrentState.Data != LobbyState.Idle) return;
+            if (RetryEntry(() => StartPracticeMatch(difficultyId))) return;
+            StartPracticeMatch(difficultyId);
+        }
+
+        private void StartPracticeMatch(string difficultyId)
+        {
             CurrentState.UpdateData(LobbyState.PreparingPractice);
             OnPracticeStart?.Invoke();
-            StartCoroutine(_matchQueueApi.MatchPractice(dto =>
-            {
-                if (dto != null)
-                {
-                    OnMatched(dto);
-                    return;
-                }
+            StartCoroutine(difficultyId == null
+                ? _matchQueueApi.MatchPractice(OnPracticeMatched)
+                : _matchQueueApi.MatchDifficulty(difficultyId, OnPracticeMatched));
+        }
 
-                CurrentState.UpdateData(LobbyState.Idle);
-                OnPracticeFailed?.Invoke();
-            }));
+        private void OnPracticeMatched(MatchedInfoDto dto)
+        {
+            if (dto != null)
+            {
+                OnMatched(dto);
+                return;
+            }
+
+            CurrentState.UpdateData(LobbyState.Idle);
+            OnPracticeFailed?.Invoke();
         }
 
         public void EnterFriendMatch(MatchedInfoDto matchedInfoDto)

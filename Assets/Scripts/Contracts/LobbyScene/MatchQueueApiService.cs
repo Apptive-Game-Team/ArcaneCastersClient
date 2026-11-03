@@ -114,6 +114,53 @@ namespace LobbyScene
             callback(ticket);
         }
 
+        private static ServerEndpoint DifficultyEndpoint =>
+            ServerList.MatchingServer.Api.Path("api", "match", "practice", "difficulties");
+
+        public IEnumerator PracticeDifficulties(Action<PracticeDifficultiesDto> callback)
+        {
+            for (int attempt = 0; attempt < 2; attempt++)
+            {
+                using var request = UnityWebRequest.Get(DifficultyEndpoint);
+                request.timeout = 8;
+                Server.SetAcceptLanguage(request);
+                Server.SetAuthorization(request);
+                yield return request.SendWebRequest();
+                if (request.result == UnityWebRequest.Result.Success &&
+                    JsonCodec.TryDeserialize(request.downloadHandler.text, out PracticeDifficultiesDto overview) &&
+                    overview?.tiers != null)
+                {
+                    callback(overview);
+                    yield break;
+                }
+                bool transient = request.result == UnityWebRequest.Result.ConnectionError || request.responseCode >= 500;
+                if (!transient || attempt != 0) break;
+                yield return new WaitForSecondsRealtime(0.75f);
+            }
+            callback(null);
+        }
+
+        public IEnumerator MatchDifficulty(string difficultyId, Action<MatchedInfoDto> callback)
+        {
+            List<ServerPing> pings = null;
+            yield return GameServerPinger.Measure(result => pings = result);
+            string url = GameServerPinger.AppendQuery(DifficultyEndpoint.Path(difficultyId), pings);
+            using var request = new UnityWebRequest(url, "POST");
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.timeout = 30;
+            Server.SetAcceptLanguage(request);
+            Server.SetAuthorization(request);
+            yield return request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success &&
+                JsonCodec.TryDeserialize(request.downloadHandler.text, out MatchedInfoDto match) &&
+                !string.IsNullOrWhiteSpace(match?.sessionId))
+            {
+                callback(match);
+                yield break;
+            }
+            callback(null);
+        }
+
         public IEnumerator MatchPractice(Action<MatchedInfoDto> callback)
         {
             // desktop 에서 로컬 서버가 준비돼 있으면 자기 PC 에서 경기한다. 조건이 하나라도 맞지 않거나
