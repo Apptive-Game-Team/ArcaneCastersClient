@@ -587,6 +587,90 @@ MonoBehaviour:
     m_Key: GameServerConnecting
     m_Metadata:
       m_Items: []
+  - m_Id: 76110341300000100
+    m_Key: "ComputerBattle.Title"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000101
+    m_Key: "ComputerBattle.Back"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000102
+    m_Key: "ComputerBattle.Quick"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000103
+    m_Key: "ComputerBattle.Start"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000104
+    m_Key: "ComputerBattle.Loading"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000105
+    m_Key: "ComputerBattle.Error"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000106
+    m_Key: "ComputerBattle.Retry"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000107
+    m_Key: "ComputerBattle.Recommended"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000108
+    m_Key: "ComputerBattle.Progress"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000109
+    m_Key: "ComputerBattle.NoRecommendation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000110
+    m_Key: "ComputerBattle.Unavailable"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000111
+    m_Key: "ComputerBattle.NoRecord"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000112
+    m_Key: "ComputerBattle.Record"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000113
+    m_Key: "ComputerBattle.Draws"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000114
+    m_Key: "ComputerBattle.Tier.INTRO"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000115
+    m_Key: "ComputerBattle.Tier.BASIC"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000116
+    m_Key: "ComputerBattle.Tier.SKILLED"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000117
+    m_Key: "ComputerBattle.Tier.ADVANCED"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000118
+    m_Key: "ComputerBattle.Tier.EXPERT"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000119
+    m_Key: "ComputerBattle.Begin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000120
+    m_Key: "ComputerBattle.NoneAvailable"
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
