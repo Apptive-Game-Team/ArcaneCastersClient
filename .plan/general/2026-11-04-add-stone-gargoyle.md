@@ -1,7 +1,7 @@
 # 2026-11-04 — 돌 가고일 공중 유닛 추가
 
 - Date: 2026-11-04
-- GitHub Issue: None (자동 승인 검토에서 원격 이슈 생성 거부)
+- GitHub Issue: https://github.com/Apptive-Game-Team/ArcaneCastersClient/issues/415
 - Status: 로컬 구현 및 검증 완료
 
 ## Goal
@@ -21,7 +21,7 @@ Java 서버와 기존 유닛 스탯, 배포 버전을 바꾸지 않는다.
 - [x] **Step 0: Recon**: Rust 천둥새 강하 행동, DB 번개 정령 스탯, Unity 공중 프리팹과 master-v2 화풍 확인.
 - [x] **Step 1: Implementation**: Rust PrefabType/GameObjectKey/registry에 StoneGargoyle 등록. ThunderBirdMob을 재사용하고 지상 마스크·Rock 속성·CommonEffectReceiver 사용. ZPhysics에 기존 기본값을 유지하는 상승속도 지정 생성자를 추가하고 가고일만 3으로 설정. DB는 HP 240/damage 50/speed 2/mass 1/radius 0.5/mana 35/attack_interval 1.5/attack_range 0.6/quantity 1/range 6/spawn_height 3 등록, TYPE_Unit/CAT_Medium/CAT_Melee 태그 및 magic_id 연결. 기본 공격 피해는 천둥새의 기존 낙하거리 계산을 따른다. Unity 프리팹과 6개 번역 테이블 추가. make-game-art/imagegen으로 붉은 눈과 이끼 낀 돌 날개의 후보 생성.
 - [x] **Step 2: Tests**: 실제 시뮬레이션에서 지상 타격·공중 제외·상승 복귀·짧은 반복 공격 주기·표적 파괴 시 중단·Rock 속성 검증. 천둥새의 기존 상승속도 유지 확인. Cargo 전체 검사와 DB migration 정적 검사, Unity 참조·이름·번역 검증.
-- [ ] **Step 3: Rollout / Rollback**: 아트 승인 전에는 후보를 Assets 밖에 보관한다. DB와 클라이언트가 준비된 뒤 Rust 버전을 사용한다. 원격 issue/PR 생성은 자동 검토 거부로 보류.
+- [ ] **Step 3: Rollout / Rollback**: 아트 승인 전에는 후보를 Assets 밖에 보관한다. DB와 클라이언트가 준비된 뒤 Rust 버전을 사용한다. 2026-11-05 사용자 승인에 따라 이슈 등록·push·초안 PR을 진행한다.
 
 ## Validation
 
@@ -56,3 +56,11 @@ Java 서버와 기존 유닛 스탯, 배포 버전을 바꾸지 않는다.
 - Graphify 명령과 그래프가 설치되어 있지 않아 `graphify update .`는 실행할 수 없었다.
 - 2026-11-05 사용자가 지옥불 차원 30% 수정안을 승인하여 리소스에 적용했다.
 - 두 기준선 실패를 제외한 서버 테스트 전체와 나머지 모든 workspace 크레이트 테스트도 독립 worktree에서 통과했다.
+
+## GitHub 연결
+
+- 클라이언트: Apptive-Game-Team/ArcaneCastersClient#415
+- DB: Apptive-Game-Team/ArcaneCastersDatabase#134
+- Rust: Apptive-Game-Team/ArcaneCastersGameRust#27
+- 모노레포 포인터: Apptive-Game-Team/ArcaneCasters#31
+- PR 외형 검수 자료: `docs/pr-media/415/stone-gargoyle-art-review.png`. 실제 전투 화면 캡처가 아닌 스프라이트 비교 시트다.
