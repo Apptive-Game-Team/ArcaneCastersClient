@@ -455,6 +455,10 @@ MonoBehaviour:
     m_Key: craterCarrier
     m_Metadata:
       m_Items: []
+  - m_Id: 78337500000000000
+    m_Key: stoneGargoyle
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

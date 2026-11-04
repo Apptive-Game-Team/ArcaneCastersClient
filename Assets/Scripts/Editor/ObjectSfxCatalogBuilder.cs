@@ -51,7 +51,7 @@ public static class ObjectSfxCatalogBuilder
         new("LightningCreature",
             "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "StormRider",
             "StormStag", "ThunderBird", "ThunderSpirit", "ZapMouse"),
-        new("RockCreature",
+        new("RockCreature", "StoneGargoyle",
             "DimensionToad", "PveDimensionToad", "RockGolem", "RockMage", "RockSlime", "MiniRock", "WallGolem",
             "PveBrickGolem"),
         new("WindCreature", "CloudDragon", "PveCorruptedWindSpirit", "WindSlime", "WindSpirit", "BombSprite"),
@@ -100,7 +100,7 @@ public static class ObjectSfxCatalogBuilder
         new("WaterLaunch", "AquaArcher", "WaterSlime", "BubbleSpirit", "CloudDragon", "BubbleGenerator"),
         new("FireLaunch", "CraterCarrier", "FireChildSpirit", "FireSpirit"),
         new("SmallAttack", "ArcaneInfantry", "ChickenCommando", "EmberSpirit", "FireSlime", "FireTadpole", "PveFireTadpole", "LeafSlime", "SeedSpirit", "VineSpirit", "PveCorruptedVineSpirit", "PveCorruptedWindSpirit", "BeanShooter", "ElectricSlime", "LightningTadpole", "PveLightningTadpole", "ThunderBird", "ThunderSpirit", "ZapMouse", "RockMage", "RockSlime", "MiniRock", "WindSlime", "WindSpirit", "BombSprite"),
-        new("SwingAttack", "SeaSerpent", "TreeGolem", "EvilEnt", "PveEvilEnt", "PveVineWitch", "StormRider", "StormStag", "RockGolem", "WallGolem", "PveBrickGolem", "MagmaSpirit"),
+        new("SwingAttack", "StoneGargoyle", "SeaSerpent", "TreeGolem", "EvilEnt", "PveEvilEnt", "PveVineWitch", "StormRider", "StormStag", "RockGolem", "WallGolem", "PveBrickGolem", "MagmaSpirit"),
     };
 
     private static readonly string[] ServerAliases =
@@ -118,7 +118,7 @@ public static class ObjectSfxCatalogBuilder
             "PveVineColony", "SeedNest", "Vine", "VineColony", "ElectricSummon",
             "FireSummon", "RockSummon", "WindSummon", "FireRune", "FrenzyTotem",
             "HealingTotem", "ManaWell", "RallyingTotem", "GrassGenerator", "RepairTotem", "ShockTrap"),
-        new("RockHit",
+        new("RockHit", "StoneGargoyle",
             "CraterCarrier", "MagmaSpirit", "DimensionToad", "PveDimensionToad",
             "RockGolem", "RockMage", "RockSlime", "MiniRock", "WallGolem", "PveBrickGolem",
             "Crater", "FireworkTower", "GroundCannon", "GroundTower", "RockTurret",
