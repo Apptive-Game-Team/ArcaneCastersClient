@@ -89,7 +89,7 @@ namespace LobbyScene
             OnPracticeStart?.Invoke();
             StartCoroutine(difficultyId == null
                 ? _matchQueueApi.MatchPractice(OnPracticeMatched)
-                : _matchQueueApi.MatchDifficulty(difficultyId, OnPracticeMatched));
+                : _matchQueueApi.MatchDifficulty(difficultyId, OnPracticeMatched, DeckMode));
         }
 
         private void OnPracticeMatched(MatchedInfoDto dto)
