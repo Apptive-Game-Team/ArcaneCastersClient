@@ -133,6 +133,8 @@ namespace LobbyScene
 
         private IEnumerator EnterGameScene(string targetSceneName)
         {
+            // 같은 프레임에 캐시 조회와 씬 로드가 끝나더라도 연결 안내를 먼저 그린다.
+            yield return null;
             if (SceneContext.User == null)
             {
                 yield return UserInfoGetter.GetUserInfo();
@@ -231,6 +233,12 @@ namespace LobbyScene
 
         private void HandleMatchmakingState(MatchTicketState state, MatchTicket ticket)
         {
+            // 매칭 결과를 받은 뒤의 진입 상태는 연결 완료나 실패가 해제한다.
+            if (enteringGameScene)
+            {
+                TicketState.UpdateData(state);
+                return;
+            }
             // 연습 요청 중에는 일반 매칭 복구 응답이 대기 화면을 덮어쓰지 않게 한다.
             if (CurrentState.Data == LobbyState.PreparingPractice) return;
             if (failedEntry != null && !enteringGameScene)
