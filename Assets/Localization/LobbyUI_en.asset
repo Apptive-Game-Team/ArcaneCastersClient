@@ -663,7 +663,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 76110341300000100
-    m_Localized: "Computer Battle"
+    m_Localized: "Bot Battle"
     m_Metadata:
       m_Items: []
   - m_Id: 76110341300000101
