@@ -134,6 +134,7 @@ namespace LobbyScene
                     yield break;
                 }
                 bool transient = request.result == UnityWebRequest.Result.ConnectionError || request.responseCode >= 500;
+                WDebug.LogWarning($"[BotBattle] 난이도 조회 실패: HTTP {request.responseCode}, {request.error}");
                 if (!transient || attempt != 0) break;
                 yield return new WaitForSecondsRealtime(0.75f);
             }
