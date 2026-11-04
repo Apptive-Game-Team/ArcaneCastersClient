@@ -60,7 +60,7 @@ namespace LobbyScene
             var table = LocalizationSettings.StringDatabase.GetTableAsync("LobbyUI");
             yield return table;
             strings = table.Status == AsyncOperationStatus.Succeeded ? table.Result : null;
-            title.text = Text("Title", "Computer Battle");
+            title.text = Text("Title", "Bot Battle");
             Label(backButton, Text("Back", "Back"));
             Label(quickButton, Text("Quick", "Quick practice"));
             Label(startButton, Text("Start", "Start battle"));
