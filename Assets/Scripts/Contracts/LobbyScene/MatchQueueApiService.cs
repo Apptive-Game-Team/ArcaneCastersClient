@@ -141,11 +141,14 @@ namespace LobbyScene
             callback(null);
         }
 
-        public IEnumerator MatchDifficulty(string difficultyId, Action<MatchedInfoDto> callback)
+        public IEnumerator MatchDifficulty(string difficultyId, Action<MatchedInfoDto> callback,
+            string deckMode = MatchDeckMode.Selected)
         {
             List<ServerPing> pings = null;
             yield return GameServerPinger.Measure(result => pings = result);
-            string url = GameServerPinger.AppendQuery(DifficultyEndpoint.Path(difficultyId), pings);
+            string url = DifficultyEndpoint.Path(difficultyId).Query("deckMode", deckMode);
+            string pingQuery = GameServerPinger.ToQuery(pings);
+            if (pingQuery != null) url += "&pings=" + Uri.EscapeDataString(pingQuery);
             using var request = new UnityWebRequest(url, "POST");
             request.downloadHandler = new DownloadHandlerBuffer();
             request.timeout = 30;
@@ -159,6 +162,7 @@ namespace LobbyScene
                 callback(match);
                 yield break;
             }
+            WDebug.LogWarning($"[BotBattle] 대전 시작 실패: HTTP {request.responseCode}, {request.error}");
             callback(null);
         }
 
