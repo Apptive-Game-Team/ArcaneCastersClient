@@ -96,6 +96,7 @@ namespace Editor
             foreach (string path in new[] { SelectionPath, BattlePath })
                 if (!settings.Any(entry => entry.path == path)) settings.Add(new EditorBuildSettingsScene(path, true));
             EditorBuildSettings.scenes = settings.ToArray();
+            FactionSelectionSetup.Build();
             AssetDatabase.SaveAssets();
             Debug.Log("FACTION_TUTORIAL_ASSETS_PASS");
         }
