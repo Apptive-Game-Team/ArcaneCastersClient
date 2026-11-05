@@ -219,6 +219,182 @@ MonoBehaviour:
     m_Key: onboarding.comic.begin
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000057
+    m_Key: FactionTutorial.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000058
+    m_Key: FactionTutorial.loading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000059
+    m_Key: FactionTutorial.connecting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000060
+    m_Key: FactionTutorial.choose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000061
+    m_Key: FactionTutorial.hell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000062
+    m_Key: FactionTutorial.nature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000063
+    m_Key: FactionTutorial.retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000064
+    m_Key: FactionTutorial.next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000065
+    m_Key: FactionTutorial.reconnect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000066
+    m_Key: FactionTutorial.error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000067
+    m_Key: FactionTutorial.expired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000068
+    m_Key: FactionTutorial.castRetry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000069
+    m_Key: FactionTutorial.shot.HELL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000070
+    m_Key: FactionTutorial.shot.NATURE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000071
+    m_Key: FactionTutorial.meteor.HELL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000072
+    m_Key: FactionTutorial.meteor.NATURE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000073
+    m_Key: FactionTutorial.tornado.HELL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000074
+    m_Key: FactionTutorial.tornado.NATURE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000075
+    m_Key: FactionTutorial.anti_air.HELL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000076
+    m_Key: FactionTutorial.anti_air.NATURE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000077
+    m_Key: FactionTutorial.formation.tank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000078
+    m_Key: FactionTutorial.formation.swarm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000079
+    m_Key: FactionTutorial.explosion.HELL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000080
+    m_Key: FactionTutorial.explosion.NATURE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000081
+    m_Key: FactionTutorial.final.0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000082
+    m_Key: FactionTutorial.final.1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000083
+    m_Key: FactionTutorial.final.2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000084
+    m_Key: FactionTutorial.success
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000085
+    m_Key: FactionTutorial.success.shot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000086
+    m_Key: FactionTutorial.success.meteor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000087
+    m_Key: FactionTutorial.success.tornado
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000088
+    m_Key: FactionTutorial.success.anti_air
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000089
+    m_Key: FactionTutorial.success.formation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000090
+    m_Key: FactionTutorial.success.explosion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000091
+    m_Key: FactionTutorial.retryTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000092
+    m_Key: FactionTutorial.retryStep
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000093
+    m_Key: FactionTutorial.complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000094
+    m_Key: FactionTutorial.reward.HELL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000095
+    m_Key: FactionTutorial.reward.NATURE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000096
+    m_Key: FactionTutorial.lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000113
+    m_Key: FactionTutorial.meteor.finish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000114
+    m_Key: FactionSelection.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000115
+    m_Key: FactionSelection.hell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000116
+    m_Key: FactionSelection.nature
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -220,7 +220,183 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000056
     m_Localized: "Start tutorial"
+    - m_Id: 318000000057
+    m_Localized: "Choose your faction"
     m_Metadata:
+      m_Items: []
+  - m_Id: 318000000058
+    m_Localized: "Loading your starting spells."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000059
+    m_Localized: "Preparing your tutorial battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000060
+    m_Localized: "Receive 3 copies of each of your faction’s 5 starting spells. You can collect the other faction’s spells later.\nInferno & Stone: Fire Shot · Ember Swarm · Towerback · Rock Golem · Fire Explosion\nNature & Water: Chain Lightning · Water Slime Swarm · Vine Spirit · Tree Golem · Water Explosion"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000061
+    m_Localized: "Inferno & Stone"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000062
+    m_Localized: "Nature & Water"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000063
+    m_Localized: "Try again"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000064
+    m_Localized: "Continue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000065
+    m_Localized: "Reconnect tutorial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000066
+    m_Localized: "Check your connection and try again. We will reconnect to your battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000067
+    m_Localized: "This battle has ended. Restart the lessons with your selected faction."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000068
+    m_Localized: "Check your spell, mana and aim. In the formation lesson, wait for your golem to take a hit before summoning the swarm."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000069
+    m_Localized: "Open the mana bar, select Fire Shot, then aim at the nature scout."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000070
+    m_Localized: "Open the mana bar and aim Chain Lightning at the clustered enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000071
+    m_Localized: "Support spell trial: drop Meteor Shower on the enemy group. It is available for this lesson only."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000072
+    m_Localized: "Support spell trial: drop Meteor Shower on the enemy group. It is available for this lesson only."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000073
+    m_Localized: "Support spell trial: summon Tornado Strike in front of the approaching enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000074
+    m_Localized: "Support spell trial: summon Tornado Strike in front of the approaching enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000075
+    m_Localized: "Deploy Towerback to shoot down the flying enemy."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000076
+    m_Localized: "Deploy Vine Spirits to shoot down the flying enemy."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000077
+    m_Localized: "Deploy your golem at the front. Your swarm becomes available when the golem takes a hit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000078
+    m_Localized: "Your golem is taking the hits. Summon a swarm behind or beside it to help attack."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000079
+    m_Localized: "Fire is strong against Nature. Use Fire Explosion on the clustered nature enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000080
+    m_Localized: "Water is strong against Fire. Use Water Explosion on the clustered ember spirits."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000081
+    m_Localized: "Final battle: use your five starting spells freely to stop the ground enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000082
+    m_Localized: "An airborne enemy has joined. Respond with your remaining allies and spells."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000083
+    m_Localized: "The final enemies are clustered together. Use what you learned to finish the battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000084
+    m_Localized: "Enemies defeated"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000085
+    m_Localized: "Your aimed spell defeated the enemy. Next, take on a larger group."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000086
+    m_Localized: "Meteor Shower cleared the group with a wide attack. Try another support spell next."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000087
+    m_Localized: "The tornado swept through the enemies. Now learn more of your faction’s starting spells."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000088
+    m_Localized: "You defeated the flyer with an ally that can attack airborne enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000089
+    m_Localized: "Your golem took the hits while the swarm helped defeat the enemy."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000090
+    m_Localized: "You struck the clustered enemies’ elemental weakness. Make your own choices in the final battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000091
+    m_Localized: "Retry this lesson"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000092
+    m_Localized: "Restart just this lesson with your mana and spells ready."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000093
+    m_Localized: "Tutorial complete"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000094
+    m_Localized: "Your Inferno & Stone starting deck is ready.\nFire Shot · Ember Swarm · Towerback · Rock Golem · Fire Explosion\nMeteor Shower and Tornado Strike were trial spells. You can obtain them later."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000095
+    m_Localized: "Your Nature & Water starting deck is ready.\nChain Lightning · Water Slime Swarm · Vine Spirit · Tree Golem · Water Explosion\nMeteor Shower and Tornado Strike were trial spells. You can obtain them later."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000096
+    m_Localized: "Enter lobby"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000113
+    m_Localized: "The meteors are falling. Finish any remaining enemies with your starting shot spell."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000114
+    m_Localized: Choose a faction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000115
+    m_Localized: Hellfire Legion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000116
+    m_Localized: World Tree Spirits
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
       m_Items: []
   references:
     version: 2

@@ -56,6 +56,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ComicIntroScene.unity
     guid: 1aaea0966be44824bac441cf7310a07d
+  - enabled: 1
+    path: Assets/Scenes/FactionSelectionScene.unity
+    guid: 39db11f2e38f8c54d836f1b7144234b5
+  - enabled: 1
+    path: Assets/Scenes/FactionTutorialBattleScene.unity
+    guid: 2f34dadadb7e06c46992c27e80db4841
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d5ac7d2c0eb114acf823685c7079a8f7, type: 2}
     com.unity.localization.settings: {fileID: 11400000, guid: cd2023339e910421c9fc21cab4d3e343, type: 2}
