@@ -471,6 +471,114 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000428
     m_Key: FriendInviteDialogTitle
+  - m_Id: 76060000000000429
+    m_Key: PracticePreparing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000430
+    m_Key: PracticeFail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000501
+    m_Key: "InGameContinue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000502
+    m_Key: "InGameSettings"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000503
+    m_Key: "InGameSurrender"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000504
+    m_Key: "SurrenderConfirm"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000505
+    m_Key: "SurrenderRetry"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000506
+    m_Key: "SurrenderPending"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000507
+    m_Key: ProgressionRetry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000508
+    m_Key: ProgressionChoose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000509
+    m_Key: ProgressionHell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000510
+    m_Key: ProgressionNature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000511
+    m_Key: ProgressionGold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000512
+    m_Key: ProgressionReceived
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000513
+    m_Key: ProgressionSlots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000514
+    m_Key: ProgressionChest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000515
+    m_Key: ProgressionLoading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000520
+    m_Key: ProgressionRewards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000521
+    m_Key: ProgressionPaid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000522
+    m_Key: ProgressionLocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000523
+    m_Key: ProgressionOwnedChests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000524
+    m_Key: ProgressionViewChests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000525
+    m_Key: ProgressionRetryButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000526
+    m_Key: ProgressionLoadFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000527
+    m_Key: ProgressionLevelTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000528
+    m_Key: ProgressionFixed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000529
+    m_Key: ProgressionChestSlots
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000601
     m_Key: LocalServer
     m_Metadata:
@@ -535,42 +643,6 @@ MonoBehaviour:
     m_Key: LocalServerTickRateAuto
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000429
-    m_Key: PracticePreparing
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000430
-    m_Key: PracticeFail
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000501
-    m_Key: "InGameContinue"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000502
-    m_Key: "InGameSettings"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000503
-    m_Key: "InGameSurrender"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000504
-    m_Key: "SurrenderConfirm"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000505
-    m_Key: "SurrenderRetry"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000506
-    m_Key: "SurrenderPending"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000507
-    m_Key: AdventureComingSoon
-    m_Metadata:
-      m_Items: []
   - m_Id: 76060000000000617
     m_Key: GameSessionPreparing
     m_Metadata:
@@ -585,6 +657,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000620
     m_Key: GameServerConnecting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000621
+    m_Key: AdventureComingSoon
     m_Metadata:
       m_Items: []
   - m_Id: 76110341300000100

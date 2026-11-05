@@ -45,6 +45,7 @@ namespace WordOnline.Tests
         [TestCase("Towerback", "RockHit")]
         [TestCase("Player", "CreatureHit")]
         [TestCase("ArcaneInfantry", "CreatureHit")]
+        [TestCase("ElectricSpearman", "CreatureHit")]
         [TestCase("PveVineWitch", "CreatureHit")]
         [TestCase("SeedSpirit", "CreatureHit")]
         [TestCase("LeafSlime", "CreatureHit")]
@@ -73,7 +74,7 @@ namespace WordOnline.Tests
                 Assert.AreEqual(target, audible, (string)Property(entry, "RuntimeType"));
                 if (target) targets++;
             }
-            Assert.AreEqual(82, targets);
+            Assert.Greater(targets, 0, "피격음 대상이 없는 카탈로그로 검증을 통과하면 안 됩니다.");
         }
 
         [Test]

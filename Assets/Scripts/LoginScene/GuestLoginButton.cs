@@ -45,8 +45,11 @@ namespace LoginScene
 
                 AuthSession.Instance.BeginSession(authResponseDto.jwt, authResponseDto.refreshToken, authResponseDto.expiresIn);
                 GuestContext.GuestPassword = authResponseDto.password;
+                TutorialScene.FactionTutorialProgress.MarkNewAccountIntent();
+                yield return TutorialScene.FactionTutorialProgress.PrepareNewAccountIntro();
+                if (SceneContext.User == null) yield break;
             
-                SceneManager.LoadScene("TutorialScene");
+                SceneManager.LoadScene("ComicIntroScene");
             }
         }
 

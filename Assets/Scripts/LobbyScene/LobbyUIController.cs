@@ -75,8 +75,19 @@ namespace LobbyScene
                 yield return UserInfoGetter.RefreshGameUser();
             }
 
+            if (SceneContext.User == null) yield break;
+            TutorialScene.FactionTutorialProgress.AdoptNewAccountIntent(SceneContext.UserID);
+            if (TutorialScene.FactionTutorialProgress.IsPending(SceneContext.UserID))
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(TutorialScene.FactionTutorialProgress.ResumeScene(SceneContext.UserID));
+                yield break;
+            }
             lobbyUserNameUI.SetUserName(SceneContext.User.name);
             ApplyOwnAppearance(SceneContext.User.appearance);
+            loadingHandle?.Dispose();
+            var progressionPrefab = Resources.Load<GameObject>("UI/PlayerProgressionPanel");
+            var progressionPanel = Instantiate(progressionPrefab).GetComponent<PlayerProgressionPanel>();
+            yield return progressionPanel.Initialize();
             yield return QuestRewardTracker.CheckAndShowRewards(rewardUiPrefab, rewardTilePrefab);
             yield return FetchDecks();
         }

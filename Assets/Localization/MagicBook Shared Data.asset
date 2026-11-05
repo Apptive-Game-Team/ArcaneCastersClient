@@ -827,6 +827,22 @@ MonoBehaviour:
     m_Key: summary.crater_carrier
     m_Metadata:
       m_Items: []
+  - m_Id: 1000078
+    m_Key: stone_gargoyle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507641
+    m_Key: summary.stone_gargoyle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000079
+    m_Key: electric_spearman
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507642
+    m_Key: summary.electric_spearman
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

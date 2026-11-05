@@ -169,6 +169,12 @@ MonoBehaviour:
     hitProfile: {fileID: 11400000, guid: 4d4acadce1191c34384a9635553a5b70, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: ElectricSpearman
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    hitProfile: {fileID: 11400000, guid: 4d4acadce1191c34384a9635553a5b70, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: ElectricSlime
     profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
     attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
@@ -230,6 +236,12 @@ MonoBehaviour:
     intentionalSilent: 0
     serverAlias: 0
   - runtimeType: RockGolem
+    profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
+    attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
+    hitProfile: {fileID: 11400000, guid: f26a1c74dd7471a439d5c4cd08516a1c, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
+  - runtimeType: StoneGargoyle
     profile: {fileID: 11400000, guid: fd60fd4d9b334c64298f9b4688eeddcc, type: 2}
     attackProfile: {fileID: 11400000, guid: 80a2c26a08be4a2aaefddb56867a30a0, type: 2}
     hitProfile: {fileID: 11400000, guid: f26a1c74dd7471a439d5c4cd08516a1c, type: 2}

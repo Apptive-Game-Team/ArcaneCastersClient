@@ -226,7 +226,6 @@ namespace GameScene.Card
             string json = JsonCodec.Serialize(input);
         
             string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
-            StompConnector.Instance.SendMessageToServer(destination, json);
             inputRequestDict[input.id] = new PendingInputRequest(new List<CardUI>(_currentCardList));
             isWaitingInputResponse = true;
             _currentCardNameList.Clear();
@@ -241,7 +240,15 @@ namespace GameScene.Card
             }
 
             StopCoroutine(nameof(WaitInputResponseTimeout));
-            StartCoroutine(nameof(WaitInputResponseTimeout));
+            if (TutorialScene.FactionTutorialBattleDriver.Instance != null)
+            {
+                TutorialScene.FactionTutorialBattleDriver.Instance.SubmitCast(input.id, magic.serverName, pos, HandleInputResponse);
+            }
+            else
+            {
+                StompConnector.Instance.SendMessageToServer(destination, json);
+                StartCoroutine(nameof(WaitInputResponseTimeout));
+            }
         }
 
         public bool TrySendInput(Vector3 pos)
@@ -383,6 +390,7 @@ namespace GameScene.Card
 
         private static void SendCardSelectionInput(object input)
         {
+            if (TutorialScene.FactionTutorialBattleDriver.Instance != null) return;
             string json = JsonCodec.Serialize(input);
             string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
             StompConnector.Instance.SendMessageToServer(destination, json);
