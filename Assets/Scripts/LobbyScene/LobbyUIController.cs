@@ -85,6 +85,21 @@ namespace LobbyScene
             lobbyUserNameUI.SetUserName(SceneContext.User.name);
             ApplyOwnAppearance(SceneContext.User.appearance);
             loadingHandle?.Dispose();
+            long tutorialOwner = SceneContext.UserID;
+            string tutorialServer = ServerList.MatchingServer.url;
+            bool lobbyOnboarding = TutorialScene.FactionTutorialProgress.IsLobbyPending(tutorialOwner);
+            if (lobbyOnboarding)
+            {
+                // 안내에 필요한 덱부터 준비한다. 성장·퀘스트 조회는 안내와 화면 이동을 막지 않는다.
+                yield return FetchDecks();
+                if (SceneManager.GetActiveScene().name != "LobbyScene"
+                    || !TutorialScene.FactionTutorialProgress.IsCurrentOwner(tutorialOwner, tutorialServer)) yield break;
+                TutorialScene.GlobalTutorialManager.StartLobbyOnboardingIfPending();
+                yield return new WaitUntil(() => !TutorialScene.FactionTutorialProgress.IsLobbyPending(tutorialOwner)
+                    || !TutorialScene.FactionTutorialProgress.IsCurrentOwner(tutorialOwner, tutorialServer));
+                if (!TutorialScene.FactionTutorialProgress.IsCurrentOwner(tutorialOwner, tutorialServer)) yield break;
+            }
+
             var progressionPrefab = Resources.Load<GameObject>("UI/PlayerProgressionPanel");
             var progressionPanel = Instantiate(progressionPrefab).GetComponent<PlayerProgressionPanel>();
             yield return progressionPanel.Initialize();

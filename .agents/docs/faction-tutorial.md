@@ -77,9 +77,23 @@ pointer: the first enemy-owned snapshot object can be a lingering elemental fiel
 
 An uncertain command retries the same command UUID with its original revision
 and payload. Keep cast input locked until it is accepted or definitively rejected.
-The final lesson has no required-card pointer. A completed server response alone
-marks the local tutorial complete; completing this battle does not post a normal
-match result or grant XP.
+The final lesson has no required-card pointer. A completed server response saves
+the `lobby` checkpoint, separate from final `completed`; completing this battle
+does not post a normal match result or grant XP. After the reward panel returns
+to Lobby, load decks and start `GlobalTutorialManager` at `DeckState`. Reuse the
+deck, magic book, lobby and practice-match guidance; do not restart `BattleState`.
+Defer progression and quest reward initialization until this guidance finishes,
+so their network requests cannot block the deck prompt. A returning Lobby scene
+must preserve an existing manager rather than restart its current step.
+Keep the final deck fetch after `PlayerProgressionPanel.Initialize()` as well:
+initialization clears the deck cache, so fetching only before guidance leaves
+the dropdown reading a null cache after the last step.
+
+Only `FinishOnboarding` marks the checkpoint completed. Interrupting guidance
+resumes at the deck button on the next login; old `completed` checkpoints stay
+completed. The manager is scoped to the captured user and matching server. Check
+that scope in both Update and the final callback, because a callback can precede
+Update on the same frame as an account change. Stop without writing on mismatch.
 
 ## Authoring and validation
 
@@ -96,6 +110,10 @@ revision and gap recovery, bounded backlog, stalls and underrun. The PlayMode
 fixture also moves a real ServedObject through intermediate positions, checks
 one attack presentation and waits for the final tween before showing success.
 Completing a server lesson alone does not validate visual playback cadence.
+
+Lobby guidance fixtures must create a persistent `SceneContext` before loading
+LobbyScene if none exists. Disabling network startup in `sceneLoaded` is too
+late for `AdminOnly.Awake`, which otherwise reports a missing context for JWKS.
 Game's TutorialBattleTest separately runs all lessons against production magic,
 prefab and physics code with a captured gameplay-parameter fixture.
 

@@ -171,7 +171,7 @@ namespace TutorialScene
             else if (result.status == "COMPLETED")
             {
                 TutorialHint.HideCurrent();
-                FactionTutorialProgress.Complete(owner);
+                FactionTutorialProgress.CompleteBattle(owner);
                 panel.Show("FactionTutorial.complete", $"FactionTutorial.reward.{ready.faction}",
                     "FactionTutorial.lobby", () => StartCoroutine(Finish()), rewardFaction: ready.faction);
             }
