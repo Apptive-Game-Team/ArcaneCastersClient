@@ -64,3 +64,10 @@ Java 서버와 기존 유닛 스탯, 배포 버전을 바꾸지 않는다.
 - Rust: Apptive-Game-Team/ArcaneCastersGameRust#27
 - 모노레포 포인터: Apptive-Game-Team/ArcaneCasters#31
 - PR 외형 검수 자료: `docs/pr-media/415/stone-gargoyle-art-review.png`. 실제 전투 화면 캡처가 아닌 스프라이트 비교 시트다.
+
+## 날갯짓 추가 — 2026-11-05
+
+- 사용자 요청으로 날개 올림·수평·내림 3프레임을 생성했다. `12321` 왕복을 선택하여 `1,2,3,2` 배열을 반복한다.
+- `SpriteFrameAnimator`를 재사용하며 간격은 0.16초다. 공통 캔버스·PPU·피벗·Full Rect로 몸통과 체력바 기준을 유지한다.
+- 실제 Rust 전투 기록을 Unity에서 재생했다. 137개 샘플의 프레임 전환이 `1,2,3,2` 반복과 일치하고 Sprite bounds가 같다. 13.7초·960x540·10fps 전투 GIF(2,566,610bytes)를 확인했다.
+- 저장된 프리팹에 대해 EditMode `ObjectSfxTests.CatalogCoversPrefabsAndHasNoLegacySoundOwnersOrMissingScripts` 1개 통과.
