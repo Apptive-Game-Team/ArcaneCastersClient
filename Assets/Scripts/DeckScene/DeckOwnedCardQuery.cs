@@ -49,6 +49,7 @@ namespace DeckScene
             ManaBand? selectedManaBand = null)
         {
             IEnumerable<DeckOwnedCardEntry> visibleEntries = (entries ?? Array.Empty<DeckOwnedCardEntry>())
+                .Where(entry => entry?.Card != null && entry.Card.count > 0)
                 .Where(entry => PassesSearch(entry, searchText))
                 .Where(entry => PassesAttribute(entry, selectedAttribute))
                 .Where(entry => !selectedCastKind.HasValue || entry.CastKind == selectedCastKind.Value)

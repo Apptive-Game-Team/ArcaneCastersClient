@@ -395,6 +395,38 @@ MonoBehaviour:
     m_Key: FactionSelection.nature
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000117
+    m_Key: FactionTutorial.loadingTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000118
+    m_Key: FactionTutorial.connectingTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000119
+    m_Key: FactionTutorial.errorTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000120
+    m_Key: FactionTutorial.expiredTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000121
+    m_Key: FactionTutorial.castRetryTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000122
+    m_Key: FactionTutorial.continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000123
+    m_Key: FactionTutorial.selectionErrorTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000124
+    m_Key: FactionTutorial.selectionError
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

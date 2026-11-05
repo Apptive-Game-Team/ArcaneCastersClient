@@ -2570,8 +2570,8 @@ Canvas:
   m_GameObject: {fileID: 503158820}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
-  m_Camera: {fileID: 469185234}
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2582,7 +2582,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 39
   m_TargetDisplay: 0
 --- !u!224 &503158824
 RectTransform:
@@ -4542,7 +4542,6 @@ MonoBehaviour:
   magicInfoPrefab: {fileID: 682494717784839384, guid: fd2ec157782514bb4a5242065201a91e, type: 3}
   magicInfo: {fileID: 5970574067173908824}
   selectedMagicView: {fileID: 1508735210}
-  userMagicApiClient: {fileID: 895110167}
 --- !u!4 &895110166
 Transform:
   m_ObjectHideFlags: 0
@@ -7399,8 +7398,8 @@ Canvas:
   m_GameObject: {fileID: 1746577622}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
-  m_Camera: {fileID: 469185234}
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
