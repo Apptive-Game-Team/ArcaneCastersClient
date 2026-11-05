@@ -19,12 +19,15 @@ namespace LobbyScene
         [SerializeField] private UiButton startButton;
         [SerializeField] private UiButton quickButton;
         [SerializeField] private UiButton backButton;
+        [SerializeField] private GameObject backdrop;
 
         private readonly List<UiButton> rows = new();
         private StringTable strings;
         private PracticeDifficultiesDto data;
         private PracticeTierDto selected;
         private bool retry;
+        private Coroutine loadRoutine;
+        private int loadVersion;
 
         private void Awake()
         {
@@ -35,15 +38,30 @@ namespace LobbyScene
 
         private void OnEnable()
         {
+            if (backdrop != null) backdrop.SetActive(true);
             LobbySceneViewModel.Instance.CurrentState.OnStateChange += LobbyChanged;
-            StartCoroutine(Load());
+            BeginLoad();
         }
 
         private void OnDisable()
         {
-            StopAllCoroutines();
+            CancelLoad();
+            if (backdrop != null) backdrop.SetActive(false);
             if (LobbySceneViewModel.Instance != null)
                 LobbySceneViewModel.Instance.CurrentState.OnStateChange -= LobbyChanged;
+        }
+
+        private void BeginLoad()
+        {
+            CancelLoad();
+            loadRoutine = StartCoroutine(Load(loadVersion));
+        }
+
+        private void CancelLoad()
+        {
+            loadVersion++;
+            if (loadRoutine != null) StopCoroutine(loadRoutine);
+            loadRoutine = null;
         }
 
         private void LobbyChanged(LobbySceneViewModel.LobbyState state)
@@ -52,20 +70,25 @@ namespace LobbyScene
                 gameObject.SetActive(false);
         }
 
-        private IEnumerator Load()
+        private IEnumerator Load(int version)
         {
             Clear();
             retry = false;
             startButton.interactable = false;
             var table = LocalizationSettings.StringDatabase.GetTableAsync("LobbyUI");
             yield return table;
+            if (!isActiveAndEnabled || version != loadVersion) yield break;
             strings = table.Status == AsyncOperationStatus.Succeeded ? table.Result : null;
             title.text = Text("Title", "Bot Battle");
             Label(backButton, Text("Back", "Back"));
             Label(quickButton, Text("Quick", "Quick practice"));
             Label(startButton, Text("Start", "Start battle"));
             summary.text = Text("Loading", "Loading results...");
-            yield return LobbySceneViewModel.Instance.LoadPracticeDifficulties(Render);
+            yield return LobbySceneViewModel.Instance.LoadPracticeDifficulties(response =>
+            {
+                if (isActiveAndEnabled && version == loadVersion) Render(response);
+            });
+            if (version == loadVersion) loadRoutine = null;
         }
 
         internal void Render(PracticeDifficultiesDto response)
@@ -160,7 +183,7 @@ namespace LobbyScene
 
         private void StartOrRetry()
         {
-            if (retry) StartCoroutine(Load());
+            if (retry) BeginLoad();
             else if (selected != null) StartMatch(selected.id);
         }
 
