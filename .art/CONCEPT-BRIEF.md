@@ -3,6 +3,15 @@
 Prompts and generated outcomes for the project's image-generation workflow.
 Current comparison boards are published through the project art-direction Site.
 
+## 돌 골렘 부족의 검은 갑각 선택 — 2026-11-05
+
+사용자는 보라색 변색을 멍처럼 느낀다고 지적한 뒤,
+`concept/corrupted-golems-20261105/v5/RockGolem-material-comparison.png`의
+오른쪽 검은 갑각 시안을 보고 전체 적용을 선택했다. 원래 돌 위에 겹쳐 자란
+검은 판과 두께 있는 가장자리, 깊은 틈에서 나오는 붉은 빛을 기준으로 한다.
+적용은 네 유닛의 다섯 프레임이며 shared master-v2 렌더링과 고정 앵커는 바꾸지 않는다.
+현재 선택 입력과 프롬프트·수치는 해당 v5 폴더에 있다.
+
 ## 비전 보병 C안 선택 — 2026-10-26
 
 사용자는 `.art/concept/arcane-infantry-restyle-20261026/C-arcane-blades.png`를

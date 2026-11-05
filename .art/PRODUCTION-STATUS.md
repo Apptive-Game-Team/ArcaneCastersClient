@@ -7,16 +7,17 @@
 
 ## 상태 판정 기준
 
-2026-11-05 돌 골렘 부족 타락 외형 v4: 사용자 피드백으로 잠식 범위를 몸체의
-약 70%까지 넓혔다. 머리 일부·몸통·복부·팔과 다리에 검붉은 표면과 붉은 균열을
-적용하고, 반대쪽 팔·어깨와 얼굴·무릎·발 일부의 원래 돌색과 초록 이끼는 남겼다.
-70%는 시각적 목표다. 대상은 `MiniRockSwarm.png`
+2026-11-05 돌 골렘 부족 타락 외형 v5: 사용자가 v4를 멍처럼 느낀다고 지적한 뒤
+검은 갑각 시안을 확인하고 전체 적용을 선택했다. 두꺼운 검은 바위 판이 돌 위에
+겹쳐 자라며 깊은 틈에서 붉은 빛이 새도록 재작업했다. 보라색 표면 변색은 사용하지
+않는다. 잠식 약 70%를 시각적 목표로 하고 황갈색 돌과 초록 이끼도 남겼다.
+대상은 `MiniRockSwarm.png`
 (런타임 `MiniRock`), `RockGolem.png`, `RockGolem2.png`(공격), `RockMage.png`,
 `WallGolem.png`다. 전신을 어둡게 한 v2는 채택하지 않았다. 캔버스·alpha bbox·
 바닥 여백·`.meta`와 prefab 참조를 보존했고 64px 비교를 확인했다.
 본문 픽셀과 alpha 윤곽은 생성물로 갱신되므로 v1의 눈 밖 픽셀 동일 검증을
-현재 버전에 적용하지 않는다. 수치는 `concept/corrupted-golems-20261105/v4/validation.json`,
-비교는 `../docs/pr-media/423/golems-corruption-70-v4.png`에 있다.
+현재 버전에 적용하지 않는다. 수치는 `concept/corrupted-golems-20261105/v5/validation.json`,
+비교는 `../docs/pr-media/423/golems-black-shell-v5.png`에 있다.
 클라이언트 브랜치 적용이며 Unity 실기 재생·PR 병합·배포·웹사이트 갱신은 아직이다.
 
 - `완료`: 새 아트가 클라이언트에 적용됐고, 웹사이트에 해당 이미지가 등록됐거나
