@@ -2,7 +2,7 @@
 
 - Date: 2026-11-05
 - GitHub Issue: #417 (DB #136, Rust #31)
-- Status: Implementation
+- Status: Verified; PR preparation
 
 ## Goal
 비전 보병 기준의 돌골렘·전기 창병을 마나 35에 제공한다.
@@ -15,8 +15,8 @@
 
 ## Approach (Checklist)
 - [x] **Step 0: Recon**: DB 등록·Rust AttackMob·Unity 기존 프리팹 확인, 이슈 생성.
-- [ ] **Step 1: Implementation**: DB 새 마이그레이션, Rust 등록, Unity 현지화·프리팹·돌골렘 축소. 신규 아트는 후보를 먼저 생성하여 승인 후 Assets에 연결한다.
-- [ ] **Step 2: Tests**: MagicRegistry를 통한 소환, Lightning 지상 공격·공중 제외·공격 주기·마나 검증, DB 정적 및 scratch 적용/재적용, Unity GUID와 현지화 확인.
+- [x] **Step 1: Implementation**: DB V123, Rust 등록, Unity 현지화·프리팹·돌골렘 축소. 신규 아트는 사용자 승인 후 Assets에 연결했다.
+- [x] **Step 2: Tests**: MagicRegistry를 통한 소환, Lightning 지상 공격·공중 제외·공격 주기, DB 정적 및 전체 scratch 적용/재적용, Unity GUID와 현지화 확인. Unity 2022.3.34f1 EditMode 8개 통과.
 - [ ] **Step 3: Rollout / Rollback**: 세 draft PR 연결, 서버·클라이언트 준비 후 DB 적용. 배포는 이번 범위 아님.
 
 ## Validation
@@ -28,7 +28,7 @@
 - **Rollback steps:** 미배포 PR은 revert, 적용한 마이그레이션은 수정하지 않고 forward-fix로 복구한다.
 
 ## Open Questions
-- 신규 아트 후보 승인 대기. 기능 코드는 먼저 검증한다.
+- 없음. 실전 승률과 WebGL 플레이 검증은 아직 수행하지 않았다.
 
 ## Plan Review
 FAST NONPASS의 소환→공격 경로 테스트와 아트 승인 단계를 반영했다. MEDIUM PASS, 수정안 HEAVY PASS.

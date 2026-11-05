@@ -331,3 +331,8 @@ commit 그대로였다.
 4. 단순 업스케일이나 포맷 변환은 아트 교체 완료로 기록하지 않는다.
 5. 웹사이트 표시용 이미지와 런타임 PNG가 실제로 대응하는지 파일명과 외형을 함께
    확인한다.
+
+## 2026-11-05 전기 창병 추가
+
+- `ElectricSpearman.png`, `ElectricSpearmanAttacking.png`: 사용자 승인 후 적용. 같은 128×102 RGBA 캔버스, PPU 90, Bottom Center. 런타임 프리팹과 카드 아이콘 연결. 기본·찌르기 자세 완료.
+- `RockGolem.prefab`: 기존 그림을 유지하고 본체·그림자를 60%로 축소.

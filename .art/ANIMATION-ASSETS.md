@@ -7,6 +7,7 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 
 | 실제 파일 | 의미 이름 | 런타임 연결 |
 |---|---|---|
+| `ElectricSpearman.png`, `ElectricSpearmanAttacking.png` | 전기 창병 · 기본 / 찌르기 | `AttackSpriteSwapController`, 공격 이벤트에서 0.14초 표시 |
 | `ArcaneInfantry.png` | 비전 보병 · 기본 준비 자세 | `InfantryPoseController` 정지 상태 |
 | `ArcaneInfantryAttacking.png` | 비전 보병 · 마력 칼날 타격 | 공격 이벤트에서 0.16초 우선 표시 |
 | `ArcaneInfantryWalkLeft.png`, `ArcaneInfantryWalkRight.png` | 비전 보병 · 두 발걸음 | 이동 이벤트가 이어질 때 0.16초마다 교대, 지지하는 발 기준 |

@@ -458,6 +458,10 @@ MonoBehaviour:
     m_Localized: "Stone Gargoyle"
     m_Metadata:
       m_Items: []
+  - m_Id: 78337600000000000
+    m_Localized: "Electric Spearman"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

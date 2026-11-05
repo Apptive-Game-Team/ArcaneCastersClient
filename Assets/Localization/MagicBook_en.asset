@@ -941,6 +941,14 @@ MonoBehaviour:
     m_Localized: "Summons a flying stone gargoyle that dives onto ground enemies with its claws."
     m_Metadata:
       m_Items: []
+  - m_Id: 1000079
+    m_Localized: "Summons a swift lightning spearman that stabs one ground enemy at a time. It has less health but attacks faster and harder than Arcane Infantry. It cannot hit flying enemies. When defeated, it overcharges nearby allied lightning units."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1864750230507642
+    m_Localized: "Summons a fast, fragile lightning spearman that stabs ground enemies."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
