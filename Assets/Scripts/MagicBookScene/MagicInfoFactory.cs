@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using System.Collections;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Data;
+using Data.Deck;
 using Data.Localization;
 using Data.Magic;
+using DeckScene;
 using Global;
 using UnityEngine;
 
@@ -24,9 +27,6 @@ namespace MagicBookScene
         [SerializeField] private GameObject magicInfoPrefab;
         [SerializeField] private MagicInfo magicInfo;
         [SerializeField] private SelectedMagicView selectedMagicView;
-        
-        [SerializeField] private UserMagicApiClient userMagicApiClient;
-
         public event Action MagicSelected;
 
         private static readonly List<ElementType> EmptyElements = new();
@@ -48,10 +48,7 @@ namespace MagicBookScene
 
             MagicInfoDataSource.Instance.GetMagics(_ =>
             {
-                userMagicApiClient.GetUserMagic(response =>
-                {
-                    LoadEntries(response?.magicIds);
-                });
+                if (this != null) StartCoroutine(LoadOwnedCards());
             });
         }
 
@@ -79,13 +76,34 @@ namespace MagicBookScene
             RenderCurrentView();
         }
         
-        private async void LoadEntries(List<long> userMagicIds = null)
+        private IEnumerator LoadOwnedCards()
         {
-            userMagicIds ??= new List<long>();
-            List<MagicBookEntry> loadedEntries = await BuildEntriesAsync(userMagicIds);
+            float retryDelay = 2;
+            while (true)
+            {
+                CardDto[] cards = null;
+                yield return new DeckApiClient().GetOwnedCards(result => cards = result);
+                if (cards != null)
+                {
+                    LoadEntries(cards);
+                    yield break;
+                }
+                // 조회 실패를 미보유로 표시하지 않고, 화면을 떠나면 코루틴도 함께 종료한다.
+                yield return new WaitForSecondsRealtime(retryDelay);
+                retryDelay = Mathf.Min(retryDelay * 2, 30);
+            }
+        }
+
+        private async void LoadEntries(CardDto[] cards)
+        {
+            var ownedMagicIds = new HashSet<long>((cards ?? Array.Empty<CardDto>())
+                .Where(card => card != null && card.count > 0)
+                .Select(card => card.id));
+            List<MagicBookEntry> loadedEntries = await BuildEntriesAsync(ownedMagicIds);
 
             RunOnUnityThread(() =>
             {
+                if (this == null) return;
                 entries.Clear();
                 entries.AddRange(loadedEntries);
                 RenderCurrentView();
@@ -120,7 +138,7 @@ namespace MagicBookScene
             }
         }
 
-        private async Task<List<MagicBookEntry>> BuildEntriesAsync(List<long> userMagicIds)
+        private async Task<List<MagicBookEntry>> BuildEntriesAsync(HashSet<long> ownedMagicIds)
         {
             var loadedEntries = new List<MagicBookEntry>();
             foreach (CombinedMagicData data in LocalCombinedMagicData.GetEffectiveDataList())
@@ -133,7 +151,7 @@ namespace MagicBookScene
 
                 loadedEntries.Add(new MagicBookEntry(
                     data,
-                    userMagicIds.Contains(data.id),
+                    ownedMagicIds.Contains(data.id),
                     localizedName));
             }
 
@@ -166,18 +184,19 @@ namespace MagicBookScene
 
         private IEnumerable<MagicBookEntry> GetVisibleEntries()
         {
-            IEnumerable<MagicBookEntry> visibleEntries = entries.Where(PassesFilters);
+            IOrderedEnumerable<MagicBookEntry> visibleEntries = entries.Where(PassesFilters)
+                .OrderByDescending(entry => entry.IsOwned);
 
             return sortMode switch
             {
                 MagicBookSortMode.Attribute => visibleEntries
-                    .OrderBy(GetPrimaryAttributeSortValue)
+                    .ThenBy(GetPrimaryAttributeSortValue)
                     .ThenBy(entry => entry.LocalizedName, StringComparer.Create(CultureInfo.CurrentCulture, true)),
                 MagicBookSortMode.ManaCost => visibleEntries
-                    .OrderBy(entry => entry.ManaCost)
+                    .ThenBy(entry => entry.ManaCost)
                     .ThenBy(entry => entry.LocalizedName, StringComparer.Create(CultureInfo.CurrentCulture, true)),
                 _ => visibleEntries
-                    .OrderBy(entry => entry.LocalizedName, StringComparer.Create(CultureInfo.CurrentCulture, true)),
+                    .ThenBy(entry => entry.LocalizedName, StringComparer.Create(CultureInfo.CurrentCulture, true)),
             };
         }
 
