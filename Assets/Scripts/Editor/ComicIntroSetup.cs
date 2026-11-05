@@ -156,6 +156,7 @@ namespace Editor
                 {
                     EditorBuildSettings.scenes = EditorBuildSettings.scenes.Concat(new[] { new EditorBuildSettingsScene(ScenePath, true) }).ToArray();
                 }
+                EnsureSceneCamera();
                 Debug.Log("Motion comic assets saved: " + ScenePath);
             }
             finally
@@ -163,6 +164,12 @@ namespace Editor
                 SceneManager.SetActiveScene(previous);
                 EditorSceneManager.CloseScene(scene, true);
             }
+        }
+
+        [MenuItem("Tools/Tutorial/Ensure Comic Intro Camera")]
+        public static void EnsureSceneCamera()
+        {
+            FactionTutorialSetup.EnsureUiSceneCamera(ScenePath);
         }
 
         private static GameObject BuildPanelTemplate()

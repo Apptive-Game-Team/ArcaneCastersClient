@@ -251,7 +251,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000064
-    m_Localized: "Continue"
+    m_Localized: "Next battle"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000065
@@ -335,7 +335,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000085
-    m_Localized: "Your aimed spell defeated the enemy. Next, take on a larger group."
+    m_Localized: "A larger group of enemies awaits in the next battle."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000086

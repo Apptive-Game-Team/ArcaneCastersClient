@@ -21,6 +21,7 @@ namespace TutorialScene
         private string faction;
         private FactionTutorialCheckpoint checkpoint;
         private bool busy;
+        private bool tutorialPending;
 
         private IEnumerator Start()
         {
@@ -30,7 +31,8 @@ namespace TutorialScene
             if (this == null || SceneContext.User == null) yield break;
             owner = SceneContext.UserID;
             matchingServer = ServerList.MatchingServer.url;
-            checkpoint = FactionTutorialProgress.Begin(owner);
+            tutorialPending = FactionTutorialProgress.IsPending(owner);
+            if (tutorialPending) checkpoint = FactionTutorialProgress.Begin(owner);
             yield return PrepareChoices();
         }
 
@@ -58,7 +60,7 @@ namespace TutorialScene
             if (result.faction == "HELL" || result.faction == "NATURE")
             {
                 faction = result.faction;
-                yield return Connect();
+                yield return ContinueAfterChoice();
                 yield break;
             }
             if (selectionView != null)
@@ -89,7 +91,13 @@ namespace TutorialScene
             LobbyUIController.ClearCachedDecks();
             DeckScene.DeckManagementViewModel.ClearCachedUserData();
             SceneContext.OwnedCards = null;
-            yield return Connect();
+            yield return ContinueAfterChoice();
+        }
+
+        private IEnumerator ContinueAfterChoice()
+        {
+            if (tutorialPending) yield return Connect();
+            else SceneManager.LoadScene("LobbyScene");
         }
 
         private IEnumerator Connect()

@@ -73,6 +73,40 @@ namespace Editor
             }
         }
 
+        public static async void RunCompact()
+        {
+            int exit = 0;
+            try
+            {
+                await LocalizationSettings.InitializationOperation.Task;
+                Directory.CreateDirectory("docs/pr-media/413");
+                foreach (string locale in new[] { "ko-KR", "en" })
+                {
+                    LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale(locale);
+                    foreach (var size in new[] { (1280, 720), (862, 478), (1024, 768) })
+                    {
+                        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene);
+                        var go = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(FactionTutorialSetup.PanelPath));
+                        var panel = go.GetComponent<FactionTutorialPanel>();
+                        foreach (string stage in new[] { "shot", "meteor", "tornado", "anti_air", "formation", "explosion" })
+                        {
+                            panel.Show("FactionTutorial.success", "FactionTutorial.success." + stage, "FactionTutorial.next", () => { });
+                            for (int i = 0; i < 15; i++) await NextUpdate();
+                            string path = $"docs/pr-media/413/tutorial-{stage}-{locale}-{size.Item1}x{size.Item2}.jpg";
+                            Capture(go.GetComponent<Canvas>(), size.Item1, size.Item2, path);
+                            foreach (var text in go.GetComponentsInChildren<TMP_Text>())
+                                if (string.IsNullOrWhiteSpace(text.text) || text.isTextOverflowing)
+                                    throw new Exception($"Tutorial text does not fit: {locale}/{stage}/{text.name}");
+                        }
+                        Object.DestroyImmediate(go);
+                    }
+                }
+                Debug.Log("FACTION_TUTORIAL_COMPACT_CAPTURE_PASS");
+            }
+            catch (Exception failure) { Debug.LogException(failure); exit = 1; }
+            EditorApplication.Exit(exit);
+        }
+
         public static async void Run()
         {
             int exit = 0;

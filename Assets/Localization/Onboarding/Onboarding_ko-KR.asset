@@ -251,7 +251,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000064
-    m_Localized: "다음 실습"
+    m_Localized: "다음 전투"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000065
@@ -335,7 +335,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000085
-    m_Localized: "조준한 마법으로 적을 쓰러뜨렸습니다. 이번에는 더 큰 무리를 상대합니다."
+    m_Localized: "다음에는 더 많은 적이 등장합니다."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000086

@@ -5,20 +5,17 @@ using Data.Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Components;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace LobbyScene
 {
     public class PlayerProgressionPanel : MonoBehaviour
     {
         [SerializeField] private GameObject root;
-        [SerializeField] private TMP_Text messageText;
-        [SerializeField] private UnityEngine.UI.Button confirmButton;
-        [SerializeField] private UnityEngine.UI.Button cancelButton;
         [SerializeField] private TMP_Text statusText;
         [SerializeField] private PlayerProgressionView view;
         private PlayerProgressionDto state;
-        private string selection;
+        public bool IsSelectingFaction { get; private set; }
 
         public IEnumerator Initialize()
         {
@@ -26,11 +23,6 @@ namespace LobbyScene
             if (statusText != null) statusText.gameObject.SetActive(false);
             foreach (var localized in GetComponentsInChildren<LocalizeStringEvent>(true)) localized.enabled = false;
             root.SetActive(false);
-            SetButtons(false);
-            confirmButton.onClick.RemoveAllListeners();
-            cancelButton.onClick.RemoveAllListeners();
-            confirmButton.onClick.AddListener(() => selection = "HELL");
-            cancelButton.onClick.AddListener(() => selection = "NATURE");
             yield return PlayerProgressionApi.Sync(result => state = result);
             if (state == null)
             {
@@ -48,32 +40,19 @@ namespace LobbyScene
                 yield return PlayerProgressionApi.Sync(result => state = result);
             }
             yield return CompleteInitialization();
+            if (IsSelectingFaction) yield break;
             var lobby = FindObjectOfType<LobbyUIController>();
             if (lobby != null) yield return lobby.FetchDecks();
         }
 
         private IEnumerator CompleteInitialization()
         {
-            while (state == null || string.IsNullOrEmpty(state.faction))
+            if (state == null) yield break;
+            if (string.IsNullOrEmpty(state.faction))
             {
-                if (state == null)
-                {
-                    root.SetActive(false);
-                    SetButtons(false);
-                    yield return new WaitForSecondsRealtime(30);
-                    yield return PlayerProgressionApi.Sync(result => state = result);
-                    continue;
-                }
-                if (!string.IsNullOrEmpty(state.faction)) break;
-                selection = null;
-                SetText(messageText, "ProgressionChoose", "Choose your starting faction. Receive 5 spells, 3 copies each. Both factions can be collected later.");
-                SetText(confirmButton.GetComponentInChildren<TMP_Text>(), "ProgressionHell", "Inferno & Stone");
-                SetText(cancelButton.GetComponentInChildren<TMP_Text>(), "ProgressionNature", "Nature & Water");
-                SetButtons(true);
-                root.SetActive(true);
-                yield return new WaitUntil(() => selection != null);
-                SetButtons(false);
-                yield return PlayerProgressionApi.Choose(selection, result => state = result);
+                IsSelectingFaction = true;
+                SceneManager.LoadScene(TutorialScene.FactionTutorialProgress.SelectionScene);
+                yield break;
             }
             root.SetActive(false);
             ShowStatus();
@@ -120,18 +99,5 @@ namespace LobbyScene
             }
         }
 
-        private void SetButtons(bool enabled)
-        {
-            confirmButton.interactable = enabled;
-            cancelButton.interactable = enabled;
-        }
-
-        private static async void SetText(TMP_Text target, string key, string fallback)
-        {
-            if (target == null) return;
-            target.text = fallback;
-            string value = await LocaleUtils.GetStringAsync("LobbyUI", key);
-            if (target != null && !string.IsNullOrEmpty(value)) target.text = value;
-        }
     }
 }

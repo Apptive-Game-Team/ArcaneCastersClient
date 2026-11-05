@@ -17,6 +17,11 @@ namespace TutorialScene
         [SerializeField] private Image[] hellIcons;
         [SerializeField] private Image[] natureIcons;
         [SerializeField] private ZoomedCardUI rewardDetails;
+        [SerializeField] private GameObject compactRoot;
+        [SerializeField] private GameObject background;
+        [SerializeField] private TMP_Text compactTitle;
+        [SerializeField] private TMP_Text compactBody;
+        [SerializeField] private UnityEngine.UI.Button compactNext;
         private int version;
 
         public void Show(string titleKey, string bodyKey, string nextKey = null, Action action = null,
@@ -25,12 +30,17 @@ namespace TutorialScene
             gameObject.SetActive(true);
             if (rewardDetails != null) rewardDetails.Hide();
             int current = ++version;
-            SetText(title, titleKey, current);
-            SetText(body, bodyKey, current);
+            bool choosing = chooseHell != null || chooseNature != null;
+            bool compact = !choosing && rewardFaction == null && compactRoot != null;
+            title.transform.parent.gameObject.SetActive(!compact);
+            if (background != null) background.SetActive(!compact);
+            if (compactRoot != null) compactRoot.SetActive(compact);
+            SetText(compact ? compactTitle : title, titleKey, current);
+            SetText(compact ? compactBody : body, bodyKey, current);
             Bind(hell, "FactionTutorial.hell", chooseHell, current);
             Bind(nature, "FactionTutorial.nature", chooseNature, current);
-            Bind(next, nextKey, action, current);
-            bool choosing = chooseHell != null || chooseNature != null;
+            Bind(next, nextKey, compact ? null : action, current);
+            if (compactNext != null) Bind(compactNext, nextKey, compact ? action : null, current);
             SetIcons(hellIcons, FactionTutorialCards.Hell, choosing || rewardFaction == "HELL", choosing ? -490 : -210, rewardFaction == "HELL");
             SetIcons(natureIcons, FactionTutorialCards.Nature, choosing || rewardFaction == "NATURE", choosing ? 70 : -210, rewardFaction == "NATURE");
         }
