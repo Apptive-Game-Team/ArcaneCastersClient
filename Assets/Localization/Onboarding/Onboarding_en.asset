@@ -384,6 +384,18 @@ MonoBehaviour:
     m_Localized: "The meteors are falling. Finish any remaining enemies with your starting shot spell."
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000114
+    m_Localized: Choose a faction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000115
+    m_Localized: Hellfire Legion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000116
+    m_Localized: World Tree Spirits
+    m_Metadata:
+      m_Items: []
   m_Metadata:
       m_Items: []
   references:

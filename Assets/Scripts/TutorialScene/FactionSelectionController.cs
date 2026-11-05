@@ -14,6 +14,7 @@ namespace TutorialScene
     public sealed class FactionSelectionController : MonoBehaviour
     {
         [SerializeField] private FactionTutorialPanel panel;
+        [SerializeField] private FactionSelectionView selectionView;
         private long owner;
         private string jwt => SceneContext.JwtToken;
         private string matchingServer;
@@ -24,7 +25,7 @@ namespace TutorialScene
         private IEnumerator Start()
         {
             GlobalTutorialManager.Instance?.FinishOnboarding();
-            panel.Show("FactionTutorial.title", "FactionTutorial.loading");
+            ShowStatus("FactionTutorial.loading");
             if (SceneContext.User == null) yield return UserInfoGetter.GetUserInfo();
             if (this == null || SceneContext.User == null) yield break;
             owner = SceneContext.UserID;
@@ -35,7 +36,7 @@ namespace TutorialScene
 
         private IEnumerator PrepareChoices()
         {
-            panel.Show("FactionTutorial.title", "FactionTutorial.loading");
+            ShowStatus("FactionTutorial.loading");
             yield return GameDataRefresh.Refresh();
             if (!Current) yield break;
             var names = FactionTutorialCards.Hell.Concat(FactionTutorialCards.Nature).Concat(new[] { "meteor_shower", "tornado_strike" });
@@ -60,7 +61,13 @@ namespace TutorialScene
                 yield return Connect();
                 yield break;
             }
-            panel.Show("FactionTutorial.title", "FactionTutorial.choose", null, null,
+            if (selectionView != null)
+            {
+                panel.GetComponent<Canvas>().enabled = false;
+                panel.GetComponent<UnityEngine.UI.GraphicRaycaster>().enabled = false;
+                selectionView.Show(() => StartCoroutine(Choose("HELL")), () => StartCoroutine(Choose("NATURE")));
+            }
+            else panel.Show("FactionTutorial.title", "FactionTutorial.choose", null, null,
                 () => StartCoroutine(Choose("HELL")), () => StartCoroutine(Choose("NATURE")));
         }
 
@@ -68,7 +75,7 @@ namespace TutorialScene
         {
             if (busy) yield break;
             busy = true;
-            panel.Show("FactionTutorial.title", "FactionTutorial.loading");
+            ShowStatus("FactionTutorial.loading");
             PlayerProgressionDto result = null;
             yield return PlayerProgressionApi.Choose(selected, value => result = value);
             busy = false;
@@ -87,7 +94,7 @@ namespace TutorialScene
 
         private IEnumerator Connect()
         {
-            panel.Show("FactionTutorial.title", "FactionTutorial.connecting");
+            ShowStatus("FactionTutorial.connecting");
             if (checkpoint.battle != null)
             {
                 if (FactionTutorialProgress.IsValidReady(checkpoint.battle, owner, faction))
@@ -137,6 +144,15 @@ namespace TutorialScene
         }
 
         private bool Current => FactionTutorialProgress.IsCurrentOwner(owner, matchingServer);
-        private void Error(Action retry) => panel.Show("FactionTutorial.title", "FactionTutorial.error", "FactionTutorial.retry", retry);
+        private void ShowStatus(string key, string next = null, Action action = null)
+        {
+            selectionView?.Hide();
+            // 같은 루트의 선택 코루틴을 유지하기 위해 Canvas만 숨긴다.
+            panel.GetComponent<Canvas>().enabled = true;
+            panel.GetComponent<UnityEngine.UI.GraphicRaycaster>().enabled = true;
+            panel.Show("FactionTutorial.title", key, next, action);
+        }
+
+        private void Error(Action retry) => ShowStatus("FactionTutorial.error", "FactionTutorial.retry", retry);
     }
 }
