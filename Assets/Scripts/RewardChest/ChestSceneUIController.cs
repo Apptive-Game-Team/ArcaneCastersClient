@@ -65,6 +65,7 @@ namespace RewardChest
         {
             busy = true;
             ChestDto[] chests = null;
+            yield return LobbyScene.PlayerProgressionApi.Sync(_ => { });
             yield return apiClient.GetChests(result => chests = result);
 
             itemFactory.ClearItems();
@@ -119,6 +120,8 @@ namespace RewardChest
             switch (outcome)
             {
                 case ChestOpenOutcome.Opened:
+                    DeckScene.DeckManagementViewModel.ClearCachedUserData();
+                    Global.SceneContext.OwnedCards = null;
                     if (presenter != null)
                     {
                         yield return presenter.Play(rewards, null, chestKey);
