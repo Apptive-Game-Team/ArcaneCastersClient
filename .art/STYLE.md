@@ -1,5 +1,8 @@
 # Art Style
 
+스토리 컷 만화는 별도로 승인된 [theevilent의 COMIC-STYLE.md](https://github.com/Apptive-Game-Team/theevilent/blob/dev/content/arcane-casters/story/COMIC-STYLE.md)를 따른다.
+만화의 윤곽선과 셀 명암을 게임 스프라이트의 master-v2 기법에 적용하지 않는다.
+
 Two axes, kept strictly separate:
 
 - **Rendering technique** — identical across every faction. This is what makes
