@@ -4,6 +4,7 @@ using GameScene.Dto.Event;
 using GameScene.Object;
 using GameScene.ServedObjectComponent;
 using GameScene.ServedObjectComponent.Effect;
+using GameScene.ServedObjectComponent.Sound;
 using Global;
 using UnityEngine;
 
@@ -21,6 +22,11 @@ namespace GameScene.Handler
 
         public void Handler(List<GameEvent> events)
         {
+            Handler(events, null);
+        }
+
+        public void Handler(List<GameEvent> events, PresentationWorld world)
+        {
             if (events == null)
             {
                 return;
@@ -30,31 +36,41 @@ namespace GameScene.Handler
             {
                 if (gameEvent is HitEvent hit)
                 {
-                    HandleHit(hit);
+                    HandleHit(hit, world);
                 }
                 else if (gameEvent is ShockEvent shock)
                 {
-                    HandleShock(shock);
+                    HandleShock(shock, world);
                 }
             }
         }
 
-        private static void HandleHit(HitEvent hit)
+        private static void HandleHit(HitEvent hit, PresentationWorld world)
         {
-            ServedObject target = ObjectContainer.Instance.FindById(hit.targetId);
+            ServedObject target = PresentationWorld.Find(hit.targetId, world);
             if (target == null)
             {
                 return;
             }
 
-            ServedObject actor = ObjectContainer.Instance.FindById(hit.actorId);
+            // Contact audio belongs to the target, including hits without an actor
+            // or a visual HitEffectController and charged StormStag's early return.
+            if (world == null) target.GetComponent<ServedObjectSfxController>()?.PlayHit();
+
+            ServedObject actor = PresentationWorld.Find(hit.actorId, world);
+            if (actor != null)
+            {
+                actor.FaceTowards(target.transform.position);
+                HitKnockback.Play(target, actor.transform.position);
+            }
+
             if (actor != null && StormStagChargeImpactRules.ShouldPlay(actor.ActiveEffects))
             {
                 DamagedObjectEffect.SetSelfDestroyEffect(
                     StormStagChargeImpactRules.EffectResourceName,
                     target.GetEdgeWorldPositionTowards(
                         actor.GetActualTransform().position,
-                        ImpactEdgeBias));
+                        ImpactEdgeBias), world);
                 return;
             }
 
@@ -73,9 +89,9 @@ namespace GameScene.Handler
             hitEffect.PlayHitFrom(actor.GetActualTransform().position);
         }
 
-        private static void HandleShock(ShockEvent shock)
+        private static void HandleShock(ShockEvent shock, PresentationWorld world)
         {
-            ServedObject trap = ObjectContainer.Instance.FindById(shock.actorId);
+            ServedObject trap = PresentationWorld.Find(shock.actorId, world);
             if (trap == null)
             {
                 return;
@@ -88,7 +104,7 @@ namespace GameScene.Handler
                 return;
             }
 
-            GameObject burst = UnityEngine.Object.Instantiate(
+            GameObject burst = world != null ? world.SpawnEffect(burstPrefab, trap.GetActualTransform().position, Quaternion.identity) : UnityEngine.Object.Instantiate(
                 burstPrefab,
                 trap.GetActualTransform().position,
                 Quaternion.identity);

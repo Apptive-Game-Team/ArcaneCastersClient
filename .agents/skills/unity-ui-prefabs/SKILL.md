@@ -38,6 +38,13 @@ Use the default project background for new UI scenes/pages. In this client, that
 
 ## Scene Wiring
 
+`GameScene.unity` and `InteractiveTutorialScene.unity` instance `CardImage.prefab`
+for their enlarged cards but remove its `CardUI` component and add `ZoomedCardUI`.
+When adding a card decoration, put its layout in the card prefab and bind it from
+both controllers. Do not retrieve it through `CardUI` on the enlarged instance:
+that component is absent. Include inactive children when caching a badge that
+hides for unknown data, or it cannot reappear on the next known card.
+
 - Scene buttons should be scene-authored prefab instances.
 - Wire button `OnClick` to an existing `ButtonBase` subclass or scene controller method.
 - Do not create UI buttons from `Awake`, `Start`, or other runtime code unless the UI is truly dynamic and repeated.
@@ -70,6 +77,24 @@ Existing scenes heavily instantiate:
 - specialized variants under `Assets/Prefabs/UI/Adventures` and `Assets/Prefabs/UI/Debug`
 
 Follow those patterns before inventing new UI structure.
+
+## Check RawImage UVs in the running Editor
+
+For a prefab-backed `RawImage` showing a `RenderTexture`, inspect `RawImage.uvRect`
+on the instantiated object in Play Mode. `FireShotPreview.prefab`'s YAML contains
+`m_UVRect` with width and height of 1, but Unity read both as 0 in the deck
+scene. The preview camera rendered sprites into the texture while the UI sampled
+only one background pixel, making the preview look blank. Set the UV explicitly
+to `new Rect(0f, 0f, 1f, 1f)` when binding the texture and verify a Game View
+capture; checking that `RawImage.texture` is non-null is not sufficient.
+
+For a deck hover smoke test, call `HaveCardMagicPopup.Show(magics, anchor)`
+with a real scene `RectTransform` (a card or, in a login-free fixture, a filter
+button). `Show(magics)` has no placement anchor; its prefab may remain outside
+the viewport while the preview is active and its texture renders correctly.
+Do not assign pixel screen coordinates directly to `RectTransform.position`:
+use the existing placement path, which converts through the canvas camera.
+Verify the full Game View, not just the active flag or RenderTexture.
 
 ## Instancing a UI prefab by hand
 

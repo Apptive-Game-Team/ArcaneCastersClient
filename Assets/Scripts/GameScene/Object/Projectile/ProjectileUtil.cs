@@ -6,14 +6,14 @@ namespace GameScene.Object.Projectile
 {
     public class ProjectileUtil
     {
-        public static Quaternion GetRotation(ProjectileDto dto)
+        public static Quaternion GetRotation(ProjectileDto dto, PresentationWorld world = null)
         {
-            return GetRotation(GetPosition(dto.start), GetPosition(dto.end));
+            return GetRotation(GetPosition(dto.start, world), GetPosition(dto.end, world), world);
         }
 
-        public static Quaternion GetRotation(Vector3 start, Vector3 end)
+        public static Quaternion GetRotation(Vector3 start, Vector3 end, PresentationWorld world = null)
         {
-            Camera camera = Camera.main;
+            Camera camera = world != null ? world.Camera : Camera.main;
             Vector3 dir = camera != null
                 ? camera.WorldToScreenPoint(end) - camera.WorldToScreenPoint(start)
                 : end - start;
@@ -34,9 +34,9 @@ namespace GameScene.Object.Projectile
         /// through screen space at the start point's depth gives the one world point that both
         /// lies in the sprite's plane and lands on the target's pixel.
         /// </summary>
-        public static float GetCameraPlaneLength(Vector3 start, Vector3 end)
+        public static float GetCameraPlaneLength(Vector3 start, Vector3 end, PresentationWorld world = null)
         {
-            Camera camera = Camera.main;
+            Camera camera = world != null ? world.Camera : Camera.main;
             if (camera == null)
             {
                 return Vector3.Distance(start, end);
@@ -55,20 +55,20 @@ namespace GameScene.Object.Projectile
         /// foreshortened by the tilt and carries the point away in depth as well.
         /// Mirrors ServedObject.GetAnchorUpDirection, which places speech bubbles the same way.
         /// </summary>
-        public static Vector3 GetScreenUp()
+        public static Vector3 GetScreenUp(PresentationWorld world = null)
         {
-            Camera camera = Camera.main;
+            Camera camera = world != null ? world.Camera : Camera.main;
             return camera != null ? camera.transform.up : Vector3.up;
         }
 
-        public static Vector3 GetPosition(ProjectileTarget target)
+        public static Vector3 GetPosition(ProjectileTarget target, PresentationWorld world = null)
         {
             switch (target)
             {
                 case PositionProjectileTarget position:
-                    return position.ToVector3();
+                    return world != null ? world.ToWorld(position.ToVector3()) : position.ToVector3();
                 case ReferenceProjectileTarget reference:
-                    ServedObject servedObject = ObjectContainer.Instance.FindById(reference.id);
+                    ServedObject servedObject = PresentationWorld.Find(reference.id, world);
                     return servedObject != null ? servedObject.transform.position : Vector3.zero;
                 default:
                     return Vector3.zero;

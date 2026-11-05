@@ -35,6 +35,13 @@ namespace Admin
 
         private void Start()
         {
+            // Local sessions grant player access only; administrator debug APIs are unavailable.
+            if (SceneContext.MatchInfo?.IsLocal == true)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
             if (adminViewModel == null) adminViewModel = FindObjectOfType<AdminViewModel>();
             selectionIndicator = CreateSelectionIndicator();
             selectionIndicator.gameObject.SetActive(false);

@@ -21,3 +21,5 @@ MonoBehaviour:
   grass1: {fileID: 21300000, guid: f4e0648da4c3419081a42549c94a90bf, type: 3}
   grass2: {fileID: 21300000, guid: dabd756c10a542fba6e4712571f7d008, type: 3}
   skyColor: {r: 0.52, g: 0.56, b: 0.6, a: 1}
+  battleBgm: {fileID: 8300000, guid: f38487e5ac48442286acf501e84f6f33, type: 3}
+  bossBgm: {fileID: 0}

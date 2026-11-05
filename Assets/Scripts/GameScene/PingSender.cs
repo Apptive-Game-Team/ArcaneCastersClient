@@ -37,7 +37,7 @@ namespace GameScene
 
         private void Update()
         {
-            _pingTimer += Time.deltaTime;
+            _pingTimer += Time.unscaledDeltaTime;
             if (_pingTimer < PING_INTERVAL)
             {
                 return;

@@ -20,6 +20,10 @@ namespace Data.BattleThemes
         [SerializeField] private Sprite grass1;
         [SerializeField] private Sprite grass2;
         [SerializeField] private Color skyColor;
+        // Adventure matches only. Null keeps the scene's default track or the BgmContainer's
+        // "boss" entry.
+        [SerializeField] private AudioClip battleBgm;
+        [SerializeField] private AudioClip bossBgm;
 
         public Texture2D GroundTexture => groundTexture;
         public Sprite Tree1 => tree1;
@@ -30,5 +34,7 @@ namespace Data.BattleThemes
         public Sprite Grass1 => grass1;
         public Sprite Grass2 => grass2;
         public Color SkyColor => skyColor;
+        public AudioClip BattleBgm => battleBgm;
+        public AudioClip BossBgm => bossBgm;
     }
 }

@@ -12,17 +12,18 @@ namespace GameScene.Object.Projectile
         
         public void Init(ProjectileDto projectileDto)
         {
-            actualObject.rotation = ProjectileUtil.GetRotation(projectileDto);
-            transform.position = ProjectileUtil.GetPosition(projectileDto.start);
+            var world = PresentationWorld.For(this);
+            actualObject.rotation = ProjectileUtil.GetRotation(projectileDto, world);
+            transform.position = ProjectileUtil.GetPosition(projectileDto.start, world);
             
             switch (projectileDto.end)
             {
                 case PositionProjectileTarget position:
-                    transform.DOMove(position.ToVector3(), projectileDto.duration)
-                        .SetEase(Ease.Linear);
+                    transform.DOMove(ProjectileUtil.GetPosition(position, world), projectileDto.duration)
+                        .SetEase(Ease.Linear).SetLink(gameObject);
                     break;
                 case ReferenceProjectileTarget reference:
-                    ServedObject targetObject = ObjectContainer.Instance.FindById(reference.id);
+                    ServedObject targetObject = PresentationWorld.Find(reference.id, world);
                     if (targetObject == null)
                     {
                         Destroy(gameObject);

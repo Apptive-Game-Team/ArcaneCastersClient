@@ -1,0 +1,46 @@
+name: Desktop updater tests
+
+on:
+  pull_request:
+    paths:
+      - 'Tools/DesktopUpdater/**'
+      - 'Assets/Scripts/Global/DesktopUpdateDialog.cs'
+      - 'Assets/Scripts/Global/DesktopUpdatePolicy.cs'
+      - 'Assets/Scripts/Editor/DesktopBuildScript.cs'
+      - '.github/workflows/*desktop*'
+      - '.github/workflows/release.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: windows-latest, rid: win-x64, executable: ArcaneUpdater.exe }
+          - { runner: ubuntu-latest, rid: linux-x64, executable: ArcaneUpdater }
+          - { runner: macos-15-intel, rid: osx-x64, executable: ArcaneUpdater }
+          - { runner: macos-latest, rid: osx-arm64, executable: ArcaneUpdater }
+    runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Publish self-contained helper
+        run: dotnet publish Tools/DesktopUpdater/DesktopUpdater.csproj -c Release -r ${{ matrix.rid }} --self-contained true -o build/helper
+      - name: Test extraction, rollback and actual process handshake
+        run: |
+          $env:ARCANE_TEST_ROOT = (Get-Location).Path
+          $env:ARCANE_UPDATER_EXECUTABLE = Join-Path (Get-Location).Path 'build/helper/${{ matrix.executable }}'
+          dotnet run --project Tools/DesktopUpdater/DesktopUpdater.Tests.csproj
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s Tools/DesktopUpdater -p 'test_*.py' -v

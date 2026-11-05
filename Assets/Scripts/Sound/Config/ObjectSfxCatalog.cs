@@ -9,11 +9,21 @@ namespace Sound.Config
     {
         [SerializeField] private string runtimeType;
         [SerializeField] private ObjectSfxProfile profile;
+        [SerializeField] private ObjectSfxProfile attackProfile;
+        [SerializeField] private ObjectSfxProfile hitProfile;
         [SerializeField] private bool intentionalSilent;
         [SerializeField] private bool serverAlias;
 
         public string RuntimeType => runtimeType;
         public ObjectSfxProfile Profile => profile;
+        public ObjectSfxProfile AttackProfile => attackProfile;
+        public ObjectSfxProfile HitProfile => hitProfile;
+        public ObjectSfxEventSlot EffectiveAttack => IntentionalSilent
+            ? null
+            : (attackProfile != null ? attackProfile : profile)?.Attack;
+        public ObjectSfxEventSlot EffectiveHit => IntentionalSilent
+            ? null
+            : (hitProfile != null ? hitProfile : profile)?.Hit;
         public bool IntentionalSilent => intentionalSilent;
         public bool ServerAlias => serverAlias;
     }
@@ -29,7 +39,26 @@ namespace Sound.Config
 
         public bool TryResolve(string runtimeType, out ObjectSfxProfile profile)
         {
+            return TryResolve(runtimeType, out profile, out _);
+        }
+
+        public bool TryResolve(
+            string runtimeType,
+            out ObjectSfxProfile profile,
+            out ObjectSfxEventSlot attack)
+        {
+            return TryResolve(runtimeType, out profile, out attack, out _);
+        }
+
+        public bool TryResolve(
+            string runtimeType,
+            out ObjectSfxProfile profile,
+            out ObjectSfxEventSlot attack,
+            out ObjectSfxEventSlot hit)
+        {
             profile = null;
+            attack = null;
+            hit = null;
 
             if (string.IsNullOrEmpty(runtimeType))
             {
@@ -44,6 +73,8 @@ namespace Sound.Config
                 }
 
                 profile = entry.IntentionalSilent ? null : entry.Profile;
+                attack = entry.EffectiveAttack;
+                hit = entry.EffectiveHit;
                 return true;
             }
 

@@ -1,0 +1,6 @@
+{
+    "name": "DevPlayground",
+    "references": ["Unity.TextMeshPro", "Unity.ugui"],
+    "defineConstraints": ["UNITY_EDITOR"],
+    "autoReferenced": true
+}

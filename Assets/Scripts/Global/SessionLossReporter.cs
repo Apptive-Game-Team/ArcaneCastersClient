@@ -60,6 +60,11 @@ namespace Global
         /// </summary>
         public static IEnumerator ReportAndLeave(SessionLossReason reason, Action onSessionAlive = null)
         {
+            if (CustomBattleConnection.IsLocalMatch) {
+                CustomBattleConnection.End();
+                SceneManager.LoadScene("Scenes/AdminScene");
+                yield break;
+            }
             SessionLossVerdict verdict = SessionLossVerdict.NotReported;
             yield return Report(reason, v => verdict = v);
 
@@ -96,6 +101,11 @@ namespace Global
         /// </summary>
         public static IEnumerator Report(SessionLossReason reason, Action<SessionLossVerdict> onVerdict)
         {
+            if (CustomBattleConnection.IsLocalMatch) {
+                CustomBattleConnection.End();
+                onVerdict?.Invoke(SessionLossVerdict.Lost);
+                yield break;
+            }
             string sessionId = SceneContext.MatchInfo?.sessionId;
 
             if (string.IsNullOrEmpty(sessionId))
@@ -103,6 +113,18 @@ namespace Global
                 // 신고할 세션 식별자가 없으면 서버 판정을 받을 방법도 없다.
                 WDebug.LogWarning($"[SessionLoss] sessionId가 없어 신고를 건너뜁니다. reason={reason}");
                 onVerdict?.Invoke(SessionLossVerdict.NotReported);
+                yield break;
+            }
+
+            if (SceneContext.MatchInfo.IsLocal)
+            {
+                // 로컬 서버 경기는 lobby 티켓이 없고 공유 game server 도 모르는 세션이다. 신고해도 404 만 오므로
+                // 보내지 않는다. 경기가 끝났으면 결과는 로컬 서버 stdout 으로 따로 보고하고, 연결이 끊겼으면
+                // 다시 붙을 곳도 같은 로컬 서버뿐이라 소실로 판정한다.
+                WDebug.Log($"[SessionLoss] 로컬 경기라 신고를 건너뜁니다. reason={reason}, sessionId={sessionId}");
+                onVerdict?.Invoke(reason == SessionLossReason.MatchCompleted
+                    ? SessionLossVerdict.NotReported
+                    : SessionLossVerdict.Lost);
                 yield break;
             }
 

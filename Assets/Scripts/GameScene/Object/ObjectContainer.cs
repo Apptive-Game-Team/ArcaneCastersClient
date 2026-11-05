@@ -69,6 +69,12 @@ namespace GameScene.Object
             return obj;
         }
 
+        /// <summary>
+        /// 등록된 몸 전체. 값 컬렉션의 struct enumerator 를 그대로 내주므로 foreach 가 할당하지 않는다.
+        /// 매 프레임 훑는 경로(<see cref="PlacementPreview"/>)는 <see cref="GetIds"/> 의 ToList 대신 이것을 쓴다.
+        /// </summary>
+        public Dictionary<int, ServedObject>.ValueCollection Values => objects.Values;
+
         public List<int> GetIds()
         {
             return objects.Keys.ToList();

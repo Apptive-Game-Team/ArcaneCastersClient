@@ -1,5 +1,15 @@
 # Golden Audio Assets
 
+## Target Material Hits
+
+The user selected three supplied WAVs on 2026-10-19: creature_onhit_1.wav,
+wood_onhit_1.wav and rock_onhit_1.wav. Runtime copies live in
+`Assets/Resources/Sound/Game/Hit/`. They use the existing postprocess chain
+(mono PCM16 44.1 kHz, silence trim, tail fade, -3 dBFS peak), with no hard duration
+cap. Full source/runtime hashes, provenance limitations, material assignments
+and validation are recorded in `docs/material-hit-sounds.md`. Reuse these files;
+do not regenerate them as replacements without a new user selection.
+
 ## In-game Forest Ambience
 
 | Field | Value |

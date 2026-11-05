@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Data;
 using Data.Net;
+using GameScene.Dto;
 using GameScene.Handler;
 using Global;
 using Global.Stomp;
@@ -51,10 +52,17 @@ namespace GameScene
             { TableReference = MessageTable, TableEntryReference = "sessionReconnecting" };
 
         private IStompTransport _transport;
+        private GameServerConnection _connection;
         private StompSubscriptionRegistry _registry;
         private StompReconnectController _reconnect;
 
-        private readonly IFrameInfoHandler<string> _frameInfoHandler = new GeneralHandler();
+        /// <summary>화면에 보인 PVE 대사 번호. 재연결 때 pveSync 에 실어 보낸다.</summary>
+        private readonly PveSyncState _pveSync = new PveSyncState();
+
+        private IFrameInfoHandler<string> _frameInfoHandler;
+
+        /// <summary>frame 구독을 걸었는지. 그 전에 연결되는 것은 최초 연결이라 pveSync 를 보내지 않는다.</summary>
+        private bool _frameSubscribed;
         private readonly FrameSilenceWatch _silence = new FrameSilenceWatch();
         private readonly ConnectAttemptSchedule _connectSchedule = new ConnectAttemptSchedule();
         private readonly StompConnectGate _connectGate = new StompConnectGate();
@@ -73,6 +81,18 @@ namespace GameScene
         /// 결과 화면으로 넘어가기 전까지의 무음과 끊김은 연결 문제가 아니다.
         /// </summary>
         private bool _matchEnded;
+        public bool HasMatchEnded => _matchEnded;
+
+        public bool MatchEnded => _matchEnded;
+
+        public bool TrySurrender()
+        {
+            if (isSpectator || _matchEnded || _transport == null || !_transport.IsConnected ||
+                string.IsNullOrEmpty(SceneContext.MatchInfo?.sessionId)) return false;
+            SendMessageToServer($"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}",
+                "{\"type\":\"surrender\"}");
+            return true;
+        }
 
         // ─── 생명주기 ────────────────────────────────────────────────────────
 
@@ -80,6 +100,12 @@ namespace GameScene
         {
             gameObject.name = "StompConnector";
             base.Awake();
+
+            BotThoughtLog.BeginMatch();
+
+            _frameInfoHandler = new GeneralHandler(_pveSync);
+            // 새 경기마다 tick rate 를 기본값으로 되돌린다. 실제 값은 첫 sync 가 알려 준다.
+            GameConfig.SetTickRate(GameConfig.DEFAULT_TICK_RATE);
 
             _registry = new StompSubscriptionRegistry();
             _reconnect = gameObject.AddComponent<StompReconnectController>();
@@ -90,11 +116,9 @@ namespace GameScene
                     ? inGameReconnectDelays
                     : DefaultReconnectDelays);
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-            _transport = gameObject.AddComponent<WebGLStompTransport>();
-#else
-            _transport = gameObject.AddComponent<NativeStompTransport>();
-#endif
+            _connection = GameServerConnection.ForMatch(SceneContext.MatchInfo);
+            _connection.ClaimForGameplay();
+            _transport = _connection.Transport;
 
             _transport.Connected += HandleConnected;
             _transport.Disconnected += HandleDisconnected;
@@ -123,9 +147,17 @@ namespace GameScene
 
         private void OnDestroy()
         {
+            if (CustomBattleConnection.IsLocalMatch) CustomBattleConnection.End();
             // 플래그를 먼저 세운다. 닫는 과정에서 올라오는 Disconnected는 끊김이 아니다.
             _intentionalDisconnect = true;
-            _transport.Disconnect();
+            if (_transport != null)
+            {
+                _transport.Connected -= HandleConnected;
+                _transport.Disconnected -= HandleDisconnected;
+                _transport.Errored -= HandleError;
+                _transport.MessageReceived -= _registry.Dispatch;
+            }
+            if (_connection != null) _connection.Close();
         }
 
         /// <summary>
@@ -169,9 +201,19 @@ namespace GameScene
                 return;
             }
 
-            string url = gameServer.Query("token", SceneContext.JwtToken);
+            // Debug.Log, not WDebug: dev runs Java and Rust game servers side by side, and which one
+            // a match landed on has to show in the console of a release WebGL build too. The address
+            // is logged before the token query is added.
+            Debug.Log($"[Match] game server: {matchInfo.ConnectionSource}, session: {matchInfo.sessionId}");
+
+            // 로컬 서버 경기는 사용자 JWT 대신 로컬 서버를 띄울 때 만든 init token 으로 인증한다.
+            // 커스텀 전투 로컬 연결이 활성화된 경우에는 그 연결의 토큰을 우선 사용한다.
+            string gameToken = CustomBattleConnection.TokenFor(
+                matchInfo,
+                matchInfo.GameServerToken(SceneContext.JwtToken));
+            string url = gameServer.Query("token", gameToken);
             _connectGate.NoteHandshakeStarted(now);
-            _transport.Connect(url, SceneContext.JwtToken);
+            _transport.Connect(url, gameToken);
         }
 
         public void SendMessageToServer(string topic, string message)
@@ -182,7 +224,18 @@ namespace GameScene
                 WDebug.LogError("[STOMP] 미연결 상태에서 메시지 전송 시도: " + topic);
                 return;
             }
-            _transport.Send(topic, message);
+            _transport.Send(topic, CustomBattleConnection.Outgoing(message));
+        }
+
+        public bool TrySendCardHover(bool hovering)
+        {
+            if (isSpectator || _matchEnded || _transport == null || !_transport.IsConnected
+                || string.IsNullOrEmpty(SceneContext.MatchInfo?.sessionId)) return false;
+            string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
+            _transport.Send(destination, hovering
+                ? "{\"type\":\"cardHover\",\"hovering\":true}"
+                : "{\"type\":\"cardHover\",\"hovering\":false}");
+            return true;
         }
 
         public void SubscribeToTopic(string topic, Action<string> callback, string subscriptionId)
@@ -193,7 +246,7 @@ namespace GameScene
                 WDebug.LogError("[STOMP] 미연결 상태에서 구독 시도: " + topic);
                 return;
             }
-            _registry.Register(topic, subscriptionId, callback);
+            _registry.Register(topic, subscriptionId, body => callback(CustomBattleConnection.Incoming(body)));
             _transport.Subscribe(topic, subscriptionId);
         }
 
@@ -210,7 +263,9 @@ namespace GameScene
         /// </summary>
         public void NotifyMatchEnded()
         {
+            if (CustomBattleConnection.IsLocalMatch) CustomBattleConnection.End();
             _matchEnded = true;
+            BotThoughtLog.EndMatch();
             _reconnect.ResetRetries();
         }
 
@@ -223,7 +278,10 @@ namespace GameScene
 
             UnsubscribeFromTopic("match-sub");
             long userId = isSpectator ? 0 : SceneContext.UserID;
+            _pveSync.Reset();
             SubscribeToTopic($"/game/{sessionId}/frameInfos/{userId}", OnFrameInfoReceived, "frame-sub");
+            _frameSubscribed = true;
+            RequestPveSync();
 
             yield return WatchFrameSilence();
         }
@@ -315,6 +373,17 @@ namespace GameScene
             _connectGate.NoteSettled();
             _reconnect.ResetRetries();
             _registry.ResubscribeAll(_transport);
+            if (_frameSubscribed)
+            {
+                RequestPveSync();
+            }
+        }
+
+        /// <summary>서버가 목표와 놓친 대사를 다시 보내게 한다. 관전자와 PVE 가 아닌 판은 보내지 않는다.</summary>
+        private void RequestPveSync()
+        {
+            if (isSpectator) return;
+            PveSyncSender.Send(_pveSync.LastEventSeq);
         }
 
         /// <summary>

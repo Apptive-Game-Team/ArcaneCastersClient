@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AssemblyName>ArcaneUpdater.Tests</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Installer.cs" />
+    <Compile Include="Tests.cs" />
+    <Compile Include="../../Assets/Scripts/Global/DesktopUpdatePolicy.cs" Link="DesktopUpdatePolicy.cs" />
+  </ItemGroup>
+</Project>

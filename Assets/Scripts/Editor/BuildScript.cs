@@ -14,6 +14,7 @@ public static class BuildScript
 
     private static void Build(bool devBuild)
     {
+        PlaygroundBuildGuard.Validate();
         SetDefine(DevDefine, devBuild);
 
         // game-ci passes -customBuildPath; fall back to convention

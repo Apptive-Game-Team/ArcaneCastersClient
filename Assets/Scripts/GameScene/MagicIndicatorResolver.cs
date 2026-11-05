@@ -36,8 +36,18 @@ namespace GameScene
         /// <summary>circle 테두리 두께. 0 이면 속을 채운다.</summary>
         public readonly float edgeWidth;
 
+        /// <summary>
+        /// <c>grounded: false</c> lane 이 조준점 높이를 따를 때만 true. 바닥 그림자 외에 3D 공중 선을
+        /// <see cref="airStart"/> 에서 <see cref="airEnd"/> 까지 그린다.
+        /// </summary>
+        public readonly bool hasAirLine;
+
+        public readonly Vector3 airStart;
+        public readonly Vector3 airEnd;
+
         private ResolvedIndicatorShape(Kind kind, Vector3 origin, Vector3 target,
-            float radius, float length, float halfWidth, float edgeWidth)
+            float radius, float length, float halfWidth, float edgeWidth,
+            bool hasAirLine = false, Vector3 airStart = default, Vector3 airEnd = default)
         {
             this.kind = kind;
             this.origin = origin;
@@ -46,6 +56,9 @@ namespace GameScene
             this.length = length;
             this.halfWidth = halfWidth;
             this.edgeWidth = edgeWidth;
+            this.hasAirLine = hasAirLine;
+            this.airStart = airStart;
+            this.airEnd = airEnd;
         }
 
         public static ResolvedIndicatorShape Circle(Vector3 center, float radius, float edgeWidth)
@@ -56,6 +69,13 @@ namespace GameScene
         public static ResolvedIndicatorShape Lane(Vector3 start, Vector3 target, float length, float halfWidth)
         {
             return new ResolvedIndicatorShape(Kind.Lane, start, target, 0f, length, halfWidth, 0f);
+        }
+
+        public static ResolvedIndicatorShape Lane(
+            Vector3 start, Vector3 target, float length, float halfWidth, Vector3 airStart, Vector3 airEnd)
+        {
+            return new ResolvedIndicatorShape(
+                Kind.Lane, start, target, 0f, length, halfWidth, 0f, true, airStart, airEnd);
         }
     }
 
@@ -75,6 +95,9 @@ namespace GameScene
         private const string FallbackRadiusParameter = "radius";
 
         private const string LeftPlayerMaster = "LeftPlayer";
+
+        /// <summary>조준점 높이가 시전자와 이만큼 넘게 달라야 공중 선을 그린다.</summary>
+        private const float AirLineHeightEpsilon = 0.01f;
 
         // document 없는 마법을 마법당 한 번만 log 하기 위한 표. 프레임마다 경고가 쏟아지면 안 된다.
         private static readonly HashSet<string> LoggedMissingDocument = new HashSet<string>();
@@ -126,6 +149,23 @@ namespace GameScene
             float range,
             List<ResolvedIndicatorShape> shapes)
         {
+            Resolve(magic, casterPosition, targetPosition, targetPosition, forward, range, shapes);
+        }
+
+        /// <summary>
+        /// <paramref name="aimPoint"/> 는 높이를 포함한 조준점이다. <paramref name="targetPosition"/> 은 그 발자국
+        /// (지면에 놓인 점)이라 circle 과 지면 lane 은 이것만 쓰고, <c>grounded: false</c> lane 만 aimPoint 의 높이를 쓴다.
+        /// 유닛을 겨누지 않으면 둘은 같다.
+        /// </summary>
+        public static void Resolve(
+            CombinedMagicData magic,
+            Vector3 casterPosition,
+            Vector3 targetPosition,
+            Vector3 aimPoint,
+            Vector3 forward,
+            float range,
+            List<ResolvedIndicatorShape> shapes)
+        {
             shapes.Clear();
             if (magic == null)
             {
@@ -147,7 +187,7 @@ namespace GameScene
                     continue;
                 }
 
-                if (TryResolveLayer(magic, layer, casterPosition, targetPosition, forward, range,
+                if (TryResolveLayer(magic, layer, casterPosition, targetPosition, aimPoint, forward, range,
                         out ResolvedIndicatorShape shape))
                 {
                     shapes.Add(shape);
@@ -182,6 +222,7 @@ namespace GameScene
             MagicIndicatorLayer layer,
             Vector3 casterPosition,
             Vector3 targetPosition,
+            Vector3 aimPoint,
             Vector3 forward,
             float range,
             out ResolvedIndicatorShape shape)
@@ -194,7 +235,7 @@ namespace GameScene
                 return TryResolveCircle(magic, layer, origin, forward, out shape);
             }
 
-            return TryResolveLane(magic, layer, origin, targetPosition, forward, range, out shape);
+            return TryResolveLane(magic, layer, origin, targetPosition, aimPoint, forward, range, out shape);
         }
 
         private static bool TryResolveCircle(
@@ -231,6 +272,7 @@ namespace GameScene
             MagicIndicatorLayer layer,
             Vector3 origin,
             Vector3 targetPosition,
+            Vector3 aimPoint,
             Vector3 forward,
             float range,
             out ResolvedIndicatorShape shape)
@@ -251,15 +293,36 @@ namespace GameScene
                     return false;
                 }
 
-                shape = ResolvedIndicatorShape.Lane(
-                    origin, targetPosition, layer.length.IsPresent ? targetLength : range, halfWidth);
+                float laneLength = layer.length.IsPresent ? targetLength : range;
+                if (layer.Grounded)
+                {
+                    shape = ResolvedIndicatorShape.Lane(origin, targetPosition, laneLength, halfWidth);
+                    return true;
+                }
+
+                // 빔은 laneLength 만큼 3D 로 나간다. 바닥에는 그 그림자(수평 성분)만 눕는다.
+                Vector3 toAim = aimPoint - origin;
+                float fullDistance = toAim.magnitude;
+                float horizontalDistance = GetGroundDistance(origin, aimPoint);
+                float shadowLength = fullDistance > Mathf.Epsilon
+                    ? laneLength * horizontalDistance / fullDistance
+                    : laneLength;
+                shape = CreateLane(origin, targetPosition, shadowLength, halfWidth, toAim, fullDistance, laneLength);
                 return true;
             }
 
             if (layer.End == MagicIndicatorLaneEnd.Aim)
             {
-                shape = ResolvedIndicatorShape.Lane(
-                    origin, targetPosition, GetGroundDistance(origin, targetPosition), halfWidth);
+                float groundDistance = GetGroundDistance(origin, targetPosition);
+                if (layer.Grounded)
+                {
+                    shape = ResolvedIndicatorShape.Lane(origin, targetPosition, groundDistance, halfWidth);
+                    return true;
+                }
+
+                Vector3 toAim = aimPoint - origin;
+                float fullDistance = toAim.magnitude;
+                shape = CreateLane(origin, targetPosition, groundDistance, halfWidth, toAim, fullDistance, fullDistance);
                 return true;
             }
 
@@ -270,6 +333,23 @@ namespace GameScene
 
             shape = ResolvedIndicatorShape.Lane(origin, origin + forward, length, halfWidth);
             return true;
+        }
+
+        /// <summary>
+        /// <c>grounded: false</c> lane 을 만든다. 조준점 높이가 origin 과 <see cref="AirLineHeightEpsilon"/> 넘게
+        /// 다를 때만 origin 에서 <c>origin + normalize(toAim) * airLength</c> 까지 가는 공중 선을 붙인다.
+        /// </summary>
+        private static ResolvedIndicatorShape CreateLane(
+            Vector3 origin, Vector3 targetPosition, float groundLength, float halfWidth,
+            Vector3 toAim, float fullDistance, float airLength)
+        {
+            if (fullDistance <= Mathf.Epsilon || Mathf.Abs(toAim.y) <= AirLineHeightEpsilon)
+            {
+                return ResolvedIndicatorShape.Lane(origin, targetPosition, groundLength, halfWidth);
+            }
+
+            return ResolvedIndicatorShape.Lane(
+                origin, targetPosition, groundLength, halfWidth, origin, origin + toAim / fullDistance * airLength);
         }
 
         /// <summary>

@@ -4,7 +4,6 @@ using GameScene.PopupBook;
 using GameScene.ServedObjectComponent;
 using GameScene.ServedObjectComponent.Sound;
 using Global;
-using Global.Sound;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -14,15 +13,20 @@ namespace GameScene.Object
     {
         public void SpawnObject(CreatedObjectDto createdObjectDto, bool playSpawnPresentation = true)
         {
-            if (ObjectContainer.Instance.IsExist(createdObjectDto.id))
+            SpawnShared(createdObjectDto, null, playSpawnPresentation);
+        }
+
+        public static ServedObject SpawnShared(CreatedObjectDto createdObjectDto, PresentationWorld world = null, bool playSpawnPresentation = true)
+        {
+            if (PresentationWorld.Find(createdObjectDto.id, world) != null)
             {
                 WDebug.LogWarning($"Object with ID {createdObjectDto.id} already exists. Spawn aborted.");
-                return;
+                return null;
             }
 
             WDebug.Log($"Spawning object: {createdObjectDto.type}, id: {createdObjectDto.id}");
 
-            GameObject spawnedObject = InstantiateGameObject(createdObjectDto);
+            GameObject spawnedObject = InstantiateGameObject(createdObjectDto, world);
 
             if (createdObjectDto.type == "TitanFist")
             {
@@ -32,9 +36,7 @@ namespace GameScene.Object
             ServedObject servedObject = spawnedObject.GetOrAddComponent<ServedObject>();
             PopupBookVisualPresenter popupBookPresenter = PopupBookVisualPresenter.Attach(servedObject);
 
-            SetAudioSourceVolume(spawnedObject);
-            LegacySfxMuter.Mute(spawnedObject);
-
+            servedObject.PresentationWorld = world;
             servedObject.SetMaster(createdObjectDto.master);
             servedObject.id = createdObjectDto.id;
 
@@ -44,13 +46,15 @@ namespace GameScene.Object
 
             // Bind once the object is fully configured. Per-creature presentation lives on the
             // prefabs as ServedObjectBehaviour components, so nothing here keys off the object type.
+            if (world != null) world.Activate(spawnedObject);
             servedObject.BindListeners();
 
             WDebug.Log($"Spawned object: {spawnedObject}, master set to: {createdObjectDto.master}, id set to: {createdObjectDto.id}");
             try
             {
-                ObjectContainer.Instance.RegisterObject(servedObject);
-                ServedObjectSfxController.Attach(
+                if (world != null) world.Register(servedObject);
+                else ObjectContainer.Instance.RegisterObject(servedObject);
+                if (world == null) ServedObjectSfxController.Attach(
                     servedObject,
                     createdObjectDto.type,
                     playSpawnPresentation);
@@ -68,33 +72,35 @@ namespace GameScene.Object
                 WDebug.LogError($"Failed to register object: {e.Message}");
                 Destroy(spawnedObject);
             }
+            return servedObject;
         }
 
-        private void SetAudioSourceVolume(GameObject obj)
+        public static GameObject GetPrefab(string type)
         {
-            AudioSource[] audioSources = obj.GetComponentsInChildren<AudioSource>();
-            foreach (var source in audioSources)
-            {
-                SoundVolumeSetter.Attach(source, SoundVolumeSetter.SoundType.Game, source.volume);
-            }
-            WDebug.Log($"Spawned object: {obj}, audio sources set: {audioSources.Length}");
+            // These legacy server nests never had their own client asset. Use the same
+            // explicit compatibility body in live play and previews, not a second renderer.
+            string resource = type == "ElectricSummon" || type == "FireSummon" || type == "RockSummon" || type == "WindSummon" ? "SeedNest" : type;
+            return Resources.Load<GameObject>($"Prefabs/{resource}");
         }
 
-        private GameObject InstantiateGameObject(CreatedObjectDto createdObjectDto)
+        private static GameObject InstantiateGameObject(CreatedObjectDto createdObjectDto, PresentationWorld world)
         {
             GameObject spawnedObject;
-            GameObject prefab = Resources.Load<GameObject>($"Prefabs/{createdObjectDto.type}");
+            GameObject prefab = GetPrefab(createdObjectDto.type);
 
             WDebug.Log($"Spawning object: {createdObjectDto.type}, prefab found: {prefab != null}");
 
             if (!prefab)
             {
+                if (world != null) throw new System.InvalidOperationException($"Missing runtime prefab: {createdObjectDto.type}");
                 spawnedObject = new GameObject(createdObjectDto.type);
                 spawnedObject.transform.position = createdObjectDto.position;
             }
             else
             {
-                spawnedObject = Instantiate(prefab, createdObjectDto.position, prefab.transform.rotation);
+                spawnedObject = world != null
+                    ? world.InstantiateInactive(prefab, world.ToWorld(createdObjectDto.position), prefab.transform.rotation)
+                    : Instantiate(prefab, createdObjectDto.position, prefab.transform.rotation);
             }
 
             WDebug.Log($"Spawned object: {spawnedObject}, gameObject created at position {createdObjectDto.position}");

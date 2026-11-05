@@ -105,23 +105,17 @@ namespace TutorialScene
         }
 
         /// <summary>
-        /// 마법을 고르면 왼쪽 페이지가 목록 대신 그 마법의 그림을 보여준다. 안내는 짚는 것을
-        /// 마스크 위로 올리므로, 왼쪽 페이지도 함께 넘기지 않으면 그림이 마스크에 덮인다.
+        /// 고른 마법의 그림과 설명은 오른쪽 카드에 다 있으므로 카드만 마스크 위로 올린다.
+        /// 왼쪽 페이지는 이제 마법 칸 목록이라, 올리면 이 단계에서도 칸이 눌린다. 대화창은
+        /// 왼쪽 위에 떠서 다음 버튼이 목록 윗줄에 겹치고, 다른 마법을 더 눌러 보던 사용자가
+        /// 칸 대신 다음 버튼을 눌러 설명을 읽기 전에 속성표 단계로 넘어갔다.
         /// </summary>
         public void ShowMagicInfo(System.Action onNext)
         {
-            var targets = new List<Transform>();
-            if (magicPageArea != null)
-            {
-                targets.Add(magicPageArea.transform);
-            }
-
-            if (magicDescriptionScrollArea != null)
-            {
-                targets.Add(magicDescriptionScrollArea.transform);
-            }
-
-            Show("onboarding.magicBook.readMagicInfo", targets.ToArray(), onNext);
+            Show(
+                "onboarding.magicBook.readMagicInfo",
+                magicDescriptionScrollArea != null ? magicDescriptionScrollArea.transform : null,
+                onNext);
         }
 
         public void ShowElementChart(System.Action onNext)

@@ -3,6 +3,7 @@ using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using GameScene.Dto;
+using GameScene.Object;
 using UnityEngine;
 
 namespace GameScene.ServedObjectComponent
@@ -16,12 +17,14 @@ namespace GameScene.ServedObjectComponent
         private Vector3? nextPosition = null;
         private double lastX;
         private readonly Action onMoved;
+        private readonly Func<PresentationWorld> world;
         
-        public PositionUpdater(Transform transform, SpriteRenderer spriteRenderer, Action onMoved = null)
+        public PositionUpdater(Transform transform, SpriteRenderer spriteRenderer, Action onMoved = null, Func<PresentationWorld> world = null)
         {
             this.transform = transform;
             this.spriteRenderer = spriteRenderer;
             this.onMoved = onMoved;
+            this.world = world;
             lastX = this.transform.position.x;
         }
 
@@ -35,16 +38,27 @@ namespace GameScene.ServedObjectComponent
             {
                 transform.position = nextPosition.Value;
             }
-            nextPosition = updatedObjectDto.position;
+            PresentationWorld presentation = world?.Invoke();
+            nextPosition = presentation != null ? presentation.ToWorld(updatedObjectDto.position) : updatedObjectDto.position;
             if ((nextPosition.Value - transform.position).sqrMagnitude > 0.0001f)
             {
                 onMoved?.Invoke();
             }
-            moveTween = transform.DOMove(nextPosition.Value, GameConfig.FRAME_DURATION)
+            moveTween = transform.DOMove(nextPosition.Value, GameConfig.FrameDuration)
                 .SetEase(Ease.Linear)
                 .SetLink(transform.gameObject);
             
             UpdateFlip();
+        }
+
+        internal void FaceTowards(Vector3 targetPosition)
+        {
+            float deltaX = targetPosition.x - transform.position.x;
+            if (Mathf.Abs(deltaX) < 0.001f) return;
+
+            // 공격 대상은 확정된 방향이므로 이동 방향의 전환 지연을 적용하지 않는다.
+            spriteRenderer.flipX = deltaX < 0f;
+            flipCounter = 0;
         }
 
         private void UpdateFlip()
@@ -56,7 +70,9 @@ namespace GameScene.ServedObjectComponent
 
             double x = (double) nextPosition?.x;
 
-            if (Math.Abs(lastX - x) > 0.1 * GameConfig.FRAME_DURATION)
+            // 갱신 한 번당 x 이동량 기준이다. 0.1 * FrameDuration 은 초속 0.1 칸이라
+            // tick rate 가 20 이든 60 이든 같은 속도에서 방향이 바뀐다.
+            if (Math.Abs(lastX - x) > 0.1 * GameConfig.FrameDuration)
             {
                 if (lastX < x)
                 {
@@ -71,15 +87,17 @@ namespace GameScene.ServedObjectComponent
             lastX = x;
         }
         
-        private const int FLIP_THRESHOLD = 10;
+        // 반대 방향 갱신이 이 시간만큼 연속으로 와야 방향을 바꾼다. 횟수로 세되 기준을 tick rate 에 맞춰
+        // 20 FPS 에서는 예전과 같은 10번이 된다. 시각으로 재면 멈췄다가 한 번 튄 갱신에도 바로 뒤집힌다.
+        private const float FLIP_THRESHOLD_SECONDS = 0.5f;
         private int flipCounter = 0;
-        
+
         private void SetFlipX(bool flipX)
         {
             if (spriteRenderer.flipX != flipX)
             {
                 flipCounter++;
-                if (flipCounter >= FLIP_THRESHOLD)
+                if (flipCounter >= Mathf.CeilToInt(FLIP_THRESHOLD_SECONDS * GameConfig.TickRate))
                 {
                     spriteRenderer.flipX = flipX;
                     flipCounter = 0;

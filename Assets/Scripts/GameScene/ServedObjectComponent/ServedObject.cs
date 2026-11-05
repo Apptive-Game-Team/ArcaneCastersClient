@@ -12,11 +12,8 @@ namespace GameScene.ServedObjectComponent
 {
     public class ServedObject : MonoBehaviour
     {
-        private const string LeftPlayer = "LeftPlayer";
         private const string RightPlayer = "RightPlayer";
         private const string TeamIndicatorResourcePath = "UI/ObjectIndicator";
-        private static readonly Color LeftIndicatorColor = new Color(0.92f, 0.24f, 0.24f, 1f);
-        private static readonly Color RightIndicatorColor = new Color(0.25f, 0.55f, 0.98f, 1f);
         private static Sprite _teamIndicatorSprite;
 
         [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -49,6 +46,21 @@ namespace GameScene.ServedObjectComponent
         [SerializeField] private float _effectScaleMin = 0.8f;
         [SerializeField] private float _effectScaleMax = 1.8f;
         public int id;
+        private PresentationWorld _presentationWorld;
+        public PresentationWorld PresentationWorld
+        {
+            get => _presentationWorld;
+            set
+            {
+                _presentationWorld = value;
+                _cachedCamera = null;
+            }
+        }
+        private Camera _cachedCamera;
+        private SpriteRenderer damageRenderer;
+        private float lastDamageFlash = float.NegativeInfinity;
+        private float damageFlashUntil;
+        private bool damageFlashing;
         
         public List<Gauge> gauges = new List<Gauge>();
         private readonly HashSet<string> activeEffects = new HashSet<string>(StringComparer.Ordinal);
@@ -110,8 +122,9 @@ namespace GameScene.ServedObjectComponent
                 return;
             }
 
-            _positionUpdater = new PositionUpdater(transform, _spriteRenderer, () => OnMoved?.Invoke());
+            _positionUpdater = new PositionUpdater(transform, _spriteRenderer, () => OnMoved?.Invoke(), () => PresentationWorld);
             UpdateTeamIndicator();
+            UpdateTeamOutline();
 
             if (master.Equals(RightPlayer))
             {
@@ -157,6 +170,11 @@ namespace GameScene.ServedObjectComponent
         private void LateUpdate()
         {
             UpdateTeamIndicatorPosition();
+            if (damageFlashing && Time.time >= damageFlashUntil)
+            {
+                if (damageRenderer != null) damageRenderer.color = Color.white;
+                damageFlashing = false;
+            }
         }
         
         public string GetMaster()
@@ -169,10 +187,10 @@ namespace GameScene.ServedObjectComponent
             UpdateMasterIfNeeded(updatedObjectDto.master);
             _positionUpdater?.UpdatePosition(updatedObjectDto);
 
+            UpdateActiveEffects(updatedObjectDto.effects);
             HandleGaugeUpdate(updatedObjectDto.gauges);
 
             HandleStatus(updatedObjectDto.status);
-            UpdateActiveEffects(updatedObjectDto.effects);
             EnsureEffectRenderer();
             _effectRenderer.SetEffects(updatedObjectDto.effects);
         }
@@ -227,6 +245,8 @@ namespace GameScene.ServedObjectComponent
             }
 
 #if UNITY_EDITOR
+            // Keep DTO geometry for real visual listeners, without editor-only debug lines.
+            if (PresentationWorld != null) return;
             if (_gizmoRenderer == null)
             {
                 _gizmoRenderer = GetComponent<ServedObjectGizmoRenderer>();
@@ -276,7 +296,7 @@ namespace GameScene.ServedObjectComponent
             switch (status)
             {
                 case "Destroyed":
-                    DestroySelf(GameConfig.FRAME_DURATION);
+                    DestroySelf(GameConfig.FrameDuration);
                     break;
 
                 case "Attack":
@@ -285,12 +305,18 @@ namespace GameScene.ServedObjectComponent
 
                 case "Damaged":
                     OnDamaged?.Invoke();
+                    FlashDamage();
                     break;
 
                 default:
                     OnOtherStatus?.Invoke(status);
                     break;
             }
+        }
+
+        public void FaceTowards(Vector3 targetPosition)
+        {
+            _positionUpdater?.FaceTowards(targetPosition);
         }
 
         public void PlayAttackPresentation()
@@ -395,9 +421,19 @@ namespace GameScene.ServedObjectComponent
             return centerWorldPosition + _spriteRenderer.transform.TransformVector(localOffset);
         }
 
-        private static Vector2 GetScreenDirection(Vector3 fromWorldPosition, Vector3 toWorldPosition)
+        private Camera GetCamera()
         {
-            Camera camera = Camera.main;
+            if (_cachedCamera == null)
+            {
+                _cachedCamera = GameScene.Object.PresentationWorld.CameraFor(this);
+            }
+
+            return _cachedCamera;
+        }
+
+        private Vector2 GetScreenDirection(Vector3 fromWorldPosition, Vector3 toWorldPosition)
+        {
+            Camera camera = GetCamera();
             Vector3 delta = camera != null
                 ? camera.WorldToScreenPoint(toWorldPosition) - camera.WorldToScreenPoint(fromWorldPosition)
                 : toWorldPosition - fromWorldPosition;
@@ -426,9 +462,9 @@ namespace GameScene.ServedObjectComponent
         }
 
         /// <summary>Screen-up in world space, so anchors sit above the sprite from the player's view.</summary>
-        private static Vector3 GetAnchorUpDirection()
+        private Vector3 GetAnchorUpDirection()
         {
-            Camera camera = Camera.main;
+            Camera camera = GetCamera();
             return camera != null ? camera.transform.up : Vector3.up;
         }
 
@@ -450,6 +486,7 @@ namespace GameScene.ServedObjectComponent
 
         private void HandleGaugeUpdate(List<Gauge> gauges)
         {
+            if (gauges == null) return;
             foreach (Gauge gauge in gauges)
             {
                 Gauge temp = this.gauges.Find(existedGauge => existedGauge.category.Equals(gauge.category));
@@ -480,6 +517,7 @@ namespace GameScene.ServedObjectComponent
             if (gauge.value < lastHp)
             {
                 OnHpDecreased?.Invoke();
+                FlashDamage();
             }
             if (gauge.value > lastHp && !Mathf.Approximately(gauge.value, gauge.maxValue))
             {
@@ -503,7 +541,7 @@ namespace GameScene.ServedObjectComponent
         {
             if (_spriteRenderer == null)
             {
-                _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+                _spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
             }
         }
 
@@ -542,6 +580,21 @@ namespace GameScene.ServedObjectComponent
             _teamIndicatorRenderer.color = indicatorColor;
             UpdateTeamIndicatorSorting();
             UpdateTeamIndicatorPosition();
+        }
+
+        /// <summary>
+        /// Outlines only objects with an HP bar — units, buildings and players. Projectiles and
+        /// effects carry a master too, but outlining them would put team colour on every bolt.
+        /// Runs after <see cref="UpdateTeamIndicator"/>, which is what finds the HP bar.
+        /// </summary>
+        private void UpdateTeamOutline()
+        {
+            if (_teamColorGaugeBar == null || !TeamColors.TryGet(master, out Color outlineColor))
+            {
+                return;
+            }
+
+            TeamSpriteOutline.Apply(_spriteRenderer, outlineColor);
         }
 
         private bool TryUpdateGaugeBarTeamIndicator()
@@ -631,18 +684,7 @@ namespace GameScene.ServedObjectComponent
 
         private static bool TryGetIndicatorColor(string targetMaster, out Color indicatorColor)
         {
-            switch (targetMaster)
-            {
-                case LeftPlayer:
-                    indicatorColor = LeftIndicatorColor;
-                    return true;
-                case RightPlayer:
-                    indicatorColor = RightIndicatorColor;
-                    return true;
-                default:
-                    indicatorColor = Color.clear;
-                    return false;
-            }
+            return TeamColors.TryGet(targetMaster, out indicatorColor);
         }
 
         private static Sprite GetTeamIndicatorSprite()
@@ -664,7 +706,22 @@ namespace GameScene.ServedObjectComponent
         private void DestroySelf()
         {
             OnDestroyed?.Invoke();
-            ObjectContainer.Instance.UnregisterObject(id);
+            if (PresentationWorld != null) PresentationWorld.Unregister(id);
+            else ObjectContainer.Instance?.UnregisterObject(id);
+        }
+
+        private void FlashDamage()
+        {
+            float interval = HasEffect("Burn") || HasEffect("SandStorm") ? 1f : 0.05f;
+            if (PresentationWorld != null) interval = Mathf.Max(interval, PresentationWorld.DamageFlashInterval);
+            if (Time.time - lastDamageFlash < interval) return;
+            EnsureSpriteRenderer();
+            damageRenderer = _spriteRenderer;
+            if (damageRenderer == null) return;
+            lastDamageFlash = Time.time;
+            damageFlashUntil = Time.time + 0.12f;
+            damageRenderer.color = new Color(1f, 0.35f, 0.2f);
+            damageFlashing = true;
         }
         
         private void DestroySelf(float delay)

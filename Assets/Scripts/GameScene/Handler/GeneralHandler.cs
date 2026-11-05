@@ -10,8 +10,16 @@ namespace GameScene.Handler
         private readonly SyncFrameHandler syncFrameHandler = new SyncFrameHandler();
         private readonly MagicValidHandler magicValidHandler = new MagicValidHandler();
         private readonly BotThoughtHandler botThoughtHandler = new BotThoughtHandler();
-        private readonly PveScriptEventHandler pveScriptEventHandler = new PveScriptEventHandler();
+        private readonly PveScriptEventHandler pveScriptEventHandler;
+        private readonly PveStateHandler pveStateHandler;
+        private readonly PveObjectiveHandler pveObjectiveHandler = new PveObjectiveHandler();
         private readonly EmoteHandler emoteHandler = new EmoteHandler();
+
+        public GeneralHandler(PveSyncState pveSyncState)
+        {
+            pveScriptEventHandler = new PveScriptEventHandler(pveSyncState);
+            pveStateHandler = new PveStateHandler(pveSyncState);
+        }
 
         public void Handler(string json)
         {
@@ -40,6 +48,12 @@ namespace GameScene.Handler
                     break;
                 case PveScriptEventInfo pveScriptEvent:
                     pveScriptEventHandler.Handler(pveScriptEvent);
+                    break;
+                case PveStateInfo pveState:
+                    pveStateHandler.Handler(pveState);
+                    break;
+                case PveObjectiveInfo pveObjective:
+                    pveObjectiveHandler.Handler(pveObjective);
                     break;
                 case EmoteInfo emote:
                     emoteHandler.Handler(emote);

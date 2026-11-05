@@ -70,6 +70,7 @@ namespace GameScene.Card
 
         private void Update()
         {
+            if (GameMenu.BlocksGameplayInput) return;
             if (Input.GetMouseButtonDown(1) || GamepadInput.CancelDown)
             {
                 Cancel();
@@ -77,10 +78,9 @@ namespace GameScene.Card
 
             if (Input.GetKeyDown(KeyCode.Space) || GamepadInput.NorthDown)
             {
-                // 마나 바가 내려가 있으면 손패가 보이지 않는다. 스페이스는 마나 바를 올리는
-                // 입력으로만 쓴다. 카드 한 장을 고르는 순간 이미 필드 선택 모드로 들어가므로
-                // 스페이스가 따로 확정할 것은 없다.
-                TryOpenManaBar();
+                // 스페이스는 사용자가 정한 마나 바 열림 상태를 올림과 내림 사이에서 바꾼다.
+                // 조준 중에 잠시 내려가는 것은 BarController 가 따로 계산한다.
+                ToggleManaBar();
             }
 
             if (CardHotkey.TryGetPressedSlotIndex(out int slotIndex))
@@ -129,17 +129,17 @@ namespace GameScene.Card
             ToggleCardBySlot(target);
         }
 
-        /// <summary>
-        /// 내려가 있는 마나 바를 올린다. 올릴 것이 없으면 false를 돌려 호출자가 확정으로 넘어가게 한다.
-        /// </summary>
-        private bool TryOpenManaBar()
+        private void ToggleManaBar()
         {
             if (barController == null)
             {
                 barController = FindObjectOfType<BarController>();
             }
 
-            return barController != null && barController.TryOpenBar();
+            if (barController != null)
+            {
+                barController.ToggleBar();
+            }
         }
 
         private void ToggleCardBySlot(int slotIndex)
@@ -250,6 +250,7 @@ namespace GameScene.Card
 
         public void SendInput(Vector3 pos) //whenFieldSelect
         {
+            if (GameMenu.BlocksGameplayInput) return;
             if (isWaitingInputResponse)
             {
                 return;
@@ -285,6 +286,7 @@ namespace GameScene.Card
 
         public bool TrySendInput(Vector3 pos)
         {
+            if (GameMenu.BlocksGameplayInput) return false;
             if (!isFieldSelectMode || isWaitingInputResponse)
             {
                 return false;

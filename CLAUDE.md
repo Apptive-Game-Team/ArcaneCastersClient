@@ -43,7 +43,7 @@ Two base classes in `Assets/Scripts/Global/`:
 - `ServerList.MatchingServer` — lobby/matchmaking; resolves to `MatchingServerCatalog.Current`, which defaults to `dev.lobby.ac.yunseong.dev:443` and can be switched by admins
 - `ServerList.AccountServer` — auth/account (`account.ac.yunseong.dev:443`, HTTPS/WSS)
 
-`MatchingServerCatalog` holds the switchable candidates (`localhost:6209`, dev, deploy — in auto-select priority order). `LobbyScene.MatchingServerDropdown` (an `AdminOnly` GameObject in `LobbyScene`) health-checks each candidate via `/api/deploy/status`, lists only the healthy ones, and `LobbyScene.MatchingServerSwitcher` clears server-scoped state and reloads the lobby on a change.
+`MatchingServerCatalog` holds the switchable candidates (`127.0.0.1:6209`, dev, deploy — in auto-select priority order). `LobbyScene.MatchingServerDropdown` (an `AdminOnly` GameObject in `LobbyScene`) health-checks each candidate via `/api/deploy/status`, lists only the healthy ones, and `LobbyScene.MatchingServerSwitcher` clears server-scoped state and reloads the lobby on a change.
 
 HTTP helpers are on `Server`: `SetAuthorization(req)` adds Bearer token; `SetAcceptLanguage(req)` adds locale header.
 

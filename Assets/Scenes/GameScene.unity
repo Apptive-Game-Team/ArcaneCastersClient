@@ -5853,6 +5853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoomedCardUI: {fileID: 555827903}
+  detailPrefab: {fileID: 9001, guid: f8b8cb18db054ed59e4f0f54cc442d5e, type: 3}
   audioSource: {fileID: 2065755163}
 --- !u!82 &2065755163
 AudioSource:
@@ -6776,6 +6777,7 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 8001000000000000002}
   - {fileID: 700072847}
   - {fileID: 2065755161}
   - {fileID: 1777325166}
@@ -29663,3 +29665,38 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &908365001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f19b4c96c2e3f2d42b40d9ac95379eff, type: 3}
+--- !u!1001 &8001000000000000001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2065755157, guid: b40e6537c2684ad69267af2534438a00, type: 3}
+      propertyPath: m_Name
+      value: GameMenu
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b40e6537c2684ad69267af2534438a00, type: 3}
+--- !u!224 &8001000000000000002 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8003000000000000002, guid: b40e6537c2684ad69267af2534438a00, type: 3}
+  m_PrefabInstance: {fileID: 8001000000000000001}
+  m_PrefabAsset: {fileID: 0}

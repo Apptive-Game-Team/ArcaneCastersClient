@@ -1,0 +1,46 @@
+[
+  {
+    "name": "ArcaneInfantryWalkLeft",
+    "sourceBox": [
+      93,
+      11,
+      838,
+      858
+    ],
+    "footAnchor": 323.5,
+    "factor": 0.09529411764705882,
+    "canvas": [
+      128,
+      81
+    ],
+    "box": [
+      32,
+      0,
+      103,
+      81
+    ],
+    "transparent": 0.6708140432098766
+  },
+  {
+    "name": "ArcaneInfantryWalkRight",
+    "sourceBox": [
+      92,
+      9,
+      839,
+      859
+    ],
+    "footAnchor": 565.5,
+    "factor": 0.09529411764705882,
+    "canvas": [
+      128,
+      81
+    ],
+    "box": [
+      31,
+      0,
+      102,
+      81
+    ],
+    "transparent": 0.6916473765432098
+  }
+]

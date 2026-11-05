@@ -6,6 +6,7 @@ using GameScene;
 using GameScene.Card;
 using GameScene.PopupBook;
 using GameScene.ServedObjectComponent;
+using GameScene.ServedObjectComponent.Sound;
 using Global;
 using Unity.Mathematics;
 using UnityEngine;
@@ -175,10 +176,11 @@ namespace TutorialScene
             if (magic != null && GameScene.MagicIndicatorResolver.IsLaneAim(magic))
             {
                 AttachPopupBookPresenter(Instantiate(shotPrefab, CasterPosition, quaternion.identity));
+                ServedObjectSfxController.PlayAttackForType("FireChildSpirit");
             }
             else if (magic != null)
             {
-                AttachPopupBookPresenter(Instantiate(mobPrefab, pos, quaternion.identity));
+                AttachPopupBookPresenter(Instantiate(mobPrefab, pos, quaternion.identity), "AquaArcher");
             }
 
             _currentCard = null;
@@ -188,7 +190,7 @@ namespace TutorialScene
             TutorialSceneUIController.Instance.SetExpectedManaCost(0);
         }
 
-        private static void AttachPopupBookPresenter(GameObject target)
+        private static void AttachPopupBookPresenter(GameObject target, string runtimeType = null)
         {
             ServedObject servedObject = target.GetComponent<ServedObject>();
             if (servedObject == null)
@@ -198,6 +200,7 @@ namespace TutorialScene
 
             PopupBookVisualPresenter.Attach(servedObject);
             servedObject.BindListeners();
+            if (runtimeType != null) ServedObjectSfxController.Attach(servedObject, runtimeType, false);
         }
 
         public void TryUseCard(CardUI cardObj)
@@ -207,9 +210,7 @@ namespace TutorialScene
 
         public void SetExpectedMagicUI()
         {
-            CombinedMagicData magic = GetCurrentMagic();
-            TutorialSceneUIController.Instance.TrySetExpectedMagicUI(magic);
-            TutorialSceneUIController.Instance.SetExpectedManaCost(CardManaCost.Of(magic));
+            TutorialSceneUIController.Instance.SetExpectedManaCost(CardManaCost.Of(GetCurrentMagic()));
         }
     }
 }

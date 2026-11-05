@@ -34,6 +34,13 @@ work down this table:
 | **macOS** | `which unity` first. Unity Hub bundles a CLI inside its app bundle, but do not hardcode that path — locate it with `find "/Applications/Unity Hub.app" -name unity -type f 2>/dev/null` and use what you find. |
 | **Linux (native)** | `which unity`. If absent, install: `curl -fsSL https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.sh \| UNITY_CLI_CHANNEL=beta bash` — it lands in `~/.local/bin/unity`. |
 
+If `unity editors` returns an empty list, do not conclude no Editor is installed.
+Inspect an existing project's `Library/Bee/*.dag.json` or compiler response files
+for `Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll`, then verify the
+corresponding `Editor/Unity.exe` and project version before using it. On the
+material-hit work the registry was empty while the project's 2022.3.34f1 Editor
+was installed at `C:/Tools/2022.3.34f1/Editor/Unity.exe`.
+
 Verify before relying on it:
 
 ```bash

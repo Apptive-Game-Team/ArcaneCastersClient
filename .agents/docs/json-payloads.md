@@ -1,5 +1,12 @@
 # Server JSON Payloads
 
+## Do not use JsonUtility for optional reference-valued frame fields
+
+`JsonUtility.FromJson` populated an absent `impact` object in every frame of the
+FireShot preview with an all-zero instance (60 impacts instead of one). Use
+`JsonCodec` for recorded server frames too, and verify missing impact remains
+null in the actual Unity runtime. A C# compile check cannot catch this.
+
 `Assets/Scripts/Global/Serialization/JsonCodec.cs` is the only place the client
 configures Json.NET, and every payload and every `PlayerPrefs` cache goes through
 it. Read this before adding a field to a server DTO, writing a `JsonConverter`,
@@ -94,3 +101,19 @@ goes through `WriteJson` at all. The value only breaks after
 next launch — the field silently disappears then. Add the `RoundTrip` test for
 every new field on a hand-written converter, not just a read test, and check
 that the change touches `WriteJson` too.
+
+## `mapType` is a string, and a test can only reach it from `Assets/Scripts/Contracts/`
+
+The server's `mapType` (`GRASSLAND`, `RIVER`, `FORTRESS`, `GATE`, `FOREST`) rides on
+`MatchedInfoDto`, `DebugGameResponse` and `RoomInfo` as a plain `string`.
+`Data.MapKinds.Parse` turns it into `MapKind` and never throws, so an older server
+(no field) and a newer one (a name this client lacks) both fall back to the old
+battle theme through `SceneContext.PrepareMap`. A `MapKind` field on a DTO would
+make `StringEnumConverter` drop the whole match response on the first new name.
+
+`DebugGameResponse` used to sit in `Assets/Scripts/LobbyScene/Debugger/`, outside
+the test assembly's reach, so it moved to `Assets/Scripts/Contracts/LobbyScene/`
+(same namespace, same `.meta` guid). Any new field on a response type that a test
+should read goes there too. `GameScene.unity` and `SpectatingScene.unity` each
+carry their own copy of the `Map` object, so a component that has to run in both
+(`BattleThemeApplier`) is added to both scenes.

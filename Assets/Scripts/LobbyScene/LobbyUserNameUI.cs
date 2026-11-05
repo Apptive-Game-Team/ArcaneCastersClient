@@ -12,6 +12,7 @@ namespace LobbyScene
         {
             // This component sits on the name text, whose parent is the UserNamePill.
             ProfileEntryButton.Attach(transform.parent);
+            FriendBootstrap.Attach(transform.parent);
         }
 
         public void SetUserName(string userName)

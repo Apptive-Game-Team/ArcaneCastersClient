@@ -23,104 +23,87 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 63110635520
-    m_Localized: 'Click the Mana Bar
-
-      to open the card window'
+    m_Localized: Tap the mana bar to open your cards
     m_Metadata:
       m_Items: []
   - m_Id: 190177075200
-    m_Localized: 'You can check the
-
-      mana cost for each card'
+    m_Localized: Each card shows the mana it costs
     m_Metadata:
       m_Items: []
   - m_Id: 391205871616
-    m_Localized: 'Click an activated location
-
-      to cast the spell'
+    m_Localized: Tap a marked spot to cast the spell
     m_Metadata:
       m_Items: []
   - m_Id: 440845459456
-    m_Localized: 'Reduce the opponent''s health
-
-      to achieve victory'
+    m_Localized: Bring your opponent down to zero to win
     m_Metadata:
       m_Items: []
   - m_Id: 486739533824
-    m_Localized: 'You can view the Magic Book
-
-      on the main screen'
+    m_Localized: Open the Magic Book from the lobby
     m_Metadata:
       m_Items: []
   - m_Id: 17619801198428160
-    m_Localized: Yay
+    m_Localized: Yes
     m_Metadata:
       m_Items: []
   - m_Id: 17619899324170240
-    m_Localized: Nay
+    m_Localized: No
     m_Metadata:
       m_Items: []
   - m_Id: 17634470650839040
-    m_Localized: 'Is this your first time playing?
-
-      If so, want me to show
-      you how it works?'
+    m_Localized: First time here? Want a quick guide?
     m_Metadata:
       m_Items: []
   - m_Id: 22655127950561280
-    m_Localized: Pick a card and you go straight to aiming. Click the spot you want and the spell flies!
+    m_Localized: Pick a card, then tap a spot to cast it
     m_Metadata:
       m_Items: []
   - m_Id: 22655217972908032
-    m_Localized: "You\u2019ve got Fire Shot right now, so why don\u2019t you try casting it?"
+    m_Localized: Pick Fire Shot and place it on the field
     m_Metadata:
       m_Items: []
   - m_Id: 22655475352178688
-    m_Localized: "Nice work! You\u2019ve really got a knack for this!"
+    m_Localized: Nice work! You have a knack for this
     m_Metadata:
       m_Items: []
   - m_Id: 22655588501917696
-    m_Localized: Every spell has its own range and area. Some of them summon minions for you!
+    m_Localized: Every spell has its own range and area
     m_Metadata:
       m_Items: []
   - m_Id: 22655689043578880
-    m_Localized: This time, summon an Aqua Archer and put it on the field.
+    m_Localized: Pick Aqua Archer and place it on the field
     m_Metadata:
       m_Items: []
   - m_Id: 22655833889673216
-    m_Localized: Whoa, nice! Summoning minions like that is key to taking control
-      of the battlefield!
+    m_Localized: Great! Minions help you hold the field
     m_Metadata:
       m_Items: []
   - m_Id: 22655909726883840
-    m_Localized: Every card carries an element, and elements counter each other. Check the chart in the magic book!
+    m_Localized: Elements counter each other. Check the Magic Book
     m_Metadata:
       m_Items: []
   - m_Id: 22656315026673664
-    m_Localized: Now, use your spells to finish off your opponent!
+    m_Localized: Finish off your opponent with spells
     m_Metadata:
       m_Items: []
   - m_Id: 22656432915976192
-    m_Localized: "Whoa\u2026 you\u2019ve definitely got what it takes to become a
-      top-class mage. Excellent!"
+    m_Localized: Excellent! You will make a fine mage
     m_Metadata:
       m_Items: []
   - m_Id: 27802988117622784
-    m_Localized: Now go fight against lots of different people and sharpen your skills.
-      Good Luck!
+    m_Localized: Now test your skills against others. Good luck!
     m_Metadata:
       m_Items: []
   - m_Id: 27811470703198208
-    m_Localized: 'Just FYI: the bottom bar slides up when you tap the mana bar, and
-      slides down when you tap the field.'
+    m_Localized: Tap the mana bar to raise your cards, tap the field to lower them
     m_Metadata:
       m_Items: []
   - m_Id: 27897468149555200
-    m_Localized: Alright, follow me!
+    m_Localized: Great, follow me!
     m_Metadata:
       m_Items: []
   - m_Id: 27897500370198528
-    m_Localized: Great, give it your best shot!
+    m_Localized: Okay, good luck!
     m_Metadata:
       m_Items: []
   references:

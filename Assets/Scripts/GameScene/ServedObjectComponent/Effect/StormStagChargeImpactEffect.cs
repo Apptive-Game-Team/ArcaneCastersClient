@@ -60,7 +60,6 @@ namespace GameScene.ServedObjectComponent.Effect
             afterimageRenderer.transform.localScale = Vector3.one * 0.58f;
 
             sequence = DOTween.Sequence();
-            sequence.SetUpdate(true);
             sequence.SetLink(gameObject);
             sequence.Insert(0f, impactRenderer.DOFade(1f, duration * 0.16f).SetEase(Ease.OutQuad));
             sequence.Insert(0f, transform.DOScale(Vector3.Scale(baseScale, new Vector3(0.76f, 0.86f, 1f)), duration * 0.16f)

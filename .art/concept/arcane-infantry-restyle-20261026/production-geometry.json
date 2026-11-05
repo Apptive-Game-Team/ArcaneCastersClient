@@ -1,0 +1,46 @@
+[
+  {
+    "name": "ArcaneInfantry",
+    "sourceBox": [
+      111,
+      76,
+      810,
+      859
+    ],
+    "footAnchor": 439.5,
+    "factor": 0.10331632653061225,
+    "canvas": [
+      128,
+      81
+    ],
+    "box": [
+      30,
+      0,
+      102,
+      81
+    ],
+    "transparent": 0.6372492283950617
+  },
+  {
+    "name": "ArcaneInfantryAttacking",
+    "sourceBox": [
+      2,
+      75,
+      847,
+      859
+    ],
+    "footAnchor": 331.5,
+    "factor": 0.10331632653061225,
+    "canvas": [
+      128,
+      81
+    ],
+    "box": [
+      30,
+      0,
+      117,
+      81
+    ],
+    "transparent": 0.6190200617283951
+  }
+]

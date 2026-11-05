@@ -7,8 +7,9 @@ namespace GameScene.Object.Projectile
     {
         public void Init(ProjectileDto projectileDto)
         {
-            transform.position = ProjectileUtil.GetPosition(projectileDto.start);
-            transform.rotation = ProjectileUtil.GetRotation(projectileDto);
+            var world = PresentationWorld.For(this);
+            transform.position = ProjectileUtil.GetPosition(projectileDto.start, world);
+            transform.rotation = ProjectileUtil.GetRotation(projectileDto, world);
             
             Destroy(gameObject, projectileDto.duration);
         }

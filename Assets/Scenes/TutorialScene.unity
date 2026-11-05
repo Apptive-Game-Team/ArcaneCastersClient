@@ -449,6 +449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1516417534}
   - component: {fileID: 1516417533}
+  - component: {fileID: 1516417535}
   m_Layer: 0
   m_Name: bg
   m_TagString: Untagged
@@ -508,6 +509,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1516417535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1516417532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b079f5bfda0b47a6ae862fca5e257b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCamera: {fileID: 0}
 --- !u!4 &1516417534
 Transform:
   m_ObjectHideFlags: 0
@@ -738,10 +752,6 @@ PrefabInstance:
     - target: {fileID: 4981589074843286038, guid: d0840718a7aae4552af6aeb3b83d5dbe, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: TutorialScene.GlobalTutorialManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 7974076722091544636, guid: d0840718a7aae4552af6aeb3b83d5dbe, type: 3}
-      propertyPath: sceneName
-      value: InteractiveTutorialScene
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7974076722091544636, guid: d0840718a7aae4552af6aeb3b83d5dbe, type: 3}

@@ -238,6 +238,10 @@ namespace DeckScene
                 button.onClick.AddListener(() => onCardInDeckSelected?.Invoke(refCard));
 
                 ui.Init(card.name, 1);
+                ui.BindHover(
+                    hovered => ownedCardMagicPopup?.Show(
+                        getOwnedCardMagicSuggestions?.Invoke(refCard), hovered.transform as RectTransform),
+                    () => ownedCardMagicPopup?.Hide());
             }
         }
 

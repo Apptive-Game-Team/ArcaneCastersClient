@@ -11,7 +11,7 @@ namespace Admin.Client
 {
     public class RoomApiClient
     {
-        private const string LocalGameServerUrl = "http://localhost:7777";
+        private const string LocalGameServerUrl = "http://127.0.0.1:7777";
         private const string LobbyGameSessionsPath = "/api/game-sessions";
         private const string LocalGameSessionsPath = "/api/debug/game-sessions";
         private const int OptionalSourceTimeoutSeconds = 2;

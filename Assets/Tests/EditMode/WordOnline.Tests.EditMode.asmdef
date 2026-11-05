@@ -7,7 +7,9 @@
         "WordOnline.Serialization",
         "WordOnline.GameContracts",
         "WordOnline.Net",
-        "WordOnline.Contracts"
+        "WordOnline.Contracts",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [
         "Editor"

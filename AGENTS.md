@@ -49,7 +49,17 @@ Follow [hand-edited-assets.md](.agents/docs/hand-edited-assets.md) before changi
 Follow this before touching gamepad input. `Active Input Handling` is Both: mouse and keyboard stay on `UnityEngine.Input`, and only gamepads are read through the Input System package, always via `Global.GamepadInput`. Legacy joystick axes do not work in WebGL, so `StandaloneInputModule` cannot carry menu navigation; `Global.GamepadUINavigator` polls the pad and sends move, submit and cancel events to the selected object, and it stays off in `GameScene`, where `AimPointerSource` and `GamepadHandNavigation` handle the match. A `Selectable` with `Navigation.Mode.None` (`CardImage.prefab` and `TutorialCardImage.prefab`, which are the in-match hand cards, and three objects in `InteractiveTutorialScene`) cannot be reached by the pad. The deck and magic book cards (`HaveCard`, `CardInDeck`, `MagicButton`) use Automatic navigation, so the pad reaches them; `GamepadUINavigator` scrolls the enclosing `ScrollRect` to the selection, and `CardItemUI` shows its hover popup on select. A new script also needs a `.cs.meta` and an `Assembly-CSharp.csproj` entry before the dotnet build check.
 
 ## Testing Guidelines
+
+Before changing in-game card hover, gameplay pause, or ping timing, read
+[card-hover-pause.md](.agents/docs/card-hover-pause.md). Freezing scaled time
+also freezes a scaled ping timer, while the authoritative server keeps running.
 `com.unity.test-framework` is installed, but there are no dedicated `Tests` assemblies in the current tree. For new automated tests, create Edit Mode or Play Mode test assemblies under `Assets/Tests` and name files `*Tests.cs`. At minimum, validate scene flow and WebGL-specific behavior manually in the Editor before opening a PR.
+
+`WordOnline.Tests.EditMode` cannot reference `Assembly-CSharp` (no asmdef can), so a test there
+cannot name a game type such as `IProjectile` or `ServedObject`. `prefab.GetComponent<IProjectile>()`
+in a test fails to compile in the Editor, and the Roslyn check in `hand-edited-assets.md` does not
+build `Assets/Tests`, so it does not catch it. Match by type name instead, as
+`PveCardUnitPrefabTests.HasComponentNamed` does, or with `GetType().GetInterface("IProjectile")`.
 
 Before using `dotnet build Assembly-CSharp.csproj` to validate a newly added script, confirm the generated project file contains that script. Unity does not always regenerate the project file while another Editor instance has the project open, and the build then reports misleading missing-type errors only at existing call sites. Refresh/regenerate from Unity, or temporarily add the missing `Compile` entries for the check and remove them before committing.
 
@@ -73,6 +83,8 @@ This repository keeps its own skills under `.agents/skills/`. Read the one that 
 - `.agents/skills/pr-media/SKILL.md` — puts screenshots, renders, or diagrams into a pull request by committing them under `docs/pr-media/<issue-num>/` and linking them by commit SHA; use for any PR that a picture would make easier to review.
 - `.agents/skills/magick/SKILL.md` — ImageMagick CLI reference for inspecting, converting, resizing, cropping, compositing, and batch-processing images with the `magick` command.
 - `.agents/skills/make-game-art/SKILL.md` — creates, edits, reviews, or standardizes WordOnline visual assets under one project-wide art style; use for character, creature, faction, building, environment, VFX, icon, sprite, or art-direction work.
+- `.agents/skills/make-motion-comic/SKILL.md` — turns one comic-page image into a playable single-board Unity motion-comic scene, with separate panel artwork, editable dialogue, comic framing and verified scene handoff.
+- `.agents/skills/record-gif/SKILL.md` — records actual app or Unity playback and converts local video/frame recordings into an animated GIF under a measured size limit.
 - `.agents/skills/make-magic/SKILL.md` — adds or scaffolds a new magic's client-side localization text and generated icon/sprite art for server-derived magic data; use `make-prefab` separately for prefab wiring.
 - `.agents/skills/make-prefab/SKILL.md` — adds or validates a runtime magic prefab and icon sprite under `Assets/Resources/Prefabs` and `Assets/Resources/Game`.
 - `.agents/skills/plan-review/SKILL.md` — plan review protocol that runs fast and medium first-pass reviews then a heavy verification pass before folding findings back into the plan; use before non-trivial implementation.
@@ -130,6 +142,19 @@ For Unity Editor automation through MCP, use the project skill at
 `.agents/skills/unity-mcp-orchestrator/SKILL.md`.
 
 ## Configuration Notes
+
+Read [developer-playground.md](.agents/docs/developer-playground.md) before changing
+the editor playground or build scene/asset selection. UNITY_EDITOR only removes
+code; even its MonoScript asset entered a real player build. Use the constrained
+host assembly plus Editor bridge described there, and verify packed assets as
+well as scene/Resources/Addressables dependencies.
+
+Before adding, assigning or removing gameplay sounds, read
+`.agents/docs/game-audio.md` and use the central catalog/player ownership path.
+
+Before changing magic preview playback or registrations, read
+`.agents/docs/magic-preview.md` for damage-status and recording validation traps.
+Before changing preview loading or caches, read `.agents/docs/server-magic-previews.md`.
 `DEV_BUILD` controls development server routing for WebGL builds. Avoid editing generated Unity metadata by hand unless the change is intentional, and keep `ProjectSettings/ProjectVersion.txt` in sync with the Unity version used for the change.
 
 ## Versioning
@@ -144,3 +169,18 @@ MAJOR for a `!` marker or a `BREAKING CHANGE` trailer, MINOR for `feat:`, PATCH
 otherwise, so write accurate commit types.
 
 Do not maintain a second client version value.
+
+## Code Review Rules
+
+- Write all code review titles, descriptions, comments, and summaries in Korean.
+- Preserve code identifiers, file paths, commands, error messages, and technical terms in their original form.
+- For each finding, concisely explain the cause, impact, and suggested fix.
+
+## Writing Style
+
+Follow [`.agents/docs/writing-style.md`](.agents/docs/writing-style.md) for chat
+replies, reviews, plans, handoffs, issues, commit titles and bodies, pull
+requests, release notes, source comments, and all frontend copy (including
+localization, errors, labels, and accessibility text).
+Its wording and title rules take precedence over older style examples;
+preserve project-specific technical constraints and workflows.

@@ -3,6 +3,18 @@
 Prompts and generated outcomes for the project's image-generation workflow.
 Current comparison boards are published through the project art-direction Site.
 
+## 비전 보병 C안 선택 — 2026-10-26
+
+사용자는 `.art/concept/arcane-infantry-restyle-20261026/C-arcane-blades.png`를
+선택했다. 넓은 어깨와 전완 장갑, 양손의 짧은 푸른 마력 칼날을 적용한다.
+이후 걷기 두 프레임도 요청했다. 기본·공격과 걷기 두 장을 함께 적용하며,
+master-v2 스타일 자체는 바꾸지 않는다. A 헬멧·B 후드 안은 비교용으로 남긴다.
+
+두 장을 함께 요청해도 생성기가 같은 발 자세를 반복할 수 있다. 이번 걷기는
+한 발을 든 프레임에서 반대 발을 드는 단일 프레임을 별도로 생성했다.
+걷는 발의 위치로 정렬하면 몸통도 좌우로 흔들리므로 머리 중심과 지지하는 발의
+바닥을 기준으로 정규화했다. 출력과 측정값은 같은 concept 폴더에 둔다.
+
 ## How concept art is used
 
 | Artifact | Role | Fed to the generator as an image reference? |

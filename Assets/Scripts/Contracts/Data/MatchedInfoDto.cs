@@ -1,5 +1,6 @@
 using Admin.Dto;
 using Data.Net;
+using Newtonsoft.Json;
 
 namespace Data
 {
@@ -12,6 +13,31 @@ namespace Data
         public User leftUser;
         public User rightUser;
         public string sessionId;
+
+        /// <summary>
+        /// Map kind the game server picked, as the server spells it (<c>GRASSLAND</c>, <c>RIVER</c>,
+        /// <c>FORTRESS</c>, <c>GATE</c>, <c>FOREST</c>). Absent or null from an older server. Kept a
+        /// string so an unknown name cannot throw out of the whole response; read it through
+        /// <see cref="MapKind"/>.
+        /// </summary>
+        public string mapType;
+
+        [JsonIgnore]
+        public MapKind MapKind => MapKinds.Parse(mapType);
+
+        /// <summary>
+        /// 자기 PC 의 로컬 서버에서 하는 경기일 때 로컬 서버를 띄우며 만든 init token. 공유 서버 경기는 null 이다.
+        /// 로컬 서버는 사용자 JWT 를 검증할 수 없으므로 경기 WebSocket 의 <c>?token=</c> 과 STOMP
+        /// <c>Authorization</c> 에 JWT 대신 이 값을 넣는다. 서버가 보내는 값이 아니므로 직렬화하지 않는다.
+        /// </summary>
+        [JsonIgnore]
+        public string localToken;
+
+        [JsonIgnore]
+        public bool IsLocal => !string.IsNullOrEmpty(localToken);
+
+        /// <summary>경기 WebSocket 인증에 쓸 값. 로컬 경기면 init token, 아니면 넘겨받은 사용자 JWT.</summary>
+        public string GameServerToken(string userJwt) => IsLocal ? localToken : userJwt;
 
         /// <summary>접속 주소를 어느 필드에서 가져왔는지. 진단 로그용이다.</summary>
         public string ConnectionSource => string.IsNullOrEmpty(webSocketUrl) ? server : webSocketUrl;
@@ -55,7 +81,7 @@ namespace Data
             }
         }
 
-        public static MatchedInfoDto CreateDebugSession(string sessionId, string userSide, long userId)
+        public static MatchedInfoDto CreateDebugSession(string sessionId, string userSide, long userId, string mapType = null)
         {
             long userIdLeft = userSide == "left" ? userId : -1;
             long userIdRight = userSide == "right" ? userId : -1;
@@ -63,10 +89,11 @@ namespace Data
             return new MatchedInfoDto
             {
                 message = "debug session",
-                server = "http://localhost:7777",
+                server = "http://127.0.0.1:7777",
                 leftUser = new User(userIdLeft, "debugger_left", "debugger_left@team6515.com", -1),
                 rightUser = new User(userIdRight, "debugger_right", "debugger_right@team6515.com", -1),
-                sessionId = sessionId
+                sessionId = sessionId,
+                mapType = mapType
             };
         }
 
@@ -78,7 +105,8 @@ namespace Data
                 server = roomInfo.serverUrl,
                 leftUser = new User(roomInfo.leftUserId, "debugger_left", "debugger_left@team6515.com", -1),
                 rightUser = new User(roomInfo.rightUserId, "debugger_right", "debugger_right@team6515.com", -1),
-                sessionId = roomInfo.sessionId
+                sessionId = roomInfo.sessionId,
+                mapType = roomInfo.mapType
             };
         }
     }

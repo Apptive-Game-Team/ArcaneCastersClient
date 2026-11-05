@@ -1,0 +1,30 @@
+Fill the entire background with one flat, uniform, fully opaque pure magenta, RGB 255 0 255, hex #FF00FF, edge to edge. The background must be that exact single colour and nothing else: no grey-and-white checkerboard pattern, no white, no grey, no gradient, no texture, no vignette, no ground plane, no cast shadow, no glow or halo bleeding into it. Magenta appears nowhere on the subject itself. Use a landscape canvas exactly twice as wide as it is tall (2:1 aspect ratio, for example 2048x1024).
+
+Game boss sprite for a 2.5D faceted low-poly papercraft game, matching the exact rendering technique of the first two reference images (MasterStyleKey.png and RockGolem.png). The third reference image (a ruined fortress wall prop from the same game) shows the stone material to use: pale warm grey cut stone blocks with moss and green vines in the cracks. Use it only for the stone material and palette, not for composition.
+
+Rendering technique, required exactly as in the references:
+- Build every shape from flat polygonal facet planes, like cut and folded paper. One flat, completely solid color per plane. Hard, sharp creases between adjacent planes.
+- No smooth 3D shading, no soft gradient across a plane, no gloss, no specular highlight, no stone grain, no photo texture, no noise, no painterly brushwork, no bloom.
+- If the result could be mistaken for a rendered 3D model, a photo, or a digital painting, it is wrong.
+- One soft light source from the upper left: a broad flat highlight facet on the upper-left side of every block, a broad flat shadow facet on the lower-right side.
+- No outer contour line and no ink outline anywhere. Shapes separate only by flat color value.
+- Restrained saturation, mid-to-high value. Nothing muddy, nothing neon.
+- Three-quarter camera, identical in both panels. The golem faces RIGHT: its face, eyes and chest point toward the right side of the canvas, eyes placed in the right half of the head.
+
+Subject, shared by both frames: a huge ancient guardian golem built out of fortress wall masonry. Only its upper body rises out of the ground: a small blocky head sunk between massive shoulders, a broad chest made of stacked rectangular wall bricks and cut stone blocks with visible seams, and two enormous arms each built from big stone blocks ending in huge blocky stone fists. There are no legs: the bottom of the body ends in a flat, broken line of rubble, loose stone chunks and cracked ground slabs, as if the golem is half buried and rising out of the earth. A few crenellation-like square merlon blocks sit on top of the shoulders like the top of a castle wall. Dark green corrupted vines with small angular leaves grow out of the cracks and wrap around the arms and chest; two eyes are narrow glowing yellow-green slits in a dark recess of the head.
+
+Two-frame layout, required exactly:
+- The canvas is split by an invisible vertical line exactly at its horizontal midpoint into two equal square panels: LEFT panel = frame 1 (resting pose), RIGHT panel = frame 2 (slam attack pose). Do not draw the dividing line, a border, or any frame.
+- Both panels show the exact same golem at the exact same scale and position: same head size, same chest width, same rubble base line at the same height, same base width.
+- In BOTH panels the rubble base touches the bottom edge of the panel, and the body fills the panel: the highest point of the golem sits within 5% of the panel's top edge. A small golem with big magenta margins is a reject.
+- The ONLY difference between the panels is the pose of one arm.
+
+Frame 1 (LEFT, resting): both huge fists rest on the ground on either side of the rubble base, knuckles down, arms bent, shoulders hunched forward.
+
+Frame 2 (RIGHT, slam wind-up): the right-side (front) arm is raised high above the head with the fist clenched at the top of the panel, ready to slam down; the other arm and fist stay resting on the ground exactly as in frame 1. Head, chest, rubble base and the resting arm are pixel-for-pixel the same as frame 1. The raised fist stays inside the panel; keep the body the same size, so the raised arm reaches the top of the panel and in frame 1 the shoulders and merlon blocks reach the top instead.
+
+Palette lock: stone blocks #D8C9AA, #C7BCA7, #AAA08D, #918977, #776F59; seams and deep shadow #535037; moss and vines #6F6B4D, #545333, #374725, #55572D; glowing eye slits #C8E86A.
+
+Exclusions: no legs, no feet, no cool blue-grey stone, no metal, no weapons, no text, no watermark, no logo, no frame, no cast shadow, no ember or spark scatter, no motion lines. The silhouette must stay readable when shrunk to 64 pixels in both frames.
+
+Save the generated image as a PNG at the output path given below.

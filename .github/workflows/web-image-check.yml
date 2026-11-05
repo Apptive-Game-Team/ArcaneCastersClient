@@ -1,0 +1,31 @@
+name: Check WebGL Nginx Image
+on:
+  pull_request:
+    paths:
+      - 'deploy/web/**'
+      - '.github/workflows/deploy-test.yml'
+      - '.github/workflows/web-image-check.yml'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare WebGL hosting fixture
+        run: |
+          mkdir -p /tmp/webgl-fixture/Build
+          echo '<!doctype html><title>WebGL fixture</title>' > /tmp/webgl-fixture/index.html
+          echo '// fixture' > /tmp/webgl-fixture/ServiceWorker.js
+          python3 - <<'PY'
+          import gzip
+          from pathlib import Path
+          root = Path('/tmp/webgl-fixture/Build')
+          for name, data in [('fixture.wasm', b'\x00asm\x01\x00\x00\x00'), ('fixture.js', b'// fixture'), ('fixture.data', b'fixture')]:
+              (root / name).write_bytes(data)
+              (root / (name + '.gz')).write_bytes(gzip.compress(data))
+          PY
+      - name: Build and check image
+        run: |
+          bash deploy/web/build-image.sh play-check /tmp/webgl-fixture
+          bash deploy/web/check-image.sh play-check /tmp/webgl-fixture

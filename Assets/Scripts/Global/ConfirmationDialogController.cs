@@ -16,6 +16,8 @@ namespace Global
         private Action onConfirm;
         private Action onCancel;
 
+        public bool IsOpen => root != null && root.activeSelf;
+
         private void Awake()
         {
             EnsureRoot();
@@ -76,7 +78,7 @@ namespace Global
             callback?.Invoke();
         }
 
-        private void Cancel()
+        public void Cancel()
         {
             Action callback = onCancel;
             Close();

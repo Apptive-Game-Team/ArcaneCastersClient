@@ -32,10 +32,12 @@ namespace GameScene.Object.Projectile
         [SerializeField] private float thickness = 2f;
 
         private float spriteHeight = 1f;
+        private PresentationWorld world;
 
         public void Init(ProjectileDto projectileDto)
         {
-            Vector3 start = ProjectileUtil.GetPosition(projectileDto.start);
+            world = PresentationWorld.For(this);
+            Vector3 start = ProjectileUtil.GetPosition(projectileDto.start, world);
 
             if (!TryGetEnd(projectileDto.end, out Vector3 end))
             {
@@ -44,7 +46,7 @@ namespace GameScene.Object.Projectile
             }
 
             transform.position = start;
-            transform.rotation = ProjectileUtil.GetRotation(start, end);
+            transform.rotation = ProjectileUtil.GetRotation(start, end, world);
 
             if (beamRenderer == null)
             {
@@ -76,7 +78,7 @@ namespace GameScene.Object.Projectile
             // scene-space.md): a world-space distance is foreshortened along +Z and not along +X,
             // so reach would appear to change with facing. GetCameraPlaneLength matches the length
             // GetRotation already aimed along.
-            float length = Mathf.Max(ProjectileUtil.GetCameraPlaneLength(start, end), MinimumLength);
+            float length = Mathf.Max(ProjectileUtil.GetCameraPlaneLength(start, end, world), MinimumLength);
             AnimateBeam(length, Mathf.Max(projectileDto.duration, MinimumDuration));
         }
 
@@ -106,11 +108,11 @@ namespace GameScene.Object.Projectile
         /// live-object reference, so this resolves either without throwing. A reference whose
         /// object is already gone reports failure instead of drawing a beam into the world origin.
         /// </summary>
-        private static bool TryGetEnd(ProjectileTarget target, out Vector3 position)
+        private bool TryGetEnd(ProjectileTarget target, out Vector3 position)
         {
             if (target is ReferenceProjectileTarget reference)
             {
-                ServedObject servedObject = ObjectContainer.Instance.FindById(reference.id);
+                ServedObject servedObject = PresentationWorld.Find(reference.id, world);
                 if (servedObject == null)
                 {
                     position = Vector3.zero;
@@ -121,7 +123,7 @@ namespace GameScene.Object.Projectile
                 return true;
             }
 
-            position = ProjectileUtil.GetPosition(target);
+            position = ProjectileUtil.GetPosition(target, world);
             return true;
         }
     }

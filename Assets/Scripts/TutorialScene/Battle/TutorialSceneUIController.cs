@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Data;
-using Data.Magic;
 using GameScene;
 using GameScene.Card;
 using GameScene.Player;
@@ -29,7 +28,6 @@ namespace TutorialScene
         [SerializeField] private TutorialCardUI cardUIPrefab;
         [SerializeField] private GameObject lowerBar;
 
-        [SerializeField] private ExpectedMagicUI expectedMagicUI;
     
         [SerializeField] private MagicFailEffecter leftUserMagicFailEffecter;
         [SerializeField] private MagicFailEffecter rightUserMagicFailEffecter;
@@ -125,9 +123,6 @@ namespace TutorialScene
 
             leftUserHpSlider.value = leftUserHp;
             rightUserHpSlider.value = rightUserHp;
-
-            leftUserIDText.text = $"ME\n HP: {leftUserHp}";
-            rightUserIDText.text = $"ENEMY\n HP: {rightUserHp}";
         }
 
         private ManaCostPreview manaCostPreview;
@@ -174,12 +169,6 @@ namespace TutorialScene
             return CardHotkey.FindCardAt<TutorialCardUI>(lowerBar.transform, index);
         }
 
-        public void TrySetExpectedMagicUI(CombinedMagicData magic)
-        {
-            if (expectedMagicUI == null) return;
-            expectedMagicUI.SetImage(magic?.GetSprite());
-        }
-    
         public void PlayMagicFailEffect()
         {
             if (leftUserMagicFailEffecter != null)

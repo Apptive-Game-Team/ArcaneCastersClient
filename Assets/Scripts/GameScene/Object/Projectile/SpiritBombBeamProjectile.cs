@@ -78,6 +78,7 @@ namespace GameScene.Object.Projectile
 
         private static Texture2D segmentTexture;
         private static Texture2D capTexture;
+        private PresentationWorld world;
 
         private ProjectileTarget startTarget;
         private ProjectileTarget endTarget;
@@ -96,6 +97,7 @@ namespace GameScene.Object.Projectile
 
         public void Init(ProjectileDto projectileDto)
         {
+            world = PresentationWorld.For(this);
             Texture2D segment = LoadTexture(SegmentSpritePath, ref segmentTexture);
             Texture2D cap = LoadTexture(CapSpritePath, ref capTexture);
             if (segment == null || cap == null)
@@ -175,14 +177,14 @@ namespace GameScene.Object.Projectile
             // slime 의 몸통에도 golem 의 몸통에도 맞는다.
             Vector3 to = endObject != null
                 ? endObject.GetEdgeWorldPositionTowards(from, 0f)
-                : lastEndPosition + ProjectileUtil.GetScreenUp() * PositionLift;
+                : lastEndPosition + ProjectileUtil.GetScreenUp(world) * PositionLift;
 
             // 길이도 회전도 카메라 평면 기준이다. 카메라가 기울어져 있어 Vector3.Distance 는
             // 화면에 그려야 할 길이를 주지 않는다 (.agents/docs/scene-space.md).
-            float length = ProjectileUtil.GetCameraPlaneLength(from, to);
+            float length = ProjectileUtil.GetCameraPlaneLength(from, to, world);
 
             transform.position = from;
-            transform.rotation = ProjectileUtil.GetRotation(from, to);
+            transform.rotation = ProjectileUtil.GetRotation(from, to, world);
 
             // size 는 scale 보다 먼저 적용되므로 가운데 조각은 scale 1 을 유지해야 길이가 맞는다.
             coreRenderer.size = new Vector2(length, beamWidth);
@@ -267,9 +269,9 @@ namespace GameScene.Object.Projectile
         /// <see cref="PositionLift"/> 만큼 올려 쓴다.
         /// </para>
         /// </summary>
-        private static Vector3 GetBeamEnd(ServedObject servedObject, Vector3 lastPosition, float heightBias)
+        private Vector3 GetBeamEnd(ServedObject servedObject, Vector3 lastPosition, float heightBias)
         {
-            Vector3 screenUp = ProjectileUtil.GetScreenUp();
+            Vector3 screenUp = ProjectileUtil.GetScreenUp(world);
             if (servedObject == null)
             {
                 return lastPosition + screenUp * PositionLift;
@@ -285,7 +287,7 @@ namespace GameScene.Object.Projectile
         /// <paramref name="lastPosition"/> 은 마지막으로 알던 값으로 남는다 — 빔이 원점으로
         /// 접히지 않고 그 자리에서 끝난다.
         /// </summary>
-        private static void TryUpdateTarget(
+        private void TryUpdateTarget(
             ProjectileTarget target,
             ref Vector3 lastPosition,
             ref ServedObject servedObject)
@@ -293,11 +295,11 @@ namespace GameScene.Object.Projectile
             switch (target)
             {
                 case PositionProjectileTarget position:
-                    lastPosition = position.ToVector3();
+                    lastPosition = ProjectileUtil.GetPosition(position, world);
                     servedObject = null;
                     break;
                 case ReferenceProjectileTarget reference:
-                    servedObject = ObjectContainer.Instance.FindById(reference.id);
+                    servedObject = PresentationWorld.Find(reference.id, world);
                     if (servedObject != null)
                     {
                         lastPosition = servedObject.transform.position;

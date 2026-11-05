@@ -25,6 +25,8 @@
 
 | 런타임 리소스 | 웹사이트/검수 근거 | 비고 |
 |---|---|---|
+| `ArcaneInfantry.png`, `ArcaneInfantryAttacking.png`, `ArcaneInfantryWalkLeft.png`, `ArcaneInfantryWalkRight.png` | 클라이언트 이슈 #372, 2026-10-26 C안 선택 | 양손 마력 칼날 보병. 기본·공격·걷기 2프레임, 128x81 RGBA, PPU 70, Bottom Center. InfantryPoseController가 이동과 공격 우선순위를 관리 |
+| `CraterCarrier.png`, `CraterCarrierDeployed.png`, `CraterCarrierRecovering.png` | 클라이언트 이슈 #334, Unity EditMode 검증 | 분화구 운반수. 192x162 RGBA 공통 캔버스, PPU 110, Bottom Center. 운반·설치 완료·설치/회수 자세. 서버 상태로 전환하며 기본 hopping/attack swap 제거 |
 | `AquaArcher.png` | `concept-art/aqua-archer-drawn.webp` | 물의 궁수 기본 프레임 |
 | `AquaArcherAttack.png` | `concept-art/aqua-archer-release.webp` | 화살을 놓은 공격 프레임 |
 | `ChickenCommando.png` | `concept-art/chicken-commando.webp`, `game-assets/chicken-commando.webp` | 인간 공수 특공대 방향 적용 |
@@ -196,6 +198,20 @@
 | `pve/pve_nature_slime_nest.png` | 클라이언트 PR (이슈 #169) | 192x142 RGBA, 원본 캔버스 유지. `PveNatureSlimeNest` 모험 보스. 애니메이션풍 유광 렌더링을 다면체 cut-paper 로 다시 그렸다. v1 반려(둥근 실루엣 가로세로비 0.997, 옛 1.35 대비 지나치게 좁고 높음), v2 통과(비 1.54, 바닥 정렬 0px). alignment 7(bottom-center) 유지 |
 | `pve/pve_water_slime_nest.png` | 클라이언트 PR (이슈 #169) | 192x158 RGBA, 원본 캔버스 유지. `PveWaterSlimeNest` 모험 보스. 위와 같은 이유로 다시 그렸다. v1 반려(비 1.59, 옛 1.22 대비 지나치게 낮고 넓음), v2 통과(비 1.21, 폭 99.5%·세로 100%). alignment 7 유지 |
 | `pve/pve_vine_witch.png` | 클라이언트 PR (이슈 #169) | 192x155 RGBA, 원본 캔버스 유지. `PveVineWitch` 모험 보스, 숲의 마녀. 애니메이션풍 인물이라 화풍 자체가 달랐던 것을 다면체 cut-paper 로 다시 그렸다. v1 한 번에 통과 — 빨간 장발·잎 후드·지팡이 실루엣 유지, `facing.py` 기준 눈 중심이 몸통 중심보다 오른쪽(오른쪽 방향 확인). alignment 7 유지 |
+| `Adventure/gate_adventure_icon.png` | 클라이언트 PR (이슈 #232) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 아이콘, 새 파일이라 `stone_fortress.png` 는 그대로 두고 `GateAdventure.asset` 의 `iconImage` 만 옮겼다. 256x183 RGBA, `agy` 의 `generate_image` 로 초록(#00FF00) 배경에 그려 key 를 제거했다. v1 반려(룬 글자가 새겨졌고 고리 안쪽에 초록이 비쳐 번졌다), v2 통과(룬 없음, 안쪽을 어두운 보라 원판으로 채움). 내용은 세로 183px 전체를 쓰고 폭은 179px 로 옛 256px 보다 좁다 — 옛 아이콘은 가로로 넓은 성이라 비율이 다르다. 4배 확대에서 어두운·밝은 배경 모두 초록 테두리 없음, 불투명 픽셀의 초록 우세 0개 |
+| `Adventure/gate_adventure_map_stage5.png` | 클라이언트 PR (이슈 #232) | **검수 대기, 자리표시 아트.** 차원문 모험 5단계 지도, `Stage5.asset` 의 `backgroundImage` 만 옮겼다. 867x256 RGB 불투명. 생성물이 1376x768 정사각이 아니라 1.79:1 이라 세로 중간 띠 406px(y 170~576)를 잘라 Lanczos 로 867x256 에 맞췄다. 길 중심은 y 약 134(목표 135). 길 두께가 옛 요새 지도보다 두껍다(옛 약 16px, 새 약 80px) — 노드 위치를 Editor 에서 확인해야 한다. v1 반려(어두운 윤곽선이 있다). v2 는 `agy` 가 권한 오류로 끝났지만 그 사이 이미지 3장이 생성돼 있었고, 그중 윤곽선이 없고 색이 평면인 마지막 한 장을 채택했다(나머지 둘은 길이 중앙에서 벗어나거나 색이 번졌다). 윤곽선 없음, 길 위 물체 없음 |
+| `Adventure/gate_adventure_map_stage6.png` | 클라이언트 PR (이슈 #232) | **검수 대기, 자리표시 아트.** 차원문 모험 6단계(보스) 지도, `Stage6.asset` 의 `backgroundImage` 만 옮겼다. 867x256 RGB 불투명. 위와 같은 방식으로 잘랐다. v1 반려(윤곽선이 있고 줄기가 잘렸다), v2 통과(윤곽선 없음, 오른쪽 끝의 그을린 속 빈 그루터기와 균열의 주황 빛, 길 양옆 차원문 고리 둘) |
+| `Background/Gate/background.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/background.png` 와 같은 이름·크기). 1254x1254 RGB 바닥 질감. 그을린 갈라진 땅, 대비를 0.62배로 낮췄고 가장자리를 섞어 이어 붙여도 이음매가 안 보이게 했다. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `Background/Gate/tree_1.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/tree_1.png` 와 같은 이름·크기). 277x242 RGBA, 꺾인 탄 줄기. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `Background/Gate/tree_2.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/tree_2.png` 와 같은 이름·크기). 265x222 RGBA, 가지 둘 달린 탄 줄기. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `Background/Gate/tree_3.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/tree_3.png` 와 같은 이름·크기). 234x218 RGBA, 속이 빈 탄 그루터기. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `Background/Gate/tree_4.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/tree_4.png` 와 같은 이름·크기). 328x264 RGBA, 굽은 가지가 달린 굵은 탄 줄기. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `Background/Gate/rock.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/rock.png` 와 같은 이름·크기). 452x166 RGBA, 불씨 금이 간 현무암 더미. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `Background/Gate/grass_1.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/grass_1.png` 와 같은 이름·크기). 238x117 RGBA, 마른 재색 풀 한 포기와 불씨 둘. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `Background/Gate/grass_2.png` | 클라이언트 PR (이슈 #235) | **검수 대기, 자리표시 아트.** 차원문 모험(adventure 3) 전투 배경 theme 의 새 파일(`Background/Fortress/grass_2.png` 와 같은 이름·크기). 466x99 RGBA, 마른 풀 다섯 포기 줄. `GateBattleTheme.asset` 이 참조하고 `GateAdventure.asset` 의 `battleTheme` 이 이 asset 을 가리킨다. `agy` 생성, 초록 배경 key 제거. Editor 미검증 |
+| `UI/Card/type_fire.png`, `type_water.png`, `type_nature.png`, `type_lightning.png`, `type_rock.png`, `type_wind.png` | 클라이언트 PR (이슈 #304) | **검수 대기.** 원소 아이콘 6장. 마법서 상성표, 도감 원소 칩, 덱 카드가 `CardImageMapper.asset` 으로 쓴다. 181x256 · 180x256 · 136x256 · 161x256 · 256x192 · 256x195 RGBA(옛 128 긴 변의 두 배), 여백 없이 잘랐다. 여섯 장을 1536x1024 한 캔버스의 3x2 격자에 같이 그리게 해 한 번에 통과했다(`codex` `image_gen` 1회). 레퍼런스는 `MasterStyleKey.png`, `ArcaneImpact.png`, 원소 룬 여섯 장 합성. magenta key 제거, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0. 쓰는 곳이 모두 `preserveAspect` 인 UI `Image` 라 화면 크기는 RectTransform 과 가로세로 비로만 정해지고 픽셀 수·PPU 와 무관하다 — `.meta` 는 그대로 뒀다. 가로세로 비는 다섯 장이 옛 비의 8% 안이다. `type_wind` 만 1.88 에서 1.31 로 바뀌어 상성표 칸 안에서 옛 그림보다 세로로 커진다(옛 바람이 여섯 중 가장 작아 보였다). 프롬프트는 1.9 를 숫자로 요구했지만 격자 한 칸 안에서는 지켜지지 않았다 |
+| `PveBrickGolem.png`, `PveBrickGolem2.png` | 클라이언트 PR (이슈 #329) | **검수 대기, 새 파일.** 요새 마지막 보스 벽돌 골렘의 기본 자세(두 주먹을 땅에 댄 자세)와 공격 자세(한 팔을 높이 든 자세). 256x251 RGBA, PPU 70, Bottom Center. 두 자세를 한 캔버스의 twin panel 로 한 번에 생성(v1 한 번에 통과)하고 공유 crop box `(0, 19, 884, 887)` 와 공유 배율 0.2896 으로 잘랐다. 눈은 몸통 중심보다 오른쪽(파일은 오른쪽을 보고, 경기에서는 RightPlayer 라 뒤집혀 왼쪽을 본다). magenta key 제거, 불투명 픽셀의 magenta 잔색 0, 네 모서리 alpha 0. 공격 자세는 잔해 바닥이 기본 자세보다 3px 위에서 끝난다. `.art/concept/brick-golem/README.md` |
+| `explode/brick_golem_crack_ring.png`, `shoot/brick_golem_sweep.png` | 클라이언트 PR (이슈 #329) | **검수 대기, 새 파일.** 벽돌 골렘의 내려찍기 경고 균열 고리(255x256, 위에서 본 원, 중심 pivot)와 휩쓸기 궤적(256x144, 중심 pivot). 한 캔버스의 두 칸에 한 번에 생성(v1 한 번에 통과), magenta key 제거, 잔색 0, 네 모서리 alpha 0 |
 
 ## 다음 교체 후보
 
@@ -252,12 +268,12 @@ v1 은 alpha 덩어리가 정확히 날 넷으로 갈라지므로(281x31, 450x68
 |---|---|
 | `LightningCloud.png`, `LightningCloudStrike0.png` ~ `LightningCloudStrike5.png` | 일곱 장 모두 둥글고 부드러운 구름 덩어리인데, 같은 구름 소재인 `RainCloud.png` 는 각진 다면체다. 한 게임 안에 구름 기법이 두 가지로 갈려 있다. 이슈 #548 에서 이 형태로 올라온 것이라 반려가 아니라 결정 사항이다 |
 
-### 통일 범위에 넣을지 정할 자산 33장
+### 통일 범위에 넣을지 정할 자산 27장
 
 아래는 baseline 그대로지만 게임 플레이 스프라이트가 아니다. 같은 기준을 댈
 대상인지 이 문서에서 정한 적이 없어 목록만 남긴다.
 
-- `Art/Images/UI/Card/` 11장 — `type_fire`·`type_lightning`·`type_nature`·`type_rock`·`type_water`·`type_wind`, `magic_build`·`magic_drop`·`magic_explode`·`magic_shoot`·`magic_spawn`. 평면 vector 아이콘으로 자기들끼리는 일관돼 있다
+- `Art/Images/UI/Card/` 5장 — `magic_build`·`magic_drop`·`magic_explode`·`magic_shoot`·`magic_spawn`. 평면 vector 아이콘으로 자기들끼리는 일관돼 있다. 같은 폴더의 원소 아이콘 `type_*` 6장은 이슈 #304 에서 다시 그려 완료 표로 옮겼다
 - `Art/Images/Customize/` 9장 — 모자·망토와 그 아이콘, `check.png`
 - `Art/Images/Adventure/` 3장 — 모험 지도/배경 자산, 아직 같은 기준을 댈지 정하지 않았다. `Resources/Game/pve/` 3장(`pve_nature_slime_nest.png`, `pve_water_slime_nest.png`, `pve_vine_witch.png`)은 이슈 #169 에서 다면체 cut-paper 로 다시 그려 완료 표로 옮겼다
 - 기타 UI 7장 — `Art/Images/Card.png`, `Art/Images/UI/Catalog.png`·`SpeechBubble.png`·`lockImage.png`, `Art/Images/Obstacle/CircleObstacle.png`, `Resources/UI/ObjectIndicator.png`·`SpeechBubble.png`

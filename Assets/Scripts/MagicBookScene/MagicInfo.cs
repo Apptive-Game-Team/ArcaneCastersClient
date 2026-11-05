@@ -4,8 +4,10 @@ using Data.GameConfig;
 using Data.Localization;
 using Data.Magic;
 using GameScene.Card;
+using Global;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MagicBookScene
 {
@@ -32,13 +34,29 @@ namespace MagicBookScene
         [SerializeField] private MagicInfoChip elementChipTemplate;
         [SerializeField] private Transform statRowsParent;
         [SerializeField] private MagicStatRow statRowTemplate;
+        [SerializeField] private MagicPreview previewPrefab;
 
         private readonly List<GameObject> spawned = new();
         private int initVersion;
+        private CombinedMagicData currentMagic;
+
+        private void OnEnable() => MagicPreviewDataSource.Changed += PreviewChanged;
+        private void OnDisable() { MagicPreviewDataSource.Changed -= PreviewChanged; initVersion++; }
+        private void PreviewChanged(string name)
+        {
+            if (currentMagic != null && (name == null || name == currentMagic.serverName)) Init(currentMagic);
+        }
 
         public async void Init(CombinedMagicData data)
         {
+            currentMagic = data;
             int version = ++initVersion;
+            // Stop the previous replay as soon as selection changes, even while text loads.
+            foreach (GameObject spawnedObject in spawned)
+            {
+                if (spawnedObject != null && spawnedObject.GetComponent<MagicPreview>() != null)
+                    spawnedObject.SetActive(false);
+            }
 
             string magicName = await LocaleUtils.GetStringAsync("Magic", data.localizationKey);
             string manaWord = await GetText(MagicBookTable, ManaKey, ManaFallback);
@@ -88,6 +106,20 @@ namespace MagicBookScene
                 statsText.gameObject.SetActive(!string.IsNullOrWhiteSpace(description));
                 // 복제한 능력치 줄 뒤에 설명이 오도록 맨 끝으로 보낸다.
                 statsText.transform.SetAsLastSibling();
+            }
+
+            if (previewPrefab != null && statRowsParent != null && previewPrefab.Supports(data))
+            {
+                MagicPreview preview = Instantiate(previewPrefab, statRowsParent);
+                preview.Configure(data);
+                preview.SetViewZoom(1.35f);
+                preview.name = "MagicExplanationPreview";
+                LayoutElement layout = preview.GetComponent<LayoutElement>();
+                layout.minHeight = 420f;
+                layout.preferredHeight = 420f;
+                preview.transform.SetAsLastSibling();
+                preview.gameObject.SetActive(true);
+                spawned.Add(preview.gameObject);
             }
         }
 
@@ -142,6 +174,7 @@ namespace MagicBookScene
             {
                 if (spawnedObject != null)
                 {
+                    spawnedObject.SetActive(false);
                     Destroy(spawnedObject);
                 }
             }

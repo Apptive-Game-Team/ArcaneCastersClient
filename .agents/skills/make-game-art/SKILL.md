@@ -124,6 +124,20 @@ where only one frame was redrawn, reads worse than six old runes: the
 inconsistency is what the eye catches. Hold the finished members until the set
 is complete.
 
+For a set of small icons, ask for all of them in **one** image: a 1536x1024
+canvas split into an invisible 3x2 grid of 512px cells, one icon per cell, then
+slice by cell. Issue #304's six element icons passed on that single call with
+matching plane size and light, where six calls would have cost six images and
+six chances to drift. One limit: a per-cell aspect ratio is only loosely kept.
+Five cells landed within 8% of the requested ratio, but the wind gust asked for
+1.9:1 came back 1.31:1. Measure every cell against its target before accepting.
+
+A replacement used only by UI `Image` components with `preserveAspect` on
+(grep the sprite's guid across `*.unity` and `*.prefab` and read
+`m_PreserveAspect`) can change resolution freely: on-screen size comes from the
+RectTransform and the aspect ratio, not from pixel count or pixels-per-unit, so
+the `.meta` needs no change. Only the aspect ratio carries over.
+
 Driving `codex exec` with an `image_gen` instruction sometimes makes it write
 its own restated copy of the prompt as a side effect — an untracked
 `<name>-prompt.txt` or `.md` next to the output image, in whatever directory

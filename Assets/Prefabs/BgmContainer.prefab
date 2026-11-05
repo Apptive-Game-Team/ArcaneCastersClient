@@ -45,3 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgmClip: {fileID: 8300000, guid: c6c5cd0ee2d7db447be3ac0e13978c23, type: 3}
+  bgmEntries:
+  - key: boss
+    clip: {fileID: 8300000, guid: a7b7e767e3434bbb8c51ddb1017a6c85, type: 3}

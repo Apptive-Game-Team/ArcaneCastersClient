@@ -21,11 +21,35 @@ namespace TutorialScene
             public int OriginalSortingOrder;
             public int OriginalSortingLayerId;
             public GraphicRaycaster AddedRaycaster;
+            public GraphicRaycaster DisabledRaycaster;
         }
 
         private readonly List<Entry> entries = new List<Entry>();
+        private readonly List<TutorialPointer> pointers = new List<TutorialPointer>();
 
-        public void Lift(Transform target, int sortingLayerId, int sortingOrder)
+        /// <summary>
+        /// 대상을 손가락으로 가리킨다. 올린 sorting 과 같이 RestoreAll 에서 거두므로, 단계를
+        /// 넘기거나 튜토리얼을 건너뛰면 손가락도 같이 사라진다.
+        /// </summary>
+        public void Point(Transform target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            TutorialPointer pointer = TutorialPointer.PointAt(target);
+            if (pointer != null)
+            {
+                pointers.Add(pointer);
+            }
+        }
+
+        /// <param name="clickable">
+        /// false 면 대상을 보여 주기만 하고 누르지 못하게 한다. raycaster 를 붙이지 않고, 원래
+        /// 있던 raycaster 는 끈다. 그러면 클릭이 대상 대신 아래의 마스크에 걸린다.
+        /// </param>
+        public void Lift(Transform target, int sortingLayerId, int sortingOrder, bool clickable = true)
         {
             if (target == null)
             {
@@ -50,9 +74,15 @@ namespace TutorialScene
 
             // 자식 Canvas의 Graphic은 부모 Canvas의 raycaster에 잡히지 않는다. 버튼이 계속
             // 눌리도록 raycaster도 같이 붙인다.
-            if (target.GetComponent<GraphicRaycaster>() == null)
+            GraphicRaycaster raycaster = target.GetComponent<GraphicRaycaster>();
+            if (clickable && raycaster == null)
             {
                 entry.AddedRaycaster = target.gameObject.AddComponent<GraphicRaycaster>();
+            }
+            else if (!clickable && raycaster != null && raycaster.enabled)
+            {
+                raycaster.enabled = false;
+                entry.DisabledRaycaster = raycaster;
             }
 
             canvas.overrideSorting = true;
@@ -64,6 +94,16 @@ namespace TutorialScene
 
         public void RestoreAll()
         {
+            foreach (TutorialPointer pointer in pointers)
+            {
+                if (pointer != null)
+                {
+                    pointer.Dismiss();
+                }
+            }
+
+            pointers.Clear();
+
             // 같은 대상을 두 번 올렸을 수 있으므로 역순으로 되돌려야 처음 값이 남는다.
             for (int i = entries.Count - 1; i >= 0; i--)
             {
@@ -73,6 +113,11 @@ namespace TutorialScene
                 if (entry.AddedRaycaster != null)
                 {
                     Object.DestroyImmediate(entry.AddedRaycaster);
+                }
+
+                if (entry.DisabledRaycaster != null)
+                {
+                    entry.DisabledRaycaster.enabled = true;
                 }
 
                 if (entry.Canvas == null)

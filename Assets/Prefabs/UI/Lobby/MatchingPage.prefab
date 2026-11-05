@@ -116,6 +116,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: {fileID: 4670000000000000011}
+  titleLabel: {fileID: 4670000000000000025}
+  matchmakingOnly:
+  - {fileID: 4670000000000000031}
+  - {fileID: 4670000000000000051}
+  - {fileID: 4670000000000000092}
 --- !u!1 &4670000000000000011
 GameObject:
   m_ObjectHideFlags: 0

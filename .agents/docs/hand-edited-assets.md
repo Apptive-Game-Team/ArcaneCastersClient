@@ -1,5 +1,11 @@
 # Hand-Edited Assets, Prefabs and Scenes
 
+`ZoomedCardUI` serves both the legacy zoomed card in `GameScene` and
+`InteractiveTutorialScene` and the `GameCardDetails.prefab` description panel.
+Before adding child-component bindings, inspect both shapes: the legacy card has
+a `MagicCastKindBadge`, while the description panel does not. Guard optional
+badge bindings; an unconditional `Bind` throws before the hover description loads.
+
 The Unity Editor cannot run in this environment, so `.asset`, `.prefab`, `.unity`
 and `.meta` files are edited as YAML by hand. Read this before changing a
 serialized type or deleting a script. Nothing here fails the build; every trap
@@ -52,6 +58,13 @@ the local `fileID` each hit declares. Stop after step 1 and the prefab opens in
 the Editor with a "missing script" component.
 
 ## Writing a new `.meta` by hand
+
+When deriving a new prefab from an existing variant, validate modification targets
+against the current base's fileIDs as well as checking that referenced GUIDs exist.
+`MagmaExplosion` still carried an old audio-clip override targeting a component
+already removed from `AbstractExplode`; copying that row into `CraterExplosion`
+looked valid to Unity but retained a dead serialized reference. Prune such overrides
+from the new variant instead of copying them forward.
 
 Copy the shape from a sibling of the same importer. A script meta is three
 lines: `fileFormatVersion: 2`, `guid: <32 lowercase hex>`, `timeCreated: <int>`.
@@ -115,6 +128,20 @@ For example, in `Panal.prefab` the `ProfileButton` instance is
 `1254884346060698375`, so the Button is `2649125704893739214` in `Panal.prefab`.
 Compute it this way instead of guessing; a wrong id is accepted silently and
 the reference is simply null at runtime.
+
+## Two abstract mobs carry a copy of the HP bar, not the HP bar prefab
+
+`AbstractMeleeMob`, `AbstractSlime`, `AbstractBuild`, `ChickenCommando` and
+`Player` instance `ServedObjectHpBar.prefab`. `AbstractRangeMob` and
+`AbstractAerialMob` hold their own copy of its objects instead, so a child added
+to `ServedObjectHpBar.prefab` never reaches the 20 range and aerial mobs that
+derive from those two. The team-colour triangle `ObjectIndicator` was missing
+from both copies this way (#339): `ServedObject` hands the triangle to any HP bar
+with `useTeamColors` and turns its own `TeamIndicator` off, and
+`ServedObjectGaugeBar` finds no `ObjectIndicator` image to colour, so no triangle
+was drawn at all. When you change `ServedObjectHpBar.prefab`, make the same edit
+in both abstract copies, and check them with
+`git grep -c "m_Name: <child>" -- 'Assets/Resources/Prefabs/Abstract/*.prefab'`.
 
 ## Disabling a component that drives a RectTransform wakes up stale overrides
 
@@ -286,6 +313,13 @@ the project's real types instead of stubs. Two things make it work:
 - Compile a changed asmdef assembly under its real name (`-out:WordOnline.Contracts.dll`).
   Under any other name, `Assembly-CSharp.dll` still asks for `WordOnline.Contracts`
   and every type it exposes from there fails with CS0012.
+- Reference `Library\ScriptAssemblies\Assembly-CSharp-firstpass.dll` as well. The
+  DOTween modules (`DOFade`, `DOAnchorPosY` and the rest) are source files under
+  `Assets/Plugins`, so they compile into the firstpass assembly, not into
+  `DOTween.dll`. The response files in `C:\temp\client-map-type-compile` leave it
+  out, and reusing them gives 21 CS1929/CS1061 errors in files nobody touched
+  (`RewardChestPresenter.cs`, `BeamProjectile.cs` and others). With the
+  reference added the same tree compiles with 0 errors.
 
 Unity's NUnit (`com.unity.ext.nunit`) throws `TypeLoadException` for
 `System.Runtime.Remoting.Messaging.CallContext` on .NET 8, so it cannot run the
@@ -319,6 +353,16 @@ in three contract files nobody had touched. Compare each copied project's
 `ProjectReference` list with the `references` of the matching `.asmdef` before
 reading the error list.
 
+A quicker check for a few edited files: compile only those files with `csc.dll`
+against the Windows checkout's `Assembly-CSharp.dll` (add `-nowarn:0436` for the
+duplicate types). On #340 the C:\dev\ac-client checkout no longer existed; the
+`C:\Users\jys09\Projects\ArcaneCasters\Client` one did. This check is never clean
+by itself. Editing `ServedObject.cs` gave CS1503, because the source `ServedObject`
+and the DLL's `ServedObject` are different types, and CS1061 on
+`PositionUpdater.UpdatePosition`, because the DLL was older than the branch. Compile
+the same files from `origin/dev` with the same response file. Only errors that are
+missing from that baseline come from your change.
+
 The EditMode test DLL built this way cannot be run outside Unity: Unity's
 `nunit.framework.dll` needs .NET Framework remoting (`CallContext`). Tests that
 touch only `WordOnline.Contracts` and `JsonCodec` run under `dotnet test` in a
@@ -343,3 +387,241 @@ without its own field in that skip list loads, renders in the Editor, and is gon
 the first time the map draws. The end-of-adventure chest lives there for that
 reason as `endOfRoadSlot`; anything else that has to sit on the road needs the
 same treatment.
+
+## A flat ground tile keeps its `SpriteRenderer` on the prefab root
+
+`RiverWater` and `RiverBridge` lie flat on the ground (root rotated 90 degrees
+about X). `ObjectSpawner` calls `PopupBookVisualPresenter.Attach`, which wraps
+the sprite returned by `ServedObject.GetActualTransform()` in a pivot and, in
+`LateUpdate`, rotates it to the camera. When that sprite is a child of the root,
+the tile stands up and plays a spawn tilt. When the `SpriteRenderer` sits on the
+root, `Attach` returns early and the tile stays flat. Do not add child renderers
+to these prefabs; the art is the overlay described below.
+
+The ground is the opaque `PopupBookGround` plane at `y = 0`, and the server sends
+`y = 0`, so a flat sprite at the same height flickers against it. `GroundDecalLift`
+keeps the tile at least 0.02 above the ground in `LateUpdate`. Raising it once in
+`Start` was not enough: right after creating an object the server sends a position
+update with `y = 0`, and `PositionUpdater` tweens the transform to it, which erases a
+height set earlier. Anything laid flat on the ground has to restore its height after
+`PositionUpdater` has run.
+
+The prefabs no longer draw the river. Their root `SpriteRenderer` stays, with an
+empty sprite, only so `ServedObject` and `PopupBookVisualPresenter.Attach` find it on
+the root and leave the tile flat; both already handle a null sprite. The picture is one
+overlay, drawn once per match by `RiverOverlay`
+(`Resources/Prefabs/RiverOverlay.prefab`). Each `RiverWater` and `RiverBridge` carries a
+`RiverOverlayMember`, which counts the live river objects per `PresentationWorld`
+(null for the real match). The first member to wake creates the overlay, the last one
+destroyed destroys it, so the order objects arrive in does not matter, a rematch in the
+same scene reuses the one overlay, and nothing is left after the match. Inside a
+`PresentationWorld` the overlay is a child of the world.
+
+The numbers live in `GameScene.Dto.RiverOverlayLayout` (assembly
+`WordOnline.GameContracts`, tested by `RiverOverlayLayoutTests`), all at 256 pixels per
+unit and lifted 0.02 above the ground (the overlay is not driven by `PositionUpdater`,
+so one lift at creation is enough):
+
+| picture | pixels | covers | pivot | position |
+| --- | --- | --- | --- | --- |
+| `RiverWaterOverlay.png` | 1024 x 2560 | x 7 to 11, z 0 to 10 | bottom left | (7, 0.02, 0), sorting order -2 |
+| `RiverBridgeOverlay.png` (twice) | 1024 x 1024 | 4 x 4 units | center | (9, 0.02, 2.5) and (9, 0.02, 7.5), sorting order -1 |
+
+The water has soft banks that cross the logical lines x = 8 and x = 10 by up to 0.25
+unit. The bridge at 2.5 opens z 1 to 4 (rows 1 to 3), the one at 7.5 opens z 6 to 9
+(rows 6 to 8). The server contract is unchanged: 8 `RiverWater` and 12 `RiverBridge`
+objects at cell centers (columns 8 and 9; water rows 0, 4, 5, 9; bridge rows 1, 2, 3, 6, 7, 8).
+
+If the server moves the river, change the constants in `RiverOverlayLayout` and repaint
+the two pictures for the new rectangle. An image generator does not hit pixel positions
+by itself: generate the water and the bridge as separate images on a flat key
+color, key the background out (`.art/tools/key-out-background.py`), resample to 256
+pixels per unit, place them at the numbers above, and draw the logical grid over the
+result (mock: `docs/pr-media/261/river-mock-64ppu-logical-guides.png`, ground texture
+resampled to 64 pixels per unit, one background texture covering 20 units) before
+accepting. The `.meta` files set sprite single, 256 pixels per unit, `maxTextureSize`
+4096 (the 2560 pixel height must not shrink), no mipmaps.
+
+## Changing a CanvasScaler reference resolution
+
+Issue #269: `LobbyScene.unity` had a canvas at 800x450 while every other canvas is
+1920x1080, so the lobby drew 2.4 times larger than the rest. Changing
+`m_ReferenceResolution` alone makes the whole canvas 2.4 times smaller, so every
+child must be multiplied by 2.4 too. Several things hide from a plain multiply:
+
+1. A `PrefabInstance` stores its geometry as `m_Modifications`
+   (`m_SizeDelta.x`, `m_fontSize`, `m_margin.x` ...). Scale those values, and add a
+   modification for every value the prefab supplies that was never overridden
+   (`Button Variant` text: `m_fontSizeMin` 9, `m_fontSizeMax` 15, margin 10/2/10/5).
+   Otherwise the autosize range and margins stay at the old scale.
+2. A `Sliced` image keeps its border in sprite pixels, so after a 2.4 times larger
+   canvas the border looks 2.4 times thinner. Divide `m_PixelsPerUnitMultiplier` by the factor.
+3. Scripts that build UI at runtime hard-code pixel sizes for the canvas they were
+   written against (`FriendBootstrap` friend modal 760x560, moved into
+   `Assets/Prefabs/UI/Lobby/Friend/FriendModal.prefab` by #309;
+   `LobbyUIController` reward popup 430x230). Serialized script fields in canvas
+   units hide the same way: `BattleHoverPresenter.bounceHeight` (12, now 28.8) is a
+   plain float that no RectTransform search finds. Grep `sizeDelta` and `anchoredPosition`
+   in `Assets/Scripts` before changing a canvas, and list what you could not rescale.
+4. Do not shrink the battle HUD's hand bar by editing YAML. `GameScene`
+   `BarController.MoveBar` moves the `Bars` rect between the literal y values 540
+   and 240, which assume the old bar height, and `LowerBar` and `ManaBar` stretch
+   across the screen width. #297 scaled `LowerBar`, `ManaBar` and `Timer` by
+   `m_LocalScale` 0.75 and changed their `m_SizeDelta` and grid padding; the
+   developer opened it in the Editor and the hand bar was broken, and the mana bar
+   floated about 150 above the hand. The `GameScene.unity` change was reverted.
+   Resizing the HUD needs the two `MoveBar` positions redesigned with it and a check
+   in the Editor. `CardImage.prefab` (the hand card) is also used by
+   `SpectatingScene` and `InteractiveTutorialScene` and has fixed-size children, so
+   do not edit the prefab or the grid cell size for this either.
+5. A GameObject the scene adds under a prefab instance is a normal document whose
+   `m_Father` is a `stripped` RectTransform. A rescale script that walks
+   `m_Children` from the canvas never reaches it, because a stripped transform has
+   no `m_Children`; it lives only in the PrefabInstance's `m_AddedGameObjects`.
+   #297 missed the hamburger `Icon` under the `Menu` Button Variant this way: the
+   button grew to 87x94.5 and the icon stayed 16.25x16.25, so it showed as a tiny
+   icon inside a large button. Walk ancestors upward from every RectTransform
+   instead (a stripped transform's parent is its PrefabInstance's
+   `m_TransformParent`), and keep only those that reach the rescaled canvas. A
+   root PrefabInstance with its own `Canvas` is a separate canvas: `MatchingPage`
+   in `LobbyScene` is 800x450 inside its prefab, so its `CoachPanel` and
+   `CoachCloseButton` stay unscaled.
+6. The prefab's own `m_PixelsPerUnitMultiplier` counts as an unoverridden value
+   from item 1: `Button Variant` ships 4, so every Sliced instance on a 1920 canvas
+   needs a `1.66667` modification on `1683031503725330102`. `RectOffset` fields
+   (`m_Padding` of a layout group) hold integers; round them after multiplying
+   instead of writing 9.6, which #297 did for `UserNamePill`.
+
+## A modal prefab saved inactive in the scene
+
+`FriendModal.prefab` (#309) is instanced once in `LobbyScene` with an
+`m_IsActive: 0` override, and its controller `FriendModalUIController` sits on the
+prefab root. Two things follow, and neither shows an error:
+
+- `FindObjectOfType<T>()` skips inactive objects and returns null. `FriendBootstrap`
+  uses `FindObjectOfType<FriendModalUIController>(true)`.
+- The controller's `Awake` does not run until the first `SetActive(true)`, so it
+  must not deactivate itself in `Awake` (the old controller did, which would close
+  the modal the moment it opened). Listener wiring is idempotent and also called
+  from `Open()`.
+
+`FriendManager` is added with `AddComponent` at runtime, so its serialized
+`friendModal` was always null and friend events never refreshed the open modal.
+`FriendBootstrap` now hands the scene instance over with `BindFriendModal`.
+
+`Button Primary.prefab` has no instance anywhere in the project, so ids computed
+inside it are unverified. The friend prefabs use `Button Variant` instances with the
+same nine modifications `Button Primary` applies (orange `m_Color`, outline
+material, white text) instead. A generator for this layout is the fastest route:
+the modal and three row prefabs are about 300 YAML documents.
+
+`C:\dev\ac-client` no longer exists on this machine. A copied older compile
+workspace (for example `C:\temp\client-329-compile`) still has it in every
+`HintPath` and `Reference`, and `dotnet build` then fails on missing references
+instead of on your code. Replace it with
+`C:\Users\jys09\Projects\ArcaneCasters\Client` (`sed -i` over the copied
+`*.csproj`), then check every `HintPath` outside `Program Files` with `wslpath -u`
+before building. Rebuilding the `<Compile Include>` lists from the worktree took
+about 11 seconds for `Assembly-CSharp.csproj`, 0 errors.
+
+## A shader change is checked by porting the fragment to Python
+
+No shader compiler runs here (no Editor, no `dxc`, `fxc` or `glslangValidator`), and a
+screenshot of the running game is not available either. The first version of
+`ArcaneCasters/SpriteTeamOutline` (#340) passed review by reading alone and shipped a
+ragged outline: one ring of 8 samples at width 3 leaves about 2.3 screen pixels between
+samples, and the edge threshold on the pixel's own alpha left a fringe of body colour
+outside the outline. Neither shows in the code; both show at once in a render.
+
+Before changing a sprite shader, port the fragment function to numpy (bilinear sampling,
+no mipmaps, `fwidth(uv)` = one over the on-screen size in pixels) and render the old and
+new code side by side on real sprites from `Assets/Resources/Game/sprites` at about 90
+screen pixels tall, enlarged 4x with nearest neighbour. #352 did this
+(`docs/pr-media/352/outline-before-after-90px.png`). The render does not prove the shader
+compiles for WebGL; say so in the pull request and leave that to an Editor check.
+# Admin room search text clipping
+
+When changing a legacy `InputField` height, inspect the nested text area's actual
+height after its negative `m_SizeDelta` padding. The former admin search field
+was 28 units high with 13 units of vertical padding, leaving only 15 units for
+a 14-point Pretendard line while vertical overflow was disabled. The serialized
+font and text references were valid even though typed glyphs were clipped.
+Keep enough line-height space, verify `ForceLabelUpdate` and generated text
+vertices in `AdminRoomSceneTests`, and check typed text in the Editor. The room
+list and its search now belong to `AdminRoomsScene`, not `AdminScene`.
+
+When repositioning UI prefab instances, normalize anchor, pivot and local scale together with anchored position and size. Admin navigation kept bottom-right anchors and moved offscreen; the lobby button retained scale 0.40005 and made its label unreadable. Test instantiated button corners against the Canvas bounds and generated label size, not merely component existence.
+## Custom battle deck selection
+
+The custom battle page uses two instances of `CustomBattleDeckDropdown.prefab`,
+derived from the matching-server dropdown without its server-selection or
+AdminOnly components. Keep both references wired in `CustomBattleDeckMenu` and
+keep their default selection at random. Owned cards and saved decks are read
+through `DeckApiClient`; do not use deck mutation endpoints for this flow.
+Require `deckSelectionVersion == 1` before sending the four-field battle request.
+Saved decks require 15 supported owned cards; the minimum three Spawn rule is
+specific to random generation. The source C# compile and serialized-reference
+checks do not replace the Editor dropdown/layout test or a real authenticated
+saved-deck retrieval check.
+
+## A copied button still calls the component you dropped
+
+`LocalServerPanel.prefab` (#314) copies `KoreanButton` from `Panal.prefab` six times
+for the tick rate buttons and drops its `LocaleSetButton`. The `Button`'s
+`m_OnClick` still listed `m_Target: {fileID: <the dropped LocaleSetButton>}`, so the
+copy pointed at an anchor that no longer existed in the file. The unresolved-reference
+check above caught it. When you drop a component from a copied subtree, empty every
+`m_PersistentCalls.m_Calls` that targeted it in the same pass. A regex that clears a
+call list up to the next two-space field misses the last field of a document, because
+the next line there is `--- !u!`.
+
+## `Button` inside `namespace LobbyScene.*` is a namespace
+
+`Assets/Scripts/LobbyScene/Button/` declares `namespace LobbyScene.Button`, so a field
+typed `Button` in any `LobbyScene.*` file fails with `CS0118: 'Button' is a namespace
+but is used like a type`, even with `using UnityEngine.UI;` or a `using Button = ...`
+alias at the top of the file: name lookup walks the enclosing namespaces before the
+file's using directives. Write `UnityEngine.UI.Button`, as
+`LobbyScene/SettingPage/LocalServerPage.cs` does.
+
+
+## Motion comic entry and UI validation
+
+`TutorialScene.unity` retained a `sceneName` override for a `SceneChangeButton`
+that was already listed in `m_RemovedComponents` (#391). Before diagnosing two
+scene transitions, inspect both the persistent calls and the removed-component
+list; an override alone does not prove a component still runs.
+
+`ComicIntroScene` must finish before loading `InteractiveTutorialScene`: the
+battle scene starts its mana and object timers in `Start`. Keep both comic
+completion and skip pointed at the battle scene, not at `SkipOnboardingTutorial`,
+which skips the entire onboarding. The fifth illustration has two dialogue beats.
+
+TMP `ForceMeshUpdate` and Play Mode UI checks populate dynamic font atlases and
+can dirty `Jua SDF.asset` and `LilitaOne SDF.asset`. `AssetDatabase.SaveAssets`
+then persists those glyph caches even when the font was not intentionally edited.
+Compare with the pre-test Git state and exclude only known test-generated font
+changes from a UI feature commit; do not discard pre-existing user edits.
+
+A PlayMode `[SetUp]` can be followed by `Start` before a `[UnityTest]` iterator
+first runs. To test skip before localization initialization, instantiate the comic
+inside the iterator immediately before invoking skip, rather than in `[SetUp]`.
+
+## Custom comic UI geometry
+
+A custom `MaskableGraphic` must explicitly require `CanvasRenderer`. The first
+comic mask compiled and imported but its serialized Viewport had no renderer,
+so EditMode instantiation and Play Mode threw `MissingComponentException`.
+Keep `[RequireComponent(typeof(CanvasRenderer))]` and verify the saved prefab.
+When reflecting `OnPopulateMesh`, select its `VertexHelper` parameter explicitly;
+Graphic also retains a Mesh overload and a name-only lookup is ambiguous.
+
+Test `GraphicRaycaster` routes on a rendered PlayMode canvas. A newly instantiated
+EditMode canvas can still have graphic depth -1 after ForceUpdateCanvases, so an
+empty hit list there does not prove the UI blocks input. Test the actual hit
+object through ExecuteEvents.ExecuteHierarchy as well as checking target flags.
+
+`ComicIntroSetup.Build` updates the reusable prefabs when the comic scene already
+exists. Do not save its temporary additive scene over an open ComicIntroScene:
+Unity rejects that write even though the prefab update succeeded. Create the
+scene only when its asset is absent, and treat SaveScene=false as a failure.

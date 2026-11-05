@@ -12,7 +12,7 @@ namespace LobbyScene
     /// Lets an admin pick which matching server the client talks to.
     ///
     /// Servers that fail their health check are left out of the dropdown, and the first healthy
-    /// server in <see cref="MatchingServerCatalog.Options"/> order (localhost, dev, deploy) is
+    /// server in <see cref="MatchingServerCatalog.Options"/> order (127.0.0.1, dev, deploy) is
     /// selected unless the admin already picked one on this device.
     ///
     /// Put this on a GameObject that also has <see cref="AdminOnly"/>: that component deactivates

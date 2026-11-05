@@ -1,0 +1,18 @@
+services:
+  play:
+    image: ghcr.io/apptive-game-team/arcanecasters-play:${PLAY_IMAGE_TAG:-latest}
+    container_name: ac-client
+    restart: unless-stopped
+    expose:
+      - "8080"
+    networks: [net]
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+networks:
+  net:
+    external: true

@@ -22,6 +22,7 @@ namespace LobbyScene.Button
                     ResetButton();
                     break;
                 case LobbySceneViewModel.LobbyState.Matching:
+                case LobbySceneViewModel.LobbyState.PreparingPractice:
                     SetButton();
                     break;
             }

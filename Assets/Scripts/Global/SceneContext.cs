@@ -1,12 +1,17 @@
 using Data;
 using Data.BattleThemes;
 using GameScene.Dto;
+using UnityEngine;
 
 namespace Global
 {
     public class SceneContext : SingletonObject<SceneContext>
     {
-    
+        static SceneContext()
+        {
+            Server.JwtTokenProvider = () => JwtToken;
+        }
+
         public static string JwtToken
         {
             get; set;
@@ -75,6 +80,57 @@ namespace Global
         }
 
         /// <summary>
+        /// Map kind the game server picked for the match being entered, set by
+        /// <see cref="PrepareMap"/> and left in place after `GameScene` loads so a later change
+        /// can ask which map is on. <see cref="MapKind.Unspecified"/> when the server sent none.
+        /// </summary>
+        public static MapKind MapKind
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Decides the match's map kind and battle theme from the server's <c>mapType</c>. Call it
+        /// right before loading `GameScene` or `SpectatingScene`, after
+        /// <see cref="ClearAdventureMatch"/> if that is called too.
+        /// <para>
+        /// A usable <paramref name="mapType"/> wins: <c>FOREST</c>, <c>FORTRESS</c>, <c>GATE</c> pick
+        /// their theme asset, <c>GRASSLAND</c> and <c>RIVER</c> pick none (the scene default). An
+        /// absent or unknown value keeps the old decision, <paramref name="fallbackTheme"/>, so an
+        /// older server still works with this client.
+        /// </para>
+        /// </summary>
+        public static void PrepareMap(string mapType, BattleThemeScriptableObject fallbackTheme)
+        {
+            MapKind kind = MapKinds.Parse(mapType);
+            MapKind = kind;
+            if (kind == MapKind.Unknown)
+            {
+                WDebug.LogWarning("Unknown mapType from server, keeping the old battle theme decision: " + mapType);
+            }
+
+            MapThemeChoice choice = MapKinds.ThemeFor(kind);
+            BattleTheme = choice == MapThemeChoice.KeepFallback
+                ? fallbackTheme
+                : FindTheme(choice);
+        }
+
+        private static BattleThemeScriptableObject FindTheme(MapThemeChoice choice)
+        {
+            if (choice == MapThemeChoice.SceneDefault) return null;
+
+            var catalog = Resources.Load<BattleThemeCatalogScriptableObject>(
+                BattleThemeCatalogScriptableObject.ResourcePath);
+            BattleThemeScriptableObject theme = catalog != null ? catalog.Find(choice) : null;
+            if (theme == null)
+            {
+                WDebug.LogWarning("No battle theme asset for " + choice + ", using the scene default.");
+            }
+
+            return theme;
+        }
+
+        /// <summary>
         /// Adventure being played, carried the same way as <see cref="BattleTheme"/>:
         /// `Data.Adventures.CurrentAdventure` is destroyed when GameScene loads (it is
         /// bound to AdventureScene / AdventuresScene), so `AdventureMapController`
@@ -112,6 +168,8 @@ namespace Global
 
         public static void ClearContext()
         {
+            GameScene.BotThoughtLog.Clear();
+            Data.Magic.MagicPreviewDataSource.Clear();
             JwtToken = null;
             _user = null;
             MatchInfo = null;
@@ -131,6 +189,7 @@ namespace Global
         public static void ClearAdventureMatch()
         {
             BattleTheme = null;
+            MapKind = MapKind.Unspecified;
             AdventureId = null;
             AdventureScenarioId = null;
             AdventureName = null;

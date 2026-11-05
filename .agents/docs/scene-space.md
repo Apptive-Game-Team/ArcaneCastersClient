@@ -23,6 +23,13 @@ places `LeftPlayer` at `x = 1` and `RightPlayer` at `x = 17`, so **`LeftPlayer`
 faces `+X` and `RightPlayer` faces `-X`**, and `Z` is the width of the field, not
 a heading. `SceneContext.Me` is the string that says which side you are.
 
+For a runtime XZ ground made with Unity's built-in `PrimitiveType.Quad`, check
+its mesh normal before choosing the rotation. This project's Unity 2022 Quad
+normal is local `-Z`, so `Quaternion.Euler(90f, 0f, 0f)` faces it upward; `-90f`
+faces it into the ground. The first magic-preview grass quad had the right
+texture and camera position but remained invisible because it was back-facing.
+Check the Game View or RenderTexture pixels, not only `MeshRenderer.isVisible`.
+
 `MagicIndicatorResolver.GetForwardDirection()` is that convention written down;
 use it rather than hard-coding `Vector3.right`. Code that forgets the right side
 looks correct in every left-side test and points backwards in half of all matches.
@@ -187,6 +194,19 @@ PNG itself was complete. Import ground-spawned effect sprites with `Bottom Cente
 explicitly offset them along screen-up when their visual is intentionally centred on the spawn
 point. Check the importer pivot before changing the PNG or scaling the prefab.
 
+For persistent status effects, `ServedObjectEffectRenderer.SpawnEffect` resets
+the effect root's local position and rotation to zero, then applies the unit's
+effect scale. Put a visual offset on a child transform; moving the prefab root
+is overwritten at spawn. `StormStagCharge4` originally placed the centred
+lightning ring at the stag's feet, burying its lower half. Its `AuraVisual` child
+now holds both the renderer and pulse/rotation component at local Y `0.67`.
+The 512x469 sprite at 400 pixels per unit needs at most
+`1.08 * (469/800 * cos(3 degrees) + 512/800 * sin(3 degrees)) = 0.6685`
+units below its centre, so that offset keeps the whole animated ring above the
+root even during its pulse and tilt. Recompute this clearance if the sprite,
+pixels per unit or animation limits change. Keep the centred pivot on the
+shared lightning aura texture: the player's staff effects also use it.
+
 ### Replacing a hit visual may also require suppressing a projectile
 
 Do not assume that changing `HitEffectController` replaces every visual attached
@@ -223,8 +243,11 @@ does not scale with how far away the target happens to be.
 
 Server `Status` arrives as a raw string and `ServedObject.HandleStatus` routes
 only `Destroyed`, `Attack` and `Damaged`. Everything else, including `Idle` and
-`Move`, falls through to `OnOtherStatus`, which only `PlayerActionController`
-subscribes to. A creature cannot react to `Idle` or `Move` through status.
+`Move`, falls through to `OnOtherStatus`. Creatures that need persistent poses must
+subscribe explicitly, as `CraterCarrierPresenter` does for `Deploying`, `Deployed`
+and `Recovering`. Do not use `OnMoved` to select a carried pose: knockback can move
+a deployed unit. Restore the phase on the server after transient attack/damage
+statuses so live updates and full reconnect snapshots use the same presentation.
 
 ## Verifying without the Editor
 
@@ -235,3 +258,17 @@ assuming — and say in the pull request which cases were computed and which sti
 need an Editor pass. For anything aimed across the field, check all four
 headings: `+X`, `-X`, `+Z`, `-Z`. The `+Z` and `-Z` cases are where a world-space
 length or offset fails, and where a bug hides if only `+X` was tried.
+
+## An indicator lane that follows height is a camera-facing ribbon
+
+`magics.indicator` lane layers may set `grounded: false`. The ground part stays a
+flat shape on the XZ plane and shortens to the beam's shadow
+(`L * horizontal / full3D` for `end: "target"`), and when the aim point is more
+than 0.01 above or below the lane origin `FieldSelector` also draws the 3D line
+from the origin toward the aim point with `SkillIndicatorShapeRenderer.SetAirLine`.
+That ribbon's width axis is `cross(camera.forward, lineDirection)`, never
+`Vector3.up`, so it stays the same thickness on screen at the 45° tilt. World
+`+Y` is the server's height, so the line's endpoints use server heights directly.
+While the pointer is over a `Selectable` the aim point is that unit's
+`GetSelectionPosition()` (its feet), the same value the click sends; circles and
+ground lanes use only its x and z.

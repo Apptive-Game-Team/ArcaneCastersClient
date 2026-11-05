@@ -60,6 +60,8 @@ namespace GameScene.ServedObjectComponent
 
         private void SpawnEffect(string effect, string resourceName)
         {
+            // Knockback is presented by the authoritative position update, not a status decal.
+            if (effect == "Knockback") return;
             // Resolved per effect, not once for the whole list: only the names the object anchors
             // (the element auras on the player) go to the anchor, everything else stays on the
             // object, and a missing parent skips just this one effect instead of the whole list.
@@ -76,7 +78,15 @@ namespace GameScene.ServedObjectComponent
                 return;
             }
 
-            GameObject effectInstance = UnityEngine.Object.Instantiate(effectPrefab, effectParent);
+            var world = GameScene.Object.PresentationWorld.For(effectParent);
+            GameObject effectInstance;
+            if (world != null)
+            {
+                effectInstance = world.InstantiateInactive(effectPrefab, effectParent.position, effectParent.rotation);
+                world.Activate(effectInstance);
+                effectInstance.transform.SetParent(effectParent, false);
+            }
+            else effectInstance = UnityEngine.Object.Instantiate(effectPrefab, effectParent);
             effectInstance.transform.localPosition = Vector3.zero;
             effectInstance.transform.localRotation = Quaternion.identity;
             ApplyEffectScale(effectInstance.transform);

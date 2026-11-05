@@ -60,7 +60,7 @@ namespace GameScene.PopupBook
             PopupBookVisualPresenter presenter = presenterObject.AddComponent<PopupBookVisualPresenter>();
             presenter.visualRoot = presenterTransform;
             presenter.spawnPresentationPivot = pivotTransform;
-            presenter.worldCamera = Camera.main;
+            presenter.worldCamera = GameScene.Object.PresentationWorld.CameraFor(servedObject);
             presenter.worldSpaceUiRoots = GetWorldSpaceUiRoots(servedObject);
             presenter.AlignWithCamera();
             return presenter;
@@ -99,7 +99,7 @@ namespace GameScene.PopupBook
         {
             if (worldCamera == null)
             {
-                worldCamera = Camera.main;
+                worldCamera = GameScene.Object.PresentationWorld.CameraFor(this);
             }
 
             AlignWithCamera();

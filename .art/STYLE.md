@@ -77,6 +77,25 @@ Do not extend this to other units. Anything else gaunt needs its own decision.
 - Max size by tier, aspect preserved, then trimmed tight:
   small `128x128`, middle `192x192`, big `256x256`.
 
+### Named exception — `TutorialHand`
+
+The tutorial pointer hand (`Assets/Art/Images/UI/Tutorial/TutorialHand.png`)
+carries a bold dark outline (`#1E1A2B`, about 4% of the drawing width). It is
+drawn over lobby and battle screens at about 64px on light and dark
+backgrounds, and the outlined candidates read on both where the unoutlined one
+did not. The user picked the outlined bare-hand candidate on 2026-10-11.
+
+- **Exempt from**: no outer contour line, and the three-quarter camera facing
+  right. It is the back of a bare right hand in a mouse-cursor pose: index
+  fingertip at the top-left, wrist leaving at the bottom-right, curled fingers
+  hidden behind the knuckle row.
+- **Still bound by**: faceted flat planes, three value bands, upper-left light,
+  the apprentice mage's skin tone and blue cuff with bronze trim, transparent
+  background.
+
+Do not extend this to sprites. Another UI pointer or cursor needs its own
+decision.
+
 Animation frames and aura assets follow `.art/ANIMATION-ASSETS.md`. Numeric
 state names such as `MagmaSpiritAttacking` identify attack frames, not separate units. Keep
 body scale, PPU, Bottom Center pivot, and ground contact invariant across frames.

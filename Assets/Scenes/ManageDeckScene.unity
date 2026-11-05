@@ -1768,6 +1768,7 @@ MonoBehaviour:
   itemRoot: {fileID: 489897595}
   detailFont: {fileID: 11400000, guid: 27eb6710ab8b4024989693d7f57479f3, type: 2}
   descriptionFont: {fileID: 11400000, guid: b15c5506cbcd44b48b4a55fb77fea659, type: 2}
+  previewPrefab: {fileID: 11400001, guid: aa570083ce364c4485dd61ac12ca4301, type: 3}
 --- !u!114 &560790886
 MonoBehaviour:
   m_ObjectHideFlags: 0

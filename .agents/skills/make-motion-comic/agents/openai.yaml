@@ -1,0 +1,4 @@
+interface:
+  display_name: "만화 → 모션 코믹"
+  short_description: "만화 한 장을 컷과 대사가 차례로 나타나는 Unity 씬으로 제작"
+  default_prompt: "$make-motion-comic 스킬로 첨부 만화 한 장을 가로 화면의 단일 모션 코믹 씬으로 만들어줘."

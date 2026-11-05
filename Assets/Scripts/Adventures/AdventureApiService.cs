@@ -1,20 +1,36 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using LobbyScene;
 using Data;
 using Global;
 using UnityEngine;
 using UnityEngine.Networking;
 using Global.Serialization;
+using LocalServer;
 
 namespace Adventures
 {
     public class AdventureApiService : MonoBehaviour
     {
-        private const string DebugBaseUrl = "http://localhost:7777";
+        private const string DebugBaseUrl = "http://127.0.0.1:7777";
 
         public IEnumerator RequestPVE(long scenarioId, Action<MatchedInfoDto> callback)
         {
-            using var www = UnityWebRequest.Get($"{ServerList.MatchingServer.url}/api/scenarios/{scenarioId}/play");
+            // 봇전과 같은 로컬 경로. 실패하면 null 이 오고 공유 서버로 간다.
+            MatchedInfoDto local = null;
+            yield return LocalMatchRoute.TryStart(LocalSessionRequest.Pve, scenarioId, dto => local = dto);
+            if (local != null)
+            {
+                callback?.Invoke(local);
+                yield break;
+            }
+
+            List<ServerPing> pings = null;
+            yield return GameServerPinger.Measure(result => pings = result);
+
+            using var www = UnityWebRequest.Get(
+                GameServerPinger.AppendQuery($"{ServerList.MatchingServer.url}/api/scenarios/{scenarioId}/play", pings));
             
             Server.SetAcceptLanguage(www);
             Server.SetAuthorization(www);

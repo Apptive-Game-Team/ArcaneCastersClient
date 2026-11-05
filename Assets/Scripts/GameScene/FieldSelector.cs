@@ -47,6 +47,12 @@ namespace GameScene
         /// <summary>참조를 찾지 못했을 때 씬 전체 스캔을 매 프레임 되풀이하지 않기 위한 재시도 간격.</summary>
         private const float MissingReferenceRetryInterval = 0.5f;
 
+        /// <summary>
+        /// 공중 선의 최대 굵기(월드 단위). 서버 ray 는 두께가 0 이라 lane 폭(halfWidth * 2)을 그대로 쓰면
+        /// 실제 판정보다 훨씬 굵은 띠가 유닛 위를 덮는다. 가늘게 두되 lane 이 이보다 좁으면 lane 폭을 따른다.
+        /// </summary>
+        private const float MaxAirLineWidth = 0.2f;
+
         CardInputSender cardInputSender;
         private GameObject currentAimObj;
         private GameObject currentRangeObj;
@@ -61,6 +67,10 @@ namespace GameScene
         private readonly List<GameObject> skillIndicatorLayers = new List<GameObject>(4);
         private readonly List<SkillIndicatorShapeRenderer> skillIndicatorLayerRenderers =
             new List<SkillIndicatorShapeRenderer>(4);
+
+        // grounded: false lane 의 공중 선. layer index 와 같은 칸을 쓰며, 처음 필요할 때만 만든다.
+        private readonly List<GameObject> airLineObjects = new List<GameObject>(2);
+        private readonly List<SkillIndicatorShapeRenderer> airLineRenderers = new List<SkillIndicatorShapeRenderer>(2);
 
         // Resolve 가 매 프레임 여기에 결과를 담는다. list 를 새로 만들지 않아야 GC 가 생기지 않는다.
         private readonly List<ResolvedIndicatorShape> resolvedShapes = new List<ResolvedIndicatorShape>(4);
@@ -129,30 +139,75 @@ namespace GameScene
             LogMagicParametersIfChanged(magicData, range, radius);
 
             Vector3 casterPosition = GetCasterPosition();
-            rangeShapeRenderer.SetCircle(casterPosition, range, true, RangeIndicatorSortingOrder, 0f);
 
             if (!TryGetGroundPosition(AimPointerSource.GetScreenPosition(casterPosition), out Vector3 mouseWorldPos))
             {
+                rangeShapeRenderer.SetCircle(casterPosition, range, true, RangeIndicatorSortingOrder, 0f);
                 return;
             }
 
-            Vector3 previewPosition = ClampToRange(mouseWorldPos, casterPosition, range);
+            // 유닛 위에 마우스가 있으면 클릭이 보낼 위치(Selectable.GetSelectionPosition)를 조준점으로 쓴다.
+            // 마우스 아래 바닥점은 비행 유닛이나 카메라 기울기 때문에 실제 시전 위치와 다르다.
+            // 바닥에 그리는 도형은 발자국(y 를 바닥 높이로)만 쓰고, 높이는 aimHeight 로 따로 들고 있다가
+            // grounded: false lane 의 공중 선에만 쓴다. 유닛과 건물을 놓는 마법은 클릭도 바닥을 보내므로 제외한다.
+            bool snapsToUnit = !MagicCastKinds.LeavesBody(magicData.castKind) && Selectable.Hovered != null;
+            float aimHeight = mouseWorldPos.y;
+            if (snapsToUnit)
+            {
+                // 서버(MagicInputHandler.clampToRange)는 받은 위치를 시전자에서 3D 거리로 잘라 방향을 유지한다.
+                // 같은 방식으로 먼저 3D 로 잘라야 비행 유닛이 사거리 밖일 때 공중 선의 기울기가 서버와 같다.
+                // 3D 거리가 range 이하면 바닥 거리도 range 이하라 아래 ClampToRange 는 더 자르지 않는다.
+                Vector3 selectionPosition = ClampToRange3D(
+                    Selectable.Hovered.GetSelectionPosition(), casterPosition, range);
+                aimHeight = selectionPosition.y;
+                mouseWorldPos = new Vector3(selectionPosition.x, mouseWorldPos.y, selectionPosition.z);
+            }
 
+            Vector3 aimPosition = ClampToRange(mouseWorldPos, casterPosition, range);
+
+            // 유닛과 건물은 땅 위 다른 몸과 겹치는 자리에 놓을 수 없다. 조준점이 막혔으면 가까운 빈자리로 옮겨
+            // 인디케이터 전부를 그 자리에 그리고 그 자리로 보낸다. 빈자리가 없으면 전부 빨갛게 그리고 보내지 않는다.
+            // 공중에 나타나는 소환은 겹쳐도 되므로 검사하지 않는다.
+            Vector3 previewPosition = aimPosition;
+            bool noFreeSpot = false;
+            if (PlacementPreview.ChecksOverlap(magicData) && !PlacementPreview.SummonsAirborne(magicData))
+            {
+                // 건물은 indicator 의 첫 원이 몸이라 그 반지름을, 유닛은 object 의 radius parameter 를 쓴다.
+                // indicator 는 조준점 기준으로 먼저 풀어 반지름만 얻는다. 반지름은 위치와 무관하다.
+                float bodyRadius;
+                if (magicData.castKind == MagicCastKind.Building)
+                {
+                    MagicIndicatorResolver.Resolve(
+                        magicData, casterPosition, aimPosition, MagicIndicatorResolver.GetForwardDirection(),
+                        range, resolvedShapes);
+                    bodyRadius = GetFootprintRadius(radius);
+                }
+                else
+                {
+                    bodyRadius = PlacementPreview.GetUnitBodyRadius(magicData);
+                }
+
+                noFreeSpot = !PlacementPreview.TryResolveSpot(
+                    aimPosition, casterPosition, range, bodyRadius, out previewPosition);
+            }
+
+            Vector3 aimPoint = new Vector3(previewPosition.x, aimHeight, previewPosition.z);
             MagicIndicatorResolver.Resolve(
                 magicData,
                 casterPosition,
                 previewPosition,
+                aimPoint,
                 MagicIndicatorResolver.GetForwardDirection(),
                 range,
                 resolvedShapes);
 
-            // 건물은 땅 위 다른 몸과 겹치는 자리에 놓을 수 없다. 서버도 거절하므로 미리 빨갛게 보이고 보내지 않는다.
-            bool placementBlocked = PlacementPreview.ChecksOverlap(magicData) &&
-                                    PlacementPreview.IsBlocked(previewPosition, GetFootprintRadius(radius));
-            Color? blockedColor = placementBlocked ? PlacementPreview.BlockedFillColor : (Color?)null;
+            Color? blockedColor = noFreeSpot ? PlacementPreview.NoSpotFillColor : (Color?)null;
+            Color? blockedEdgeColor = noFreeSpot ? PlacementPreview.NoSpotEdgeColor : (Color?)null;
+            rangeShapeRenderer.SetCircle(casterPosition, range, true, RangeIndicatorSortingOrder, 0f, blockedColor,
+                blockedEdgeColor);
             aimShapeRenderer.SetCircle(previewPosition, AimIndicatorRadius, true, AimIndicatorSortingOrder, 0f,
-                blockedColor);
-            DrawSkillIndicatorLayers(resolvedShapes, blockedColor);
+                blockedColor, blockedEdgeColor);
+            DrawSkillIndicatorLayers(resolvedShapes, blockedColor, blockedEdgeColor);
 
             // UI 레이캐스트는 클릭을 걸러내는 용도뿐이므로, 실제로 버튼을 뗀 프레임에만 수행한다.
             bool gamepadConfirm = GamepadInput.SubmitDown;
@@ -176,7 +231,7 @@ namespace GameScene
                 return;
             }
 
-            if (placementBlocked)
+            if (noFreeSpot)
             {
                 return;
             }
@@ -264,6 +319,18 @@ namespace GameScene
             }
 
             return null;
+        }
+
+        private static Vector3 ClampToRange3D(Vector3 targetPosition, Vector3 origin, float range)
+        {
+            float safeRange = Mathf.Max(range, 0f);
+            Vector3 offset = targetPosition - origin;
+            if (offset.sqrMagnitude <= safeRange * safeRange)
+            {
+                return targetPosition;
+            }
+
+            return origin + offset.normalized * safeRange;
         }
 
         private static Vector3 ClampToRange(Vector3 targetPosition, Vector3 origin, float range)
@@ -447,7 +514,8 @@ namespace GameScene
         /// 푼 도형을 순서대로 그린다. pool 이 모자라면 그때만 GameObject 를 만들고, 남으면 비활성화만 한다.
         /// 여기서는 list 도 문자열도 새로 만들지 않으므로 프레임마다 GC 가 생기지 않는다.
         /// </summary>
-        private void DrawSkillIndicatorLayers(List<ResolvedIndicatorShape> shapes, Color? overrideColor = null)
+        private void DrawSkillIndicatorLayers(
+            List<ResolvedIndicatorShape> shapes, Color? overrideColor = null, Color? overrideEdgeColor = null)
         {
             Color layerColor = overrideColor ?? SkillIndicatorShapeRenderer.LayerFillColor;
             for (int i = 0; i < shapes.Count; i++)
@@ -474,7 +542,7 @@ namespace GameScene
                     float edgeWidth = hasDocumentEdgeWidth ? shape.edgeWidth : DefaultSkillIndicatorLayerEdgeWidth;
                     layerRenderer.SetCircle(
                         shape.origin, shape.radius, !hasDocumentEdgeWidth, sortingOrder, edgeWidth,
-                        layerColor);
+                        layerColor, overrideEdgeColor);
                 }
                 else
                 {
@@ -482,6 +550,20 @@ namespace GameScene
                     layerRenderer.SetLine(
                         shape.origin, shape.target, shape.length, sortingOrder, shape.halfWidth * 2f,
                         layerColor);
+                }
+
+                if (shape.hasAirLine)
+                {
+                    // 바닥 lane 보다 한 칸 위(layer 끼리 2 씩 떨어져 있어 다른 layer 와 겹치지 않는다).
+                    SkillIndicatorShapeRenderer airRenderer = GetOrCreateAirLine(i);
+                    if (!airLineObjects[i].activeSelf) airLineObjects[i].SetActive(true);
+                    airRenderer.SetAirLine(
+                        shape.airStart, shape.airEnd, sortingOrder + 1,
+                        Mathf.Min(shape.halfWidth * 2f, MaxAirLineWidth), layerColor);
+                }
+                else if (i < airLineObjects.Count && airLineObjects[i] != null && airLineObjects[i].activeSelf)
+                {
+                    airLineObjects[i].SetActive(false);
                 }
             }
 
@@ -515,8 +597,29 @@ namespace GameScene
             return skillIndicatorLayerRenderers[index];
         }
 
+        private SkillIndicatorShapeRenderer GetOrCreateAirLine(int index)
+        {
+            while (airLineObjects.Count <= index)
+            {
+                GameObject airObject = new GameObject($"SkillIndicatorAirLine{airLineObjects.Count}");
+                airLineObjects.Add(airObject);
+                airLineRenderers.Add(airObject.AddComponent<SkillIndicatorShapeRenderer>());
+            }
+
+            return airLineRenderers[index];
+        }
+
         private void HideSkillIndicatorLayersFrom(int firstUnusedIndex)
         {
+            for (int i = firstUnusedIndex; i < airLineObjects.Count; i++)
+            {
+                GameObject airObject = airLineObjects[i];
+                if (airObject != null && airObject.activeSelf)
+                {
+                    airObject.SetActive(false);
+                }
+            }
+
             for (int i = firstUnusedIndex; i < skillIndicatorLayers.Count; i++)
             {
                 GameObject layerObject = skillIndicatorLayers[i];

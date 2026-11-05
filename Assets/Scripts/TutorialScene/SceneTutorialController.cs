@@ -10,6 +10,8 @@ namespace TutorialScene
         [SerializeField] private GameObject targetClickBlocker;
         [SerializeField] private TutorialPanel panel;
 
+        private const string OnboardingTable = "Onboarding";
+
         private readonly TutorialSortingLift lift = new TutorialSortingLift();
 
         protected override void Awake()
@@ -28,9 +30,9 @@ namespace TutorialScene
             Show(messageKey, target != null ? new[] { target } : null, onNext, TutorialPanelSide.Left, blockTargetClick);
         }
 
-        protected void Show(string messageKey, Transform target, TutorialPanelSide panelSide, Action onNext = null)
+        protected void Show(string messageKey, Transform target, TutorialPanelSide panelSide, Action onNext = null, bool blockTargetClick = false)
         {
-            Show(messageKey, target != null ? new[] { target } : null, onNext, panelSide);
+            Show(messageKey, target != null ? new[] { target } : null, onNext, panelSide, blockTargetClick);
         }
 
         protected void Show(string messageKey, Transform[] targets, Action onNext = null)
@@ -53,9 +55,50 @@ namespace TutorialScene
                 targetClickBlocker.SetActive(blockTargetClick);
             }
 
-            panel?.Show(messageKey, onNext, panelSide);
+            // 할 일을 알려 주는 단계는 화면 아래 대화창 대신 위쪽 한 줄 안내와 손가락을 쓴다.
+            // 대화창은 다음 버튼을 눌러 넘어가는, 설명이 꼭 필요한 단계에서만 띄운다.
+            bool usePanel = onNext != null && panel != null;
+            if (usePanel)
+            {
+                TutorialHint.HideCurrent();
+                panel.Show(messageKey, onNext, panelSide);
+            }
+            else
+            {
+                panel?.Hide();
+                TutorialHint.Show(OnboardingTable, messageKey);
+            }
 
-            LiftAboveMask(targets, blockTargetClick);
+            LiftAboveMask(targets, blockTargetClick, usePanel);
+            PointAtAction(targets, onNext);
+        }
+
+        /// <summary>
+        /// 이 단계에서 눌러야 할 것을 손가락으로 가리킨다. 다음 버튼으로 넘어가는 단계는 패널의
+        /// 다음 버튼을, 대상을 눌러야 넘어가는 단계는 대상을 가리킨다. 대상을 여럿 주면 배경처럼
+        /// 아래에 깔 것을 먼저 주므로(LiftAboveMask), 눌러야 할 것은 맨 뒤에 있다.
+        /// </summary>
+        private void PointAtAction(Transform[] targets, Action onNext)
+        {
+            if (onNext != null)
+            {
+                lift.Point(panel != null ? panel.NextButtonTransform : null);
+                return;
+            }
+
+            if (targets == null)
+            {
+                return;
+            }
+
+            for (int i = targets.Length - 1; i >= 0; i--)
+            {
+                if (targets[i] != null)
+                {
+                    lift.Point(targets[i]);
+                    return;
+                }
+            }
         }
 
         /// <summary>
@@ -66,7 +109,7 @@ namespace TutorialScene
         /// 누르지 못하게 하려고 대상 바로 위에 두고, 패널의 다음 버튼은 차단막에 막히지
         /// 않도록 가장 위에 둔다.
         /// </summary>
-        private void LiftAboveMask(Transform[] targets, bool blockTargetClick)
+        private void LiftAboveMask(Transform[] targets, bool blockTargetClick, bool liftPanel)
         {
             Canvas maskCanvas = mask != null ? mask.GetComponentInParent<Canvas>() : null;
             if (maskCanvas == null)
@@ -83,7 +126,7 @@ namespace TutorialScene
                 {
                     if (target != null)
                     {
-                        lift.Lift(target, layer, ++order);
+                        lift.Lift(target, layer, ++order, !blockTargetClick);
                     }
                 }
             }
@@ -93,7 +136,7 @@ namespace TutorialScene
                 lift.Lift(targetClickBlocker.transform, layer, ++order);
             }
 
-            if (panel != null && !SortsAbove(panel.RootRectTransform, layer, order))
+            if (liftPanel && panel != null && !SortsAbove(panel.RootRectTransform, layer, order))
             {
                 lift.Lift(panel.RootRectTransform, layer, order + 1);
             }
@@ -128,6 +171,7 @@ namespace TutorialScene
             }
 
             panel?.Hide();
+            TutorialHint.HideCurrent();
         }
     }
 }

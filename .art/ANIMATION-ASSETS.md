@@ -7,6 +7,9 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 
 | 실제 파일 | 의미 이름 | 런타임 연결 |
 |---|---|---|
+| `ArcaneInfantry.png` | 비전 보병 · 기본 준비 자세 | `InfantryPoseController` 정지 상태 |
+| `ArcaneInfantryAttacking.png` | 비전 보병 · 마력 칼날 타격 | 공격 이벤트에서 0.16초 우선 표시 |
+| `ArcaneInfantryWalkLeft.png`, `ArcaneInfantryWalkRight.png` | 비전 보병 · 두 발걸음 | 이동 이벤트가 이어질 때 0.16초마다 교대, 지지하는 발 기준 |
 | `MagmaSpirit.png` | 용암 갑각 악마 · 선 기본 자세 | `MagmaSpirit.prefab` 기본 SpriteRenderer |
 | `MagmaSpiritAttacking.png` | 용암 갑각 악마 · 내려찍기 자세 | `OnAttackSpriteSwapper.onAttackSprite` |
 | `MagmaSpiritSpawn.png` | 용암 갑각 악마 · 지면 돌파 소환 자세 | 생성 시 0.28초 표시 |
@@ -26,6 +29,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `RockTurretAttacking.png` | 인간제 투석 포탑 · 발사 직후 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
 | `WaterSlime.png` | 물 슬라임 · 한 개체 기본 자세 | `WaterSlime.prefab` 기본 SpriteRenderer |
 | `WaterSlimeAttackSpit.png` | 물 슬라임 · 물 뱉기 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.15초 표시 |
+| `PveBrickGolem.png` | 벽돌 골렘 · 두 주먹을 땅에 댄 기본 자세 | `PveBrickGolem.prefab` 기본 SpriteRenderer |
+| `PveBrickGolem2.png` | 벽돌 골렘 · 한 팔을 높이 든 내려찍기 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
 
 실제 파일명과 `.meta` GUID는 런타임 참조 때문에 유지한다. 문서와 홈페이지에서는
 숫자 접미사 대신 의미 이름을 표시한다.
@@ -287,6 +292,7 @@ PPU·pivot·앵커 좌표를 같이 출력한다.
 | 실제 파일 | 의미 이름 | 사용 방식 |
 |---|---|---|
 | `Effect/AreaOfEffect/RepairAura.png` | repair_totem · 수리 범위 경계 | `RepairTotem.prefab` 자식 SpriteRenderer, `AuraRadiusScaler`가 크기 결정 |
+| `Effect/AreaOfEffect/RallyZone.png` | rallying_totem · 집결 구역 경계 (`effect_radius`) | `RallyingTotem.prefab` 자식 `RallyZone`, `AuraRadiusScaler`가 크기 결정, `GroundPinnedChild`가 땅 XZ 평면에 눕히고 낙하 중에도 땅에 고정 |
 
 - **상태 오라를 키워서 범위 표시로 쓰지 않는다.** element 오라 6종은 전부 가로
   1.28 world unit 로 그려져 있고 실제 최대 사용처가 `FireSpirit`의 2.8배, 즉 3.58
