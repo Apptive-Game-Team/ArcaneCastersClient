@@ -456,3 +456,9 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 합집합이 캔버스 전체가 된다. 2026-09-18 에 `electric_explode` 가 이렇게 배율
 0.094 로 계산돼 캔버스의 59% 만 채운 채 한 번 나갔다. 재기 전에 8 미만을 0 으로
 내리고, 내보낼 때 같은 바닥을 한 번 더 깐다.
+
+## 돌 가고일 날갯짓
+
+`StoneGargoyleFly1`은 날개 올림, `StoneGargoyleFly2`는 수평, `StoneGargoyleFly3`은 날개 내림이다. `StoneGargoyle.prefab`의 `SpriteFrameAnimator`가 `1, 2, 3, 2`를 0.16초 간격으로 반복한다. 경계의 1을 공유하므로 화면에서는 `1 → 2 → 3 → 2 → 1 → 2…`로 왕복한다.
+
+세 파일은 192x165, PPU 100, Bottom Center이며 몸통 배율·눈 가로 기준·발톱 하단을 공유한다. `spriteMeshType: 0`인 Full Rect를 유지해 날개 자세마다 표시 경계가 바뀌지 않게 한다. 기존 정적 `StoneGargoyle.png`는 마법 아이콘으로 유지한다.

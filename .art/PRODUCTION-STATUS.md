@@ -213,6 +213,7 @@
 | `PveBrickGolem.png`, `PveBrickGolem2.png` | 클라이언트 PR (이슈 #329) | **검수 대기, 새 파일.** 요새 마지막 보스 벽돌 골렘의 기본 자세(두 주먹을 땅에 댄 자세)와 공격 자세(한 팔을 높이 든 자세). 256x251 RGBA, PPU 70, Bottom Center. 두 자세를 한 캔버스의 twin panel 로 한 번에 생성(v1 한 번에 통과)하고 공유 crop box `(0, 19, 884, 887)` 와 공유 배율 0.2896 으로 잘랐다. 눈은 몸통 중심보다 오른쪽(파일은 오른쪽을 보고, 경기에서는 RightPlayer 라 뒤집혀 왼쪽을 본다). magenta key 제거, 불투명 픽셀의 magenta 잔색 0, 네 모서리 alpha 0. 공격 자세는 잔해 바닥이 기본 자세보다 3px 위에서 끝난다. `.art/concept/brick-golem/README.md` |
 | `explode/brick_golem_crack_ring.png`, `shoot/brick_golem_sweep.png` | 클라이언트 PR (이슈 #329) | **검수 대기, 새 파일.** 벽돌 골렘의 내려찍기 경고 균열 고리(255x256, 위에서 본 원, 중심 pivot)와 휩쓸기 궤적(256x144, 중심 pivot). 한 캔버스의 두 칸에 한 번에 생성(v1 한 번에 통과), magenta key 제거, 잔색 0, 네 모서리 alpha 0 |
 | `sprites/StoneGargoyle.png` | 돌 가고일 신규 유닛, 2026-11-05 사용자 승인 | 192x176 RGBA, PPU 100, Bottom Center. 돌 부족 70%와 지옥불 차원 영향 30%. 날개 끝·어깨·발톱의 그을린 돌과 붉은 균열, 붉은 눈·이끼 유지. `StoneGargoyle.prefab`에 연결. blue key `--deadzone 4`, enclosed_pixels=0, 네 모서리 alpha 0. `.art/concept/stone-gargoyle/README.md` |
+| `sprites/StoneGargoyleFly1.png`, `StoneGargoyleFly2.png`, `StoneGargoyleFly3.png` | 2026-11-05 사용자 요청 및 12321 왕복 선택 | 날개 올림·수평·내림 3장, 192x165 RGBA, PPU 100, Bottom Center, Full Rect. 기존 `SpriteFrameAnimator`의 `1,2,3,2` 반복, 프레임 0.16초. 공유 크롭·배율·발톱 하단 정렬. `.art/concept/stone-gargoyle-wings/README.md` |
 
 ## 다음 교체 후보
 
