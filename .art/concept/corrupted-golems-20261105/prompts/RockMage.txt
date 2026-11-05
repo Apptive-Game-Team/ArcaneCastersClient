@@ -1,0 +1,5 @@
+Use case: precise-object-edit
+Asset type: Unity runtime sprite, RockMage.png.
+Primary request: Change ONLY the two existing dark oval eyes into luminous crimson-red oval eyes, matching the corrupted stone golems in the Arcane Casters comic: dark-red oval edge, bright red inner fill, tiny warm pale-red highlight. Keep the exact same eye shapes, positions and sizes. Restrained red glow only inside the eyes; no halo on the face.
+Input image: edit target, the original RockMage sprite. This is the sole production rendering reference.
+Constraints: Keep the entire warm tan stone body, green moss, all limbs, pose, accessories, silhouette, every facet, camera facing, crop and image placement unchanged. Preserve genuine transparent background. No horns, cracks, lava, spikes, flames, aura, new expression, background, text or watermark. Do not repaint the body. This is only a two-eye color/material replacement.
