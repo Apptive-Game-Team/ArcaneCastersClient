@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -14,19 +18,43 @@ namespace WordOnline.Tests
     {
         private GameObject root;
         private MonoBehaviour view;
+        private Locale previousLocale;
         private const string Path = "Assets/Prefabs/UI/Tutorial/FactionSelectionView.prefab";
         private void Call(string method, params object[] arguments) =>
             view.GetType().GetMethod(method, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Invoke(view, arguments);
 
-        [SetUp]
-        public void SetUp()
+        [UnitySetUp]
+        public IEnumerator SetUp()
         {
+            // EditMode에서는 언어가 자동 선택되지 않으므로 Show의 번역 조회 전에 준비한다.
+            previousLocale = LocalizationSettings.SelectedLocale;
+            var locale = AssetDatabase.LoadAssetAtPath<Locale>("Assets/Localization/English (en).asset");
+            Assert.IsNotNull(locale);
+            LocalizationSettings.SelectedLocale = locale;
+            var initialization = LocalizationSettings.InitializationOperation;
+            double deadline = EditorApplication.timeSinceStartup + 30d;
+            while (!initialization.IsDone)
+            {
+                Assert.Less(EditorApplication.timeSinceStartup, deadline, "언어 초기화가 완료되지 않았습니다.");
+                yield return null;
+            }
+            var table = LocalizationSettings.StringDatabase.GetTableAsync("Onboarding");
+            while (!table.IsDone)
+            {
+                Assert.Less(EditorApplication.timeSinceStartup, deadline, "Onboarding 번역 테이블을 불러오지 못했습니다.");
+                yield return null;
+            }
+            Assert.IsNotNull(table.Result);
             root = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(Path));
             view = root.GetComponents<MonoBehaviour>().Single(component => component.GetType().Name == "FactionSelectionView");
         }
 
         [TearDown]
-        public void TearDown() => Object.DestroyImmediate(root);
+        public void TearDown()
+        {
+            Object.DestroyImmediate(root);
+            LocalizationSettings.SelectedLocale = previousLocale;
+        }
 
         [Test]
         public void WholeRegionsSubmitOnlyOneChoiceAndCanBeReopened()

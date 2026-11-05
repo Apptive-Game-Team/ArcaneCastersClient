@@ -9,7 +9,9 @@
         "WordOnline.Net",
         "WordOnline.Contracts",
         "Unity.TextMeshPro",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Unity.Localization",
+        "Unity.ResourceManager"
     ],
     "includePlatforms": [
         "Editor"
