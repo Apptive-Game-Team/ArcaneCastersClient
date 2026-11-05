@@ -59,9 +59,16 @@ namespace LobbyScene
         {
             WDebug.Log("LobbyUIController Start");
             loadingHandle = LoadingPage.Begin(this);
-            deckDropdown.onValueChanged.AddListener(OnDropdownChanged);
-            yield return GameDataRefresh.Refresh();
-            yield return LoadUserInfo();
+            try
+            {
+                deckDropdown.onValueChanged.AddListener(OnDropdownChanged);
+                yield return GameDataRefresh.Refresh();
+                yield return LoadUserInfo();
+            }
+            finally
+            {
+                loadingHandle?.Dispose();
+            }
         }
     
         private IEnumerator LoadUserInfo()
