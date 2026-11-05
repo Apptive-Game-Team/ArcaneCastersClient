@@ -383,6 +383,18 @@ MonoBehaviour:
     m_Key: FactionTutorial.meteor.finish
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000114
+    m_Key: FactionSelection.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000115
+    m_Key: FactionSelection.hell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000116
+    m_Key: FactionSelection.nature
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

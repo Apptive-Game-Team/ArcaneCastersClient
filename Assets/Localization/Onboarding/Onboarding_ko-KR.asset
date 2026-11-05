@@ -384,6 +384,18 @@ MonoBehaviour:
     m_Localized: "메테오가 떨어지고 있습니다. 남아 있는 적들은 기본 슛으로 마무리하세요."
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000114
+    m_Localized: 세력 선택
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000115
+    m_Localized: 불타는 군단
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000116
+    m_Localized: 세계수 정령
+    m_Metadata:
+      m_Items: []
   m_Metadata:
       m_Items: []
   references:
