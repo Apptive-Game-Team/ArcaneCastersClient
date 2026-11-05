@@ -157,6 +157,11 @@ Before changing preview loading or caches, read `.agents/docs/server-magic-previ
 
 ## Versioning
 
+Before changing desktop builds or packaging, read `Tools/DesktopUpdater/README.md`.
+The macOS executable follows `productName`, not the output `.app` filename.
+Normalize the built executable and `CFBundleExecutable` before signing; changing
+`productName` instead moves existing preferences and auth storage.
+
 `PlayerSettings.bundleVersion`, serialized as `bundleVersion` in
 `ProjectSettings/ProjectSettings.asset`, is the client's single version source.
 Do not bump it in a pull request. The monorepo `deploy` skill bumps it once per
