@@ -53,4 +53,13 @@ jobs:
           versioning: None
           customParameters: -desktopPlatform ${{ matrix.rid }} -desktopBuildPath build/desktop/ArcaneCasters.app -logFile -
       - name: Check updater executable layout
-        run: test -f build/desktop/ArcaneCasters.app/Contents/MacOS/ArcaneCasters
+        run: |
+          test -f build/desktop/ArcaneCasters.app/Contents/MacOS/ArcaneCasters
+          file build/desktop/ArcaneCasters.app/Contents/MacOS/ArcaneCasters | grep '${{ matrix.rid == 'osx-arm64' && 'arm64' || 'x86_64' }}'
+          python3 - <<'PY'
+          import plistlib
+          from pathlib import Path
+          root = Path('build/desktop/ArcaneCasters.app')
+          with (root / 'Contents/Info.plist').open('rb') as source:
+              assert plistlib.load(source)['CFBundleExecutable'] == 'ArcaneCasters'
+          PY
