@@ -74,6 +74,10 @@ old cast history or a missing response. Do not implement damage/physics here.
 Frames use a monotonically increasing watermark across step resets. Never replay
 events at or below that watermark. Use the server's target coordinates for the
 pointer: the first enemy-owned snapshot object can be a lingering elemental field.
+Capture the world cast point when entering field-selection guidance instead of
+reading the latest target in its screen-point callback. Tornado victims orbit,
+so following each response makes the hand circle with them. Reproject the fixed
+world point for the camera and choose a new point only on a new selection.
 
 An uncertain command retries the same command UUID with its original revision
 and payload. Keep cast input locked until it is accepted or definitively rejected.

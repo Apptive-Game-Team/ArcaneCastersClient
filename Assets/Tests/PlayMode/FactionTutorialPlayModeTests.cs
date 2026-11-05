@@ -47,7 +47,7 @@ namespace WordOnline.Tests
             source = GetStatic("Data.Magic.MagicInfoDataSource", "Instance");
             var field = source.GetType().GetField("magics", BindingFlags.Instance | BindingFlags.NonPublic);
             previousMagics = field.GetValue(source);
-            var response = Json("Data.Magic.MagicInfoResponse", "{\"magics\":[{\"id\":1,\"name\":\"fire_shot\",\"elements\":[\"Fire\"],\"manaCost\":10,\"castKind\":\"Shot\"},{\"id\":2,\"name\":\"meteor_shower\",\"elements\":[\"Fire\",\"Rock\"],\"manaCost\":50,\"castKind\":\"Drop\"}]}");
+            var response = Json("Data.Magic.MagicInfoResponse", "{\"magics\":[{\"id\":1,\"name\":\"fire_shot\",\"elements\":[\"Fire\"],\"manaCost\":10,\"castKind\":\"Shot\"},{\"id\":2,\"name\":\"meteor_shower\",\"elements\":[\"Fire\",\"Rock\"],\"manaCost\":50,\"castKind\":\"Drop\"},{\"id\":3,\"name\":\"tornado_strike\",\"elements\":[\"Wind\"],\"manaCost\":50,\"castKind\":\"Drop\"}]}");
             source.GetType().GetMethod("ProcessResponse", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new[] { response });
             Set(driver, "owner", Owner);
             Set(driver, "matchingServer", ((object)GetStatic("Data.ServerList", "MatchingServer")).GetType().GetProperty("url").GetValue(GetStatic("Data.ServerList", "MatchingServer")));
@@ -73,6 +73,53 @@ namespace WordOnline.Tests
             Assert.That(sender.GetType().GetMethod("GetMagicName").Invoke(sender, null), Is.Null);
             var ids = ((IEnumerable)ui.GetType().GetMethod("GetAllCards").Invoke(ui, null)).Cast<long>().ToArray();
             Assert.That(ids, Is.EqualTo(new long[] { 2 }));
+        }
+
+        [UnityTest]
+        public IEnumerator CastPointerKeepsItsPointWhileTornadoTargetsOrbitAndUpdatesOnReselection()
+        {
+            yield return SetUpBattle();
+            void Receive(float x, float z) => ApplyJson(JsonConvert.SerializeObject(new {
+                battleId = "tutorial-fixture", ownerId = Owner, faction = "HELL", revision = 0,
+                stage = "tornado", status = "RUNNING", cards = new long[] { 3 }, recommended = "tornado_strike",
+                targetX = x, targetZ = z, frames = new object[0], snapshot = new object[0]
+            }));
+            var lateUpdate = driver.GetType().GetMethod("LateUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
+            var pointerField = driver.GetType().GetField("pointer", BindingFlags.Instance | BindingFlags.NonPublic);
+            var ui = GetStatic("GameScene.GameSceneUIController", "Instance");
+            var sender = GetStatic("GameScene.Card.CardInputSender", "Instance");
+            void SelectCard() => sender.GetType().GetMethod("TryUseCard").Invoke(sender,
+                new[] { ui.GetType().GetMethod("GetCardAt").Invoke(ui, new object[] { 0 }) });
+            Vector2 Point()
+            {
+                object pointer = pointerField.GetValue(driver);
+                Assert.That(pointer, Is.Not.Null);
+                var getPoint = (Func<Vector2?>)pointer.GetType().GetField("pressPoint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(pointer);
+                Assert.That(getPoint(), Is.Not.Null);
+                return getPoint().Value;
+            }
+
+            Receive(8, 5);
+            SelectCard();
+            lateUpdate.Invoke(driver, null);
+            Vector2 original = Camera.main.WorldToScreenPoint(new Vector3(8, 0, 5));
+            Assert.That(Vector2.Distance(Point(), original), Is.LessThan(.01f));
+            for (int i = 0; i < 8; i++)
+            {
+                float angle = i * Mathf.PI / 4;
+                Receive(9 + Mathf.Cos(angle), 5 + Mathf.Sin(angle));
+                lateUpdate.Invoke(driver, null);
+                Assert.That(Vector2.Distance(Point(), original), Is.LessThan(.01f), "손이 적의 회전 좌표를 따라가면 안 된다.");
+                yield return null;
+            }
+
+            sender.GetType().GetMethod("Cancel").Invoke(sender, null);
+            lateUpdate.Invoke(driver, null);
+            Receive(10, 6);
+            SelectCard();
+            lateUpdate.Invoke(driver, null);
+            Vector2 next = Camera.main.WorldToScreenPoint(new Vector3(10, 0, 6));
+            Assert.That(Vector2.Distance(Point(), next), Is.LessThan(.01f), "새 선택에서는 사용 지점을 다시 잡는다.");
         }
 
         [UnityTest]

@@ -261,11 +261,10 @@ namespace TutorialScene
             pointerMode = mode;
             if (mode == "field")
             {
-                pointer = TutorialPointer.PointAtScreen(() => {
-                    bool summon = state.stage == "anti_air" || state.stage == "formation";
-                    Vector3 point = summon ? new Vector3(6, 0, 5) : new Vector3(state.targetX, 0, state.targetZ);
-                    return TutorialPointer.ScreenPointOfWorld(point);
-                });
+                bool summon = state.stage == "anti_air" || state.stage == "formation";
+                // 선택 시점의 사용 지점을 유지해 토네이도에 휘말린 적을 따라가지 않는다.
+                Vector3 point = summon ? new Vector3(6, 0, 5) : new Vector3(state.targetX, 0, state.targetZ);
+                pointer = TutorialPointer.PointAtScreen(() => TutorialPointer.ScreenPointOfWorld(point));
             }
             else if (mode == "card") pointer = TutorialPointer.PointAt(card.transform);
             else
