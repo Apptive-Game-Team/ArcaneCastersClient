@@ -9,8 +9,8 @@ using UnityEngine;
 namespace LobbyScene
 {
     /// <summary>
-    /// 관리자가 고른 서버는 일시적으로 응답하지 않아도 유지한다.
-    /// 저장된 선택이 없는 첫 실행에서만 정상 응답한 서버를 우선순위에 따라 고른다.
+    /// 정상 응답한 서버 중 저장된 선택을 우선 적용한다.
+    /// 저장된 서버가 응답하지 않으면 정상 서버를 우선순위에 따라 고른다.
     /// </summary>
     public class MatchingServerDropdown : MonoBehaviour
     {
@@ -47,7 +47,7 @@ namespace LobbyScene
         }
 
         /// <summary>
-        /// 모든 후보를 확인하고, 정상 서버와 관리자가 명시적으로 고른 서버를 목록에 남긴다.
+        /// 저장된 선택도 상태 검사를 통과해야 자동 선택 후보에 포함한다.
         /// </summary>
         private IEnumerator CollectOptions()
         {
@@ -67,10 +67,9 @@ namespace LobbyScene
             }
 
             serverOptions.Clear();
-            MatchingServerOption storedOption = MatchingServerCatalog.FindStoredOption();
             foreach (MatchingServerOption option in MatchingServerCatalog.Options)
             {
-                if (probeResults[option] || option == storedOption)
+                if (probeResults[option])
                     serverOptions.Add(option);
             }
         }
