@@ -7,14 +7,16 @@
 
 ## 상태 판정 기준
 
-2026-11-05 사용자 요청에 따른 돌 골렘 부족 타락 외형 재작업: `MiniRockSwarm.png`
+2026-11-05 돌 골렘 부족 타락 외형 v3: 사용자 피드백으로 핀의 2단계 잠식처럼
+한쪽 팔과 어깨 가장자리만 검붉게 바꾸고 붉은 균열을 추가했다. 얼굴과 몸통 대부분,
+반대쪽 팔·두 다리의 원래 돌색과 초록 이끼는 유지한다. 대상은 `MiniRockSwarm.png`
 (런타임 `MiniRock`), `RockGolem.png`, `RockGolem2.png`(공격), `RockMage.png`,
-`WallGolem.png`에 붉은 눈을 적용했다. 코믹스 2화 모크의 차원문 접촉 장면과
-6화 잠식된 골렘의 돌·이끼 유지 표현을 기준으로 했다. 5장 모두 눈 밖 RGBA와
-전체 alpha·캔버스·접지 영역은 원본과 동일하다. `.meta`와 prefab은 변경하지
-않았다. 검증 수치는 `concept/corrupted-golems-20261105/validation.json`,
-전후 비교는 `../docs/pr-media/423/`에 있다. 클라이언트 브랜치 적용이며,
-Unity 실기 재생·PR 병합·배포·웹사이트 이미지 갱신은 아직 수행하지 않았다.
+`WallGolem.png`다. 전신을 어둡게 한 v2는 채택하지 않았다. 캔버스·alpha bbox·
+바닥 여백·`.meta`와 prefab 참조를 보존했고 64px 비교를 확인했다.
+본문 픽셀과 alpha 윤곽은 생성물로 갱신되므로 v1의 눈 밖 픽셀 동일 검증을
+현재 버전에 적용하지 않는다. 수치는 `concept/corrupted-golems-20261105/v3/validation.json`,
+비교는 `../docs/pr-media/423/golems-partial-corruption-v3.png`에 있다.
+클라이언트 브랜치 적용이며 Unity 실기 재생·PR 병합·배포·웹사이트 갱신은 아직이다.
 
 - `완료`: 새 아트가 클라이언트에 적용됐고, 웹사이트에 해당 이미지가 등록됐거나
   클라이언트 PR에서 검수까지 끝났다.

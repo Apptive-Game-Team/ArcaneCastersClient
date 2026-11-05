@@ -1,37 +1,42 @@
-# 2026-11-05 — 돌 골렘 부족의 타락 외형 적용
+# 2026-11-05 — 핀의 2단계처럼 돌 골렘 부족의 부분 잠식 적용
 
 - Date: 2026-11-05
 - GitHub Issue: #423
-- Status: 구현 및 정적 검증 완료, Unity 실기 확인 대기
+- Status: 구현·정적 검증 완료, PR #424 검토 대기
 
 ## Goal
-게임의 돌 골렘 부족 유닛 전체에 코믹스의 붉은 눈 적용.
+붉은 눈과 한쪽 팔·어깨 가장자리의 검붉은 표면 및 짧은 균열로 부분 잠식을 표현한다.
+핀의 2단계처럼 얼굴과 몸통 대부분·반대쪽 팔·다리의 원래 돌색과 초록 이끼를 남긴다.
 
 ## Non-goals
-능력치·행동·이름·기존 프레임 포즈·웹사이트·코믹스 수정. 인간 병기 Towerback과 PveBrickGolem 제외.
+능력치·행동·이름·웹사이트·코믹스 수정. 인간 병기 Towerback과 PveBrickGolem 제외.
+전신 변색과 모든 이끼를 시들게 한 v2는 사용하지 않는다.
 
 ## Context / Constraints
-코믹스 2화 art-v4/page-03-diverse.png, 6화 art-revised-v3/page-12.png에서 돌·이끼·몸체는 유지되고 눈만 붉게 빛난다. 게임의 master-v2 렌더링과 원본 alpha, 크기, 접지, GUID를 보존한다.
+사용자 피드백: 눈만 바꾼 v1은 약하고, 전신 변색 v2는 과하므로 핀처럼 부분적으로 적용한다.
+참고는 website의 story/references/mage-corruption.png 가운데 2단계다.
+게임의 master-v2 렌더링, 기존 캔버스·alpha bbox·바닥 여백·GUID·PPU·피벗을 유지한다.
+생성물로 표면을 갱신했으므로 v1의 눈 밖 픽셀·전체 alpha 동일 검증은 현재 버전에 적용하지 않는다.
 
 ## Approach (Checklist)
-- [x] **Step 0: Recon** MiniRock prefab과 MiniRockSwarm 스프라이트 연결 확인. RockGolem 기본·공격, RockMage, WallGolem 포함, 총 5장.
-- [x] **Step 1: Implementation** 원본별 built-in image_gen 편집. 생성된 붉은 눈만 추출해 원본 눈 영역에 맞춰 합성하고 몸체 픽셀 보존.
-- [x] **Step 2: Tests** 원본 크기·alpha 일치, 눈 외 픽셀 동일, prefab GUID 불변, 기본·공격 프레임 연결, 64px와 원본 전후 비교 확인.
-- [ ] **Step 3: Rollout / Rollback** 독립 feature/423 브랜치와 dev 대상 PR. 배포는 별도. 이미지 5장 복원으로 되돌린다.
+- [x] **Step 0: Recon** MiniRock prefab의 MiniRockSwarm 연결, RockGolem 기본·공격, RockMage, WallGolem 총 5장 확인.
+- [x] **Step 1: Implementation** built-in image_gen으로 부분 잠식 생성. 꼬마돌은 기존 생성 팔을 원본의 한쪽 팔 영역에 합성. 선택 입력과 프롬프트 보존.
+- [x] **Step 2: Tests** 캔버스·bbox·바닥 여백·metadata·prefab 참조, 붉은 눈·동일 팔 기본/공격과 64px 비교 확인.
+- [ ] **Step 3: Rollout / Rollback** PR #424 검토 뒤 dev 병합은 별도. 원본 PNG 5장 복원으로 되돌린다.
 
 ## Validation
-- **Commands to run:** 이미지 검증 스크립트, git diff --check, 스프라이트 시트 생성.
-- **Expected output:** 5장 모두 alpha·크기·눈 외 픽셀 보존, 붉은 눈 확인, 기존 meta 불변.
+- **Commands to run:** v3/finalize.py, 이미지·prefab 참조 확인, git diff --check.
+- **Expected output:** 5장 모두 기존 캔버스·bbox·바닥 여백 유지, metadata·prefab 변경 없음.
 
 ## Risks & Rollback
-- **Risks:** 생성기의 몸체 재해석은 눈 영역만 사용해 차단한다. 64px에서 붉은 눈 가독성을 확인한다. Unity 실기 재생 검증 여부를 PR에 명시한다.
-- **Rollback steps:** 해당 커밋 revert 또는 이미지 5장 복원.
+- **Risks:** 실제 Unity 재생은 미확인. 기존 alpha 윤곽 전체와 픽셀은 생성물로 달라진다.
+- **Rollback steps:** feat(art) 변경 revert 또는 원본 PNG 5장 복원.
 
 ## Open Questions
-- 없음. 사용자가 게임 안 부족 유닛 전체를 대상으로 확정했다.
-
-## Plan Review
-FAST REVIEW의 프레임 누락·눈 마스크 범위 지적을 반영했다. 상위 prefab의 빈 swapSprite와 RockGolem 공격 override를 확인했다. MEDIUM REVIEW와 수정 계획의 HEAVY REVIEW는 PASS다.
+- 없음. 최신 사용자 피드백을 적용했다.
 
 ## Verification Results
-다섯 이미지의 alpha·캔버스·접지·눈 밖 RGBA 동일 검증을 통과했다. 변경 픽셀 수는 462/110/110/342/96이다. 64px와 전후 비교를 확인했다. ImageMagick은 설치되어 있지 않아 make-sheets.sh 대신 Pillow로 같은 전체 스프라이트 검토 시트를 생성했다. Unity Editor 실제 재생은 수행하지 않았다.
+5장 모두 기존 캔버스·alpha bbox·바닥 여백을 유지했다. 입력 원본과의 종횡비 차이는 3.8% 이내다.
+meta와 prefab 변경이 없으며 64px 및 원본 크기 비교를 확인했다. 전체 스프라이트 시트는
+ImageMagick 미설치로 Pillow를 사용했다. Graphify 실행 파일은 설치되어 있지 않다.
+Unity Editor 실제 재생·빌드·PR 병합·배포는 수행하지 않았다.
