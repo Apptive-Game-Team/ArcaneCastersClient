@@ -341,3 +341,7 @@ commit 그대로였다.
 ## 성장 UI 골드 아이콘 — 2026-10-29
 
 `Assets/Resources/UI/Progression/Gold.png`: 승인된 흰 패널 시안에 사용하는 단일 골드 아이콘. master-v2 기준으로 생성했으며, 로비·레벨 보상·골드 보상 타일에서 공유한다. 투명 배경, Unity 최대 텍스처 256, 작은 화면에서 실루엣 확인. 클라이언트 #393 / PR #396 검토 대상.
+
+## 세력 선택 배경 — 2026-11-05
+
+`Assets/Art/Images/UI/FactionSelection/Environments.png`: 승인된 세력 대치 시안에서 분리한 기본·불타는 군단·세계수 배경 atlas. 유닛과 글자는 포함하지 않는다. 선택 prefab은 같은 비율로 잘라 겹치고 alpha를 전환한다. 유닛은 기존 원본 스프라이트를 그대로 사용한다. Sprite와 prefab은 `FactionSelectionSetup.Build`로 재생성한다.
