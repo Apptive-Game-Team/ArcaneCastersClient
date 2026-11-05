@@ -16,7 +16,11 @@ namespace LobbyScene
         private MatchEventStream eventStream;
         private bool snapshotRequestInFlight;
         private bool enqueueInFlight;
+        private bool checkingEnqueueOutcome;
+        private int enqueueVersion;
         private bool cancelRequestedDuringEnqueue;
+        private bool cancelRequestInFlight;
+        private int cancelRequestVersion;
         private bool stopping;
         private Coroutine reconnectCoroutine;
         private Coroutine fallbackCoroutine;
@@ -44,17 +48,23 @@ namespace LobbyScene
 
         public void Enqueue(string deckMode)
         {
+            cancelRequestVersion++;
+            cancelRequestInFlight = false;
+            int requestVersion = ++enqueueVersion;
+            MatchTicket previousTicket = reducer.Current;
+            checkingEnqueueOutcome = false;
             enqueueInFlight = true;
             cancelRequestedDuringEnqueue = false;
             StartCoroutine(api.CreateTicket(deckMode, ticket =>
             {
+                if (requestVersion != enqueueVersion) return;
                 enqueueInFlight = false;
                 if (ticket == null)
                 {
-                    bool cancelRequested = cancelRequestedDuringEnqueue;
-                    cancelRequestedDuringEnqueue = false;
-                    // No ticket was created, so a pending cancel has nothing left to cancel.
-                    PublishLocalState(cancelRequested ? MatchTicketState.Canceled : MatchTicketState.Failed);
+                    // 응답 유실만으로 생성 실패를 단정하지 않고 서버에 남은 티켓을 확인한다.
+                    if (reducer.Current != null && !IsSameTicket(reducer.Current, previousTicket)) return;
+                    checkingEnqueueOutcome = true;
+                    RecoverSnapshot();
                     return;
                 }
                 // ApplyTicket starts the pending cancel itself when the ticket is Queued or Allocating,
@@ -75,7 +85,7 @@ namespace LobbyScene
 
             // The create request has not returned yet, so there is no ticket id to cancel.
             // Remember the request; the ticket is canceled as soon as it is applied.
-            if (enqueueInFlight)
+            if (enqueueInFlight || checkingEnqueueOutcome)
             {
                 cancelRequestedDuringEnqueue = true;
                 PublishLocalState(MatchTicketState.CancelPending);
@@ -96,9 +106,17 @@ namespace LobbyScene
 
         private void RequestCancel(MatchTicket ticket)
         {
+            if (cancelRequestInFlight) return;
+            cancelRequestInFlight = true;
+            int requestVersion = ++cancelRequestVersion;
             PublishLocalState(MatchTicketState.CancelPending);
             StartCoroutine(api.CancelTicket(ticket.ticketId, result =>
             {
+                if (requestVersion != cancelRequestVersion) return;
+                cancelRequestInFlight = false;
+                // 이전 티켓의 늦은 취소 응답으로 새 매칭이나 확인된 종료 상태를 되돌리지 않는다.
+                if (reducer.Current == null || reducer.Current.ticketId != ticket.ticketId) return;
+                if (!IsCancelable(reducer.Current)) return;
                 if (result?.ticket != null)
                 {
                     if (!ApplyTicket(result.ticket)) RestoreServerStateFromTransientState();
@@ -117,12 +135,20 @@ namespace LobbyScene
             // A 404 only describes the ticket held when the request went out. A ticket applied
             // while it was in flight (the create response arriving first) must not be cleared by it.
             MatchTicket requestedFor = reducer.Current;
+            int requestedEnqueueVersion = enqueueVersion;
+            bool requestedWhileChecking = checkingEnqueueOutcome;
             StartCoroutine(api.GetActiveTicket((requestSucceeded, ticket) =>
             {
                 snapshotRequestInFlight = false;
+                // 생성 결과를 확인하기 전에 시작한 조회의 404로 새 요청을 종결하지 않는다.
+                if (requestedEnqueueVersion != enqueueVersion || (checkingEnqueueOutcome && !requestedWhileChecking))
+                {
+                    if (checkingEnqueueOutcome) RecoverSnapshot();
+                    return;
+                }
                 if (!requestSucceeded)
                 {
-                    PublishLocalState(MatchTicketState.Reconnecting);
+                    if (HasUnconfirmedMatch()) PublishLocalState(MatchTicketState.Reconnecting);
                     if (snapshotRetryCoroutine == null)
                         snapshotRetryCoroutine = StartCoroutine(RetrySnapshot());
                     return;
@@ -131,10 +157,21 @@ namespace LobbyScene
                 {
                     // The create request may not have reached the server yet.
                     if (enqueueInFlight) return;
+                    if (checkingEnqueueOutcome)
+                    {
+                        checkingEnqueueOutcome = false;
+                        reducer.Clear();
+                        bool canceled = cancelRequestedDuringEnqueue;
+                        cancelRequestedDuringEnqueue = false;
+                        PublishLocalState(canceled ? MatchTicketState.Canceled : MatchTicketState.Failed);
+                        return;
+                    }
                     MatchTicket local = reducer.Current;
                     if (local == null)
                     {
-                        PublishLocalState(MatchTicketState.Idle);
+                        bool canceled = cancelRequestedDuringEnqueue;
+                        cancelRequestedDuringEnqueue = false;
+                        PublishLocalState(canceled ? MatchTicketState.Canceled : MatchTicketState.Idle);
                     }
                     else if (IsSameTicket(local, requestedFor) &&
                              (IsCancelable(local) || State == MatchTicketState.CancelPending))
@@ -146,7 +183,9 @@ namespace LobbyScene
                     }
                     return;
                 }
+                checkingEnqueueOutcome = false;
                 if (!ApplyTicket(ticket)) RestoreServerStateFromTransientState();
+                if (!IsCancelable(ticket)) cancelRequestedDuringEnqueue = false;
             }));
         }
 
@@ -197,7 +236,7 @@ namespace LobbyScene
         private void HandleStreamDisconnected()
         {
             if (stopping) return;
-            PublishLocalState(MatchTicketState.Reconnecting);
+            if (HasUnconfirmedMatch()) PublishLocalState(MatchTicketState.Reconnecting);
             if (fallbackCoroutine == null) fallbackCoroutine = StartCoroutine(PollWhileDisconnected());
             if (reconnectCoroutine == null) reconnectCoroutine = StartCoroutine(Reconnect());
         }
@@ -223,7 +262,14 @@ namespace LobbyScene
         private bool ApplyTicket(MatchTicket ticket)
         {
             if (!reducer.Apply(ticket)) return false;
+            checkingEnqueueOutcome = false;
             MatchTicketState parsedState = ticket.ParsedState;
+            if (parsedState == MatchTicketState.Matched || parsedState == MatchTicketState.Canceled ||
+                parsedState == MatchTicketState.Failed || parsedState == MatchTicketState.Expired)
+            {
+                enqueueInFlight = false;
+                cancelRequestedDuringEnqueue = false;
+            }
             if (cancelRequestedDuringEnqueue && IsCancelable(ticket))
             {
                 // Whichever path (event stream or create response) applies the ticket first
@@ -244,6 +290,9 @@ namespace LobbyScene
             if (State != MatchTicketState.Reconnecting && State != MatchTicketState.CancelPending) return;
             PublishLocalState(reducer.Current.ParsedState);
         }
+
+        private bool HasUnconfirmedMatch() => enqueueInFlight || checkingEnqueueOutcome ||
+            cancelRequestedDuringEnqueue || IsCancelable(reducer.Current) || State == MatchTicketState.CancelPending;
 
         private void PublishLocalState(MatchTicketState state)
         {

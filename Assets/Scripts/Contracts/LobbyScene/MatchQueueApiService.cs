@@ -13,6 +13,7 @@ namespace LobbyScene
 {
     public class MatchQueueApiService : MonoBehaviour
     {
+        private const int TicketRequestTimeoutSeconds = 8;
         private static ServerEndpoint MatchTickets =>
             ServerList.MatchingServer.Api.Path("api", "match", "tickets");
 
@@ -33,6 +34,7 @@ namespace LobbyScene
         public virtual IEnumerator GetActiveTicket(Action<bool, MatchTicket> callback)
         {
             using var webRequest = UnityWebRequest.Get(MatchTickets.Path("active"));
+            webRequest.timeout = TicketRequestTimeoutSeconds;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
             yield return webRequest.SendWebRequest();
@@ -64,6 +66,7 @@ namespace LobbyScene
         public virtual IEnumerator CancelTicket(string ticketId, Action<MatchCancelResult> callback)
         {
             using var webRequest = UnityWebRequest.Delete(MatchTickets.Path(ticketId));
+            webRequest.timeout = TicketRequestTimeoutSeconds;
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
@@ -92,6 +95,7 @@ namespace LobbyScene
             Action<MatchTicket> callback,
             string operation)
         {
+            webRequest.timeout = TicketRequestTimeoutSeconds;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
             yield return webRequest.SendWebRequest();
@@ -183,6 +187,7 @@ namespace LobbyScene
 
             using var webRequest = UnityWebRequest.Get(
                 GameServerPinger.AppendQuery(ServerList.MatchingServer.Api.Path("api", "match", "practice", "me"), pings));
+            webRequest.timeout = 30;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
             yield return webRequest.SendWebRequest();

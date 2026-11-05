@@ -204,6 +204,206 @@ namespace WordOnline.Tests
             Assert.That(coordinator.CurrentTicket?.ticketId, Is.EqualTo("ticket-204"));
         }
 
+        [Test]
+        public void Cancel_WhileRequestIsPending_SendsOnlyOneRequest()
+        {
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.TicketToReturnOnCreate = new MatchTicket { ticketId = "pending-cancel", version = 1, state = "QUEUED" };
+            coordinator.Enqueue("normal_deck");
+            apiStub.HoldCancel = true;
+
+            coordinator.Cancel();
+            coordinator.Cancel();
+
+            Assert.That(apiStub.CancelCallCount, Is.EqualTo(1));
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.CancelPending));
+            apiStub.CompleteCancel(new MatchCancelResult {
+                ticket = new MatchTicket { ticketId = "pending-cancel", version = 2, state = "CANCELED" }
+            });
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Canceled));
+        }
+
+        [Test]
+        public void SnapshotFailure_AfterCancellation_KeepsCancellationConfirmed()
+        {
+            apiStub.SnapshotTicket = new MatchTicket { ticketId = "finished", version = 2, state = "CANCELED" };
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.SnapshotSucceeded = false;
+
+            coordinator.RecoverSnapshot();
+
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Canceled));
+        }
+
+        [Test]
+        public void Cancel_ConfirmedBeforeCreateResponse_DoesNotReopenOnConnectionFailure()
+        {
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.HoldCreate = true;
+            coordinator.Enqueue("normal_deck");
+            coordinator.Cancel();
+            var queued = new MatchTicket { ticketId = "canceled-before-create", version = 1, state = "QUEUED" };
+            apiStub.SnapshotTicket = queued;
+            apiStub.CancelResultToReturn = new MatchCancelResult {
+                ticket = new MatchTicket { ticketId = "canceled-before-create", version = 2, state = "CANCELED" }
+            };
+            coordinator.RecoverSnapshot();
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Canceled));
+
+            apiStub.SnapshotSucceeded = false;
+            coordinator.RecoverSnapshot();
+            apiStub.CompleteCreate(queued);
+
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Canceled));
+        }
+
+        [Test]
+        public void Cancel_DuringUnknownCreateOutcome_RemembersIntentUntilRecovery()
+        {
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.HoldCreate = true;
+            coordinator.Enqueue("normal_deck");
+            apiStub.SnapshotSucceeded = false;
+            apiStub.CompleteCreate(null);
+            coordinator.Cancel();
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.CancelPending));
+            apiStub.SnapshotSucceeded = true;
+            apiStub.SnapshotTicket = new MatchTicket { ticketId = "unknown-create", version = 1, state = "QUEUED" };
+            apiStub.CancelResultToReturn = new MatchCancelResult {
+                ticket = new MatchTicket { ticketId = "unknown-create", version = 2, state = "CANCELED" }
+            };
+
+            coordinator.RecoverSnapshot();
+
+            Assert.That(apiStub.CancelCallCount, Is.EqualTo(1));
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Canceled));
+        }
+
+        [Test]
+        public void CreateFailure_AfterPreviousTerminalTicket_SettlesNewOutcome()
+        {
+            apiStub.SnapshotTicket = new MatchTicket { ticketId = "previous", version = 2, state = "CANCELED" };
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.SnapshotTicket = null;
+            apiStub.TicketToReturnOnCreate = null;
+
+            coordinator.Enqueue("normal_deck");
+
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Failed));
+            Assert.That(coordinator.CurrentTicket, Is.Null);
+        }
+
+        [Test]
+        public void CreateFailure_DoesNotUseSnapshotStartedBeforeCreation()
+        {
+            apiStub.HoldSnapshot = true;
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.HoldCreate = true;
+            coordinator.Enqueue("normal_deck");
+            apiStub.CompleteCreate(null);
+            Assert.That(apiStub.SnapshotCallCount, Is.EqualTo(1));
+
+            apiStub.CompleteSnapshot(true, null);
+
+            Assert.That(apiStub.SnapshotCallCount, Is.EqualTo(2));
+            Assert.That(coordinator.State, Is.Not.EqualTo(MatchTicketState.Failed));
+            apiStub.CompleteSnapshot(true, new MatchTicket { ticketId = "created-after-snapshot", version = 1, state = "QUEUED" });
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Queued));
+        }
+
+        [Test]
+        public void Cancel_WhenCreateResponseIsLost_CancelsTicketRecoveredFromServer()
+        {
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.HoldCreate = true;
+            coordinator.Enqueue("normal_deck");
+            coordinator.Cancel();
+            apiStub.SnapshotTicket = new MatchTicket { ticketId = "lost-create", version = 1, state = "QUEUED" };
+            apiStub.CancelResultToReturn = new MatchCancelResult {
+                ticket = new MatchTicket { ticketId = "lost-create", version = 2, state = "CANCELED" }
+            };
+
+            apiStub.CompleteCreate(null);
+
+            Assert.That(apiStub.CancelCallCount, Is.EqualTo(1));
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Canceled));
+        }
+
+        [Test]
+        public void Cancel_WhenCreateAndSnapshotFail_WaitsForConfirmationBeforeCanceling()
+        {
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.HoldCreate = true;
+            coordinator.Enqueue("normal_deck");
+            coordinator.Cancel();
+            apiStub.SnapshotSucceeded = false;
+
+            apiStub.CompleteCreate(null);
+
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Reconnecting));
+            Assert.That(apiStub.CancelCallCount, Is.Zero);
+            apiStub.SnapshotSucceeded = true;
+            apiStub.SnapshotTicket = new MatchTicket { ticketId = "recovered-create", version = 1, state = "QUEUED" };
+            apiStub.CancelResultToReturn = new MatchCancelResult {
+                ticket = new MatchTicket { ticketId = "recovered-create", version = 2, state = "CANCELED" }
+            };
+            coordinator.RecoverSnapshot();
+            Assert.That(apiStub.CancelCallCount, Is.EqualTo(1));
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Canceled));
+        }
+
+        [Test]
+        public void Cancel_LateFailureAfterConfirmedCancellation_DoesNotRestartMatching()
+        {
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.TicketToReturnOnCreate = new MatchTicket { ticketId = "confirmed-cancel", version = 1, state = "QUEUED" };
+            coordinator.Enqueue("normal_deck");
+            apiStub.HoldCancel = true;
+            coordinator.Cancel();
+            apiStub.SnapshotTicket = new MatchTicket { ticketId = "confirmed-cancel", version = 2, state = "CANCELED" };
+            coordinator.RecoverSnapshot();
+            int snapshots = apiStub.SnapshotCallCount;
+
+            apiStub.CompleteCancel(null);
+
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Canceled));
+            Assert.That(apiStub.SnapshotCallCount, Is.EqualTo(snapshots));
+        }
+
+        [Test]
+        public void Cancel_OldResponseAfterNewEnqueue_DoesNotReplaceNewTicket()
+        {
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.TicketToReturnOnCreate = new MatchTicket { ticketId = "old-cancel", version = 1, state = "QUEUED" };
+            coordinator.Enqueue("normal_deck");
+            apiStub.HoldCancel = true;
+            coordinator.Cancel();
+            apiStub.TicketToReturnOnCreate = new MatchTicket { ticketId = "new-queue", version = 1, state = "QUEUED" };
+            coordinator.Enqueue("normal_deck");
+
+            apiStub.CompleteCancel(new MatchCancelResult {
+                ticket = new MatchTicket { ticketId = "old-cancel", version = 2, state = "CANCELED" }
+            });
+
+            Assert.That(coordinator.CurrentTicket.ticketId, Is.EqualTo("new-queue"));
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Queued));
+        }
+
+        [Test]
+        public void Cancel_UnconfirmedResponseAndQueuedSnapshot_AllowsRetry()
+        {
+            coordinator.Initialize(apiStub, connectStream: false);
+            apiStub.TicketToReturnOnCreate = new MatchTicket { ticketId = "retry-cancel", version = 1, state = "QUEUED" };
+            coordinator.Enqueue("normal_deck");
+            apiStub.SnapshotTicket = apiStub.TicketToReturnOnCreate;
+
+            coordinator.Cancel();
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Queued));
+            coordinator.Cancel();
+
+            Assert.That(apiStub.CancelCallCount, Is.EqualTo(2));
+        }
+
         private class FakeMatchQueueApiService : MatchQueueApiService
         {
             public string LastRequestedDeckMode { get; private set; }
@@ -214,8 +414,19 @@ namespace WordOnline.Tests
             public int CancelCallCount { get; private set; }
             public string LastCanceledTicketId { get; private set; }
             public bool HoldSnapshot { get; set; }
+            public bool SnapshotSucceeded { get; set; } = true;
+            public bool HoldCancel { get; set; }
+            public int SnapshotCallCount { get; private set; }
             private Action<MatchTicket> pendingCreateCallback;
             private Action<bool, MatchTicket> pendingSnapshotCallback;
+            private Action<MatchCancelResult> pendingCancelCallback;
+
+            public void CompleteCancel(MatchCancelResult result)
+            {
+                var callback = pendingCancelCallback;
+                pendingCancelCallback = null;
+                callback?.Invoke(result);
+            }
 
             public void CompleteSnapshot(bool requestSucceeded, MatchTicket ticket)
             {
@@ -245,12 +456,13 @@ namespace WordOnline.Tests
 
             public override IEnumerator GetActiveTicket(Action<bool, MatchTicket> callback)
             {
+                SnapshotCallCount++;
                 if (HoldSnapshot)
                 {
                     pendingSnapshotCallback = callback;
                     yield break;
                 }
-                callback?.Invoke(true, SnapshotTicket);
+                callback?.Invoke(SnapshotSucceeded, SnapshotTicket);
                 yield break;
             }
 
@@ -258,6 +470,11 @@ namespace WordOnline.Tests
             {
                 CancelCallCount++;
                 LastCanceledTicketId = ticketId;
+                if (HoldCancel)
+                {
+                    pendingCancelCallback = callback;
+                    yield break;
+                }
                 callback?.Invoke(CancelResultToReturn);
                 yield break;
             }

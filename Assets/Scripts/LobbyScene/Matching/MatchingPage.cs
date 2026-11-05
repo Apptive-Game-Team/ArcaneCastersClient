@@ -17,6 +17,7 @@ namespace LobbyScene.Matching
 
         private LocalizedString matchingTitle;
         private readonly LocalizedString connectingTitle = new LocalizedString("LobbyUI", "GameServerConnecting");
+        private readonly LocalizedString cancelingTitle = new LocalizedString("LobbyUI", "MatchingStateCancelPending");
         private readonly LocalizedString[] preparationTitles =
         {
             new LocalizedString("LobbyUI", "GameSessionPreparing"),
@@ -83,6 +84,7 @@ namespace LobbyScene.Matching
             preparingSession = preparing;
 
             titleLabel.StringReference = connecting ? connectingTitle :
+                viewModel.TicketState.Data == MatchTicketState.CancelPending ? cancelingTitle :
                 preparing ? preparationTitles[preparationMessageIndex] : matchingTitle;
             foreach (GameObject widget in matchmakingOnly) widget.SetActive(!preparing && !connecting);
             content.SetActive(connecting || preparing ||
