@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Global.Serialization;
 using RewardChest;
 
@@ -67,7 +68,7 @@ namespace Data.Quests
                 return false;
             }
 
-            rewards = RewardView.FromEntries(parsed.rewards);
+            rewards = RewardView.FromEntries(parsed.rewards?.Where(entry => entry != null && entry.amount > 0));
             return true;
         }
 

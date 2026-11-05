@@ -19,16 +19,6 @@ namespace Data
         public static readonly MatchingServerOption Local =
             new MatchingServerOption("local", "127.0.0.1", new Server("local", "127.0.0.1", 6209));
 
-        /// <summary>
-        /// The magic-card track's own environment. It runs its own account server with its own
-        /// key pair, so <see cref="ServerList.AccountServer"/> has to point at the same
-        /// environment: this lobby verifies tokens against that account server's JWKS and
-        /// rejects one signed by any other.
-        /// </summary>
-        public static readonly MatchingServerOption MagicCard =
-            new MatchingServerOption("magic-card", "magic-card",
-                new Server("magic-card", "lobby.magic-card.ac.theevilent.com", 443, true));
-
         public static readonly MatchingServerOption Dev =
             new MatchingServerOption("dev", "dev", new Server("dev", "lobby.dev.ac.theevilent.com", 443, true));
 
@@ -39,13 +29,17 @@ namespace Data
         /// Options in auto-select priority order: the first healthy one wins when the admin
         /// has no stored choice.
         /// </summary>
-        public static readonly IReadOnlyList<MatchingServerOption> Options = new[] { Local, MagicCard, Dev, Deploy };
+        public static readonly IReadOnlyList<MatchingServerOption> Options = new[] { Local, Dev, Deploy };
 
         /// <summary>
-        /// 관리자 선택 전에는 운영 서버를 사용한다. 개발 빌드도 같은 기본값을 쓰며,
-        /// 관리자는 드롭다운에서 다른 서버를 선택할 수 있다.
+        /// 로비보다 먼저 실행되는 튜토리얼도 에디터에서는 개발 서버를 사용한다.
+        /// 빌드는 운영 서버로 시작하며 관리자는 드롭다운에서 서버를 바꿀 수 있다.
         /// </summary>
+#if UNITY_EDITOR
+        private static readonly MatchingServerOption BuildDefault = Dev;
+#else
         private static readonly MatchingServerOption BuildDefault = Deploy;
+#endif
 
         public static MatchingServerOption Current { get; private set; } = BuildDefault;
 

@@ -16,7 +16,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace LobbyScene {
-    public class PlayerProgressionView : MonoBehaviour {
+    public partial class PlayerProgressionView : MonoBehaviour {
         [SerializeField] private GameObject hud;
         [SerializeField] private GameObject page;
         [SerializeField] private TMP_Text levelText;
@@ -41,6 +41,8 @@ namespace LobbyScene {
         [SerializeField] private RewardTileView tilePrefab;
         [SerializeField] private RewardTileView largeTilePrefab;
         [SerializeField] private ChestApiClient chestApi;
+        [SerializeField] private GameObject xpNoticeRoot;
+        [SerializeField] private TMP_Text xpNotice;
         private readonly List<ProgressionRewardRow> rows = new List<ProgressionRewardRow>();
         private PlayerProgressionDto state;
         private ProgressionRewardsDto catalog;
@@ -49,41 +51,155 @@ namespace LobbyScene {
         private bool loading;
         private int? chestCount;
         private string paid = "", locked = "";
+        private Coroutine xpAnimation;
+        private ProgressionLevelRewardDto[] xpLevels;
+        private bool hasPresentation;
+        private long displayedXp;
+        private long targetXp;
+        private int targetLevel;
+        private bool levelUpVisible;
+        private int noticeLevel;
+        private string levelUpFormat = "";
 
         private void OnEnable() { LocalizationSettings.SelectedLocaleChanged += LocaleChanged; }
-        private void OnDisable() { LocalizationSettings.SelectedLocaleChanged -= LocaleChanged; }
+        private void OnDisable() {
+            LocalizationSettings.SelectedLocaleChanged -= LocaleChanged;
+            CloseClaimPresentation();
+            if (xpAnimation != null) { StopCoroutine(xpAnimation); xpAnimation = null; }
+            if (state != null) RenderProgress(state.level, state.levelXp, state.nextLevelXp);
+            displayedXp = targetXp;
+            if (xpFill != null) xpFill.color = pageXpFill.color = new Color32(91, 208, 76, 255);
+            if (xpNoticeRoot != null) xpNoticeRoot.SetActive(false);
+        }
         private void LocaleChanged(Locale _) { Bind(state); if (catalog != null) SelectLevel(selectedLevel); }
 
         public void Bind(PlayerProgressionDto value) {
             if (value == null || string.IsNullOrEmpty(value.faction)) return;
-            if (state != null && state.faction != value.faction) { catalog = null; ClearRows(); }
+            CheckClaimContext();
+            if (state != null && state.faction != value.faction) {
+                catalog = null; xpLevels = null; hasPresentation = false; ClearRows();
+            }
             state = value;
             hud.SetActive(!page.activeSelf);
-            levelText.text = $"Lv. {value.level}";
-            string xp = value.nextLevelXp <= 0 ? "MAX" : $"{value.levelXp} / {value.nextLevelXp}";
-            xpText.text = xp;
-            pageXpText.text = value.nextLevelXp <= 0 ? "MAX" : xp + " XP";
-            float fill = value.nextLevelXp <= 0 ? 1 : Mathf.Clamp01((float)value.levelXp / value.nextLevelXp);
-            xpFill.rectTransform.anchorMax = pageXpFill.rectTransform.anchorMax = new Vector2(fill, 1);
             goldText.text = pageGoldText.text = value.currency.ToString("N0");
-            pagePlayerText.text = $"{SceneContext.User?.name ?? ""} · Lv. {value.level}";
+            PresentExperience(value);
             _ = RefreshText(++textVersion);
+            ScheduleClaimsRefresh();
+            if (page.activeSelf && catalog == null && !loading) RetryRewards();
+        }
+
+        private void RenderProgress(int level, long xp, int cost) {
+            levelText.text = $"Lv. {level}";
+            xpText.text = cost <= 0 ? "MAX" : $"{xp} / {cost}";
+            pageXpText.text = cost <= 0 ? "MAX" : xpText.text + " XP";
+            float fill = cost <= 0 ? 1 : Mathf.Clamp01((float)xp / cost);
+            xpFill.rectTransform.anchorMax = pageXpFill.rectTransform.anchorMax = new Vector2(fill, 1);
+            pagePlayerText.text = $"{SceneContext.User?.name ?? ""} · Lv. {level}";
+        }
+
+        private void PresentExperience(PlayerProgressionDto value) {
+            if (hasPresentation && targetXp == value.xp && targetLevel == value.level) return;
+            long start = suppressContextExperience ? value.xp
+                : hasPresentation ? displayedXp : Math.Max(0, value.xp - Math.Max(0, value.gainedXp));
+            suppressContextExperience = false;
+            bool animate = Application.isPlaying && isActiveAndEnabled && start < value.xp;
+            if (xpAnimation != null) { StopCoroutine(xpAnimation); xpAnimation = null; }
+            hasPresentation = true;
+            targetXp = value.xp;
+            targetLevel = value.level;
+            levelUpVisible = false;
+            if (!animate) {
+                displayedXp = value.xp;
+                RenderProgress(value.level, value.levelXp, value.nextLevelXp);
+                if (xpNoticeRoot != null) xpNoticeRoot.SetActive(false);
+                return;
+            }
+            // DTO는 지급 알림 뒤 재사용되므로 연출에 필요한 값은 시작할 때 복사한다.
+            xpAnimation = StartCoroutine(AnimateExperience(start, value.xp, value.level,
+                value.levelXp, value.nextLevelXp, value.faction));
+        }
+
+        private IEnumerator AnimateExperience(long from, long to, int finalLevel, long finalXp, int finalCost, string faction) {
+            long gained = to - from;
+            if (xpNoticeRoot != null) xpNoticeRoot.SetActive(true);
+            if (xpNotice != null) xpNotice.text = $"+{gained:N0} XP";
+            long finalThreshold = to - finalXp;
+            var levels = xpLevels ?? catalog?.levels;
+            if (from < finalThreshold && (levels == null || levels.Length == 0)) {
+                // 레벨 경계는 서버의 지급표를 사용한다. 조회 실패도 다른 로비 조작을 막지 않는다.
+                xpText.text = pageXpText.text = "…";
+                yield return PlayerProgressionApi.Rewards(result => {
+                    if (result != null && result.faction == faction) xpLevels = result.levels;
+                });
+                levels = xpLevels;
+            }
+            if (from >= finalThreshold) {
+                levels = new[] { new ProgressionLevelRewardDto { level = finalLevel, requiredXp = finalThreshold } };
+            }
+            if (levels == null || levels.Length == 0) {
+                RenderProgress(finalLevel, finalXp, finalCost);
+                displayedXp = to;
+            } else {
+                levels = levels.OrderBy(level => level.requiredXp).ToArray();
+                int index = Array.FindLastIndex(levels, level => level.requiredXp <= from);
+                index = Mathf.Max(0, index);
+                int crossings = Mathf.Max(0, finalLevel - levels[index].level);
+                float duration = Mathf.Clamp(2.5f / (crossings + 1), 0.08f, 0.65f);
+                displayedXp = from;
+                while (displayedXp < to) {
+                    var current = levels[index];
+                    bool hasNext = index + 1 < levels.Length && current.level < finalLevel;
+                    long next = hasNext ? levels[index + 1].requiredXp : to;
+                    int cost = hasNext ? (int)(next - current.requiredXp) : finalCost;
+                    long end = Math.Min(to, next);
+                    long begin = displayedXp;
+                    for (float elapsed = 0; elapsed < duration; elapsed += Time.unscaledDeltaTime) {
+                        float progress = Mathf.SmoothStep(0, 1, elapsed / duration);
+                        displayedXp = begin + (long)((end - begin) * (double)progress);
+                        RenderProgress(current.level, displayedXp - current.requiredXp, cost);
+                        yield return null;
+                    }
+                    displayedXp = end;
+                    if (hasNext && end == next) {
+                        index++;
+                        levelUpVisible = true;
+                        noticeLevel = levels[index].level;
+                        if (xpNotice != null) xpNotice.text = string.IsNullOrEmpty(levelUpFormat)
+                            ? $"Lv. {levels[index].level} ↑" : string.Format(levelUpFormat, levels[index].level);
+                        xpFill.color = pageXpFill.color = new Color32(255, 210, 63, 255);
+                    }
+                    if (end <= begin) break;
+                }
+                RenderProgress(finalLevel, finalXp, finalCost);
+            }
+            displayedXp = to;
+            yield return new WaitForSecondsRealtime(levelUpVisible ? 1.8f : 1.1f);
+            xpFill.color = pageXpFill.color = new Color32(91, 208, 76, 255);
+            if (xpNoticeRoot != null) xpNoticeRoot.SetActive(false);
+            xpAnimation = null;
         }
 
         private async Task RefreshText(int version) {
+            string selectedFaction = state?.faction;
             string completed = await LocaleUtils.GetStringAsync("LobbyUI", "ProgressionPaid");
             string unreached = await LocaleUtils.GetStringAsync("LobbyUI", "ProgressionLocked");
-            string faction = await LocaleUtils.GetStringAsync("LobbyUI", state.faction == "HELL" ? "ProgressionHell" : "ProgressionNature");
+            string faction = await LocaleUtils.GetStringAsync("LobbyUI", selectedFaction == "HELL" ? "ProgressionHell" : "ProgressionNature");
             string chest = await LocaleUtils.GetStringAsync("LobbyUI", "ProgressionOwnedChests");
+            string levelUp = await LocaleUtils.GetStringAsync("LobbyUI", "ProgressionLevelUp");
             if (this == null || version != textVersion) return;
             paid = completed; locked = unreached;
+            levelUpFormat = levelUp;
+            if (levelUpVisible && xpNotice != null) xpNotice.text = string.Format(levelUpFormat, noticeLevel);
             factionText.text = faction;
             chestText.text = string.Format(chest, chestCount.HasValue ? chestCount.Value.ToString() : "—");
             UpdateRowStates();
+            _ = RefreshClaimText();
         }
 
         public IEnumerator RefreshChests() {
+            var context = Data.Profile.RewardRequestContext.Capture();
             yield return chestApi.GetChests(chests => {
+                if (!context.IsCurrent) return;
                 chestCount = chests?.Length;
                 if (state != null) _ = RefreshText(++textVersion);
             });
@@ -95,11 +211,15 @@ namespace LobbyScene {
             hud.SetActive(false);
             if (catalog == null) RetryRewards();
             else { SelectLevel(selectedLevel); ScrollToSelection(); }
+            StartClaimsRefresh();
         }
 
-        public void CloseRewards() { page.SetActive(false); hud.SetActive(state != null); }
+        public void CloseRewards() { CloseClaimPresentation(); page.SetActive(false); hud.SetActive(state != null); }
         public void OpenChests() { SceneManager.LoadScene("ChestScene"); }
-        public void RetryRewards() { if (!loading) StartCoroutine(LoadRewards()); }
+        public void RetryRewards() {
+            if (catalog == null && !loading) StartCoroutine(LoadRewards());
+            StartClaimsRefresh();
+        }
 
         private IEnumerator LoadRewards() {
             loading = true;
@@ -121,7 +241,8 @@ namespace LobbyScene {
                 rows.Add(row);
             }
             statusText.gameObject.SetActive(false);
-            SelectLevel(state.level);
+            if (showingPending) OpenPendingRewards();
+            else SelectLevel(state.level);
             Canvas.ForceUpdateCanvases();
             ScrollToSelection();
         }
@@ -154,6 +275,8 @@ namespace LobbyScene {
         public void SelectLevel(int level) {
             var reward = catalog?.levels?.FirstOrDefault(x => x.level == level);
             if (reward == null) return;
+            ShowLevelTab();
+            slotsText.gameObject.SetActive(true);
             selectedLevel = level;
             for (int i = rewardsRoot.childCount - 1; i >= 0; i--) Remove(rewardsRoot.GetChild(i).gameObject);
             bool compact = (reward.cards?.Length ?? 0) > 2;
@@ -186,9 +309,7 @@ namespace LobbyScene {
 
         private void UpdateRowStates() {
             if (state == null) return;
-            foreach (var row in rows) row.Refresh(state.level, selectedLevel, paid, locked);
-            detailState.text = selectedLevel <= state.level ? paid : locked;
-            detailState.color = selectedLevel <= state.level ? new Color32(47, 133, 42, 255) : new Color32(91, 98, 117, 255);
+            RefreshClaimRowStates();
         }
     }
 }

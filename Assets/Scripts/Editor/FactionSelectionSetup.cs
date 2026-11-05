@@ -133,6 +133,7 @@ namespace Editor
             controllerData.ApplyModifiedPropertiesWithoutUndo();
             if (!EditorSceneManager.SaveScene(controller.gameObject.scene, FactionTutorialSetup.SelectionPath))
                 throw new IOException("Failed to save faction selection scene");
+            FactionTutorialSetup.EnsureUiSceneCamera(FactionTutorialSetup.SelectionPath);
         }
 
         private static void ImportBackgrounds()

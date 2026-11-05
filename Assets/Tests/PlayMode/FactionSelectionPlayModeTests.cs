@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,6 +17,61 @@ namespace WordOnline.Tests
 {
     public class FactionSelectionPlayModeTests
     {
+        [UnityTest]
+        public IEnumerator LobbyWithoutFactionOpensTheSharedSelectionScene()
+        {
+#if UNITY_EDITOR
+            var root = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(
+                "Assets/Resources/UI/PlayerProgressionPanel.prefab"));
+            var panel = root.GetComponents<MonoBehaviour>().Single(component => component.GetType().Name == "PlayerProgressionPanel");
+            var field = panel.GetType().GetField("state", BindingFlags.Instance | BindingFlags.NonPublic);
+            field.SetValue(panel, Activator.CreateInstance(field.FieldType));
+            yield return VerifyNavigation(panel, "CompleteInitialization", "FactionSelectionScene");
+            if (root != null) Object.Destroy(root);
+#else
+            yield return null;
+#endif
+        }
+
+        [UnityTest]
+        public IEnumerator SelectionOutsideOnboardingReturnsToLobby()
+        {
+#if UNITY_EDITOR
+            var type = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("TutorialScene.FactionSelectionController")).First(value => value != null);
+            var root = new GameObject("SelectionOnlyFixture");
+            var controller = (MonoBehaviour)root.AddComponent(type);
+            controller.enabled = false;
+            yield return VerifyNavigation(controller, "ContinueAfterChoice", "LobbyScene");
+            if (root != null) Object.Destroy(root);
+#else
+            yield return null;
+#endif
+        }
+
+        private static IEnumerator VerifyNavigation(MonoBehaviour component, string method, string destination)
+        {
+            bool loaded = false;
+            UnityEngine.Events.UnityAction<Scene, LoadSceneMode> onLoaded = (scene, mode) => {
+                if (scene.name != destination) return;
+                loaded = true;
+                // 실제 씬 이동을 검사하되 인증 및 보상 API 요청은 시작하지 않는다.
+                foreach (var root in scene.GetRootGameObjects()) root.SetActive(false);
+            };
+            SceneManager.sceneLoaded += onLoaded;
+            try
+            {
+                var routine = (IEnumerator)component.GetType().GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(component, null);
+                Assert.That(routine.MoveNext(), Is.False);
+                float deadline = Time.realtimeSinceStartup + 5;
+                while (!loaded && Time.realtimeSinceStartup < deadline) yield return null;
+                Assert.That(loaded, Is.True, destination);
+                Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo(destination));
+            }
+            finally { SceneManager.sceneLoaded -= onLoaded; }
+        }
+
         [UnityTest]
         public IEnumerator OpeningClearsPreviousSelectionAndPointerExitRestoresKeyboardFocus()
         {

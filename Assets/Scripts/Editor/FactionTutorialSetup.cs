@@ -66,6 +66,7 @@ namespace Editor
             SetArray(serialized, "hellIcons", hellIcons);
             SetArray(serialized, "natureIcons", natureIcons);
             serialized.ApplyModifiedPropertiesWithoutUndo();
+            ConfigureCompactPanel(root);
             PrefabUtility.SaveAsPrefabAsset(root, PanelPath);
             Object.DestroyImmediate(root);
 
@@ -99,6 +100,87 @@ namespace Editor
             FactionSelectionSetup.Build();
             AssetDatabase.SaveAssets();
             Debug.Log("FACTION_TUTORIAL_ASSETS_PASS");
+        }
+
+        [MenuItem("Tools/Tutorial/Refresh Compact Panel")]
+        public static void RefreshCompactPanel()
+        {
+            var root = PrefabUtility.LoadPrefabContents(PanelPath);
+            try
+            {
+                ConfigureCompactPanel(root);
+                PrefabUtility.SaveAsPrefabAsset(root, PanelPath);
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+
+        private static void ConfigureCompactPanel(GameObject root)
+        {
+            var previous = root.transform.Find("CompactOverlay");
+            if (previous != null) Object.DestroyImmediate(previous.gameObject);
+            var overlay = Surface("CompactOverlay", root.transform, Vector2.zero, Vector2.zero);
+            overlay.anchorMin = Vector2.zero;
+            overlay.anchorMax = Vector2.one;
+            overlay.offsetMin = overlay.offsetMax = Vector2.zero;
+            var dim = overlay.GetComponent<Image>();
+            dim.sprite = null;
+            dim.color = new Color32(10, 18, 30, 158);
+            var surface = Surface("CompactPanel", overlay, Vector2.zero, new Vector2(800, 340));
+            surface.GetComponent<Image>().sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Images/UI/Flat/FlatCard.png");
+            var heading = Label("Title", surface, new Vector2(0, 100), new Vector2(704, 56), 36);
+            var description = Label("Description", surface, new Vector2(0, 10), new Vector2(704, 96), 24);
+            description.enableAutoSizing = true;
+            description.fontSizeMin = 19;
+            description.fontSizeMax = 24;
+            var button = Button("Continue", surface, new Vector2(0, -104), new Vector2(320, 64), true);
+            var data = new SerializedObject(root.GetComponent<FactionTutorialPanel>());
+            Set(data, "compactRoot", overlay.gameObject);
+            Set(data, "background", root.transform.Find("Background").gameObject);
+            Set(data, "compactTitle", heading);
+            Set(data, "compactBody", description);
+            Set(data, "compactNext", button);
+            data.ApplyModifiedPropertiesWithoutUndo();
+            overlay.gameObject.SetActive(false);
+        }
+
+        public static void EnsureUiSceneCamera(string scenePath)
+        {
+            Scene scene = SceneManager.GetSceneByPath(scenePath);
+            bool opened = !scene.IsValid() || !scene.isLoaded;
+            if (opened) scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
+            try
+            {
+                var camera = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<Camera>(true))
+                    .FirstOrDefault(candidate => candidate.isActiveAndEnabled && candidate.targetDisplay == 0 && candidate.targetTexture == null);
+                bool changed = false;
+                // Overlay UI만 있는 씬에도 Display 1을 렌더링해야 Game View의 카메라 없음 안내가 사라진다.
+                if (camera == null)
+                {
+                    var cameraObject = new GameObject("BackgroundCamera", typeof(Camera));
+                    SceneManager.MoveGameObjectToScene(cameraObject, scene);
+                    camera = cameraObject.GetComponent<Camera>();
+                    camera.clearFlags = CameraClearFlags.SolidColor;
+                    camera.backgroundColor = new Color32(10, 12, 18, 255);
+                    camera.cullingMask = 0;
+                    camera.depth = -100;
+                    camera.orthographic = true;
+                    camera.targetDisplay = 0;
+                    changed = true;
+                }
+                if (!scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<AudioListener>(true))
+                    .Any(listener => listener.isActiveAndEnabled))
+                {
+                    var listener = camera.GetComponent<AudioListener>();
+                    if (listener == null) listener = camera.gameObject.AddComponent<AudioListener>();
+                    listener.enabled = true;
+                    changed = true;
+                }
+                if (!changed) return;
+                if (!EditorSceneManager.SaveScene(scene, scenePath))
+                    throw new InvalidOperationException("Could not save tutorial UI camera.");
+                Debug.Log("TUTORIAL_UI_CAMERA_PASS");
+            }
+            finally { if (opened) EditorSceneManager.CloseScene(scene, true); }
         }
 
         private static RectTransform Surface(string name, Transform parent, Vector2 position, Vector2 size)
