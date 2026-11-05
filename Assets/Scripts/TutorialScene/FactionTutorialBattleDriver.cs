@@ -49,7 +49,7 @@ namespace TutorialScene
                 SceneManager.LoadScene(FactionTutorialProgress.SelectionScene);
                 yield break;
             }
-            panel.Show("FactionTutorial.title", "FactionTutorial.connecting");
+            ShowConnecting();
             while (Current && !finishing)
             {
                 float started = Time.realtimeSinceStartup;
@@ -74,17 +74,12 @@ namespace TutorialScene
             if (!Current || finishing) yield break;
             if (code == 404 || code == 410)
             {
-                suspended = true;
-                ClearPointer();
-                panel.Show("FactionTutorial.title", "FactionTutorial.expired", "FactionTutorial.reconnect",
-                    () => SceneManager.LoadScene(FactionTutorialProgress.SelectionScene));
+                ShowExpired();
                 yield break;
             }
             if (result == null || result.ownerId != owner || result.battleId != ready.battleId || result.faction != ready.faction)
             {
-                suspended = true;
-                ClearPointer();
-                panel.Show("FactionTutorial.title", "FactionTutorial.error", "FactionTutorial.retry", ResumePolling);
+                ShowConnectionError(ResumePolling);
                 yield break;
             }
             if (result.lastFrame < watermark || (state != null && result.revision < state.revision)) yield break;
@@ -177,6 +172,7 @@ namespace TutorialScene
                 panel.Show("FactionTutorial.complete", $"FactionTutorial.reward.{ready.faction}",
                     "FactionTutorial.lobby", () => StartCoroutine(Finish()), rewardFaction: ready.faction);
             }
+            else ShowConnectionError(ResumePolling);
         }
 
         private static void SynchronizeCards(long[] cards)
@@ -211,6 +207,7 @@ namespace TutorialScene
         private IEnumerator Command(object body, int inputId, Action<MagicValidInfo> complete,
             string castStage = null, string castMagic = null)
         {
+            if (suspended) ShowConnecting();
             while (busy) yield return null;
             busy = true;
             Reply reply = null;
@@ -219,12 +216,14 @@ namespace TutorialScene
                 (value, status) => { reply = value; code = status; });
             busy = false;
             if (!Current || finishing) yield break;
+            if (code == 404 || code == 410)
+            {
+                ShowExpired();
+                yield break;
+            }
             if (reply == null && (code == 0 || code >= 500 || (code >= 200 && code < 300)))
             {
-                suspended = true;
-                ClearPointer();
-                panel.Show("FactionTutorial.title", "FactionTutorial.error", "FactionTutorial.retry",
-                    () => StartCoroutine(Command(body, inputId, complete, castStage, castMagic)));
+                ShowConnectionError(() => StartCoroutine(Command(body, inputId, complete, castStage, castMagic)));
                 yield break;
             }
             bool accepted = reply?.accepted == true;
@@ -240,20 +239,51 @@ namespace TutorialScene
             panel.Hide();
             if (!accepted && code != 409)
             {
-                suspended = true;
-                panel.Show("FactionTutorial.title", "FactionTutorial.castRetry", "FactionTutorial.retry", ResumePolling);
+                if (complete != null) ShowCastRejected();
+                else ShowConnectionError(() => StartCoroutine(Command(body, inputId, complete)));
             }
             else yield return Poll();
         }
 
         private void ResumePolling()
         {
-            panel.Hide();
+            ShowConnecting();
             suspended = false;
             state = null;
             presentedState = null;
             pendingTerminal = null;
             playback.Invalidate();
+        }
+
+        private void ShowConnecting()
+        {
+            TutorialHint.HideCurrent();
+            panel.Show("FactionTutorial.connectingTitle", "FactionTutorial.connecting");
+        }
+
+        private void ShowCastRejected()
+        {
+            suspended = true;
+            ClearPointer();
+            TutorialHint.HideCurrent();
+            panel.Show("FactionTutorial.castRetryTitle", "FactionTutorial.castRetry", "FactionTutorial.continue", ResumePolling);
+        }
+
+        private void ShowConnectionError(Action retry)
+        {
+            suspended = true;
+            ClearPointer();
+            TutorialHint.HideCurrent();
+            panel.Show("FactionTutorial.errorTitle", "FactionTutorial.error", "FactionTutorial.retry", retry);
+        }
+
+        private void ShowExpired()
+        {
+            suspended = true;
+            ClearPointer();
+            TutorialHint.HideCurrent();
+            panel.Show("FactionTutorial.expiredTitle", "FactionTutorial.expired", "FactionTutorial.reconnect",
+                () => SceneManager.LoadScene(FactionTutorialProgress.SelectionScene));
         }
 
         private void LateUpdate()

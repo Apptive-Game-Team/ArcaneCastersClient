@@ -26,7 +26,7 @@ namespace TutorialScene
         private IEnumerator Start()
         {
             GlobalTutorialManager.Instance?.FinishOnboarding();
-            ShowStatus("FactionTutorial.loading");
+            ShowStatus("FactionTutorial.loadingTitle", "FactionTutorial.loading");
             if (SceneContext.User == null) yield return UserInfoGetter.GetUserInfo();
             if (this == null || SceneContext.User == null) yield break;
             owner = SceneContext.UserID;
@@ -38,7 +38,7 @@ namespace TutorialScene
 
         private IEnumerator PrepareChoices()
         {
-            ShowStatus("FactionTutorial.loading");
+            ShowStatus("FactionTutorial.loadingTitle", "FactionTutorial.loading");
             yield return GameDataRefresh.Refresh();
             if (!Current) yield break;
             var names = FactionTutorialCards.HellPractice.Concat(FactionTutorialCards.NaturePractice).Concat(new[] { "meteor_shower", "tornado_strike" });
@@ -77,7 +77,7 @@ namespace TutorialScene
         {
             if (busy) yield break;
             busy = true;
-            ShowStatus("FactionTutorial.loading");
+            ShowStatus("FactionTutorial.loadingTitle", "FactionTutorial.loading");
             PlayerProgressionDto result = null;
             yield return PlayerProgressionApi.Choose(selected, value => result = value);
             busy = false;
@@ -102,7 +102,7 @@ namespace TutorialScene
 
         private IEnumerator Connect()
         {
-            ShowStatus("FactionTutorial.connecting");
+            ShowStatus("FactionTutorial.connectingTitle", "FactionTutorial.connecting");
             if (checkpoint.battle != null)
             {
                 if (FactionTutorialProgress.IsValidReady(checkpoint.battle, owner, faction))
@@ -118,7 +118,7 @@ namespace TutorialScene
                         Enter(checkpoint.battle);
                         yield break;
                     }
-                    if (code != 404 && code != 410) { Error(() => StartCoroutine(Connect())); yield break; }
+                    if (code != 404 && code != 410) { Error(() => StartCoroutine(Connect()), true); yield break; }
                 }
                 checkpoint.battle = null;
                 checkpoint.requestId = Guid.NewGuid().ToString();
@@ -131,7 +131,7 @@ namespace TutorialScene
             if (!Current) yield break;
             if (!FactionTutorialProgress.IsValidReady(ready, owner, faction))
             {
-                Error(() => StartCoroutine(Connect()));
+                Error(() => StartCoroutine(Connect()), true);
                 yield break;
             }
             checkpoint.battle = ready;
@@ -152,15 +152,17 @@ namespace TutorialScene
         }
 
         private bool Current => FactionTutorialProgress.IsCurrentOwner(owner, matchingServer);
-        private void ShowStatus(string key, string next = null, Action action = null)
+        private void ShowStatus(string titleKey, string bodyKey, string next = null, Action action = null)
         {
             selectionView?.Hide();
             // 같은 루트의 선택 코루틴을 유지하기 위해 Canvas만 숨긴다.
             panel.GetComponent<Canvas>().enabled = true;
             panel.GetComponent<UnityEngine.UI.GraphicRaycaster>().enabled = true;
-            panel.Show("FactionTutorial.title", key, next, action);
+            panel.Show(titleKey, bodyKey, next, action);
         }
 
-        private void Error(Action retry) => ShowStatus("FactionTutorial.error", "FactionTutorial.retry", retry);
+        private void Error(Action retry, bool connecting = false) => ShowStatus(
+            connecting ? "FactionTutorial.errorTitle" : "FactionTutorial.selectionErrorTitle",
+            connecting ? "FactionTutorial.error" : "FactionTutorial.selectionError", "FactionTutorial.retry", retry);
     }
 }
