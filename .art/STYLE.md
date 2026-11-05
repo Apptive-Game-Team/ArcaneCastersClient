@@ -156,6 +156,14 @@ Neither spirit nor demon. Neutral third party.
 
 Palette: warm tan stone `#CDC8B8` `#A3A29D` `#8A857A`, moss `#55572D` `#374725`
 
+2026-11-05 사용자 요청으로 게임의 `MiniRock`, `RockGolem`, `RockMage`,
+`WallGolem`에 코믹스 기준 타락 외형을 적용한다. 정상 타원 눈의 형태와 위치는
+유지하고, 어두운 붉은 가장자리·선명한 붉은 내부·작은 밝은 반사점으로 바꾼다.
+돌 몸체·초록 이끼·실루엣·기본/공격 포즈는 유지한다. 몸체에 균열, 용암,
+악마 뿔이나 불꽃을 추가하지 않는다. 공용 검은 눈 규칙의 예외는 이 네 유닛에
+한정하며, 인간 병기 `Towerback`과 `PveBrickGolem`에는 적용하지 않는다.
+고정 master-v2 앵커 자체는 변경하지 않는다.
+
 ### Humans — the player's faction
 
 Machinery and masonry. Built, not born.
