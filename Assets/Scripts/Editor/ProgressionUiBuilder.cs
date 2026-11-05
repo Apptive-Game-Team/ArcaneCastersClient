@@ -108,12 +108,82 @@ public static class ProgressionUiBuilder {
         Ref(fields, "retryButton", Button("Retry", detail, "ProgressionRetryButton", 30, 190, 180, 44, view.RetryRewards));
         Ref(fields, "chestApi", root.AddComponent<ChestApiClient>());
         fields.ApplyModifiedPropertiesWithoutUndo();
+        ConfigureExperienceFeedback(root);
+        ConfigureManualClaims(root);
         hud.gameObject.SetActive(false); page.gameObject.SetActive(false);
         PrefabUtility.SaveAsPrefabAsset(root, Folder + "PlayerProgressionView.prefab");
         Object.DestroyImmediate(root);
         UpdateLobby();
         AssetDatabase.SaveAssets();
         Debug.Log("PROGRESSION_UI_BUILD_COMPLETE");
+    }
+
+    public static void RefreshExperienceFeedback() {
+        string path = Folder + "PlayerProgressionView.prefab";
+        var root = PrefabUtility.LoadPrefabContents(path);
+        try {
+            ConfigureExperienceFeedback(root);
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+        } finally { PrefabUtility.UnloadPrefabContents(root); }
+    }
+
+    [MenuItem("Tools/Progression/Refresh Manual Claims")]
+    public static void RefreshManualClaims() {
+        string path = Folder + "PlayerProgressionView.prefab";
+        var root = PrefabUtility.LoadPrefabContents(path);
+        try {
+            ConfigureManualClaims(root);
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+        } finally { PrefabUtility.UnloadPrefabContents(root); }
+        AssetDatabase.SaveAssets();
+    }
+
+    private static void ConfigureManualClaims(GameObject root) {
+        var view = root.GetComponent<PlayerProgressionView>();
+        var fields = new SerializedObject(view);
+        var list = root.transform.Find("LevelRewardsPage/Levels");
+        var detail = root.transform.Find("LevelRewardsPage/Detail");
+        foreach (string path in new[] { "LevelRewardsPage/Levels/LevelTab", "LevelRewardsPage/Levels/PendingTab",
+            "LevelRewardsPage/Detail/Claim", "LevelRewardsPage/Detail/ClaimMessage", "Hud/Rewards/PendingDot" }) {
+            var previous = root.transform.Find(path);
+            if (previous != null) Object.DestroyImmediate(previous.gameObject);
+        }
+        list.Find("Title").gameObject.SetActive(false);
+        Ref(fields, "levelTab", Button("LevelTab", list, "ProgressionRewards", 16, 14, 174, 40, view.OpenLevelRewards));
+        Ref(fields, "pendingTab", Button("PendingTab", list, "ProgressionPending", 200, 14, 189, 40, view.OpenPendingRewards));
+        list.Find("Viewport/Content").GetComponent<VerticalLayoutGroup>().padding = new RectOffset(4, 4, 6, 6);
+        var claim = Button("Claim", detail, "ProgressionClaim", 30, 447, 260, 42, view.ClaimSelectedReward);
+        claim.GetComponent<Image>().color = new Color32(255, 154, 31, 255);
+        Ref(fields, "claimButton", claim);
+        var message = Text("ClaimMessage", detail, "", 17, 30, 405, 490, 38);
+        message.enableWordWrapping = true;
+        Ref(fields, "claimMessage", message);
+        Position((RectTransform)detail.Find("Slots"), 30, 405, 460, 38);
+        Position((RectTransform)detail.Find("Retry"), 310, 447, 180, 42);
+        var dot = Icon("PendingDot", root.transform.Find("Hud/Rewards"), Sprite("FlatCircle"), 224, 4, 16, 16);
+        dot.color = new Color32(239, 68, 58, 255);
+        Ref(fields, "pendingDot", dot.gameObject);
+        Ref(fields, "rewardUiPrefab", AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/RewardUI.prefab"));
+        Ref(fields, "claimTilePrefab", AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/RewardChest/RewardTile.prefab").GetComponent<RewardTileView>());
+        fields.ApplyModifiedPropertiesWithoutUndo();
+        dot.gameObject.SetActive(false); claim.gameObject.SetActive(false); message.gameObject.SetActive(false);
+    }
+
+    private static void ConfigureExperienceFeedback(GameObject root) {
+        var hud = root.transform.Find("Hud");
+        var previous = hud.Find("ProgressNotice");
+        if (previous != null) Object.DestroyImmediate(previous.gameObject);
+        var notice = Panel("ProgressNotice", hud, 312, 22, 240, 70, "FlatPill");
+        notice.GetComponent<Image>().raycastTarget = false;
+        var text = Text("Text", notice, "", 23, 12, 10, 216, 48);
+        text.alignment = TextAlignmentOptions.Center;
+        text.enableAutoSizing = true; text.fontSizeMin = 16; text.fontSizeMax = 23;
+        text.raycastTarget = false;
+        var fields = new SerializedObject(root.GetComponent<PlayerProgressionView>());
+        Ref(fields, "xpNoticeRoot", notice.gameObject);
+        Ref(fields, "xpNotice", text);
+        fields.ApplyModifiedPropertiesWithoutUndo();
+        notice.gameObject.SetActive(false);
     }
 
     private static void UpdateLobby() {

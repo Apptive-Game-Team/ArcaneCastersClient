@@ -110,6 +110,7 @@ namespace LobbyScene
             var progressionPrefab = Resources.Load<GameObject>("UI/PlayerProgressionPanel");
             var progressionPanel = Instantiate(progressionPrefab).GetComponent<PlayerProgressionPanel>();
             yield return progressionPanel.Initialize();
+            if (progressionPanel == null || progressionPanel.IsSelectingFaction) yield break;
             yield return QuestRewardTracker.CheckAndShowRewards(rewardUiPrefab, rewardTilePrefab);
             yield return FetchDecks();
         }
@@ -354,6 +355,8 @@ namespace LobbyScene
             request.SetRequestHeader("Content-Type", "application/json");
             Server.SetAcceptLanguage(request);
             Server.SetAuthorization(request);
+            Data.Profile.ManualRewardClaims.Apply(request);
+            request.timeout = 15;
 
             yield return request.SendWebRequest();
 
@@ -445,7 +448,7 @@ namespace LobbyScene
             return null;
         }
 
-        private static void PopulateRewardUI(
+        public static void PopulateRewardUI(
             GameObject rewardUI,
             IReadOnlyList<RewardView> rewards,
             RewardTileView rewardTilePrefab,

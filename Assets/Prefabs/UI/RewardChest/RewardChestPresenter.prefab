@@ -140,7 +140,7 @@ MonoBehaviour:
   chestBodyImage: {fileID: 7601020000000000043}
   chestLid: {fileID: 7601020000000000051}
   chestLidImage: {fileID: 7601020000000000053}
-  closedChestSprite: {fileID: 21300000, guid: 5db61c51a2a84afe99c5bf1eceda49a0, type: 3}
+  closedChestSprite: {fileID: 21300000, guid: 8755ed7255f42884db1cadd019651f03, type: 3}
   openChestSprite: {fileID: 21300000, guid: 06da837407cc48f189664d87f4d03501, type: 3}
   rayImage: {fileID: 7601020000000000093}
   sparkleImages:

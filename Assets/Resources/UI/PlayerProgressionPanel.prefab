@@ -193,9 +193,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 1588132092050282864}
-  messageText: {fileID: 6835899407290816143}
-  confirmButton: {fileID: 4836948195304155164}
-  cancelButton: {fileID: 3108760406395741602}
   statusText: {fileID: 900000000000000004}
 --- !u!1 &5618488746090931082
 GameObject:

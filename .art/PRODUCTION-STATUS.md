@@ -345,3 +345,7 @@ commit 그대로였다.
 ## 세력 선택 배경 — 2026-11-05
 
 `Assets/Art/Images/UI/FactionSelection/Environments.png`: 승인된 세력 대치 시안에서 분리한 기본·불타는 군단·세계수 배경 atlas. 유닛과 글자는 포함하지 않는다. 선택 prefab은 같은 비율로 잘라 겹치고 alpha를 전환한다. 유닛은 기존 원본 스프라이트를 그대로 사용한다. Sprite와 prefab은 `FactionSelectionSetup.Build`로 재생성한다.
+
+## 마법 상자 — 2026-11-05
+
+`Assets/Resources/RewardChest/Chests/default/closed.png`, `animation_closed.png`, `open.png`: 사용자 요청으로 금색 목재 상자를 master-v2의 청색 판넬·크림 석재·청록 결정 마법 상자로 교체했다. 목록과 로비에는 여백을 줄인 closed 아이콘을 사용하고, 개봉 연출에는 같은 공통 크롭·배율·바닥 기준의 animation_closed/open 256×256 RGBA 프레임을 사용한다. 원본과 프롬프트는 `.art/concept/chest-redesign-20261105/`에 보관한다. Unity Editor 프리뷰에서 목록·닫힘·열림 프레임을 검수했고 프레임 연결과 바닥 정렬 테스트를 통과했다. 연속 개봉 동작의 실제 플레이 검증은 남아 있다.

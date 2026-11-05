@@ -746,6 +746,50 @@ MonoBehaviour:
     m_Localized: "No opponents are available right now."
     m_Metadata:
       m_Items: []
+  - m_Id: 76110341300000121
+    m_Localized: "Level up! Lv. {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000122
+    m_Localized: "Pending rewards"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000123
+    m_Localized: "Claim"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000124
+    m_Localized: "Daily reward"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000125
+    m_Localized: "Quest reward"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000126
+    m_Localized: "Could not claim the reward. Please try again."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000127
+    m_Localized: "This reward was already claimed. The list has been refreshed."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000128
+    m_Localized: "All available rewards have been claimed."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000129
+    m_Localized: "Could not check rewards. Retrying shortly."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000130
+    m_Localized: "Reward claimed."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000131
+    m_Localized: "You already own this reward. The list has been refreshed."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

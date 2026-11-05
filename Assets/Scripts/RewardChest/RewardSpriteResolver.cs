@@ -70,5 +70,15 @@ namespace RewardChest
             sprite = ChestSpritePaths.Load(chestKey, ChestSpritePaths.Open, Resources.Load<Sprite>);
             return sprite != null;
         }
+
+        /// <summary>목록 아이콘과 달리 개봉 프레임은 열린 뚜껑의 공간까지 포함해 몸체 위치를 맞춘다.</summary>
+        public static bool TryResolveChestClosedForAnimation(string chestKey, out Sprite sprite)
+        {
+            sprite = Resources.Load<Sprite>(ChestSpritePaths.Build(chestKey, "animation_closed"))
+                ?? Resources.Load<Sprite>(ChestSpritePaths.Build(chestKey, ChestSpritePaths.Closed))
+                ?? Resources.Load<Sprite>(ChestSpritePaths.Build(ChestSpritePaths.DefaultKey, "animation_closed"))
+                ?? Resources.Load<Sprite>(ChestSpritePaths.Build(ChestSpritePaths.DefaultKey, ChestSpritePaths.Closed));
+            return sprite != null;
+        }
     }
 }

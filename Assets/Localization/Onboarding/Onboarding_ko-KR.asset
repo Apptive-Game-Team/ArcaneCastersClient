@@ -249,7 +249,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000064
-    m_Localized: "다음 실습"
+    m_Localized: "다음 전투"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000065
@@ -333,27 +333,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000085
-    m_Localized: "조준한 마법으로 적을 쓰러뜨렸습니다. 이번에는 더 큰 무리를 상대합니다."
+    m_Localized: "다음에는 더 많은 적이 등장합니다."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000086
-    m_Localized: "메테오의 넓은 공격으로 무리를 정리했습니다. 다음 지원 마법도 체험해 보세요."
+    m_Localized: "다음 전투에서는 토네이도를 사용해 보세요."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000087
-    m_Localized: "토네이도가 적들을 휩쓸었습니다. 이제 세력의 기본 마법을 더 익혀 봅니다."
+    m_Localized: "이제 선택한 세력의 기본 마법을 사용해 보세요."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000088
-    m_Localized: "공중을 공격할 수 있는 동료로 날아오는 적을 처치했습니다."
+    m_Localized: "다음에는 골렘과 무리를 함께 소환해 보세요."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000089
-    m_Localized: "골렘이 버티는 사이 무리가 함께 싸워 적을 쓰러뜨렸습니다."
+    m_Localized: "다음에는 적의 속성 약점을 노려 보세요."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000090
-    m_Localized: "모여 있는 적들의 속성 약점을 노려 정리했습니다. 마지막은 직접 판단해 보세요."
+    m_Localized: "마지막 전투에서는 배운 마법을 자유롭게 사용해 보세요."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000091

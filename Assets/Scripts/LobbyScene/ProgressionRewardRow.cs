@@ -31,5 +31,22 @@ namespace LobbyScene {
             stateText.text = Level <= current ? paid : locked;
             stateText.color = Level <= current ? new Color32(47, 133, 42, 255) : new Color32(91, 98, 117, 255);
         }
+
+        public void BindPending(string title, string status, Action select) {
+            Level = 0;
+            levelText.text = title;
+            levelText.rectTransform.sizeDelta = new Vector2(240, 30);
+            magicIcon.gameObject.SetActive(false);
+            chestIcon.gameObject.SetActive(false);
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => select());
+            RefreshStatus(-1, status, true);
+        }
+
+        public void RefreshStatus(int selected, string status, bool reached) {
+            background.color = Level == selected ? new Color32(255, 154, 31, 255) : Color.white;
+            stateText.text = status;
+            stateText.color = reached ? new Color32(47, 133, 42, 255) : new Color32(91, 98, 117, 255);
+        }
     }
 }

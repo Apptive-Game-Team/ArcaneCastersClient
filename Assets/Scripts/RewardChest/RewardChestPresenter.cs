@@ -118,7 +118,7 @@ namespace RewardChest
 
         private void ChooseChestSprites(string chestKey)
         {
-            activeClosedSprite = RewardSpriteResolver.TryResolveChestIcon(chestKey, out Sprite closed) ? closed : closedChestSprite;
+            activeClosedSprite = RewardSpriteResolver.TryResolveChestClosedForAnimation(chestKey, out Sprite closed) ? closed : closedChestSprite;
             activeOpenSprite = RewardSpriteResolver.TryResolveChestOpenIcon(chestKey, out Sprite open) ? open : openChestSprite;
         }
 

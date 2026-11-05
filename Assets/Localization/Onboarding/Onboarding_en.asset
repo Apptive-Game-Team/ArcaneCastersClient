@@ -249,7 +249,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000064
-    m_Localized: "Continue"
+    m_Localized: "Next battle"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000065
@@ -333,27 +333,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000085
-    m_Localized: "Your aimed spell defeated the enemy. Next, take on a larger group."
+    m_Localized: "A larger group of enemies awaits in the next battle."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000086
-    m_Localized: "Meteor Shower cleared the group with a wide attack. Try another support spell next."
+    m_Localized: "Try Tornado Strike in the next battle."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000087
-    m_Localized: "The tornado swept through the enemies. Now learn more of your faction’s starting spells."
+    m_Localized: "Now try the starting spells of your faction."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000088
-    m_Localized: "You defeated the flyer with an ally that can attack airborne enemies."
+    m_Localized: "Next, summon a golem and a swarm together."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000089
-    m_Localized: "Your golem took the hits while the swarm helped defeat the enemy."
+    m_Localized: "Next, exploit elemental weaknesses."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000090
-    m_Localized: "You struck the clustered enemies’ elemental weakness. Make your own choices in the final battle."
+    m_Localized: "Use the spells you learned freely in the final battle."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000091
