@@ -1,0 +1,56 @@
+name: Desktop build check
+
+on:
+  pull_request:
+    paths:
+      - 'Assets/Scripts/Editor/DesktopBuildScript.cs'
+      - '.github/workflows/desktop-build-check.yml'
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-build-check-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: Build ${{ matrix.rid }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [osx-x64, osx-arm64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ matrix.rid }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-${{ matrix.rid }}-
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.34f1
+          targetPlatform: StandaloneOSX
+          buildName: ArcaneCasters
+          buildsPath: build
+          buildMethod: DesktopBuildScript.Build
+          versioning: None
+          customParameters: -desktopPlatform ${{ matrix.rid }} -desktopBuildPath build/desktop/ArcaneCasters.app -logFile -
+      - name: Check updater executable layout
+        run: test -f build/desktop/ArcaneCasters.app/Contents/MacOS/ArcaneCasters
