@@ -212,6 +212,8 @@
 | `UI/Card/type_fire.png`, `type_water.png`, `type_nature.png`, `type_lightning.png`, `type_rock.png`, `type_wind.png` | 클라이언트 PR (이슈 #304) | **검수 대기.** 원소 아이콘 6장. 마법서 상성표, 도감 원소 칩, 덱 카드가 `CardImageMapper.asset` 으로 쓴다. 181x256 · 180x256 · 136x256 · 161x256 · 256x192 · 256x195 RGBA(옛 128 긴 변의 두 배), 여백 없이 잘랐다. 여섯 장을 1536x1024 한 캔버스의 3x2 격자에 같이 그리게 해 한 번에 통과했다(`codex` `image_gen` 1회). 레퍼런스는 `MasterStyleKey.png`, `ArcaneImpact.png`, 원소 룬 여섯 장 합성. magenta key 제거, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0. 쓰는 곳이 모두 `preserveAspect` 인 UI `Image` 라 화면 크기는 RectTransform 과 가로세로 비로만 정해지고 픽셀 수·PPU 와 무관하다 — `.meta` 는 그대로 뒀다. 가로세로 비는 다섯 장이 옛 비의 8% 안이다. `type_wind` 만 1.88 에서 1.31 로 바뀌어 상성표 칸 안에서 옛 그림보다 세로로 커진다(옛 바람이 여섯 중 가장 작아 보였다). 프롬프트는 1.9 를 숫자로 요구했지만 격자 한 칸 안에서는 지켜지지 않았다 |
 | `PveBrickGolem.png`, `PveBrickGolem2.png` | 클라이언트 PR (이슈 #329) | **검수 대기, 새 파일.** 요새 마지막 보스 벽돌 골렘의 기본 자세(두 주먹을 땅에 댄 자세)와 공격 자세(한 팔을 높이 든 자세). 256x251 RGBA, PPU 70, Bottom Center. 두 자세를 한 캔버스의 twin panel 로 한 번에 생성(v1 한 번에 통과)하고 공유 crop box `(0, 19, 884, 887)` 와 공유 배율 0.2896 으로 잘랐다. 눈은 몸통 중심보다 오른쪽(파일은 오른쪽을 보고, 경기에서는 RightPlayer 라 뒤집혀 왼쪽을 본다). magenta key 제거, 불투명 픽셀의 magenta 잔색 0, 네 모서리 alpha 0. 공격 자세는 잔해 바닥이 기본 자세보다 3px 위에서 끝난다. `.art/concept/brick-golem/README.md` |
 | `explode/brick_golem_crack_ring.png`, `shoot/brick_golem_sweep.png` | 클라이언트 PR (이슈 #329) | **검수 대기, 새 파일.** 벽돌 골렘의 내려찍기 경고 균열 고리(255x256, 위에서 본 원, 중심 pivot)와 휩쓸기 궤적(256x144, 중심 pivot). 한 캔버스의 두 칸에 한 번에 생성(v1 한 번에 통과), magenta key 제거, 잔색 0, 네 모서리 alpha 0 |
+| `sprites/StoneGargoyle.png` | 돌 가고일 신규 유닛, 2026-11-05 사용자 승인 | 192x176 RGBA, PPU 100, Bottom Center. 돌 부족 70%와 지옥불 차원 영향 30%. 날개 끝·어깨·발톱의 그을린 돌과 붉은 균열, 붉은 눈·이끼 유지. `StoneGargoyle.prefab`에 연결. blue key `--deadzone 4`, enclosed_pixels=0, 네 모서리 alpha 0. `.art/concept/stone-gargoyle/README.md` |
+| `sprites/StoneGargoyleFly1.png`, `StoneGargoyleFly2.png`, `StoneGargoyleFly3.png` | 2026-11-05 사용자 요청 및 12321 왕복 선택 | 날개 올림·수평·내림 3장, 192x165 RGBA, PPU 100, Bottom Center, Full Rect. 기존 `SpriteFrameAnimator`의 `1,2,3,2` 반복, 프레임 0.16초. 공유 크롭·배율·발톱 하단 정렬. `.art/concept/stone-gargoyle-wings/README.md` |
 
 ## 다음 교체 후보
 
@@ -330,3 +332,8 @@ commit 그대로였다.
 4. 단순 업스케일이나 포맷 변환은 아트 교체 완료로 기록하지 않는다.
 5. 웹사이트 표시용 이미지와 런타임 PNG가 실제로 대응하는지 파일명과 외형을 함께
    확인한다.
+
+## 2026-11-05 전기 창병 추가
+
+- `ElectricSpearman.png`, `ElectricSpearmanAttacking.png`: 사용자 승인 후 적용. 같은 128×102 RGBA 캔버스, PPU 90, Bottom Center. 런타임 프리팹과 카드 아이콘 연결. 기본·찌르기 자세 완료.
+- `RockGolem.prefab`: 기존 그림을 유지하고 본체·그림자를 60%로 축소.

@@ -7,6 +7,7 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 
 | 실제 파일 | 의미 이름 | 런타임 연결 |
 |---|---|---|
+| `ElectricSpearman.png`, `ElectricSpearmanAttacking.png` | 전기 창병 · 기본 / 찌르기 | `AttackSpriteSwapController`, 공격 이벤트에서 0.14초 표시 |
 | `ArcaneInfantry.png` | 비전 보병 · 기본 준비 자세 | `InfantryPoseController` 정지 상태 |
 | `ArcaneInfantryAttacking.png` | 비전 보병 · 마력 칼날 타격 | 공격 이벤트에서 0.16초 우선 표시 |
 | `ArcaneInfantryWalkLeft.png`, `ArcaneInfantryWalkRight.png` | 비전 보병 · 두 발걸음 | 이동 이벤트가 이어질 때 0.16초마다 교대, 지지하는 발 기준 |
@@ -456,3 +457,9 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 합집합이 캔버스 전체가 된다. 2026-09-18 에 `electric_explode` 가 이렇게 배율
 0.094 로 계산돼 캔버스의 59% 만 채운 채 한 번 나갔다. 재기 전에 8 미만을 0 으로
 내리고, 내보낼 때 같은 바닥을 한 번 더 깐다.
+
+## 돌 가고일 날갯짓
+
+`StoneGargoyleFly1`은 날개 올림, `StoneGargoyleFly2`는 수평, `StoneGargoyleFly3`은 날개 내림이다. `StoneGargoyle.prefab`의 `SpriteFrameAnimator`가 `1, 2, 3, 2`를 0.16초 간격으로 반복한다. 경계의 1을 공유하므로 화면에서는 `1 → 2 → 3 → 2 → 1 → 2…`로 왕복한다.
+
+세 파일은 192x165, PPU 100, Bottom Center이며 몸통 배율·눈 가로 기준·발톱 하단을 공유한다. `spriteMeshType: 0`인 Full Rect를 유지해 날개 자세마다 표시 경계가 바뀌지 않게 한다. 기존 정적 `StoneGargoyle.png`는 마법 아이콘으로 유지한다.
