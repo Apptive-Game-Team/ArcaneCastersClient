@@ -66,6 +66,7 @@ namespace TutorialScene
         }
 
         public static bool IsPending(long owner) => owner > 0 && Read(owner)?.state == "pending";
+        public static bool IsLobbyPending(long owner) => owner > 0 && Read(owner)?.state == "lobby";
         public static string ResumeScene(long owner) => Read(owner)?.comicSeen == true ? SelectionScene : "ComicIntroScene";
 
         public static void MarkComicSeen(long owner)
@@ -89,6 +90,11 @@ namespace TutorialScene
         {
             PlayerPrefs.SetString(Key(owner), JsonCodec.Serialize(checkpoint));
             PlayerPrefs.Save();
+        }
+
+        public static void CompleteBattle(long owner)
+        {
+            Save(owner, new FactionTutorialCheckpoint { state = "lobby", comicSeen = true });
         }
 
         public static void Complete(long owner)

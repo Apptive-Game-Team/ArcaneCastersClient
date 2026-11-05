@@ -68,6 +68,36 @@ namespace WordOnline.Tests
             }
         }
 
+        [Test]
+        public void BattleCompletionPersistsLobbyGuidanceWithoutRestartingCombatOrExistingAccounts()
+        {
+            const long owner = 98765461;
+            const long other = 98765462;
+            Type progress = Runtime("FactionTutorialProgress");
+            object Call(string method, long user) => progress.GetMethod(method).Invoke(null, new object[] { user });
+            string prefix = "faction-tutorial-v1:" + ServerList.MatchingServer.url + ":";
+            try
+            {
+                Call("Begin", owner);
+                Call("Complete", other);
+                Call("CompleteBattle", owner);
+                Assert.That(Call("IsPending", owner), Is.False, "전투는 다시 시작하지 않는다.");
+                Assert.That(Call("IsLobbyPending", owner), Is.True, "다시 읽은 체크포인트도 로비 안내를 기다린다.");
+                Assert.That(Call("IsLobbyPending", other), Is.False, "기존 완료 계정은 안내를 다시 받지 않는다.");
+                Assert.That(Call("IsLobbyPending", owner + 2), Is.False, "체크포인트가 없는 계정도 제외한다.");
+                Call("Complete", owner);
+                Assert.That(Call("IsLobbyPending", owner), Is.False);
+                object saved = Call("Read", owner);
+                Assert.That(saved.GetType().GetField("state").GetValue(saved), Is.EqualTo("completed"));
+            }
+            finally
+            {
+                PlayerPrefs.DeleteKey(prefix + owner);
+                PlayerPrefs.DeleteKey(prefix + other);
+                PlayerPrefs.Save();
+            }
+        }
+
         [TestCase("FactionSelectionScene", "FactionSelectionController")]
         [TestCase("FactionTutorialBattleScene", "FactionTutorialBattleDriver")]
         public void ScenesAreBuiltAndTheirControllersHaveTheAuthoredPanel(string sceneName, string controller)

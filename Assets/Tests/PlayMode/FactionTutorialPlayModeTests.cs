@@ -161,6 +161,36 @@ namespace WordOnline.Tests
             finally { Time.maximumDeltaTime = previousMaximum; }
         }
 
+        [UnityTest]
+        public IEnumerator CompletedBattleQueuesLobbyGuidanceInsteadOfCompletingAllOnboarding()
+        {
+            yield return SetUpBattle();
+            Type progress = TypeNamed("TutorialScene.FactionTutorialProgress");
+            string server = (string)((object)GetStatic("Data.ServerList", "MatchingServer")).GetType()
+                .GetProperty("url").GetValue(GetStatic("Data.ServerList", "MatchingServer"));
+            string key = "faction-tutorial-v1:" + server + ":" + Owner;
+            string previous = PlayerPrefs.GetString(key, "");
+            try
+            {
+                Apply(0, "final", "COMPLETED", 1);
+                float deadline = Time.realtimeSinceStartup + 2;
+                while (!(bool)progress.GetMethod("IsLobbyPending").Invoke(null, new object[] { Owner })
+                    && Time.realtimeSinceStartup < deadline)
+                {
+                    driver.GetType().GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(driver, null);
+                    yield return null;
+                }
+                Assert.That(progress.GetMethod("IsPending").Invoke(null, new object[] { Owner }), Is.False);
+                Assert.That(progress.GetMethod("IsLobbyPending").Invoke(null, new object[] { Owner }), Is.True);
+            }
+            finally
+            {
+                if (string.IsNullOrEmpty(previous)) PlayerPrefs.DeleteKey(key);
+                else PlayerPrefs.SetString(key, previous);
+                PlayerPrefs.Save();
+            }
+        }
+
         private void Apply(int revision, string stage, string status, int card)
         {
             string json = $"{{\"battleId\":\"tutorial-fixture\",\"ownerId\":{Owner},\"faction\":\"HELL\",\"revision\":{revision},\"stage\":\"{stage}\",\"status\":\"{status}\",\"mana\":120,\"cards\":[{card}],\"frames\":[],\"snapshot\":[],\"remainingSeconds\":120}}";
@@ -184,6 +214,142 @@ namespace WordOnline.Tests
             SetStatic("Global.SceneContext", "User", previousUser);
             SetStatic("Global.SceneContext", "MatchInfo", previousMatch);
             SetStatic("Global.SceneContext", "JwtToken", previousToken);
+            yield return null;
+        }
+    }
+
+    public class LobbyOnboardingPlayModeTests
+    {
+        private const long Owner = 98765463;
+        private object previousUser;
+        private string previousToken;
+        private string checkpointKey;
+        private string previousCheckpoint;
+        private GameObject fixtureContext;
+
+        private static Type Runtime(string name) => AppDomain.CurrentDomain.GetAssemblies()
+            .Select(assembly => assembly.GetType(name)).First(type => type != null);
+        private static object GetStatic(string type, string name) => Runtime(type)
+            .GetProperty(name, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).GetValue(null);
+        private static void SetStatic(string type, string name, object value) => Runtime(type).GetProperty(name).SetValue(null, value);
+        private static object Progress(string method) => Runtime("TutorialScene.FactionTutorialProgress")
+            .GetMethod(method).Invoke(null, new object[] { Owner });
+        private static void StartGuidance() => Runtime("TutorialScene.GlobalTutorialManager")
+            .GetMethod("StartLobbyOnboardingIfPending").Invoke(null, null);
+        private static object Manager => GetStatic("TutorialScene.GlobalTutorialManager", "Instance");
+        private static object State => Manager.GetType().GetField("currentState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Manager);
+        private static string Step => Manager.GetType().GetProperty("CurrentProgress").GetValue(Manager).ToString();
+        private static void Invoke(object target, string method) => target.GetType()
+            .GetMethod(method, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Invoke(target, null);
+
+        [UnitySetUp]
+        public IEnumerator PrepareLobby()
+        {
+            previousUser = GetStatic("Global.SceneContext", "User");
+            previousToken = (string)GetStatic("Global.SceneContext", "JwtToken");
+            if ((Object)GetStatic("Global.SceneContext", "Instance") == null)
+            {
+                fixtureContext = new GameObject("Lobby guidance fixture context");
+                fixtureContext.AddComponent(Runtime("Global.SceneContext"));
+            }
+            SetStatic("Global.SceneContext", "User", JsonConvert.DeserializeObject(
+                "{\"id\":98765463,\"name\":\"Lobby guidance fixture\",\"selectedDeckId\":-1}", Runtime("Data.User")));
+            SetStatic("Global.SceneContext", "JwtToken", "fixture-only");
+            object server = GetStatic("Data.ServerList", "MatchingServer");
+            checkpointKey = "faction-tutorial-v1:" + server.GetType().GetProperty("url").GetValue(server) + ":" + Owner;
+            previousCheckpoint = PlayerPrefs.GetString(checkpointKey, "");
+            Progress("CompleteBattle");
+            SceneManager.sceneLoaded += DisableNetworkStartup;
+            yield return SceneManager.LoadSceneAsync("LobbyScene");
+        }
+
+        private static void DisableNetworkStartup(Scene scene, LoadSceneMode mode)
+        {
+            // 실제 씬의 안내와 버튼 연결을 유지하고 인증·덱·보상 HTTP 초기화만 실행하지 않는다.
+            foreach (var component in scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<MonoBehaviour>(true)))
+                if (component != null && component.GetType().Assembly.GetName().Name == "Assembly-CSharp"
+                    && component.GetType().Namespace != "TutorialScene") component.enabled = false;
+        }
+
+        [UnityTest]
+        public IEnumerator LobbyStartsDeckGuidanceOnceAndContinuesThroughMagicBookAndPracticePrompt()
+        {
+            StartGuidance();
+            object manager = Manager;
+            Assert.That(Step, Is.EqualTo("Deck_EnterScene"));
+            yield return null;
+            Assert.That(Step, Is.EqualTo("Deck_EnterScene"), "Start가 전투 단계로 되돌리면 안 된다.");
+            StartGuidance();
+            Assert.That(Manager, Is.SameAs(manager));
+            Invoke(State, "OnDeckButtonClicked");
+            yield return SceneManager.LoadSceneAsync("ManageDeckScene");
+            Assert.That(Step, Is.EqualTo("Deck_ExplainDeck"));
+            var controller = (Component)GetStatic("TutorialScene.DeckTutorialController", "Instance");
+            object panel = controller.GetType().BaseType.GetField("panel", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+            Assert.That(panel, Is.Not.Null);
+            for (int i = 0; i < 6; i++) Invoke(panel, "OnNextClicked");
+            Assert.That(Step, Is.EqualTo("Deck_ReturnToLobby"));
+            yield return SceneManager.LoadSceneAsync("LobbyScene");
+            Assert.That(Step, Is.EqualTo("MagicBook_EnterScene"));
+            StartGuidance();
+            Assert.That(Step, Is.EqualTo("MagicBook_EnterScene"), "로비 재진입은 기존 진행을 유지한다.");
+            Invoke(State, "OnMagicBookButtonClicked");
+            yield return SceneManager.LoadSceneAsync("MagicBookScene");
+            controller = (Component)GetStatic("TutorialScene.MagicBookTutorialController", "Instance");
+            panel = controller.GetType().BaseType.GetField("panel", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+            Invoke(panel, "OnNextClicked");
+            Assert.That(Step, Is.EqualTo("MagicBook_SelectMagic"));
+            Invoke(State, "OnMagicSelected");
+            Invoke(panel, "OnNextClicked");
+            Assert.That(Step, Is.EqualTo("MagicBook_OpenElementChart"));
+            Invoke(State, "OnElementChartOpened");
+            Invoke(panel, "OnNextClicked");
+            yield return SceneManager.LoadSceneAsync("LobbyScene");
+            Assert.That(Step, Is.EqualTo("Common_SelectDeck"));
+            controller = (Component)GetStatic("TutorialScene.LobbyTutorialController", "Instance");
+            panel = controller.GetType().BaseType.GetField("panel", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(controller);
+            for (int i = 0; i < 5; i++) Invoke(panel, "OnNextClicked");
+            Assert.That(Step, Is.EqualTo("HospitalityBattle"));
+            Assert.That(Progress("IsLobbyPending"), Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator FinalGuidanceCompletionPersistsAndDoesNotRestart()
+        {
+            StartGuidance();
+            Invoke(Manager, "FinishOnboarding");
+            Assert.That(Progress("IsLobbyPending"), Is.False);
+            yield return null;
+            StartGuidance();
+            Assert.That((Object)Manager == null, Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator CompletionCallbackAfterAccountChangeDoesNotWriteBeforeUpdate()
+        {
+            StartGuidance();
+            SetStatic("Global.SceneContext", "User", null);
+            Invoke(Manager, "FinishOnboarding");
+            Assert.That(Progress("IsLobbyPending"), Is.True, "이전 계정의 안내 대기를 유지한다.");
+            yield return null;
+            Assert.That((Object)Manager == null, Is.True);
+        }
+
+        [UnityTearDown]
+        public IEnumerator Cleanup()
+        {
+            SceneManager.sceneLoaded -= DisableNetworkStartup;
+            if ((Object)Manager != null) Object.Destroy(((Component)Manager).gameObject);
+            var empty = SceneManager.CreateScene("LobbyGuidanceCleanup");
+            SceneManager.SetActiveScene(empty);
+            foreach (string sceneName in new[] { "LobbyScene", "ManageDeckScene", "MagicBookScene" })
+                if (SceneManager.GetSceneByName(sceneName).isLoaded) yield return SceneManager.UnloadSceneAsync(sceneName);
+            SetStatic("Global.SceneContext", "User", previousUser);
+            SetStatic("Global.SceneContext", "JwtToken", previousToken);
+            if (fixtureContext != null) Object.Destroy(fixtureContext);
+            if (string.IsNullOrEmpty(previousCheckpoint)) PlayerPrefs.DeleteKey(checkpointKey);
+            else PlayerPrefs.SetString(checkpointKey, previousCheckpoint);
+            PlayerPrefs.Save();
             yield return null;
         }
     }
