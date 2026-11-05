@@ -882,6 +882,7 @@ MonoBehaviour:
   startButton: {fileID: 1254884346061088383}
   quickButton: {fileID: 1254884346061089383}
   backButton: {fileID: 1254884346061090383}
+  backdrop: {fileID: 0}
 --- !u!1001 &923000
 PrefabInstance:
   m_ObjectHideFlags: 0

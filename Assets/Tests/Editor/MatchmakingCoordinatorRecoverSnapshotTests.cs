@@ -66,7 +66,7 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void RecoverSnapshot_WhenRequestFails_SetsStateToReconnecting()
+        public void RecoverSnapshot_WhenRequestFailsWithoutAMatch_KeepsLobbyIdle()
         {
             // Arrange
             fakeApi.RequestSucceeded = false;
@@ -77,8 +77,8 @@ namespace WordOnline.Tests
             coordinator.Initialize(fakeApi, connectStream: false);
 
             // Assert
-            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Reconnecting));
-            Assert.That(reportedState, Is.EqualTo(MatchTicketState.Reconnecting));
+            Assert.That(coordinator.State, Is.EqualTo(MatchTicketState.Idle));
+            Assert.That(reportedState, Is.Null);
         }
 
         [Test]
