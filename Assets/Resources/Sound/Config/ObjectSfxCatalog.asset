@@ -169,6 +169,12 @@ MonoBehaviour:
     hitProfile: {fileID: 11400000, guid: 4d4acadce1191c34384a9635553a5b70, type: 2}
     intentionalSilent: 0
     serverAlias: 0
+  - runtimeType: ElectricSpearman
+    profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
+    attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}
+    hitProfile: {fileID: 11400000, guid: 4d4acadce1191c34384a9635553a5b70, type: 2}
+    intentionalSilent: 0
+    serverAlias: 0
   - runtimeType: ElectricSlime
     profile: {fileID: 11400000, guid: d56c530f53bbfb94b8a0ab48cc99a0b4, type: 2}
     attackProfile: {fileID: 11400000, guid: c60bfdc5617140eaaf78b6cb0e3307a1, type: 2}

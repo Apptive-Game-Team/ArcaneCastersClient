@@ -45,6 +45,7 @@ namespace WordOnline.Tests
         [TestCase("Towerback", "RockHit")]
         [TestCase("Player", "CreatureHit")]
         [TestCase("ArcaneInfantry", "CreatureHit")]
+        [TestCase("ElectricSpearman", "CreatureHit")]
         [TestCase("PveVineWitch", "CreatureHit")]
         [TestCase("SeedSpirit", "CreatureHit")]
         [TestCase("LeafSlime", "CreatureHit")]
