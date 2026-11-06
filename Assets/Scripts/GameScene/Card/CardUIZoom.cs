@@ -6,6 +6,7 @@ namespace GameScene.Card
 {
     public class CardUIZoom : MonoBehaviour
     {
+        private const string AutoPauseKey = "PracticeCardHoverAutoPause";
         private const float HoverSoundCooldown = 0.12f;
         private const float DescriptionHoverDelay = 1f;
         public static CardUIZoom Instance { get; private set; }
@@ -13,6 +14,9 @@ namespace GameScene.Card
         [SerializeField] private ZoomedCardUI zoomedCardUI;
         [SerializeField] private ZoomedCardUI detailPrefab;
         [SerializeField] private AudioSource audioSource;
+        [SerializeField] private GameObject pauseOverlay;
+        private bool hoverLeaseSent;
+        public bool AutoPause { get; private set; } = true;
         private float lastHoverSoundTime = float.NegativeInfinity;
         private CardUI hoveredCard;
         private bool hasHover;
@@ -24,6 +28,8 @@ namespace GameScene.Card
         private void Awake()
         {
             Instance = this;
+            if (Global.SceneContext.MatchInfo?.IsPracticeMatch == true)
+                AutoPause = PlayerPrefs.GetInt(AutoPauseKey, 1) != 0;
             zoomedCardUI.Hide();
             if (detailPrefab != null) zoomedCardUI = Instantiate(detailPrefab, transform);
             zoomedCardUI.Hide();
@@ -59,7 +65,7 @@ namespace GameScene.Card
     
         public void Hide()
         {
-            if (hasHover && StompConnector.Instance != null) StompConnector.Instance.TrySendCardHover(false);
+            ReleaseHover();
             hasHover = false;
             hoveredCard = null;
             SetLocalPause(false);
@@ -73,7 +79,31 @@ namespace GameScene.Card
 
         public void ApplyServerPause(bool paused)
         {
-            SetLocalPause(paused && hasHover && hoveredCard != null && Application.isFocused);
+            SetLocalPause(paused && AutoPause && hoverLeaseSent && hasHover && hoveredCard != null && Application.isFocused);
+        }
+
+        public void SetAutoPause(bool enabled)
+        {
+            if (AutoPause == enabled) return;
+            AutoPause = enabled;
+            PlayerPrefs.SetInt(AutoPauseKey, enabled ? 1 : 0);
+            PlayerPrefs.Save();
+            if (!enabled)
+            {
+                ReleaseHover();
+                SetLocalPause(false);
+            }
+            else if (hasHover)
+            {
+                RefreshHover();
+            }
+        }
+
+        private void ReleaseHover()
+        {
+            if (!hoverLeaseSent) return;
+            hoverLeaseSent = false;
+            StompConnector.Instance?.TrySendCardHover(false);
         }
 
         private void SetLocalPause(bool paused)
@@ -86,6 +116,7 @@ namespace GameScene.Card
                 Time.timeScale = previousTimeScale;
             }
             locallyPaused = paused;
+            if (pauseOverlay != null) pauseOverlay.SetActive(paused);
         }
 
         private void Update()
@@ -99,12 +130,13 @@ namespace GameScene.Card
                 if (Time.unscaledTime >= hoverReadyTime) ShowDetails();
                 return;
             }
-            if (Time.unscaledTime >= nextHoverRefresh) RefreshHover();
+            if (AutoPause && Time.unscaledTime >= nextHoverRefresh) RefreshHover();
         }
 
         private void RefreshHover()
         {
-            if (StompConnector.Instance != null) StompConnector.Instance.TrySendCardHover(true);
+            if (!AutoPause) return;
+            if (StompConnector.Instance?.TrySendCardHover(true) == true) hoverLeaseSent = true;
             nextHoverRefresh = Time.unscaledTime + 0.5f;
         }
 

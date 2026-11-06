@@ -84,6 +84,7 @@ namespace LobbyScene
             {
                 if (dto != null)
                 {
+                    dto.IsPracticeMatch = true;
                     OnMatched(dto);
                     return;
                 }
@@ -162,6 +163,7 @@ namespace LobbyScene
             {
                 failedEntry = null;
                 enteringGameScene = false;
+                activeMatch.IsPracticeMatch = activeMatch.sessionId == retry.sessionId && retry.IsPracticeMatch;
                 OnMatched(activeMatch);
                 yield break;
             }
