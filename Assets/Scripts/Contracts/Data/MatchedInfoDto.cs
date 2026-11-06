@@ -14,6 +14,13 @@ namespace Data
         public User rightUser;
         public string sessionId;
 
+        [JsonIgnore]
+        public bool IsPracticeMatch { get; set; }
+
+        [JsonIgnore] public bool LocalSupportsCardHoverPause { get; set; }
+        [JsonIgnore]
+        public bool SupportsCardHoverPause => IsPracticeMatch && (!IsLocal || LocalSupportsCardHoverPause);
+
         /// <summary>
         /// Map kind the game server picked, as the server spells it (<c>GRASSLAND</c>, <c>RIVER</c>,
         /// <c>FORTRESS</c>, <c>GATE</c>, <c>FOREST</c>). Absent or null from an older server. Kept a
