@@ -17,6 +17,10 @@ namespace Data
         [JsonIgnore]
         public bool IsPracticeMatch { get; set; }
 
+        // 로컬 Rust 서버는 카드 호버 일시정지 요청을 지원하지 않는다.
+        [JsonIgnore]
+        public bool SupportsCardHoverPause => IsPracticeMatch && !IsLocal;
+
         /// <summary>
         /// Map kind the game server picked, as the server spells it (<c>GRASSLAND</c>, <c>RIVER</c>,
         /// <c>FORTRESS</c>, <c>GATE</c>, <c>FOREST</c>). Absent or null from an older server. Kept a

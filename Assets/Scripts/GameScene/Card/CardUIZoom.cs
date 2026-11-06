@@ -28,7 +28,9 @@ namespace GameScene.Card
         private void Awake()
         {
             Instance = this;
-            if (Global.SceneContext.MatchInfo?.IsPracticeMatch == true)
+            if (Global.SceneContext.MatchInfo?.IsLocal == true)
+                AutoPause = false;
+            else if (Global.SceneContext.MatchInfo?.SupportsCardHoverPause == true)
                 AutoPause = PlayerPrefs.GetInt(AutoPauseKey, 1) != 0;
             zoomedCardUI.Hide();
             if (detailPrefab != null) zoomedCardUI = Instantiate(detailPrefab, transform);

@@ -17,7 +17,7 @@ namespace GameScene.UI
         protected override void Start()
         {
             base.Start();
-            gameObject.SetActive(SceneContext.MatchInfo?.IsPracticeMatch == true);
+            gameObject.SetActive(SceneContext.MatchInfo?.SupportsCardHoverPause == true);
             Refresh();
         }
 
