@@ -1,11 +1,15 @@
 using System;
+using System.Collections;
 using Data;
 using GameScene.Dto;
 using Global;
+using LobbyScene;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Components;
+using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace ResultScene
 {
@@ -16,6 +20,7 @@ namespace ResultScene
 
         [SerializeField] TextMeshProUGUI resultText;
         [SerializeField] TextMeshProUGUI mmrDeltaText;
+        [SerializeField] private TextMeshProUGUI matchXpText;
         [SerializeField] GameObject winTitle;
         [SerializeField] GameObject loseTitle;
         [SerializeField] GameObject drawTitle;
@@ -50,6 +55,7 @@ namespace ResultScene
 
         private void Start()
         {
+            SetActive(matchXpText != null ? matchXpText.gameObject : null, false);
             // 결과 화면에 들어왔다는 것은 세션이 닫혔다는 뜻이다. 신고하지 않으면 로비 티켓이
             // MATCHED로 남아 다음 매칭이 조용히 무시된다. 결과 표시와는 독립적으로 진행한다.
             StartCoroutine(SessionLossReporter.ReportMatchCompleted());
@@ -94,6 +100,50 @@ namespace ResultScene
             ShowTitle(outcome);
             SetResultText(newMmr.ToString());
             SetMmrDelta(newMmr - lastMmr);
+
+            var match = SceneContext.MatchInfo;
+            if (matchXpText != null && !CustomBattleConnection.IsLocalMatch && match != null && !match.IsLocal &&
+                !string.IsNullOrEmpty(match.sessionId) && !string.IsNullOrEmpty(SceneContext.JwtToken))
+                StartCoroutine(ShowMatchXp(match.sessionId));
+        }
+
+        private IEnumerator ShowMatchXp(string sessionId)
+        {
+            // 결과 화면이 경기 기록보다 먼저 도착할 수 있어 잠시 다시 확인한다.
+            for (int attempt = 0; attempt < 4; attempt++)
+            {
+                PlayerProgressionDto progression = null;
+                long status = 0;
+                yield return PlayerProgressionApi.SyncMatch(sessionId, (value, code) =>
+                {
+                    progression = value;
+                    status = code;
+                });
+
+                if (progression?.matchXp is ProgressionMatchXpDto xp)
+                {
+                    var baseLine = LocalizationSettings.StringDatabase.GetLocalizedStringAsync(
+                        "LobbyUI", "ResultMatchXp", new object[] { xp.baseXp });
+                    yield return baseLine;
+                    if (baseLine.Status != AsyncOperationStatus.Succeeded) yield break;
+
+                    string label = baseLine.Result;
+                    if (xp.firstWinBonusXp > 0)
+                    {
+                        var bonusLine = LocalizationSettings.StringDatabase.GetLocalizedStringAsync(
+                            "LobbyUI", "ResultFirstWinXp", new object[] { xp.firstWinBonusXp });
+                        yield return bonusLine;
+                        if (bonusLine.Status == AsyncOperationStatus.Succeeded) label += "\n" + bonusLine.Result;
+                    }
+
+                    matchXpText.text = label;
+                    matchXpText.gameObject.SetActive(true);
+                    yield break;
+                }
+
+                if (status < 0 || (status >= 400 && status < 500 && status != 408 && status != 429)) yield break;
+                if (attempt < 3) yield return new WaitForSecondsRealtime(0.5f * (1 << attempt));
+            }
         }
 
         /// <summary>
