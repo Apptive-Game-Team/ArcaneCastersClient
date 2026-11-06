@@ -25,18 +25,23 @@ namespace LobbyScene
             complete(context.IsCurrent ? result : null);
         }
 
-        public static IEnumerator Sync(Action<PlayerProgressionDto> complete) => Request("sync", "{}", complete);
+        public static IEnumerator Sync(Action<PlayerProgressionDto> complete) =>
+            Request("sync", "{}", (value, _) => complete(value));
+
+        public static IEnumerator SyncMatch(string sessionId, Action<PlayerProgressionDto, long> complete) =>
+            Request($"sync?sessionId={Uri.EscapeDataString(sessionId)}", "{}", complete, timeout: 4);
 
         public static IEnumerator Choose(string faction, Action<PlayerProgressionDto> complete) =>
-            Request("faction", JsonCodec.Serialize(new { faction }), complete);
+            Request("faction", JsonCodec.Serialize(new { faction }), (value, _) => complete(value));
 
-        private static IEnumerator Request(string path, string body, Action<PlayerProgressionDto> complete)
+        private static IEnumerator Request(string path, string body, Action<PlayerProgressionDto, long> complete,
+            int timeout = 15)
         {
             var context = Data.Profile.RewardRequestContext.Capture();
             using var request = new UnityWebRequest($"{ServerList.MatchingServer.url}/api/users/mine/progression/{path}", "POST");
             request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(body));
             request.downloadHandler = new DownloadHandlerBuffer();
-            request.timeout = 15;
+            request.timeout = timeout;
             request.SetRequestHeader("Content-Type", "application/json");
             Server.SetAuthorization(request);
             Server.SetAcceptLanguage(request);
@@ -45,7 +50,8 @@ namespace LobbyScene
             PlayerProgressionDto result = null;
             if (request.result == UnityWebRequest.Result.Success)
                 JsonCodec.TryDeserialize(request.downloadHandler.text, out result, out _);
-            complete(context.IsCurrent ? result : null);
+            if (context.IsCurrent) complete(result, request.responseCode);
+            else complete(null, -1);
         }
 
         public static IEnumerator Pending(Action<ProgressionPendingRewardsDto, long> complete)

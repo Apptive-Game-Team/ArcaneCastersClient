@@ -795,6 +795,14 @@ MonoBehaviour:
     m_Key: ProgressionReceiptEmpty
     m_Metadata:
       m_Items: []
+  - m_Id: 76110341300000132
+    m_Key: ResultMatchXp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000133
+    m_Key: ResultFirstWinXp
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
