@@ -160,7 +160,8 @@ namespace Global.LocalHosting
                     rightUser = right,
                     sessionId = string.IsNullOrEmpty(created.sessionId) ? (string)session["sessionId"] : created.sessionId,
                     mapType = (string)session["mapType"],
-                    localToken = token
+                    localToken = token,
+                    LocalSupportsCardHoverPause = created.supportsCardHoverPause
                 };
             }
             catch (Exception exception)

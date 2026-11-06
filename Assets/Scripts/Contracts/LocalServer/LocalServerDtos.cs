@@ -52,6 +52,7 @@ namespace LocalServer
     /// <summary>로컬 서버 <c>POST /api/local/sessions</c> 응답.</summary>
     public sealed class LocalServerSessionResponse
     {
+        public bool supportsCardHoverPause;
         public string sessionId;
         public string webSocketUrl;
     }

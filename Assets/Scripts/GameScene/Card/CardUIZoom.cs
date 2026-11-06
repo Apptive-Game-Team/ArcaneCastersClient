@@ -28,7 +28,7 @@ namespace GameScene.Card
         private void Awake()
         {
             Instance = this;
-            if (Global.SceneContext.MatchInfo?.IsLocal == true)
+            if (Global.SceneContext.MatchInfo is { IsLocal: true, SupportsCardHoverPause: false })
                 AutoPause = false;
             else if (Global.SceneContext.MatchInfo?.SupportsCardHoverPause == true)
                 AutoPause = PlayerPrefs.GetInt(AutoPauseKey, 1) != 0;
