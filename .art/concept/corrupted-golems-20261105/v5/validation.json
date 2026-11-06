@@ -1,0 +1,117 @@
+[
+  {
+    "name": "MiniRockSwarm",
+    "canvas": [
+      236,
+      256
+    ],
+    "old_bbox": [
+      3,
+      1,
+      232,
+      255
+    ],
+    "new_bbox": [
+      3,
+      1,
+      232,
+      255
+    ],
+    "bottom_before": 1,
+    "bottom_after": 1,
+    "source_aspect_change": -0.0425,
+    "meta_identical": true
+  },
+  {
+    "name": "RockGolem",
+    "canvas": [
+      256,
+      244
+    ],
+    "old_bbox": [
+      14,
+      6,
+      227,
+      244
+    ],
+    "new_bbox": [
+      14,
+      6,
+      227,
+      244
+    ],
+    "bottom_before": 0,
+    "bottom_after": 0,
+    "source_aspect_change": -0.0179,
+    "meta_identical": true
+  },
+  {
+    "name": "RockGolem2",
+    "canvas": [
+      256,
+      244
+    ],
+    "old_bbox": [
+      0,
+      0,
+      256,
+      244
+    ],
+    "new_bbox": [
+      0,
+      0,
+      256,
+      244
+    ],
+    "bottom_before": 0,
+    "bottom_after": 0,
+    "source_aspect_change": -0.0201,
+    "meta_identical": true
+  },
+  {
+    "name": "RockMage",
+    "canvas": [
+      234,
+      256
+    ],
+    "old_bbox": [
+      1,
+      3,
+      233,
+      255
+    ],
+    "new_bbox": [
+      1,
+      3,
+      233,
+      255
+    ],
+    "bottom_before": 1,
+    "bottom_after": 1,
+    "source_aspect_change": -0.0305,
+    "meta_identical": true
+  },
+  {
+    "name": "WallGolem",
+    "canvas": [
+      226,
+      254
+    ],
+    "old_bbox": [
+      0,
+      0,
+      226,
+      254
+    ],
+    "new_bbox": [
+      0,
+      0,
+      226,
+      254
+    ],
+    "bottom_before": 0,
+    "bottom_after": 0,
+    "source_aspect_change": 0.0119,
+    "meta_identical": true
+  }
+]

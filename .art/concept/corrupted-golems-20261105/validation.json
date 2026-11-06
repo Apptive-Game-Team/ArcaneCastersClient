@@ -1,0 +1,152 @@
+[
+  {
+    "name": "MiniRockSwarm",
+    "canvas": [
+      236,
+      256
+    ],
+    "alpha_bbox": [
+      3,
+      1,
+      232,
+      255
+    ],
+    "changed_pixels": 462,
+    "eye_regions": [
+      [
+        136,
+        45,
+        149,
+        75
+      ],
+      [
+        168,
+        44,
+        180,
+        73
+      ]
+    ],
+    "alpha_identical": true,
+    "outside_eyes_identical": true
+  },
+  {
+    "name": "RockGolem",
+    "canvas": [
+      256,
+      244
+    ],
+    "alpha_bbox": [
+      14,
+      6,
+      227,
+      244
+    ],
+    "changed_pixels": 110,
+    "eye_regions": [
+      [
+        144,
+        54,
+        151,
+        70
+      ],
+      [
+        159,
+        53,
+        166,
+        69
+      ]
+    ],
+    "alpha_identical": true,
+    "outside_eyes_identical": true
+  },
+  {
+    "name": "RockGolem2",
+    "canvas": [
+      256,
+      244
+    ],
+    "alpha_bbox": [
+      0,
+      0,
+      256,
+      244
+    ],
+    "changed_pixels": 110,
+    "eye_regions": [
+      [
+        122,
+        48,
+        130,
+        64
+      ],
+      [
+        137,
+        46,
+        144,
+        62
+      ]
+    ],
+    "alpha_identical": true,
+    "outside_eyes_identical": true
+  },
+  {
+    "name": "RockMage",
+    "canvas": [
+      234,
+      256
+    ],
+    "alpha_bbox": [
+      1,
+      3,
+      233,
+      255
+    ],
+    "changed_pixels": 342,
+    "eye_regions": [
+      [
+        123,
+        80,
+        136,
+        106
+      ],
+      [
+        154,
+        79,
+        164,
+        104
+      ]
+    ],
+    "alpha_identical": true,
+    "outside_eyes_identical": true
+  },
+  {
+    "name": "WallGolem",
+    "canvas": [
+      226,
+      254
+    ],
+    "alpha_bbox": [
+      0,
+      0,
+      226,
+      254
+    ],
+    "changed_pixels": 96,
+    "eye_regions": [
+      [
+        125,
+        20,
+        132,
+        34
+      ],
+      [
+        137,
+        19,
+        144,
+        33
+      ]
+    ],
+    "alpha_identical": true,
+    "outside_eyes_identical": true
+  }
+]
