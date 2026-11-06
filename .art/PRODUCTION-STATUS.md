@@ -337,3 +337,7 @@ commit 그대로였다.
 
 - `ElectricSpearman.png`, `ElectricSpearmanAttacking.png`: 사용자 승인 후 적용. 같은 128×102 RGBA 캔버스, PPU 90, Bottom Center. 런타임 프리팹과 카드 아이콘 연결. 기본·찌르기 자세 완료.
 - `RockGolem.prefab`: 기존 그림을 유지하고 본체·그림자를 60%로 축소.
+
+## 성장 UI 골드 아이콘 — 2026-10-29
+
+`Assets/Resources/UI/Progression/Gold.png`: 승인된 흰 패널 시안에 사용하는 단일 골드 아이콘. master-v2 기준으로 생성했으며, 로비·레벨 보상·골드 보상 타일에서 공유한다. 투명 배경, Unity 최대 텍스처 256, 작은 화면에서 실루엣 확인. 클라이언트 #393 / PR #396 검토 대상.
