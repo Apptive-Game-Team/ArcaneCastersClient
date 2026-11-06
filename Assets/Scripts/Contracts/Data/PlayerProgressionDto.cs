@@ -13,5 +13,13 @@ namespace Data
         public long currency;
         public long gainedXp;
         public int grantedChests;
+        public ProgressionMatchXpDto matchXp;
+    }
+
+    [Serializable]
+    public class ProgressionMatchXpDto
+    {
+        public int baseXp;
+        public int firstWinBonusXp;
     }
 }

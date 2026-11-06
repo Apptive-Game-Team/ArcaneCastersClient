@@ -804,6 +804,14 @@ MonoBehaviour:
     m_Localized: "\uC774\uBBF8 \uBCF4\uC720\uD55C \uBCF4\uC0C1\uC785\uB2C8\uB2E4. \uBAA9\uB85D\uC744 \uC0C8\uB85C \uD655\uC778\uD588\uC2B5\uB2C8\uB2E4."
     m_Metadata:
       m_Items: []
+  - m_Id: 76110341300000132
+    m_Localized: "\uACBD\uAE30 +{0} XP"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000133
+    m_Localized: "\uC624\uB298\uC758 \uCCAB \uC2B9 +{0} XP"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
