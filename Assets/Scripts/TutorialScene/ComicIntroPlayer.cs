@@ -21,7 +21,7 @@ namespace TutorialScene
             public string localizationKey;
         }
 
-        private const string TutorialSceneName = "InteractiveTutorialScene";
+        private const string TutorialSceneName = FactionTutorialProgress.SelectionScene;
         private const float InputBufferSeconds = 0.16f;
         private const float LoadingTimeoutSeconds = 12f;
 
@@ -231,6 +231,7 @@ namespace TutorialScene
                 yield return null;
             }
             yield return null;
+            if (Global.SceneContext.User != null) FactionTutorialProgress.MarkComicSeen(Global.SceneContext.UserID);
             SceneManager.LoadScene(TutorialSceneName);
         }
 
