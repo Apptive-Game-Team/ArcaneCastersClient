@@ -39,7 +39,7 @@ namespace TutorialScene
             ShowStatus("FactionTutorial.loading");
             yield return GameDataRefresh.Refresh();
             if (!Current) yield break;
-            var names = FactionTutorialCards.Hell.Concat(FactionTutorialCards.Nature).Concat(new[] { "meteor_shower", "tornado_strike" });
+            var names = FactionTutorialCards.HellPractice.Concat(FactionTutorialCards.NaturePractice).Concat(new[] { "meteor_shower", "tornado_strike" });
             if (names.Any(name => !LocalCombinedMagicData.TryGetByName(name, out var magic) || magic.id <= 0
                     || !GameParameterResolver.TryGetMagicParameter(magic, "range", out float range) || range <= 0))
             {

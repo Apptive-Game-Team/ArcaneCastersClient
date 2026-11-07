@@ -151,8 +151,8 @@ namespace TutorialScene
                 panel.Hide();
                 string key = result.stage == "meteor" && result.recommended != "meteor_shower" ? "FactionTutorial.meteor.finish"
                     : result.stage == "final" ? $"FactionTutorial.final.{result.wave}"
-                    : result.stage == "formation" ? (result.recommended == FactionTutorialCards.Hell[3]
-                        || result.recommended == FactionTutorialCards.Nature[3] ? "FactionTutorial.formation.tank" : "FactionTutorial.formation.swarm")
+                    : result.stage == "formation" ? (result.recommended == FactionTutorialCards.HellPractice[3]
+                        || result.recommended == FactionTutorialCards.NaturePractice[3] ? "FactionTutorial.formation.tank" : "FactionTutorial.formation.swarm")
                     : $"FactionTutorial.{result.stage}.{ready.faction}";
                 TutorialHint.Show("Onboarding", key);
             }
@@ -261,7 +261,8 @@ namespace TutorialScene
             pointerMode = mode;
             if (mode == "field")
             {
-                bool summon = state.stage == "anti_air" || state.stage == "formation";
+                // explosion은 호환용 stage 이름이며 현재는 공중 유닛 소환 실습이다.
+                bool summon = state.stage == "anti_air" || state.stage == "formation" || state.stage == "explosion";
                 // 선택 시점의 사용 지점을 유지해 토네이도에 휘말린 적을 따라가지 않는다.
                 Vector3 point = summon ? new Vector3(6, 0, 5) : new Vector3(state.targetX, 0, state.targetZ);
                 pointer = TutorialPointer.PointAtScreen(() => TutorialPointer.ScreenPointOfWorld(point));

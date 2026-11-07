@@ -98,6 +98,23 @@ namespace WordOnline.Tests
             }
         }
 
+        [Test]
+        public void PracticeRostersDoNotChangeTheStartingRewards()
+        {
+            Type cards = Runtime("FactionTutorialCards");
+            string[] List(string field) => (string[])cards.GetField(field).GetValue(null);
+            Assert.That(List("HellPractice"), Is.EqualTo(new[] { "fire_shot", "rock_golem", "rock_mage", "wall_golem", "stone_gargoyle" }));
+            Assert.That(List("NaturePractice"), Is.EqualTo(new[] { "chain_lightning", "electric_spearman", "aqua_archer", "tree_golem", "thunder_spirit" }));
+            Assert.That(List("Hell"), Is.EqualTo(new[] { "fire_shot", "ember_spirit_swarm", "towerback", "rock_golem", "magma_explosion" }));
+            Assert.That(List("Nature"), Is.EqualTo(new[] { "chain_lightning", "water_slime_swarm", "vine_spirit", "tree_golem", "water_explosion" }));
+            foreach (string field in new[] { "HellPractice", "NaturePractice" })
+                foreach (string name in List(field).Where(name => !name.Contains("shot") && name != "chain_lightning"))
+                {
+                    string prefabName = string.Concat(name.Split('_').Select(word => char.ToUpperInvariant(word[0]) + word.Substring(1)));
+                    Assert.That(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Prefabs/" + prefabName + ".prefab"), Is.Not.Null, name);
+                }
+        }
+
         [TestCase("FactionSelectionScene", "FactionSelectionController")]
         [TestCase("FactionTutorialBattleScene", "FactionTutorialBattleDriver")]
         public void ScenesAreBuiltAndTheirControllersHaveTheAuthoredPanel(string sceneName, string controller)

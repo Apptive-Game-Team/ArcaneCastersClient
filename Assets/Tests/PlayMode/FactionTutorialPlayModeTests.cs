@@ -47,7 +47,17 @@ namespace WordOnline.Tests
             source = GetStatic("Data.Magic.MagicInfoDataSource", "Instance");
             var field = source.GetType().GetField("magics", BindingFlags.Instance | BindingFlags.NonPublic);
             previousMagics = field.GetValue(source);
-            var response = Json("Data.Magic.MagicInfoResponse", "{\"magics\":[{\"id\":1,\"name\":\"fire_shot\",\"elements\":[\"Fire\"],\"manaCost\":10,\"castKind\":\"Shot\"},{\"id\":2,\"name\":\"meteor_shower\",\"elements\":[\"Fire\",\"Rock\"],\"manaCost\":50,\"castKind\":\"Drop\"},{\"id\":3,\"name\":\"tornado_strike\",\"elements\":[\"Wind\"],\"manaCost\":50,\"castKind\":\"Drop\"}]}");
+            var fixtureMagics = new[] {
+                ("fire_shot", "Fire", "Shot"), ("meteor_shower", "Fire", "Drop"), ("tornado_strike", "Wind", "Drop"),
+                ("wall_golem", "Rock", "Unit"), ("rock_golem", "Rock", "Unit"), ("stone_gargoyle", "Rock", "Unit"),
+                ("tree_golem", "Nature", "Unit"), ("electric_spearman", "Lightning", "Unit"), ("thunder_spirit", "Lightning", "Unit"),
+                ("rock_mage", "Rock", "Unit"), ("aqua_archer", "Water", "Unit")
+            };
+            var response = Json("Data.Magic.MagicInfoResponse", JsonConvert.SerializeObject(new {
+                magics = fixtureMagics.Select((entry, index) => new {
+                    id = index + 1, name = entry.Item1, elements = new[] { entry.Item2 }, manaCost = 35, castKind = entry.Item3
+                })
+            }));
             source.GetType().GetMethod("ProcessResponse", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(source, new[] { response });
             Set(driver, "owner", Owner);
             Set(driver, "matchingServer", ((object)GetStatic("Data.ServerList", "MatchingServer")).GetType().GetProperty("url").GetValue(GetStatic("Data.ServerList", "MatchingServer")));
@@ -120,6 +130,52 @@ namespace WordOnline.Tests
             lateUpdate.Invoke(driver, null);
             Vector2 next = Camera.main.WorldToScreenPoint(new Vector3(10, 0, 6));
             Assert.That(Vector2.Distance(Point(), next), Is.LessThan(.01f), "새 선택에서는 사용 지점을 다시 잡는다.");
+        }
+
+        [UnityTest]
+        public IEnumerator BothFactionsGuidePracticeSummonsInsideRangeAndDistinguishTankFromMelee()
+        {
+            yield return SetUpBattle();
+            var lateUpdate = driver.GetType().GetMethod("LateUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
+            var ui = GetStatic("GameScene.GameSceneUIController", "Instance");
+            var sender = GetStatic("GameScene.Card.CardInputSender", "Instance");
+            int revision = 0;
+            foreach (var lesson in new[] {
+                ("HELL", "anti_air", 10, "rock_mage"), ("HELL", "formation", 4, "wall_golem"),
+                ("HELL", "formation", 5, "rock_golem"), ("HELL", "explosion", 6, "stone_gargoyle"),
+                ("NATURE", "anti_air", 11, "aqua_archer"), ("NATURE", "formation", 7, "tree_golem"),
+                ("NATURE", "formation", 8, "electric_spearman"), ("NATURE", "explosion", 9, "thunder_spirit")
+            })
+            {
+                Set(driver, "ready", Json("Data.TutorialReadyDto", JsonConvert.SerializeObject(new {
+                    battleId = "tutorial-fixture", ownerId = Owner, faction = lesson.Item1, server = "http://localhost:7001"
+                })));
+                ApplyJson(JsonConvert.SerializeObject(new {
+                    battleId = "tutorial-fixture", ownerId = Owner, faction = lesson.Item1, revision = revision++,
+                    stage = lesson.Item2, status = "RUNNING", cards = new[] { lesson.Item3 }, recommended = lesson.Item4,
+                    targetX = 9, targetZ = 5, frames = new object[0], snapshot = new object[0]
+                }));
+                sender.GetType().GetMethod("TryUseCard").Invoke(sender,
+                    new[] { ui.GetType().GetMethod("GetCardAt").Invoke(ui, new object[] { 0 }) });
+                lateUpdate.Invoke(driver, null);
+                object pointer = driver.GetType().GetField("pointer", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(driver);
+                Assert.That(pointer, Is.Not.Null, lesson.Item4);
+                var point = (Func<Vector2?>)pointer.GetType().GetField("pressPoint", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(pointer);
+                Vector2 expected = Camera.main.WorldToScreenPoint(new Vector3(6, 0, 5));
+                Assert.That(Vector2.Distance(point().Value, expected), Is.LessThan(.01f), lesson.Item4);
+                var hint = Object.FindObjectsOfType<MonoBehaviour>().Single(item => item.GetType().Name == "TutorialHint");
+                object text = hint.GetType().GetField("message", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(hint);
+                float deadline = Time.realtimeSinceStartup + 5;
+                while (string.IsNullOrEmpty((string)text.GetType().GetProperty("text").GetValue(text)) && Time.realtimeSinceStartup < deadline) yield return null;
+                string actualText = (string)text.GetType().GetProperty("text").GetValue(text);
+                string key = lesson.Item2 == "formation" ? "FactionTutorial.formation." + (lesson.Item3 == 4 || lesson.Item3 == 7 ? "tank" : "swarm")
+                    : "FactionTutorial." + lesson.Item2 + "." + lesson.Item1;
+                var localization = (System.Threading.Tasks.Task<string>)TypeNamed("Data.Localization.LocaleUtils")
+                    .GetMethod("GetStringAsync").Invoke(null, new object[] { "Onboarding", key });
+                while (!localization.IsCompleted && Time.realtimeSinceStartup < deadline) yield return null;
+                Assert.That(localization.IsCompleted, Is.True);
+                Assert.That(actualText, Is.EqualTo(localization.Result), lesson.Item4);
+            }
         }
 
         [UnityTest]
