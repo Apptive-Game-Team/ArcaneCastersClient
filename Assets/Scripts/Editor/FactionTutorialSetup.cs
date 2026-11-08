@@ -23,12 +23,14 @@ namespace Editor
         private static readonly Color Ink = new Color32(28, 26, 43, 255);
         private static TMP_FontAsset Font => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Art/Fonts/LilitaOne SDF.asset");
 
-        [MenuItem("Tools/Tutorial/Build Faction Tutorial")]
-        public static void Build()
+        [MenuItem("Tools/Tutorial/Build Tutorial Panel")]
+        public static void BuildPanel()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play Mode first");
             Directory.CreateDirectory(Path.GetDirectoryName(PanelPath));
-            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            Scene previous = SceneManager.GetActiveScene();
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+            SceneManager.SetActiveScene(scene);
             var root = new GameObject("FactionTutorialPanel", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             var canvas = root.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -57,6 +59,10 @@ namespace Editor
             var next = Button("Continue", backdrop.transform, new Vector2(0, -230), new Vector2(600, 70), true);
             var hellIcons = Icons("Inferno", backdrop.transform, -490);
             var natureIcons = Icons("Nature", backdrop.transform, 70);
+            var details = (GameObject)PrefabUtility.InstantiatePrefab(
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/GameCardDetails.prefab"), root.transform);
+            var rewardDetails = details.GetComponent<GameScene.Card.ZoomedCardUI>();
+            rewardDetails.Hide();
             var serialized = new SerializedObject(panel);
             Set(serialized, "title", title);
             Set(serialized, "body", body);
@@ -65,9 +71,22 @@ namespace Editor
             Set(serialized, "next", next);
             SetArray(serialized, "hellIcons", hellIcons);
             SetArray(serialized, "natureIcons", natureIcons);
+            Set(serialized, "rewardDetails", rewardDetails);
             serialized.ApplyModifiedPropertiesWithoutUndo();
             PrefabUtility.SaveAsPrefabAsset(root, PanelPath);
             Object.DestroyImmediate(root);
+            EditorSceneManager.CloseScene(scene, true);
+            if (previous.IsValid() && previous.isLoaded) SceneManager.SetActiveScene(previous);
+            AssetDatabase.SaveAssets();
+            Debug.Log("FACTION_TUTORIAL_PANEL_PASS");
+        }
+
+        [MenuItem("Tools/Tutorial/Build Faction Tutorial")]
+        public static void Build()
+        {
+            if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play Mode first");
+            BuildPanel();
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             var selectionPanel = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(PanelPath));
             var selection = selectionPanel.AddComponent<FactionSelectionController>();
@@ -167,6 +186,8 @@ namespace Editor
             {
                 var frame = Surface(prefix + "Card" + i, parent, new Vector2(start + i * 105, -40), new Vector2(90, 90));
                 frame.GetComponent<Image>().sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/Images/UI/Flat/FlatTile.png");
+                frame.GetComponent<Image>().raycastTarget = true;
+                frame.gameObject.AddComponent<TutorialRewardCard>();
                 var go = new GameObject("Artwork", typeof(RectTransform), typeof(Image));
                 go.transform.SetParent(frame, false);
                 var rect = go.GetComponent<RectTransform>();

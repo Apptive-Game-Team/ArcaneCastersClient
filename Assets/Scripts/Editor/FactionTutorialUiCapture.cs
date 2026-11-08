@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using TMPro;
 using TutorialScene;
@@ -7,6 +8,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -14,6 +16,63 @@ namespace Editor
 {
     public static class FactionTutorialUiCapture
     {
+        [MenuItem("Tools/Tutorial/Capture Reward Review")]
+        public static void CaptureRewardReview()
+        {
+            var previousScene = SceneManager.GetActiveScene();
+            var previousLocale = LocalizationSettings.SelectedLocale;
+            Scene temporary = default;
+            GameObject root = null;
+            Data.Magic.MagicInfoDataSource catalog = null;
+            object previousMagics = null;
+            var magicsField = typeof(Data.Magic.MagicInfoDataSource).GetField("magics", BindingFlags.Instance | BindingFlags.NonPublic);
+            try
+            {
+                if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play Mode first");
+                LocalizationSettings.InitializationOperation.WaitForCompletion();
+                LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale("ko-KR");
+                foreach (string table in new[] { "Onboarding", "Magic", "MagicBook" })
+                    LocalizationSettings.StringDatabase.GetTableAsync(table).WaitForCompletion();
+                Directory.CreateDirectory("docs/pr-media/397");
+                temporary = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+                SceneManager.SetActiveScene(temporary);
+                catalog = Data.Magic.MagicInfoDataSource.Instance;
+                previousMagics = magicsField.GetValue(catalog);
+                // EditMode에서는 Awake가 캐시를 읽지 않으므로 저장된 카탈로그를 명시적으로 읽는다.
+                typeof(Data.Magic.MagicInfoDataSource).GetMethod("LoadFromPlayerPrefs", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(catalog, null);
+                root = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(FactionTutorialSetup.PanelPath));
+                var panel = root.GetComponent<FactionTutorialPanel>();
+                foreach (string faction in new[] { "HELL", "NATURE" })
+                {
+                    panel.Show("FactionTutorial.complete", "FactionTutorial.reward." + faction,
+                        "FactionTutorial.lobby", () => { }, rewardFaction: faction);
+                    Canvas.ForceUpdateCanvases();
+                    if (faction == "NATURE")
+                    {
+                        var data = new SerializedObject(panel);
+                        var icon = (Image)data.FindProperty("natureIcons").GetArrayElementAtIndex(4).objectReferenceValue;
+                        var magic = Data.Magic.LocalCombinedMagicData.GetCombinedMagicData(FactionTutorialCards.Nature[4]);
+                        if (magic == null) throw new InvalidOperationException("Reward magic catalog unavailable");
+                        icon.transform.parent.GetComponent<TutorialRewardCard>().OnPointerClick(null);
+                        Canvas.ForceUpdateCanvases();
+                    }
+                    Capture(root.GetComponent<Canvas>(), 1280, 720,
+                        "docs/pr-media/397/tutorial-reward-" + faction.ToLowerInvariant() + ".jpg");
+                }
+                Debug.Log("FACTION_TUTORIAL_REWARD_CAPTURE_PASS");
+            }
+            catch (Exception exception) { Debug.LogException(exception); }
+            finally
+            {
+                if (catalog != null) magicsField.SetValue(catalog, previousMagics);
+                if (root != null) Object.DestroyImmediate(root);
+                if (temporary.IsValid() && temporary.isLoaded) EditorSceneManager.CloseScene(temporary, true);
+                if (previousScene.IsValid() && previousScene.isLoaded) SceneManager.SetActiveScene(previousScene);
+                LocalizationSettings.SelectedLocale = previousLocale;
+            }
+        }
+
         public static async void Run()
         {
             int exit = 0;

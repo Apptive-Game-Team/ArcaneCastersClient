@@ -22,7 +22,9 @@ and must stay aligned with Lobby's progression policy. `.HellPractice` and
 shot, melee, ranged, tank, flyer. HELL uses fire_shot, rock_golem, rock_mage,
 wall_golem, stone_gargoyle; NATURE uses chain_lightning, electric_spearman,
 aqua_archer, tree_golem, thunder_spirit. Keep these in sync with Rust tutorial
-HELL/NATURE arrays. Meteor Shower and Tornado Strike are additional trials.
+HELL/NATURE arrays. HELL tries Meteor Shower only; NATURE tries Tornado Strike only.
+Keep the server's stage numbers and names stable: NEXT branches after shot and skips
+the other faction's trial, so each faction plays six lessons.
 Neither practice permissions nor completion grant those spells as rewards.
 
 The sixth lesson retains the wire stage `explosion` for compatibility, but now
@@ -89,6 +91,13 @@ reading the latest target in its screen-point callback. Tornado victims orbit,
 so following each response makes the hand circle with them. Reproject the fixed
 world point for the camera and choose a new point only on a new selection.
 
+Remember guided (stage, magic) pairs only after a CAST is accepted. Hide the card,
+bar and field pointer for that pair afterwards, including retries and polling recovery.
+Cancelled selections and rejected casts keep guidance; a newly recommended formation
+unit and the same card in another lesson still receive their first guidance.
+Pass the captured stage and magic through uncertain-command retries instead of reading
+the later state when the acknowledgement arrives.
+
 An uncertain command retries the same command UUID with its original revision
 and payload. Keep cast input locked until it is accepted or definitively rejected.
 The final lesson has no required-card pointer. A completed server response saves
@@ -111,6 +120,20 @@ Update on the same frame as an account change. Stop without writing on mismatch.
 
 ## Authoring and validation
 
+Reward icons use TutorialRewardCard and the shared GameCardDetails prefab. Bind their
+actual starting-reward magic, not the practice roster. Mouse hover/exit shows/hides the
+short summary, while tap keeps it visible. Hide requests must match the current anchor:
+an old card's exit can arrive after another card has opened its popup. Keep async text
+invalidated on disable and reuse MagicBook summary.* entries in both locales.
+ZoomedCardUI's legacy card path accepts a Transform; casting it to RectTransform before
+the legacy branch broke CardHoverSummaryTests' existing non-UI fixture.
+
+Use Editor.FactionTutorialSetup.BuildPanel for panel-only edits; Build regenerates
+selection and battle scenes too. Editor.FactionTutorialUiCapture.CaptureRewardReview
+captures the authored reward panel and short summary without leaving the Editor.
+In EditMode, load the saved magic catalog explicitly before capturing: Awake has not
+filled MagicInfoDataSource, so merely creating the source left reward icons blank.
+
 Run `Editor.FactionTutorialSetup.Build` to regenerate the two scenes and the
 shared panel. Keep layout in existing UI prefab instances. `FactionTutorialUiCapture`
 renders the actual authored panel with fixture card art in both locales; its
@@ -126,7 +149,10 @@ one attack presentation and waits for the final tween before showing success.
 Completing a server lesson alone does not validate visual playback cadence.
 
 Lobby guidance fixtures must create a persistent `SceneContext` before loading
-LobbyScene if none exists. Disabling network startup in `sceneLoaded` is too
+LobbyScene if none exists. Stop runtime coroutines across Assembly-CSharp and
+WordOnline.* assemblies in sceneLoaded. Disabling a component alone leaves
+OnEnable's HTTP coroutine running; local servers then return fixture-token 401
+errors. Disabling network startup in `sceneLoaded` is too
 late for `AdminOnly.Awake`, which otherwise reports a missing context for JWKS.
 Game's TutorialBattleTest separately runs all lessons against production magic,
 prefab and physics code with a captured gameplay-parameter fixture.

@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -8,6 +9,10 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
+using TMPro;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace WordOnline.Tests
@@ -51,7 +56,11 @@ namespace WordOnline.Tests
                 ("fire_shot", "Fire", "Shot"), ("meteor_shower", "Fire", "Drop"), ("tornado_strike", "Wind", "Drop"),
                 ("wall_golem", "Rock", "Unit"), ("rock_golem", "Rock", "Unit"), ("stone_gargoyle", "Rock", "Unit"),
                 ("tree_golem", "Nature", "Unit"), ("electric_spearman", "Lightning", "Unit"), ("thunder_spirit", "Lightning", "Unit"),
-                ("rock_mage", "Rock", "Unit"), ("aqua_archer", "Water", "Unit")
+                ("rock_mage", "Rock", "Unit"), ("aqua_archer", "Water", "Unit"),
+                ("chain_lightning", "Lightning", "Shot"), ("ember_spirit_swarm", "Fire", "Unit"),
+                ("towerback", "Rock", "Unit"), ("magma_explosion", "Fire", "Drop"),
+                ("water_slime_swarm", "Water", "Unit"), ("vine_spirit", "Nature", "Unit"),
+                ("water_explosion", "Water", "Drop")
             };
             var response = Json("Data.Magic.MagicInfoResponse", JsonConvert.SerializeObject(new {
                 magics = fixtureMagics.Select((entry, index) => new {
@@ -83,6 +92,110 @@ namespace WordOnline.Tests
             Assert.That(sender.GetType().GetMethod("GetMagicName").Invoke(sender, null), Is.Null);
             var ids = ((IEnumerable)ui.GetType().GetMethod("GetAllCards").Invoke(ui, null)).Cast<long>().ToArray();
             Assert.That(ids, Is.EqualTo(new long[] { 2 }));
+        }
+
+        [UnityTest]
+        public IEnumerator CardGuidanceStaysConsumedForRepeatedCastsAndRetryButGuidesNewCardsAndSteps()
+        {
+            yield return SetUpBattle();
+            var lateUpdate = driver.GetType().GetMethod("LateUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
+            var pointer = driver.GetType().GetField("pointer", BindingFlags.Instance | BindingFlags.NonPublic);
+            var guided = (HashSet<string>)driver.GetType().GetField("guidedCards", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(driver);
+            var sender = GetStatic("GameScene.Card.CardInputSender", "Instance");
+            var ui = GetStatic("GameScene.GameSceneUIController", "Instance");
+            void Receive(int revision, string stage, int card, string recommended) => ApplyJson(JsonConvert.SerializeObject(new {
+                battleId = "tutorial-fixture", ownerId = Owner, faction = "HELL", revision, stage, status = "RUNNING",
+                mana = 120, cards = new[] { card }, recommended, frames = new object[0], snapshot = new object[0]
+            }));
+            void Select() => sender.GetType().GetMethod("TryUseCard").Invoke(sender,
+                new[] { ui.GetType().GetMethod("GetCardAt").Invoke(ui, new object[] { 0 }) });
+            void UpdatePointer() => lateUpdate.Invoke(driver, null);
+            Receive(0, "formation", 4, "wall_golem");
+            UpdatePointer();
+            Assert.That(pointer.GetValue(driver), Is.Not.Null);
+            Select();
+            UpdatePointer();
+            sender.GetType().GetMethod("Cancel").Invoke(sender, null);
+            UpdatePointer();
+            Assert.That(pointer.GetValue(driver), Is.Not.Null, "선택 취소만으로 안내를 소비하지 않는다.");
+            guided.Add("formation:wall_golem");
+            UpdatePointer();
+            Assert.That(pointer.GetValue(driver), Is.Null);
+            Select();
+            UpdatePointer();
+            Assert.That(pointer.GetValue(driver), Is.Null, "반복 카드 선택에도 필드 손 안내를 되풀이하지 않는다.");
+            Receive(1, "formation", 4, "wall_golem");
+            UpdatePointer();
+            Assert.That(pointer.GetValue(driver), Is.Null, "같은 단계 재시도에서도 안내를 되풀이하지 않는다.");
+            Receive(1, "formation", 5, "rock_golem");
+            UpdatePointer();
+            Assert.That(pointer.GetValue(driver), Is.Not.Null, "새로 배우는 근접 카드는 안내한다.");
+            Receive(2, "shot", 4, "wall_golem");
+            UpdatePointer();
+            Assert.That(pointer.GetValue(driver), Is.Not.Null, "다른 단계의 카드는 처음부터 안내한다.");
+        }
+
+        [UnityTest]
+        public IEnumerator RewardCardsShowLocalizedSummariesForHoverAndTouchWithoutStaleExitOrHiddenUpdates()
+        {
+            yield return SetUpBattle();
+            yield return LocalizationSettings.InitializationOperation;
+            var previousLocale = LocalizationSettings.SelectedLocale;
+            try
+            {
+                var panel = (Component)driver.GetType().GetField("panel", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(driver);
+                var details = (Component)panel.GetType().GetField("rewardDetails", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel);
+                Assert.That(details, Is.Not.Null);
+                var body = (TMP_Text)details.GetType().GetField("descriptionText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(details);
+                var title = (TMP_Text)details.GetType().GetField("cardNameText", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(details);
+                var panelBody = (TMP_Text)panel.GetType().GetField("body", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel);
+                foreach (string locale in new[] { "ko-KR", "en" })
+                {
+                    LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.GetLocale(locale);
+                    foreach (string faction in new[] { "HELL", "NATURE" })
+                    {
+                        panel.GetType().GetMethod("Show").Invoke(panel, new object[] {
+                            "FactionTutorial.complete", "FactionTutorial.reward." + faction, "FactionTutorial.lobby",
+                            new Action(() => { }), null, null, faction
+                        });
+                        var icons = (Image[])panel.GetType().GetField(faction == "HELL" ? "hellIcons" : "natureIcons",
+                            BindingFlags.Instance | BindingFlags.NonPublic).GetValue(panel);
+                        var names = (string[])TypeNamed("TutorialScene.FactionTutorialCards").GetField(faction == "HELL" ? "Hell" : "Nature").GetValue(null);
+                        Component previous = null;
+                        foreach (var pair in icons.Select((icon, i) => (icon, i)))
+                        {
+                            var card = pair.icon.transform.parent.GetComponent(TypeNamed("TutorialScene.TutorialRewardCard"));
+                            Assert.That(card, Is.Not.Null);
+                            var mouse = new PointerEventData(EventSystem.current) { pointerId = -1 };
+                            card.GetType().GetMethod("OnPointerEnter").Invoke(card, new object[] { mouse });
+                            if (previous != null) previous.GetType().GetMethod("OnPointerExit").Invoke(previous, new object[] { mouse });
+                            Assert.That(details.gameObject.activeSelf, Is.True, "이전 카드의 exit가 새 설명을 닫으면 안 된다.");
+                            string expected = LocalizationSettings.StringDatabase.GetLocalizedString("MagicBook", "summary." + names[pair.i]);
+                            float deadline = Time.realtimeSinceStartup + 5;
+                            while (body.text != expected && Time.realtimeSinceStartup < deadline) yield return null;
+                            Assert.That(body.text, Is.EqualTo(expected));
+                            Assert.That(string.IsNullOrWhiteSpace(title.text), Is.False);
+                            Assert.That(details.GetComponentsInChildren<Graphic>(true).All(graphic => !graphic.raycastTarget), Is.True);
+                            card.GetType().GetMethod("OnPointerExit").Invoke(card, new object[] { mouse });
+                            Assert.That(details.gameObject.activeSelf, Is.False);
+                            var touch = new PointerEventData(EventSystem.current) { pointerId = 0 };
+                            card.GetType().GetMethod("OnPointerClick").Invoke(card, new object[] { touch });
+                            card.GetType().GetMethod("OnPointerExit").Invoke(card, new object[] { touch });
+                            Assert.That(details.gameObject.activeSelf, Is.True, "탭 종료 후에도 설명을 읽을 수 있어야 한다.");
+                            previous = card;
+                        }
+                        float bodyDeadline = Time.realtimeSinceStartup + 5;
+                        string expectedBody = LocalizationSettings.StringDatabase.GetLocalizedString("Onboarding", "FactionTutorial.reward." + faction);
+                        while (panelBody.text != expectedBody && Time.realtimeSinceStartup < bodyDeadline) yield return null;
+                        Assert.That(panelBody.text, Is.EqualTo(expectedBody));
+                        if (locale == "ko-KR") Assert.That(panelBody.text, Is.EqualTo("기본적인 전투를 배웠습니다. 축하합니다!\n아래 카드들을 획득했습니다!"));
+                        panel.GetType().GetMethod("Hide").Invoke(panel, null);
+                        yield return null;
+                        Assert.That(details.gameObject.activeInHierarchy, Is.False);
+                    }
+                }
+            }
+            finally { LocalizationSettings.SelectedLocale = previousLocale; }
         }
 
         [UnityTest]
@@ -370,8 +483,14 @@ namespace WordOnline.Tests
         {
             // 실제 씬의 안내와 버튼 연결을 유지하고 인증·덱·보상 HTTP 초기화만 실행하지 않는다.
             foreach (var component in scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<MonoBehaviour>(true)))
-                if (component != null && component.GetType().Assembly.GetName().Name == "Assembly-CSharp"
-                    && component.GetType().Namespace != "TutorialScene") component.enabled = false;
+            {
+                if (component == null || component.GetType().Namespace == "TutorialScene") continue;
+                string assembly = component.GetType().Assembly.GetName().Name;
+                if (assembly != "Assembly-CSharp" && !assembly.StartsWith("WordOnline.")) continue;
+                // OnEnable에서 이미 시작한 요청도 멈춘다. enabled=false만으로는 코루틴이 남는다.
+                component.StopAllCoroutines();
+                component.enabled = false;
+            }
         }
 
         [UnityTest]

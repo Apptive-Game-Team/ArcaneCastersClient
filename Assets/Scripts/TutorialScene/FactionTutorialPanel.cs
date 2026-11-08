@@ -1,5 +1,6 @@
 using System;
 using Data.Localization;
+using GameScene.Card;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,12 +16,14 @@ namespace TutorialScene
         [SerializeField] private UnityEngine.UI.Button next;
         [SerializeField] private Image[] hellIcons;
         [SerializeField] private Image[] natureIcons;
+        [SerializeField] private ZoomedCardUI rewardDetails;
         private int version;
 
         public void Show(string titleKey, string bodyKey, string nextKey = null, Action action = null,
             Action chooseHell = null, Action chooseNature = null, string rewardFaction = null)
         {
             gameObject.SetActive(true);
+            if (rewardDetails != null) rewardDetails.Hide();
             int current = ++version;
             SetText(title, titleKey, current);
             SetText(body, bodyKey, current);
@@ -28,11 +31,11 @@ namespace TutorialScene
             Bind(nature, "FactionTutorial.nature", chooseNature, current);
             Bind(next, nextKey, action, current);
             bool choosing = chooseHell != null || chooseNature != null;
-            SetIcons(hellIcons, FactionTutorialCards.Hell, choosing || rewardFaction == "HELL", choosing ? -490 : -210);
-            SetIcons(natureIcons, FactionTutorialCards.Nature, choosing || rewardFaction == "NATURE", choosing ? 70 : -210);
+            SetIcons(hellIcons, FactionTutorialCards.Hell, choosing || rewardFaction == "HELL", choosing ? -490 : -210, rewardFaction == "HELL");
+            SetIcons(natureIcons, FactionTutorialCards.Nature, choosing || rewardFaction == "NATURE", choosing ? 70 : -210, rewardFaction == "NATURE");
         }
 
-        public void Hide() { version++; gameObject.SetActive(false); }
+        public void Hide() { version++; if (rewardDetails != null) rewardDetails.Hide(); gameObject.SetActive(false); }
 
         private void Bind(UnityEngine.UI.Button button, string key, Action action, int current)
         {
@@ -55,7 +58,7 @@ namespace TutorialScene
             if (this != null && current == version && target != null) target.text = text;
         }
 
-        private static void SetIcons(Image[] icons, string[] names, bool visible, float start)
+        private void SetIcons(Image[] icons, string[] names, bool visible, float start, bool describe)
         {
             if (icons == null) return;
             for (int i = 0; i < icons.Length; i++)
@@ -64,6 +67,12 @@ namespace TutorialScene
                 ((RectTransform)icons[i].transform.parent).anchoredPosition = new Vector2(start + i * 105, -40);
                 if (visible && i < names.Length)
                     icons[i].sprite = DeckScene.DeckCardSpriteResolver.GetMagicSprite(names[i]);
+                var card = icons[i].transform.parent.GetComponent<TutorialRewardCard>();
+                if (card != null)
+                {
+                    card.Bind(i < names.Length ? names[i] : null, rewardDetails);
+                    card.enabled = visible && describe;
+                }
             }
         }
     }

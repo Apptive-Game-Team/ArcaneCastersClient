@@ -337,7 +337,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000086
-    m_Localized: "Meteor Shower cleared the group with a wide attack. Try another support spell next."
+    m_Localized: "Meteor Shower cleared the group with a wide attack. Now learn to use your faction’s practice units."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000087
@@ -369,11 +369,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000094
-    m_Localized: "Your Inferno & Stone starting deck is ready.\nFire Shot · Ember Swarm · Towerback · Rock Golem · Fire Explosion\nPractice spells may differ from the spells you own."
+    m_Localized: "You learned the basics of combat. Congratulations!\nYou received the cards below!"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000095
-    m_Localized: "Your Nature & Water starting deck is ready.\nChain Lightning · Water Slime Swarm · Vine Spirit · Tree Golem · Water Explosion\nPractice spells may differ from the spells you own."
+    m_Localized: "You learned the basics of combat. Congratulations!\nYou received the cards below!"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000096

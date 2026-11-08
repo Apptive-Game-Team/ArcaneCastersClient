@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Data;
 using Data.Magic;
@@ -33,6 +34,7 @@ namespace TutorialScene
         private bool finishing;
         private TutorialPointer pointer;
         private string pointerMode;
+        private readonly HashSet<string> guidedCards = new HashSet<string>();
 
         private void Awake() { Instance = this; }
 
@@ -195,7 +197,7 @@ namespace TutorialScene
             commandPending = true;
             var body = new { commandId = Guid.NewGuid().ToString(), revision = state.revision, action = "CAST", magic,
                 position = new { x = position.x, y = 0, z = position.z } };
-            StartCoroutine(Command(body, inputId, complete));
+            StartCoroutine(Command(body, inputId, complete, state.stage, magic));
         }
 
         private IEnumerator SendAction(string action)
@@ -206,7 +208,8 @@ namespace TutorialScene
             yield return Command(body, 0, null);
         }
 
-        private IEnumerator Command(object body, int inputId, Action<MagicValidInfo> complete)
+        private IEnumerator Command(object body, int inputId, Action<MagicValidInfo> complete,
+            string castStage = null, string castMagic = null)
         {
             while (busy) yield return null;
             busy = true;
@@ -221,10 +224,15 @@ namespace TutorialScene
                 suspended = true;
                 ClearPointer();
                 panel.Show("FactionTutorial.title", "FactionTutorial.error", "FactionTutorial.retry",
-                    () => StartCoroutine(Command(body, inputId, complete)));
+                    () => StartCoroutine(Command(body, inputId, complete, castStage, castMagic)));
                 yield break;
             }
             bool accepted = reply?.accepted == true;
+            if (accepted && castStage != null && castMagic != null)
+            {
+                guidedCards.Add(castStage + ":" + castMagic);
+                ClearPointer();
+            }
             complete?.Invoke(new MagicValidInfo { id = inputId, valid = accepted,
                 resultCode = accepted ? "SUCCESS" : "FAIL_INVALID_PLACE", message = "" });
             commandPending = false;
@@ -251,6 +259,11 @@ namespace TutorialScene
         private void LateUpdate()
         {
             if (state?.status != "RUNNING" || state.stage == "final" || suspended || !Current) return;
+            if (guidedCards.Contains(state.stage + ":" + state.recommended))
+            {
+                ClearPointer();
+                return;
+            }
             var sender = FindObjectOfType<CardInputSender>();
             if (sender == null || string.IsNullOrEmpty(state.recommended)) return;
             string mode = sender.IsFieldSelectMode() ? "field" : "card";
