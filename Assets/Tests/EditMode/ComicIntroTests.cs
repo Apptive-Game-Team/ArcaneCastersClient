@@ -33,6 +33,23 @@ namespace WordOnline.Tests
             UnityEngine.Object.DestroyImmediate(root);
         }
 
+        [TestCase("ComicIntroScene")]
+        [TestCase("FactionSelectionScene")]
+        public void TutorialUiSceneHasAnActiveCameraForDisplayOne(string sceneName)
+        {
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(
+                "Assets/Scenes/" + sceneName + ".unity", UnityEditor.SceneManagement.OpenSceneMode.Additive);
+            try
+            {
+                var cameras = scene.GetRootGameObjects().SelectMany(go => go.GetComponentsInChildren<Camera>(true));
+                Assert.That(cameras.Any(camera => camera.isActiveAndEnabled && camera.targetDisplay == 0
+                    && camera.targetTexture == null), Is.True, "Display 1에 렌더링하는 카메라가 있어야 한다.");
+                Assert.That(scene.GetRootGameObjects().SelectMany(go => go.GetComponentsInChildren<AudioListener>(true))
+                    .Count(listener => listener.isActiveAndEnabled), Is.EqualTo(1), "활성 AudioListener는 씬에 하나여야 한다.");
+            }
+            finally { UnityEditor.SceneManagement.EditorSceneManager.CloseScene(scene, true); }
+        }
+
         [Test]
         public void SevenIllustrationsShareOnePageAndEightOrderedDialogueBeats()
         {

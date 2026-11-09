@@ -481,6 +481,115 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000428
     m_Localized: "\uCE5C\uC120\uC804 \uCD08\uB300"
+  - m_Id: 76060000000000429
+    m_Localized: "\uC5F0\uC2B5\uBAA8\uB4DC \uC900\uBE44\uC911..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000430
+    m_Localized: "\uC5F0\uC2B5 \uACBD\uAE30\uB97C \uC2DC\uC791\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.
+      \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000501
+    m_Localized: "\uACC4\uC18D\uD558\uAE30"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000502
+    m_Localized: "\uC124\uC815"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000503
+    m_Localized: "\uD56D\uBCF5\uD558\uAE30"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000504
+    m_Localized: "\uD56D\uBCF5\uD558\uACE0 \uC774\uBC88 \uAC8C\uC784\uC744 \uC885\uB8CC\uD560\uAE4C\uC694? \uD328\uBC30\uB85C \uCC98\uB9AC\uB429\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000505
+    m_Localized: "\uD56D\uBCF5 \uCC98\uB9AC\uB97C \uD655\uC778\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000506
+    m_Localized: "\uD56D\uBCF5 \uACB0\uACFC\uB97C \uAE30\uB2E4\uB9AC\uB294 \uC911\uC785\uB2C8\uB2E4..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000507
+    m_Localized: "보상을 불러오지 못했어요. 다시 연결하고 있어요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000508
+    m_Localized: "시작 세력을 선택하세요. 마법 5종을 3장씩 받아요. 이후에는 양쪽 세력의 마법을 모두 모을 수 있어요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000509
+    m_Localized: "지옥불 정령 · 돌 부족"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000510
+    m_Localized: "자연 정령 · 물 슬라임"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000511
+    m_Localized: "골드"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000512
+    m_Localized: "경험치 +{0} · 상자 +{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000513
+    m_Localized: "카드 또는 골드 · {0}회 추첨"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000514
+    m_Localized: "마법 상자"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000515
+    m_Localized: 보상을 불러오고 있어요.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000520
+    m_Localized: "레벨 보상"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000521
+    m_Localized: "지급 완료"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000522
+    m_Localized: "미도달"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000523
+    m_Localized: "보유 상자 {0}개"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000524
+    m_Localized: "보유 상자 보기"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000525
+    m_Localized: "다시 시도"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000526
+    m_Localized: "보상 정보를 불러오지 못했어요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000527
+    m_Localized: "Lv. {0} 보상"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000528
+    m_Localized: "레벨 달성 보상"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000529
+    m_Localized: "상자 보상 {0}칸\n카드 또는 골드를 받아요."
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000601
     m_Localized: "\uB85C\uCEEC \uC11C\uBC84"
     m_Metadata:
@@ -547,43 +656,6 @@ MonoBehaviour:
     m_Localized: "\uC790\uB3D9"
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000429
-    m_Localized: "\uC5F0\uC2B5\uBAA8\uB4DC \uC900\uBE44\uC911..."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000430
-    m_Localized: "\uC5F0\uC2B5 \uACBD\uAE30\uB97C \uC2DC\uC791\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.
-      \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000501
-    m_Localized: "\uACC4\uC18D\uD558\uAE30"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000502
-    m_Localized: "\uC124\uC815"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000503
-    m_Localized: "\uD56D\uBCF5\uD558\uAE30"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000504
-    m_Localized: "\uD56D\uBCF5\uD558\uACE0 \uC774\uBC88 \uAC8C\uC784\uC744 \uC885\uB8CC\uD560\uAE4C\uC694? \uD328\uBC30\uB85C \uCC98\uB9AC\uB429\uB2C8\uB2E4."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000505
-    m_Localized: "\uD56D\uBCF5 \uCC98\uB9AC\uB97C \uD655\uC778\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000506
-    m_Localized: "\uD56D\uBCF5 \uACB0\uACFC\uB97C \uAE30\uB2E4\uB9AC\uB294 \uC911\uC785\uB2C8\uB2E4..."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 76060000000000507
-    m_Localized: "\uC900\uBE44\uC911\uC785\uB2C8\uB2E4.."
-    m_Metadata:
-      m_Items: []
   - m_Id: 76060000000000617
     m_Localized: "\uAC8C\uC784 \uC900\uBE44 \uC911..."
     m_Metadata:
@@ -598,6 +670,146 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000620
     m_Localized: "\uAC8C\uC784 \uC11C\uBC84 \uC5F0\uACB0 \uC911..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000621
+    m_Localized: "\uC900\uBE44\uC911\uC785\uB2C8\uB2E4.."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000100
+    m_Localized: "\ubd07 \ub300\uc804"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000101
+    m_Localized: "\ub4a4\ub85c"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000102
+    m_Localized: "\ube60\ub978 \uc5f0\uc2b5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000103
+    m_Localized: "\ub300\uc804 \uc2dc\uc791"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000104
+    m_Localized: "\uc804\uc801\uc744 \ubd88\ub7ec\uc624\ub294 \uc911"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000105
+    m_Localized: "\ub09c\uc774\ub3c4\ub97c \ubd88\ub7ec\uc624\uc9c0 \ubabb\ud588\uc5b4\uc694."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000106
+    m_Localized: "\ub2e4\uc2dc \uc2dc\ub3c4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000107
+    m_Localized: "\ucd94\ucc9c \ub09c\uc774\ub3c4  {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000108
+    m_Localized: "\ucd5c\uadfc \ub300\uc804  {0}/5\ud310"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000109
+    m_Localized: "\ub09c\uc774\ub3c4\ub97c \uc120\ud0dd\ud558\uc138\uc694."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000110
+    m_Localized: "\uc0c1\ub300 \uc5c6\uc74c"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000111
+    m_Localized: "\uae30\ub85d \uc5c6\uc74c"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000112
+    m_Localized: "{0}\uc2b9 {1}\ud328"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000113
+    m_Localized: " {0}\ubb34"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000114
+    m_Localized: "\uc785\ubb38"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000115
+    m_Localized: "\uae30\ubcf8"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000116
+    m_Localized: "\uc219\ub828"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000117
+    m_Localized: "\uace0\uae09"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000118
+    m_Localized: "\ucd5c\uc0c1\uae09"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000119
+    m_Localized: "{0}\ubd80\ud130 \uc2dc\uc791"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000120
+    m_Localized: "\uc9c0\uae08 \ub300\uc804\ud560 \uc0c1\ub300\uac00 \uc5c6\uc5b4\uc694."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000121
+    m_Localized: "\uB808\uBCA8 \uC5C5! Lv. {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000122
+    m_Localized: "\uBC1B\uC744 \uBCF4\uC0C1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000123
+    m_Localized: "\uBC1B\uAE30"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000124
+    m_Localized: "\uCD9C\uC11D \uBCF4\uC0C1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000125
+    m_Localized: "\uD018\uC2A4\uD2B8 \uBCF4\uC0C1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000126
+    m_Localized: "\uBCF4\uC0C1\uC744 \uBC1B\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000127
+    m_Localized: "\uC774\uBBF8 \uBC1B\uC740 \uBCF4\uC0C1\uC785\uB2C8\uB2E4. \uBAA9\uB85D\uC744 \uC0C8\uB85C \uD655\uC778\uD588\uC2B5\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000128
+    m_Localized: "\uBC1B\uC744 \uBCF4\uC0C1\uC744 \uBAA8\uB450 \uBC1B\uC558\uC2B5\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000129
+    m_Localized: "\uBCF4\uC0C1\uC744 \uD655\uC778\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4. \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uD655\uC778\uD569\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000130
+    m_Localized: "\uBCF4\uC0C1\uC744 \uBC1B\uC558\uC2B5\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000131
+    m_Localized: "\uC774\uBBF8 \uBCF4\uC720\uD55C \uBCF4\uC0C1\uC785\uB2C8\uB2E4. \uBAA9\uB85D\uC744 \uC0C8\uB85C \uD655\uC778\uD588\uC2B5\uB2C8\uB2E4."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000132
+    m_Localized: "\uACBD\uAE30 +{0} XP"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000133
+    m_Localized: "\uC624\uB298\uC758 \uCCAB \uC2B9 +{0} XP"
     m_Metadata:
       m_Items: []
   references:

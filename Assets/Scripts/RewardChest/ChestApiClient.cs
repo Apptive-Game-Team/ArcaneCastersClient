@@ -17,8 +17,10 @@ namespace RewardChest
         {
             string url = $"{ServerList.MatchingServer.url}/api/users/mine/chests";
             using UnityWebRequest webRequest = UnityWebRequest.Get(url);
+            webRequest.timeout = 15;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
+            Data.Profile.ManualRewardClaims.Apply(webRequest);
             webRequest.downloadHandler = new DownloadHandlerBuffer();
 
             yield return webRequest.SendWebRequest();
@@ -52,8 +54,10 @@ namespace RewardChest
             webRequest.uploadHandler = new UploadHandlerRaw(Array.Empty<byte>());
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             webRequest.SetRequestHeader("Content-Type", "application/json");
+            webRequest.timeout = 15;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
+            Data.Profile.ManualRewardClaims.Apply(webRequest);
 
             yield return webRequest.SendWebRequest();
 

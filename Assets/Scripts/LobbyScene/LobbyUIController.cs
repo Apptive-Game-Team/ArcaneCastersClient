@@ -59,9 +59,16 @@ namespace LobbyScene
         {
             WDebug.Log("LobbyUIController Start");
             loadingHandle = LoadingPage.Begin(this);
-            deckDropdown.onValueChanged.AddListener(OnDropdownChanged);
-            yield return GameDataRefresh.Refresh();
-            yield return LoadUserInfo();
+            try
+            {
+                deckDropdown.onValueChanged.AddListener(OnDropdownChanged);
+                yield return GameDataRefresh.Refresh();
+                yield return LoadUserInfo();
+            }
+            finally
+            {
+                loadingHandle?.Dispose();
+            }
         }
     
         private IEnumerator LoadUserInfo()
@@ -75,8 +82,35 @@ namespace LobbyScene
                 yield return UserInfoGetter.RefreshGameUser();
             }
 
+            if (SceneContext.User == null) yield break;
+            TutorialScene.FactionTutorialProgress.AdoptNewAccountIntent(SceneContext.UserID);
+            if (TutorialScene.FactionTutorialProgress.IsPending(SceneContext.UserID))
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(TutorialScene.FactionTutorialProgress.ResumeScene(SceneContext.UserID));
+                yield break;
+            }
             lobbyUserNameUI.SetUserName(SceneContext.User.name);
             ApplyOwnAppearance(SceneContext.User.appearance);
+            loadingHandle?.Dispose();
+            long tutorialOwner = SceneContext.UserID;
+            string tutorialServer = ServerList.MatchingServer.url;
+            bool lobbyOnboarding = TutorialScene.FactionTutorialProgress.IsLobbyPending(tutorialOwner);
+            if (lobbyOnboarding)
+            {
+                // 안내에 필요한 덱부터 준비한다. 성장·퀘스트 조회는 안내와 화면 이동을 막지 않는다.
+                yield return FetchDecks();
+                if (SceneManager.GetActiveScene().name != "LobbyScene"
+                    || !TutorialScene.FactionTutorialProgress.IsCurrentOwner(tutorialOwner, tutorialServer)) yield break;
+                TutorialScene.GlobalTutorialManager.StartLobbyOnboardingIfPending();
+                yield return new WaitUntil(() => !TutorialScene.FactionTutorialProgress.IsLobbyPending(tutorialOwner)
+                    || !TutorialScene.FactionTutorialProgress.IsCurrentOwner(tutorialOwner, tutorialServer));
+                if (!TutorialScene.FactionTutorialProgress.IsCurrentOwner(tutorialOwner, tutorialServer)) yield break;
+            }
+
+            var progressionPrefab = Resources.Load<GameObject>("UI/PlayerProgressionPanel");
+            var progressionPanel = Instantiate(progressionPrefab).GetComponent<PlayerProgressionPanel>();
+            yield return progressionPanel.Initialize();
+            if (progressionPanel == null || progressionPanel.IsSelectingFaction) yield break;
             yield return QuestRewardTracker.CheckAndShowRewards(rewardUiPrefab, rewardTilePrefab);
             yield return FetchDecks();
         }
@@ -321,6 +355,8 @@ namespace LobbyScene
             request.SetRequestHeader("Content-Type", "application/json");
             Server.SetAcceptLanguage(request);
             Server.SetAuthorization(request);
+            Data.Profile.ManualRewardClaims.Apply(request);
+            request.timeout = 15;
 
             yield return request.SendWebRequest();
 
@@ -412,7 +448,7 @@ namespace LobbyScene
             return null;
         }
 
-        private static void PopulateRewardUI(
+        public static void PopulateRewardUI(
             GameObject rewardUI,
             IReadOnlyList<RewardView> rewards,
             RewardTileView rewardTilePrefab,

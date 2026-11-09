@@ -39,7 +39,8 @@ namespace Global
                 }
                 yield break;
             }
-            SceneManager.LoadScene(sceneName);
+            // 연결 안내를 표시한 프레임을 유지하면서 씬을 준비한다.
+            yield return SceneManager.LoadSceneAsync(sceneName);
         }
     }
 }

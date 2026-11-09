@@ -38,7 +38,7 @@ namespace WordOnline.Tests
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name != "InteractiveTutorialScene") return;
+            if (scene.name != "FactionSelectionScene") return;
             tutorialLoads++;
             // 진입까지만 검사한다. 인증 없는 테스트에서 전투 데이터 HTTP 요청을 시작하지 않는다.
             foreach (GameObject sceneRoot in scene.GetRootGameObjects()) sceneRoot.SetActive(false);
@@ -102,7 +102,7 @@ namespace WordOnline.Tests
             deadline = Time.realtimeSinceStartup + 8;
             while (tutorialLoads == 0 && Time.realtimeSinceStartup < deadline) yield return null;
             Assert.That(tutorialLoads, Is.EqualTo(1));
-            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("InteractiveTutorialScene"));
+            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("FactionSelectionScene"));
         }
 
         [UnityTest]
@@ -164,7 +164,7 @@ namespace WordOnline.Tests
             float deadline = Time.realtimeSinceStartup + 8;
             while (tutorialLoads == 0 && Time.realtimeSinceStartup < deadline) yield return null;
             Assert.That(tutorialLoads, Is.EqualTo(1));
-            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("InteractiveTutorialScene"));
+            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("FactionSelectionScene"));
         }
 
         private object Get(string name) => Field(player, name);

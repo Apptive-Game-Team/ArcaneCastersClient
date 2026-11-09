@@ -34,6 +34,8 @@ namespace Data.Profile
 
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
+            webRequest.timeout = 15;
+            ManualRewardClaims.Apply(webRequest);
             webRequest.downloadHandler = new DownloadHandlerBuffer();
 
             yield return webRequest.SendWebRequest();
@@ -60,7 +62,8 @@ namespace Data.Profile
         /// Claims one quest. Never throws: every status code becomes a <see cref="QuestClaimOutcome"/>, and the
         /// rewards list is empty for every outcome other than <see cref="QuestClaimOutcome.Claimed"/>.
         /// </summary>
-        public IEnumerator ClaimQuest(long questId, Action<QuestClaimOutcome, List<RewardView>> callback)
+        public IEnumerator ClaimQuest(long questId, Action<QuestClaimOutcome, List<RewardView>> callback,
+            Action<long, bool> responseInfo = null)
         {
             string url = $"{ServerList.MatchingServer.url}/api/users/mine/quests/{questId}/claim";
             using var webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
@@ -69,6 +72,8 @@ namespace Data.Profile
             webRequest.SetRequestHeader("Content-Type", "application/json");
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
+            webRequest.timeout = 15;
+            ManualRewardClaims.Apply(webRequest);
 
             yield return webRequest.SendWebRequest();
 
@@ -82,17 +87,20 @@ namespace Data.Profile
                 }
 
                 WDebug.LogWarning($"Quest {questId} was not claimed: {outcome} ({webRequest.responseCode} / {webRequest.error})");
+                responseInfo?.Invoke(webRequest.responseCode, false);
                 callback?.Invoke(outcome, new List<RewardView>());
                 yield break;
             }
 
             string body = webRequest.downloadHandler.text;
-            if (!QuestClaimPayloads.TryParseClaimResponse(body, out List<RewardView> rewards, out string error))
+            bool parsed = QuestClaimPayloads.TryParseClaimResponse(body, out List<RewardView> rewards, out string error);
+            if (!parsed)
             {
-                // The rewards were granted either way; the caller falls back to the quest's own reward list.
+                // 지급 여부가 불명확하므로 수동 수령 화면은 같은 ID를 한 번 더 확인하고 예상 보상을 연출하지 않는다.
                 WDebug.LogError($"Failed to parse claimed quest {questId}: {error} / {JsonCodec.Excerpt(body)}");
             }
 
+            responseInfo?.Invoke(webRequest.responseCode, parsed);
             callback?.Invoke(QuestClaimOutcome.Claimed, rewards);
         }
     }

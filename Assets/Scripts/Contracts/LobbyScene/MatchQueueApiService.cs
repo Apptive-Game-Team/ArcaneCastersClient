@@ -13,6 +13,7 @@ namespace LobbyScene
 {
     public class MatchQueueApiService : MonoBehaviour
     {
+        private const int TicketRequestTimeoutSeconds = 8;
         private static ServerEndpoint MatchTickets =>
             ServerList.MatchingServer.Api.Path("api", "match", "tickets");
 
@@ -33,6 +34,7 @@ namespace LobbyScene
         public virtual IEnumerator GetActiveTicket(Action<bool, MatchTicket> callback)
         {
             using var webRequest = UnityWebRequest.Get(MatchTickets.Path("active"));
+            webRequest.timeout = TicketRequestTimeoutSeconds;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
             yield return webRequest.SendWebRequest();
@@ -64,6 +66,7 @@ namespace LobbyScene
         public virtual IEnumerator CancelTicket(string ticketId, Action<MatchCancelResult> callback)
         {
             using var webRequest = UnityWebRequest.Delete(MatchTickets.Path(ticketId));
+            webRequest.timeout = TicketRequestTimeoutSeconds;
             webRequest.downloadHandler = new DownloadHandlerBuffer();
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
@@ -92,6 +95,7 @@ namespace LobbyScene
             Action<MatchTicket> callback,
             string operation)
         {
+            webRequest.timeout = TicketRequestTimeoutSeconds;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
             yield return webRequest.SendWebRequest();
@@ -114,6 +118,58 @@ namespace LobbyScene
             callback(ticket);
         }
 
+        private static ServerEndpoint DifficultyEndpoint =>
+            ServerList.MatchingServer.Api.Path("api", "match", "practice", "difficulties");
+
+        public IEnumerator PracticeDifficulties(Action<PracticeDifficultiesDto> callback)
+        {
+            for (int attempt = 0; attempt < 2; attempt++)
+            {
+                using var request = UnityWebRequest.Get(DifficultyEndpoint);
+                request.timeout = 8;
+                Server.SetAcceptLanguage(request);
+                Server.SetAuthorization(request);
+                yield return request.SendWebRequest();
+                if (request.result == UnityWebRequest.Result.Success &&
+                    JsonCodec.TryDeserialize(request.downloadHandler.text, out PracticeDifficultiesDto overview) &&
+                    overview?.tiers != null)
+                {
+                    callback(overview);
+                    yield break;
+                }
+                bool transient = request.result == UnityWebRequest.Result.ConnectionError || request.responseCode >= 500;
+                WDebug.LogWarning($"[BotBattle] 난이도 조회 실패: HTTP {request.responseCode}, {request.error}");
+                if (!transient || attempt != 0) break;
+                yield return new WaitForSecondsRealtime(0.75f);
+            }
+            callback(null);
+        }
+
+        public IEnumerator MatchDifficulty(string difficultyId, Action<MatchedInfoDto> callback,
+            string deckMode = MatchDeckMode.Selected)
+        {
+            List<ServerPing> pings = null;
+            yield return GameServerPinger.Measure(result => pings = result);
+            string url = DifficultyEndpoint.Path(difficultyId).Query("deckMode", deckMode);
+            string pingQuery = GameServerPinger.ToQuery(pings);
+            if (pingQuery != null) url += "&pings=" + Uri.EscapeDataString(pingQuery);
+            using var request = new UnityWebRequest(url, "POST");
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.timeout = 30;
+            Server.SetAcceptLanguage(request);
+            Server.SetAuthorization(request);
+            yield return request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success &&
+                JsonCodec.TryDeserialize(request.downloadHandler.text, out MatchedInfoDto match) &&
+                !string.IsNullOrWhiteSpace(match?.sessionId))
+            {
+                callback(match);
+                yield break;
+            }
+            WDebug.LogWarning($"[BotBattle] 대전 시작 실패: HTTP {request.responseCode}, {request.error}");
+            callback(null);
+        }
+
         public IEnumerator MatchPractice(Action<MatchedInfoDto> callback)
         {
             // desktop 에서 로컬 서버가 준비돼 있으면 자기 PC 에서 경기한다. 조건이 하나라도 맞지 않거나
@@ -131,6 +187,7 @@ namespace LobbyScene
 
             using var webRequest = UnityWebRequest.Get(
                 GameServerPinger.AppendQuery(ServerList.MatchingServer.Api.Path("api", "match", "practice", "me"), pings));
+            webRequest.timeout = 30;
             Server.SetAcceptLanguage(webRequest);
             Server.SetAuthorization(webRequest);
             yield return webRequest.SendWebRequest();
