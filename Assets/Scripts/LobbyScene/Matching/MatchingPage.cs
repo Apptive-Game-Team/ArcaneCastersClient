@@ -39,8 +39,8 @@ namespace LobbyScene.Matching
             viewModel = LobbySceneViewModel.Instance;
             viewModel.CurrentState.OnStateChange += ApplyLobbyState;
             viewModel.TicketState.OnStateChange += ApplyTicketState;
-            viewModel.OnGameConnectionStateChanged += Render;
-            Render();
+            viewModel.OnGameConnectionStateChanged += ApplyGameConnectionState;
+            ApplyGameConnectionState();
         }
 
         private void OnDestroy()
@@ -48,7 +48,7 @@ namespace LobbyScene.Matching
             if (viewModel == null) return;
             viewModel.CurrentState.OnStateChange -= ApplyLobbyState;
             viewModel.TicketState.OnStateChange -= ApplyTicketState;
-            viewModel.OnGameConnectionStateChanged -= Render;
+            viewModel.OnGameConnectionStateChanged -= ApplyGameConnectionState;
         }
 
         private void Update()
@@ -61,21 +61,26 @@ namespace LobbyScene.Matching
 
         private void ApplyLobbyState(LobbySceneViewModel.LobbyState state)
         {
-            Render();
+            Render(state, viewModel.TicketState.Data);
         }
 
         private void ApplyTicketState(MatchTicketState state)
         {
-            Render();
+            Render(viewModel.CurrentState.Data, state);
         }
 
-        private void Render()
+        private void ApplyGameConnectionState()
+        {
+            Render(viewModel.CurrentState.Data, viewModel.TicketState.Data);
+        }
+
+        private void Render(LobbySceneViewModel.LobbyState lobbyState, MatchTicketState ticketState)
         {
             bool connecting = viewModel.PreparingGameConnection;
+            bool matching = lobbyState == LobbySceneViewModel.LobbyState.Matching;
             bool preparing = !connecting &&
-                (viewModel.CurrentState.Data == LobbySceneViewModel.LobbyState.PreparingPractice ||
-                 (viewModel.CurrentState.Data == LobbySceneViewModel.LobbyState.Matching &&
-                  viewModel.TicketState.Data == MatchTicketState.Allocating));
+                (lobbyState == LobbySceneViewModel.LobbyState.PreparingPractice ||
+                 (matching && ticketState == MatchTicketState.Allocating));
             if (preparing && !preparingSession)
             {
                 preparationMessageIndex = 0;
@@ -84,11 +89,10 @@ namespace LobbyScene.Matching
             preparingSession = preparing;
 
             titleLabel.StringReference = connecting ? connectingTitle :
-                viewModel.TicketState.Data == MatchTicketState.CancelPending ? cancelingTitle :
+                ticketState == MatchTicketState.CancelPending ? cancelingTitle :
                 preparing ? preparationTitles[preparationMessageIndex] : matchingTitle;
             foreach (GameObject widget in matchmakingOnly) widget.SetActive(!preparing && !connecting);
-            content.SetActive(connecting || preparing ||
-                viewModel.CurrentState.Data == LobbySceneViewModel.LobbyState.Matching);
+            content.SetActive(connecting || preparing || matching);
         }
     }
 }

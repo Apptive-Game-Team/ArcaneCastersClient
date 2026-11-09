@@ -90,10 +90,14 @@ namespace WordOnline.Tests
                 var currentState = modelType.GetField("CurrentState").GetValue(model);
                 var update = currentState.GetType().GetMethod("UpdateData");
                 var stateType = update.GetParameters()[0].ParameterType;
-                foreach (string state in new[] { "Matching", "PreparingPractice", "Idle" })
+                var stateChanged = currentState.GetType().GetEvent("OnStateChange");
+                var applyLobbyState = page.GetType().GetMethod("ApplyLobbyState", flags);
+                stateChanged.AddEventHandler(currentState,
+                    Delegate.CreateDelegate(stateChanged.EventHandlerType, page, applyLobbyState));
+
+                foreach (string state in new[] { "Matching", "Idle", "PreparingPractice", "Idle" })
                 {
                     update.Invoke(currentState, new[] { Enum.Parse(stateType, state) });
-                    page.GetType().GetMethod("Render", flags).Invoke(page, null);
                     Assert.That(content.activeSelf, Is.EqualTo(state != "Idle"), state);
                     Assert.That(backdrop.gameObject.activeInHierarchy, Is.EqualTo(state != "Idle"), state);
                 }

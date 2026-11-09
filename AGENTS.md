@@ -59,6 +59,10 @@ in a test fails to compile in the Editor, and the Roslyn check in `hand-edited-a
 build `Assets/Tests`, so it does not catch it. Match by type name instead, as
 `PveCardUnitPrefabTests.HasComponentNamed` does, or with `GetType().GetInterface("IProjectile")`.
 
+`StateEvent<T>.OnStateChange` runs before `Data` is updated. Render the changed
+state from the callback argument. In UI tests, assert the result of `UpdateData`
+without calling `Render` again, which hid the stuck matching window in #442.
+
 Before using `dotnet build Assembly-CSharp.csproj` to validate a newly added script, confirm the generated project file contains that script. Unity does not always regenerate the project file while another Editor instance has the project open, and the build then reports misleading missing-type errors only at existing call sites. Refresh/regenerate from Unity, or temporarily add the missing `Compile` entries for the check and remove them before committing.
 
 ## Commit & Pull Request Guidelines
