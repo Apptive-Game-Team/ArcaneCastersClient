@@ -442,6 +442,14 @@ resampled to 64 pixels per unit, one background texture covering 20 units) befor
 accepting. The `.meta` files set sprite single, 256 pixels per unit, `maxTextureSize`
 4096 (the 2560 pixel height must not shrink), no mipmaps.
 
+## Screen Space Overlay 전환 시 UI의 Z 좌표 확인
+
+Canvas를 Screen Space Camera에서 Screen Space Overlay로 바꿀 때는 자식
+RectTransform의 `m_LocalPosition.z`와 프리팹 override를 확인한다. 마법서의
+제목, 탭, 상세 텍스트에는 이전 Canvas에서 쓰던 약 -10000의 Z 좌표가 남아
+배경과 버튼이 표시되는 동안에도 글씨가 보이지 않았다. 화면과 같은 평면에
+그릴 UI는 Z를 0으로 맞추고 Play Mode에서 글씨가 표시되는지 확인한다.
+
 ## Changing a CanvasScaler reference resolution
 
 Issue #269: `LobbyScene.unity` had a canvas at 800x450 while every other canvas is
