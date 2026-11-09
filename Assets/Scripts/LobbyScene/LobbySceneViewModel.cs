@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using Data;
 using Global;
+using Global.Serialization;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 namespace LobbyScene
@@ -12,6 +14,9 @@ namespace LobbyScene
         [SerializeField] private MatchQueueApiService _matchQueueApi;
         private MatchmakingCoordinator coordinator;
         private bool enteringGameScene;
+        private MatchedInfoDto failedEntry;
+        public bool PreparingGameConnection => enteringGameScene;
+        public event Action OnGameConnectionStateChanged;
         public string DeckMode { get; set; } = MatchDeckMode.Selected;
 
         public enum LobbyState
@@ -53,27 +58,51 @@ namespace LobbyScene
 
         public void Enqueue()
         {
+            if (RetryEntry(StartEnqueue)) return;
+            StartEnqueue();
+        }
+
+        private void StartEnqueue()
+        {
             Debug.Log("Enqueue button clicked: Enqueueing player.");
             StartMatching();
             coordinator.Enqueue(DeckMode);
         }
 
-        public void PlayPracticeMatch()
+        public IEnumerator LoadPracticeDifficulties(Action<PracticeDifficultiesDto> callback)
         {
-            Debug.Log("Practice button clicked: Starting practice match.");
+            return _matchQueueApi.PracticeDifficulties(callback);
+        }
+
+        public void PlayPracticeMatch() => PlayPracticeMatch(null);
+
+        public void PlayPracticeMatch(string difficultyId)
+        {
+            if (CurrentState.Data != LobbyState.Idle) return;
+            if (RetryEntry(() => StartPracticeMatch(difficultyId))) return;
+            StartPracticeMatch(difficultyId);
+        }
+
+        private void StartPracticeMatch(string difficultyId)
+        {
             CurrentState.UpdateData(LobbyState.PreparingPractice);
             OnPracticeStart?.Invoke();
-            StartCoroutine(_matchQueueApi.MatchPractice(dto =>
-            {
-                if (dto != null)
-                {
-                    OnMatched(dto);
-                    return;
-                }
+            StartCoroutine(difficultyId == null
+                ? _matchQueueApi.MatchPractice(OnPracticeMatched)
+                : _matchQueueApi.MatchDifficulty(difficultyId, OnPracticeMatched, DeckMode));
+        }
 
-                CurrentState.UpdateData(LobbyState.Idle);
-                OnPracticeFailed?.Invoke();
-            }));
+        private void OnPracticeMatched(MatchedInfoDto dto)
+        {
+            if (dto != null)
+            {
+                dto.IsPracticeMatch = true;
+                OnMatched(dto);
+                return;
+            }
+
+            CurrentState.UpdateData(LobbyState.Idle);
+            OnPracticeFailed?.Invoke();
         }
 
         public void EnterFriendMatch(MatchedInfoDto matchedInfoDto)
@@ -84,6 +113,7 @@ namespace LobbyScene
 
         private void OnMatched(MatchedInfoDto matchedInfoDto)
         {
+            if (enteringGameScene || failedEntry?.sessionId == matchedInfoDto.sessionId) return;
             SceneContext.MatchInfo = matchedInfoDto;
             // PVP/practice matches from the lobby are never an adventure match; guarantee the
             // forest default in case a previous adventure match left a theme set.
@@ -96,22 +126,94 @@ namespace LobbyScene
 
             // Matched can fire more than once for the same reconnect (snapshot poll and
             // event stream both feed it), so only the first call may start the transition.
-            if (enteringGameScene) return;
             enteringGameScene = true;
+            CurrentState.UpdateData(LobbyState.Matching);
+            OnGameConnectionStateChanged?.Invoke();
             StartCoroutine(EnterGameScene(targetSceneName));
         }
 
         private IEnumerator EnterGameScene(string targetSceneName)
         {
+            // 같은 프레임에 캐시 조회와 씬 로드가 끝나더라도 연결 안내를 먼저 그린다.
+            yield return null;
             if (SceneContext.User == null)
             {
                 yield return UserInfoGetter.GetUserInfo();
 
                 // GetUserInfo already redirected to LoginScene and left User null on failure.
-                if (SceneContext.User == null) yield break;
+                if (SceneContext.User == null) { EntryFailed(); yield break; }
             }
 
-            yield return GameDataRefresh.Refresh(() => SceneManager.LoadScene(targetSceneName));
+            yield return GameDataRefresh.Refresh();
+            yield return GameSceneEntry.PrepareAndLoad(this, EntryFailed, targetSceneName);
+        }
+
+        private bool RetryEntry(Action startNewMatch)
+        {
+            if (enteringGameScene) return true;
+            if (failedEntry == null) return false;
+            var retry = failedEntry;
+            enteringGameScene = true;
+            CurrentState.UpdateData(LobbyState.Matching);
+            OnGameConnectionStateChanged?.Invoke();
+            StartCoroutine(RevalidateEntry(retry, startNewMatch));
+            return true;
+        }
+
+        private IEnumerator RevalidateEntry(MatchedInfoDto retry, Action startNewMatch)
+        {
+            // 연결 실패만으로 세션 소실을 단정하지 않는다. 로비가 호스트의 생존을 확인한 응답을 쓴다.
+            using var request = UnityWebRequest.Get(
+                $"{ServerList.MatchingServer.url}/api/users/mine/match-info");
+            request.timeout = 15;
+            Server.SetAcceptLanguage(request);
+            Server.SetAuthorization(request);
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success &&
+                JsonCodec.TryDeserialize(request.downloadHandler.text, out MatchedInfoDto activeMatch, out _) &&
+                activeMatch != null && !string.IsNullOrWhiteSpace(activeMatch.sessionId))
+            {
+                failedEntry = null;
+                enteringGameScene = false;
+                activeMatch.IsPracticeMatch = activeMatch.sessionId == retry.sessionId && retry.IsPracticeMatch;
+                OnMatched(activeMatch);
+                yield break;
+            }
+
+            if (request.result == UnityWebRequest.Result.ProtocolError &&
+                (request.responseCode == 400 || request.responseCode == 404 || request.responseCode == 410))
+            {
+                // match-info 조회만으로 MATCHED 티켓은 해제되지 않는다. 서버의 정리 판정을 기다린다.
+                SceneContext.MatchInfo = retry;
+                SessionLossVerdict verdict = SessionLossVerdict.NotReported;
+                yield return SessionLossReporter.Report(SessionLossReason.SessionRecoveryFailed, result => verdict = result);
+                if (!verdict.ClearsMatchState())
+                {
+                    EntryFailed();
+                    yield break;
+                }
+                failedEntry = null;
+                enteringGameScene = false;
+                CurrentState.UpdateData(LobbyState.Idle);
+                OnGameConnectionStateChanged?.Invoke();
+                startNewMatch();
+                yield break;
+            }
+
+            // 인증 오류·서버 오류·전송 실패는 판정 보류다. 중복 생성 없이 수동 재시도를 남긴다.
+            SceneContext.MatchInfo = retry;
+            EntryFailed();
+        }
+
+        public void EntryFailed()
+        {
+            failedEntry = SceneContext.MatchInfo;
+            enteringGameScene = false;
+            CurrentState.UpdateData(LobbyState.Idle);
+            OnGameConnectionStateChanged?.Invoke();
+            OnMatchingFailed?.Invoke();
+            OnMatchingStop?.Invoke();
         }
 
         public void RemoveFromQueue()
@@ -133,8 +235,25 @@ namespace LobbyScene
 
         private void HandleMatchmakingState(MatchTicketState state, MatchTicket ticket)
         {
+            // 매칭 결과를 받은 뒤의 진입 상태는 연결 완료나 실패가 해제한다.
+            if (enteringGameScene)
+            {
+                TicketState.UpdateData(state);
+                return;
+            }
             // 연습 요청 중에는 일반 매칭 복구 응답이 대기 화면을 덮어쓰지 않게 한다.
             if (CurrentState.Data == LobbyState.PreparingPractice) return;
+            if (failedEntry != null && !enteringGameScene)
+            {
+                if (state == MatchTicketState.Reconnecting ||
+                    (state == MatchTicketState.Matched && ticket?.matchInfo?.sessionId == failedEntry.sessionId))
+                {
+                    TicketState.UpdateData(state);
+                    CurrentState.UpdateData(LobbyState.Idle);
+                    return;
+                }
+                if (state != MatchTicketState.Idle) failedEntry = null;
+            }
             MatchTicketState previousState = TicketState.Data;
             TicketState.UpdateData(state);
 

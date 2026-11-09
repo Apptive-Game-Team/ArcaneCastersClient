@@ -61,7 +61,8 @@ namespace LobbyScene
             SceneContext.ClearAdventureMatch();
             SceneContext.PrepareMap(matchedInfoDto.mapType, null);
             yield return GameDataRefresh.Refresh();
-            SceneManager.LoadScene("GameScene");
+            var lobby = LobbySceneViewModel.Instance;
+            yield return GameSceneEntry.PrepareAndLoad(lobby, () => lobby.EntryFailed());
         }
 
         /// <summary>

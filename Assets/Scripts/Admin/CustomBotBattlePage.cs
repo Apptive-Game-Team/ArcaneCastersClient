@@ -84,7 +84,12 @@ namespace Admin {
                         SceneContext.PrepareMap(match.mapType,null);
                         entered = true;
                     } catch (System.Exception) { messageText.text = "로컬 경기 응답을 확인할 수 없습니다."; }
-                    if (entered) { SceneManager.LoadScene("Scenes/GameScene"); yield break; }
+                    if (entered) {
+                        bool failed = false;
+                        yield return GameSceneEntry.PrepareAndLoad(this, () => failed = true, "Scenes/GameScene");
+                        if (!failed) yield break;
+                        CustomBattleConnection.End();
+                    }
                 }
             }
             busy = false; cancelButton.interactable = true;

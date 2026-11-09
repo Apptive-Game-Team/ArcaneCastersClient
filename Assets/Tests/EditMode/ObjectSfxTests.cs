@@ -33,6 +33,7 @@ namespace WordOnline.Tests
         [TestCase("FireSlime", "SmallAttack")]
         [TestCase("FireTadpole", "SmallAttack")]
         [TestCase("ThunderSpirit", "SmallAttack")]
+        [TestCase("ElectricSpearman", "SmallAttack")]
         [TestCase("MiniRock", "SmallAttack")]
         [TestCase("StormStag", "SwingAttack")]
         [TestCase("RockGolem", "SwingAttack")]

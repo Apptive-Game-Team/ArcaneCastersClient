@@ -1,5 +1,9 @@
 # Style Anchors
 
+스토리 만화 기준 이미지는 [theevilent의 comic-style.png](https://github.com/Apptive-Game-Team/theevilent/blob/dev/content/arcane-casters/story/references/comic-style.png)이다.
+적용 범위와 사용 방법은 [theevilent의 COMIC-STYLE.md](https://github.com/Apptive-Game-Team/theevilent/blob/dev/content/arcane-casters/story/COMIC-STYLE.md)를 따른다.
+아래 master-v2 표는 게임 스프라이트 기준이다.
+
 Frozen reference set for magic sprite art. Everything under `.art/` sits outside
 `Assets/`, so Unity never imports it and it costs nothing at build time.
 

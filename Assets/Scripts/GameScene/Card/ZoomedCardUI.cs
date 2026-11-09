@@ -17,42 +17,57 @@ namespace GameScene.Card
         [SerializeField] private TMP_Text descriptionText;
         private int renderVersion;
         private MagicCastKindBadge castKindBadge;
+        private Transform currentAnchor;
 
         private void Awake() {
             // 확대 카드는 CardUI를 제거한 프리팹 인스턴스다. 숨긴 배지도 다시 찾는다.
             castKindBadge = GetComponentInChildren<MagicCastKindBadge>(true);
         }
         
-        public async void Show(CardUI cardUI)
+        public void Show(CardUI cardUI)
+        {
+            if (cardUI == null) return;
+            ShowDetails(cardUI.Magic, cardUI.CardSprite, cardUI.DisplayName, cardUI.Mana,
+                cardUI.transform);
+        }
+
+        public void ShowMagic(CombinedMagicData magic, RectTransform anchor)
+        {
+            if (magic == null || anchor == null) return;
+            ShowDetails(magic, magic.GetSprite(), string.Empty, magic.manaCost.ToString(), anchor);
+        }
+
+        private async void ShowDetails(CombinedMagicData magic, Sprite sprite, string displayName,
+            string mana, Transform anchor)
         {
             int version = ++renderVersion;
+            currentAnchor = anchor;
             gameObject.SetActive(true);
-            cardManaText.text = cardUI.Mana;
-            cardImage.sprite = cardUI.CardSprite;
-            cardNameText.text = cardUI.DisplayName;
+            cardManaText.text = mana;
+            cardImage.sprite = sprite;
+            cardNameText.text = displayName;
             // 새 설명 패널에는 배지가 없고 기존 확대 카드에는 배지가 있다.
             if (castKindBadge != null) {
-                castKindBadge.Bind(cardUI.Magic?.castKind ?? MagicCastKind.Unknown);
+                castKindBadge.Bind(magic?.castKind ?? MagicCastKind.Unknown);
             }
             if (descriptionText == null) {
                 Vector3 position = transform.position;
-                position.x = cardUI.transform.position.x;
+                position.x = anchor.position.x;
                 transform.position = position;
                 return;
             }
             descriptionText.text = string.Empty;
-            PlaceAbove(cardUI.transform as RectTransform);
-            CombinedMagicData magic = cardUI.Magic;
-            string name = await LocaleUtils.GetStringAsync("Magic", magic.localizationKey ?? cardUI.CardName);
+            PlaceAbove(anchor as RectTransform);
+            string name = await LocaleUtils.GetStringAsync("Magic", magic.localizationKey ?? magic.serverName);
             string description = await GetSummaryAsync(magic);
-            if (this == null || cardUI == null || version != renderVersion || !gameObject.activeSelf) return;
+            if (this == null || anchor == null || version != renderVersion || !gameObject.activeInHierarchy) return;
             cardNameText.text = name;
             descriptionText.text = description;
             float bodyHeight = Mathf.Clamp(descriptionText.GetPreferredValues(description,
                 descriptionText.rectTransform.rect.width, 0f).y, 48f, 168f);
             descriptionText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, bodyHeight);
             ((RectTransform)transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, bodyHeight + 168f);
-            PlaceAbove(cardUI.transform as RectTransform);
+            PlaceAbove(anchor as RectTransform);
         }
 
         private static async Task<string> GetSummaryAsync(CombinedMagicData magic)
@@ -73,6 +88,17 @@ namespace GameScene.Card
         {
             renderVersion++;
             gameObject.SetActive(false);
+        }
+
+        public void HideFor(RectTransform anchor)
+        {
+            if (currentAnchor == anchor) Hide();
+        }
+
+        private void OnDisable()
+        {
+            renderVersion++;
+            currentAnchor = null;
         }
 
         private void PlaceAbove(RectTransform anchor)

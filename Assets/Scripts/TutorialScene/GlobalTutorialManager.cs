@@ -1,4 +1,5 @@
 using Global;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace TutorialScene
@@ -6,18 +7,35 @@ namespace TutorialScene
     public class GlobalTutorialManager : SingletonObject<GlobalTutorialManager>
     {
         private const string LobbySceneName = "LobbyScene";
-        private const string BattleTutorialSceneName = "InteractiveTutorialScene";
+        private const string ComicIntroSceneName = "ComicIntroScene";
 
         private ITutorialState currentState;
+        private long lobbyOwner;
+        private string matchingServer;
 
         public OnboardingProgress CurrentProgress { get; private set; } = OnboardingProgress.Battle;
 
         private void Start()
         {
-            if (CurrentProgress == OnboardingProgress.Battle)
+            if (currentState == null && CurrentProgress == OnboardingProgress.Battle)
             {
                 CompleteTask(new BattleState());
             }
+        }
+
+        public static void StartLobbyOnboardingIfPending()
+        {
+            if (SceneContext.User == null || Instance != null
+                || SceneManager.GetActiveScene().name != LobbySceneName
+                || !FactionTutorialProgress.IsLobbyPending(SceneContext.UserID))
+            {
+                return;
+            }
+
+            var manager = new GameObject(nameof(GlobalTutorialManager)).AddComponent<GlobalTutorialManager>();
+            manager.lobbyOwner = SceneContext.UserID;
+            manager.matchingServer = Data.ServerList.MatchingServer.url;
+            manager.CompleteTask(new DeckState());
         }
 
         public void CompleteTask(ITutorialState nextState)
@@ -33,7 +51,7 @@ namespace TutorialScene
         public void StartOnboardingTutorial()
         {
             SetProgress(OnboardingProgress.Battle);
-            LoadSceneIfNeeded(BattleTutorialSceneName);
+            LoadSceneIfNeeded(ComicIntroSceneName);
             CompleteTask(new BattleState());
         }
 
@@ -61,6 +79,12 @@ namespace TutorialScene
 
         public void Update()
         {
+            if (lobbyOwner > 0 && !FactionTutorialProgress.IsCurrentOwner(lobbyOwner, matchingServer))
+            {
+                CompleteOnboarding();
+                return;
+            }
+
             if (currentState != null)
             {
                 currentState.Update();
@@ -102,6 +126,18 @@ namespace TutorialScene
 
         public void FinishOnboarding()
         {
+            if (lobbyOwner > 0)
+            {
+                // 계정 변경 직후 Update보다 완료 콜백이 먼저 올 수도 있다.
+                if (!FactionTutorialProgress.IsCurrentOwner(lobbyOwner, matchingServer))
+                {
+                    CompleteOnboarding();
+                    return;
+                }
+
+                FactionTutorialProgress.Complete(lobbyOwner);
+            }
+
             SetProgress(OnboardingProgress.Completed);
             CompleteOnboarding();
         }

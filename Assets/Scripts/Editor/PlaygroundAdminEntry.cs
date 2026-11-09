@@ -15,6 +15,8 @@ public static class PlaygroundAdminEntry {
     }
 
     private static void PrepareForPlay(PlayModeStateChange state) {
+        // 배치 테스트의 Play Mode 전환에서는 테스트용 씬을 그대로 유지한다.
+        if (Application.isBatchMode) return;
         if (state == PlayModeStateChange.ExitingEditMode &&
             SceneManager.GetActiveScene().name != "Playground") PlaygroundSceneBuilder.Generate();
     }

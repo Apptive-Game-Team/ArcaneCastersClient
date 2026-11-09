@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4410385096704
-    m_Localized: Account successfully deleted.\nReturning to the title screen.
+    m_Localized: "Account deleted.\nReturning to the login screen."
     m_Metadata:
       m_Items: []
   - m_Id: 5395702603776

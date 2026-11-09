@@ -470,6 +470,114 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000428
     m_Localized: Friendly Match Invite
+  - m_Id: 76060000000000429
+    m_Localized: Preparing practice mode...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000430
+    m_Localized: Couldn't start the practice match. Please try again later.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000501
+    m_Localized: "Continue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000502
+    m_Localized: "Settings"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000503
+    m_Localized: "Surrender"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000504
+    m_Localized: "Surrender and end this match? This counts as a defeat."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000505
+    m_Localized: "Surrender could not be confirmed. Please try again."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000506
+    m_Localized: "Waiting for the surrender result..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000507
+    m_Localized: "Could not load rewards. Retrying..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000508
+    m_Localized: "Choose your starting faction. Receive 5 spells, 3 copies each. Both factions can be collected later."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000509
+    m_Localized: "Inferno & Stone"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000510
+    m_Localized: "Nature & Water"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000511
+    m_Localized: "Gold"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000512
+    m_Localized: "XP +{0} · Chests +{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000513
+    m_Localized: "Cards or gold · {0} draws"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000514
+    m_Localized: "Magic chest"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000515
+    m_Localized: Loading rewards...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000520
+    m_Localized: "Level rewards"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000521
+    m_Localized: "Granted"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000522
+    m_Localized: "Locked"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000523
+    m_Localized: "Chests: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000524
+    m_Localized: "View chests"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000525
+    m_Localized: "Retry"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000526
+    m_Localized: "Could not load rewards."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000527
+    m_Localized: "Lv. {0} rewards"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000528
+    m_Localized: "Level rewards"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000529
+    m_Localized: "{0} chest reward slots\nEach gives a card or gold."
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000601
     m_Localized: Local server
     m_Metadata:
@@ -534,36 +642,160 @@ MonoBehaviour:
     m_Localized: Auto
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000429
-    m_Localized: Preparing practice mode...
+  - m_Id: 76060000000000617
+    m_Localized: Preparing the game...
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000430
-    m_Localized: Couldn't start the practice match. Please try again later.
+  - m_Id: 76060000000000618
+    m_Localized: Planting trees...
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000501
-    m_Localized: "Continue"
+  - m_Id: 76060000000000619
+    m_Localized: Making a river...
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000502
-    m_Localized: "Settings"
+  - m_Id: 76060000000000620
+    m_Localized: Connecting to the game server...
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000503
-    m_Localized: "Surrender"
+  - m_Id: 76060000000000621
+    m_Localized: Coming soon..
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000504
-    m_Localized: "Surrender and end this match? This counts as a defeat."
+  - m_Id: 76110341300000100
+    m_Localized: "Bot Battle"
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000505
-    m_Localized: "Surrender could not be confirmed. Please try again."
+  - m_Id: 76110341300000101
+    m_Localized: "Back"
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000506
-    m_Localized: "Waiting for the surrender result..."
+  - m_Id: 76110341300000102
+    m_Localized: "Quick practice"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000103
+    m_Localized: "Start battle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000104
+    m_Localized: "Loading results..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000105
+    m_Localized: "Could not load difficulty levels."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000106
+    m_Localized: "Retry"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000107
+    m_Localized: "Recommended: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000108
+    m_Localized: "Recent battles: {0}/5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000109
+    m_Localized: "Choose a difficulty level."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000110
+    m_Localized: "Unavailable"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000111
+    m_Localized: "No results"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000112
+    m_Localized: "{0}W  {1}L"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000113
+    m_Localized: "  {0}D"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000114
+    m_Localized: "Intro"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000115
+    m_Localized: "Basic"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000116
+    m_Localized: "Skilled"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000117
+    m_Localized: "Advanced"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000118
+    m_Localized: "Expert"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000119
+    m_Localized: "Start with {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000120
+    m_Localized: "No opponents are available right now."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000121
+    m_Localized: "Level up! Lv. {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000122
+    m_Localized: "Pending rewards"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000123
+    m_Localized: "Claim"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000124
+    m_Localized: "Daily reward"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000125
+    m_Localized: "Quest reward"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000126
+    m_Localized: "Could not claim the reward. Please try again."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000127
+    m_Localized: "This reward was already claimed. The list has been refreshed."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000128
+    m_Localized: "All available rewards have been claimed."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000129
+    m_Localized: "Could not check rewards. Retrying shortly."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000130
+    m_Localized: "Reward claimed."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000131
+    m_Localized: "You already own this reward. The list has been refreshed."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000132
+    m_Localized: Match +{0} XP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000133
+    m_Localized: First win of the day +{0} XP
     m_Metadata:
       m_Items: []
   references:

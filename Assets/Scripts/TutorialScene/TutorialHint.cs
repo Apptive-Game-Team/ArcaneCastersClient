@@ -31,7 +31,7 @@ namespace TutorialScene
             TutorialHint hint = GetOrCreate();
             if (hint != null)
             {
-                hint.SetMessage(table, key);
+                hint.ShowMessage(table, key);
             }
         }
 
@@ -43,8 +43,13 @@ namespace TutorialScene
                 return;
             }
 
-            current.requestId++;
-            current.band.SetActive(false);
+            current.HideMessage();
+        }
+
+        public void HideMessage()
+        {
+            requestId++;
+            band.SetActive(false);
         }
 
         private static TutorialHint GetOrCreate()
@@ -65,7 +70,7 @@ namespace TutorialScene
             return current;
         }
 
-        private async void SetMessage(string table, string key)
+        public async void ShowMessage(string table, string key)
         {
             int id = ++requestId;
             band.SetActive(true);

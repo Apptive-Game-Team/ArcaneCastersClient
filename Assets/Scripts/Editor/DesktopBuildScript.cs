@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using Global.Serialization;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
@@ -46,6 +47,8 @@ public static class DesktopBuildScript
             });
             if (report.summary.result != BuildResult.Succeeded)
                 throw new InvalidOperationException("Desktop build failed: " + report.summary.result);
+            if (target == BuildTarget.StandaloneOSX)
+                NormalizeMacExecutable(root);
             if (!File.Exists(Path.Combine(root, executable)))
                 throw new IOException("Build executable does not match the updater layout");
             string marker = target == BuildTarget.StandaloneOSX ? "Contents/Resources/arcane-install.json" : "arcane-install.json";
@@ -58,6 +61,27 @@ public static class DesktopBuildScript
         {
             PlayerSettings.SetArchitecture(BuildTargetGroup.Standalone, previousArchitecture);
         }
+    }
+
+    internal static void NormalizeMacExecutable(string root)
+    {
+        string plistPath = Path.Combine(root, "Contents/Info.plist");
+        var plist = new XmlDocument { XmlResolver = null };
+        plist.Load(plistPath);
+        var executable = plist.SelectSingleNode("/plist/dict/key[.='CFBundleExecutable']/following-sibling::*[1][self::string]");
+        string name = executable?.InnerText;
+        if (string.IsNullOrWhiteSpace(name) || name == "." || name == ".." || name.IndexOfAny(new[] { '/', '\\' }) >= 0)
+            throw new InvalidDataException("macOS bundle has no valid CFBundleExecutable");
+        string directory = Path.Combine(root, "Contents/MacOS");
+        if (!File.Exists(Path.Combine(directory, name)))
+            throw new FileNotFoundException("macOS bundle executable is missing", name);
+        if (name == "ArcaneCasters") return;
+
+        // productName은 저장 경로에도 쓰이므로 빌드 결과만 updater 규약에 맞춘다.
+        // 변경된 번들은 updater 삽입 후 릴리스 패키징 단계에서 다시 서명한다.
+        File.Move(Path.Combine(directory, name), Path.Combine(directory, "ArcaneCasters"));
+        executable.InnerText = "ArcaneCasters";
+        plist.Save(plistPath);
     }
 
     private static string Argument(string name)

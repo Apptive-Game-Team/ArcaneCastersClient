@@ -59,6 +59,10 @@ in a test fails to compile in the Editor, and the Roslyn check in `hand-edited-a
 build `Assets/Tests`, so it does not catch it. Match by type name instead, as
 `PveCardUnitPrefabTests.HasComponentNamed` does, or with `GetType().GetInterface("IProjectile")`.
 
+`StateEvent<T>.OnStateChange` runs before `Data` is updated. Render the changed
+state from the callback argument. In UI tests, assert the result of `UpdateData`
+without calling `Render` again, which hid the stuck matching window in #442.
+
 Before using `dotnet build Assembly-CSharp.csproj` to validate a newly added script, confirm the generated project file contains that script. Unity does not always regenerate the project file while another Editor instance has the project open, and the build then reports misleading missing-type errors only at existing call sites. Refresh/regenerate from Unity, or temporarily add the missing `Compile` entries for the check and remove them before committing.
 
 ## Commit & Pull Request Guidelines
@@ -81,6 +85,8 @@ This repository keeps its own skills under `.agents/skills/`. Read the one that 
 - `.agents/skills/pr-media/SKILL.md` — puts screenshots, renders, or diagrams into a pull request by committing them under `docs/pr-media/<issue-num>/` and linking them by commit SHA; use for any PR that a picture would make easier to review.
 - `.agents/skills/magick/SKILL.md` — ImageMagick CLI reference for inspecting, converting, resizing, cropping, compositing, and batch-processing images with the `magick` command.
 - `.agents/skills/make-game-art/SKILL.md` — creates, edits, reviews, or standardizes WordOnline visual assets under one project-wide art style; use for character, creature, faction, building, environment, VFX, icon, sprite, or art-direction work.
+- `.agents/skills/make-motion-comic/SKILL.md` — turns one comic-page image into a playable single-board Unity motion-comic scene, with separate panel artwork, editable dialogue, comic framing and verified scene handoff.
+- `.agents/skills/record-gif/SKILL.md` — records actual app or Unity playback and converts local video/frame recordings into an animated GIF under a measured size limit.
 - `.agents/skills/make-magic/SKILL.md` — adds or scaffolds a new magic's client-side localization text and generated icon/sprite art for server-derived magic data; use `make-prefab` separately for prefab wiring.
 - `.agents/skills/make-prefab/SKILL.md` — adds or validates a runtime magic prefab and icon sprite under `Assets/Resources/Prefabs` and `Assets/Resources/Game`.
 - `.agents/skills/plan-review/SKILL.md` — plan review protocol that runs fast and medium first-pass reviews then a heavy verification pass before folding findings back into the plan; use before non-trivial implementation.
@@ -139,6 +145,10 @@ For Unity Editor automation through MCP, use the project skill at
 
 ## Configuration Notes
 
+Before changing account onboarding, tutorial scenes or their card input, read
+[faction-tutorial.md](.agents/docs/faction-tutorial.md) for checkpoint ownership,
+step transitions, server API dependencies and the dedicated battle fixture.
+
 Read [developer-playground.md](.agents/docs/developer-playground.md) before changing
 the editor playground or build scene/asset selection. UNITY_EDITOR only removes
 code; even its MonoScript asset entered a real player build. Use the constrained
@@ -154,6 +164,11 @@ Before changing preview loading or caches, read `.agents/docs/server-magic-previ
 `DEV_BUILD` controls development server routing for WebGL builds. Avoid editing generated Unity metadata by hand unless the change is intentional, and keep `ProjectSettings/ProjectVersion.txt` in sync with the Unity version used for the change.
 
 ## Versioning
+
+Before changing desktop builds or packaging, read `Tools/DesktopUpdater/README.md`.
+The macOS executable follows `productName`, not the output `.app` filename.
+Normalize the built executable and `CFBundleExecutable` before signing; changing
+`productName` instead moves existing preferences and auth storage.
 
 `PlayerSettings.bundleVersion`, serialized as `bundleVersion` in
 `ProjectSettings/ProjectSettings.asset`, is the client's single version source.

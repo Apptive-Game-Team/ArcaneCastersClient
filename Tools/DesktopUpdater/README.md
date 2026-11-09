@@ -111,6 +111,12 @@ The builder preserves productName, companyName and application identifiers; only
 output executable/folder names change. User preferences and auth storage remain in Unity's normal persistent-data
 location. The updater does not copy them into the installation.
 
+On macOS, Unity derives `Contents/MacOS/<name>` from `productName`, even when
+the output bundle is named `ArcaneCasters.app`. The builder normalizes that
+executable and `CFBundleExecutable` to `ArcaneCasters` after building, before
+the packaging job signs the bundle again. Keep the product name unchanged:
+changing it also moves preferences and authentication storage.
+
 The helper is copied outside the installation to
 `Application.persistentDataPath/DesktopUpdates/<session>/helper`. That session
 contains the downloaded ZIP, `job.json`, handshake files and `result.txt`.

@@ -16,8 +16,8 @@ namespace GameScene
     /// <summary>
     /// 게임 서버 STOMP 최초 연결의 재시도 일정.
     ///
-    /// 소켓이 끝내 열리지 않는 경우 예전에는 한 번 걸어둔 연결이 10초 예산을 통째로 태우고
-    /// 끝났다. 짧은 예산을 여러 번 쓰면 총 대기 시간을 줄이면서도 일시적인 실패를 넘길 수 있다.
+    /// 인증과 네트워크 왕복이 끝나기 전에 연결을 교체하지 않도록 시도마다 10초를 기다린다.
+    /// 응답이 없는 연결을 무한히 기다리지 않도록 시도 횟수를 제한한다.
     ///
     /// 백그라운드 탭에서 루프가 멈춘 구간은 서버가 늦은 것이 아니므로 예산에서 뺀다.
     /// </summary>
@@ -26,7 +26,7 @@ namespace GameScene
         public const int DefaultMaxAttempts = 3;
 
         /// <summary>시도 한 번당 예산. 최대 대기는 이 값 × <see cref="DefaultMaxAttempts"/>다.</summary>
-        public const float DefaultAttemptSeconds = 2f;
+        public const float DefaultAttemptSeconds = 10f;
 
         private readonly int _maxAttempts;
         private readonly float _attemptSeconds;

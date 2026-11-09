@@ -42,7 +42,7 @@ namespace ResultScene
             // The adventure's theme is still in SceneContext from the first run (nothing here
             // clears it), so it is the fallback for a server that sends no mapType.
             SceneContext.PrepareMap(dto.mapType, SceneContext.BattleTheme);
-            SceneManager.LoadScene("GameScene");
+            StartCoroutine(GameSceneEntry.PrepareAndLoad(this, ResetButton));
         }
     }
 }

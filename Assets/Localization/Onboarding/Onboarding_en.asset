@@ -178,6 +178,260 @@ MonoBehaviour:
     m_Localized: "Changed your deck? Save it here"
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000046
+    m_Localized: "Long ago, a great archmage lived on the continent of Word."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000047
+    m_Localized: "Ten thousand years ago, the World Tree grew where he died."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000048
+    m_Localized: "And now, a gate to another dimension has opened."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000049
+    m_Localized: "Attack."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000050
+    m_Localized: "Destroy the enemy before you."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000051
+    m_Localized: "Everyone, fall back!\nProtect the World Tree!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000052
+    m_Localized: "And so, war began on the continent of Word."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000053
+    m_Localized: "Keep going."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000054
+    m_Localized: "Skip"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000055
+    m_Localized: "Click / Space to continue"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000056
+    m_Localized: "Start tutorial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000057
+    m_Localized: "Choose your faction"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000058
+    m_Localized: "Loading your starting spells."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000059
+    m_Localized: "Preparing your tutorial battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000060
+    m_Localized: "Receive 3 copies of each of your faction’s 5 starting spells. You can collect the other faction’s spells later.\nInferno & Stone: Fire Shot · Ember Swarm · Towerback · Rock Golem · Fire Explosion\nNature & Water: Chain Lightning · Water Slime Swarm · Vine Spirit · Tree Golem · Water Explosion"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000061
+    m_Localized: "Inferno & Stone"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000062
+    m_Localized: "Nature & Water"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000063
+    m_Localized: "Try again"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000064
+    m_Localized: "Next battle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000065
+    m_Localized: "Restart tutorial"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000066
+    m_Localized: "Check your connection and try again. We will reconnect to your battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000067
+    m_Localized: "Restart the lessons with your selected faction."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000068
+    m_Localized: "Check your spell, mana and aim, then try casting again."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000069
+    m_Localized: "Open the mana bar, select Fire Shot, then aim at the nature scout."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000070
+    m_Localized: "Open the mana bar and aim Chain Lightning at the clustered enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000071
+    m_Localized: "Support spell trial: drop Meteor Shower on the enemy group. It is available for this lesson only."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000072
+    m_Localized: "Support spell trial: drop Meteor Shower on the enemy group. It is available for this lesson only."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000073
+    m_Localized: "Support spell trial: summon Tornado Strike in front of the approaching enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000074
+    m_Localized: "Support spell trial: summon Tornado Strike in front of the approaching enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000075
+    m_Localized: "Deploy a Rock Mage to shoot down the flying enemy."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000076
+    m_Localized: "Deploy an Aqua Archer to shoot down the flying enemy."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000077
+    m_Localized: "Deploy your tank at the front. Your melee unit becomes available when the tank takes a hit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000078
+    m_Localized: "Your tank is taking the hits. Summon a melee unit behind or beside it to help attack."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000079
+    m_Localized: "Deploy a Stone Gargoyle. It flies over the field and dives to attack ground enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000080
+    m_Localized: "Deploy a Thunder Spirit. It attacks ground enemies from the air."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000081
+    m_Localized: "Final battle: use your five practice spells freely to stop the ground enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000082
+    m_Localized: "An airborne enemy has joined. Respond with your remaining allies and spells."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000083
+    m_Localized: "The final enemies are clustered together. Use what you learned to finish the battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000084
+    m_Localized: "Enemies defeated"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000085
+    m_Localized: "A larger group of enemies awaits in the next battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000086
+    m_Localized: "Meteor Shower cleared the group with a wide attack. Now learn to use your faction’s practice units."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000087
+    m_Localized: "The tornado swept through the enemies. Now learn to use your faction’s practice units."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000088
+    m_Localized: "You defeated the flyer with an ally that can attack airborne enemies."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000089
+    m_Localized: "Your tank took the hits while your melee unit helped defeat the enemy."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000090
+    m_Localized: "Your flying unit defeated the ground enemies. Make your own choices in the final battle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000091
+    m_Localized: "Lesson failed"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000092
+    m_Localized: "Restart just this lesson with your mana and spells ready."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000093
+    m_Localized: "Tutorial complete"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000094
+    m_Localized: "You learned the basics of combat. Congratulations!\nYou received the cards below!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000095
+    m_Localized: "You learned the basics of combat. Congratulations!\nYou received the cards below!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000096
+    m_Localized: "Enter lobby"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000113
+    m_Localized: "The meteors are falling. Finish any remaining enemies with your starting shot spell."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000114
+    m_Localized: Choose a faction
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000115
+    m_Localized: Hellfire Legion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000116
+    m_Localized: World Tree Spirits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000117
+    m_Localized: "Loading starting spells"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000118
+    m_Localized: "Connecting to the tutorial battle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000119
+    m_Localized: "Could not connect to the battle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000120
+    m_Localized: "Tutorial battle ended"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000121
+    m_Localized: "Cannot cast this spell yet"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000122
+    m_Localized: "Continue lesson"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000123
+    m_Localized: "Could not load starting information"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000124
+    m_Localized: "Could not load your starting spells and faction. Check your connection and try again."
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

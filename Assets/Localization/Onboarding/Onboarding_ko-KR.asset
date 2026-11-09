@@ -178,6 +178,260 @@ MonoBehaviour:
     m_Localized: "덱을 바꿨다면 여기를 눌러 저장해요"
     m_Metadata:
       m_Items: []
+  - m_Id: 318000000046
+    m_Localized: "오래전, 워드 대륙에는\n한 대마법사가 살았다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000047
+    m_Localized: "만 년 전, 그가 죽은 자리에서\n세계수가 자라났다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000048
+    m_Localized: "그리고 지금,\n다른 차원으로 통하는\n문이 열렸다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000049
+    m_Localized: "공격해라."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000050
+    m_Localized: "눈앞의 적을 없애라."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000051
+    m_Localized: "모두 물러서!\n세계수를 지켜!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000052
+    m_Localized: "그렇게, 워드 대륙에\n전쟁은 시작됐다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000053
+    m_Localized: "계속해라."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000054
+    m_Localized: "건너뛰기"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000055
+    m_Localized: "클릭 / Space로 계속"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000056
+    m_Localized: "튜토리얼 시작"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000057
+    m_Localized: "함께할 세력을 선택하세요"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000058
+    m_Localized: "시작 마법을 확인하고 있습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000059
+    m_Localized: "튜토리얼 전투를 준비하고 있습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000060
+    m_Localized: "각 세력의 기본 마법 5종을 3장씩 받습니다. 다른 세력의 마법도 이후에 모을 수 있습니다.\n지옥불·돌: 화염슛 · 불씨 정령 무리 · 타워백 · 돌 골렘 · 불 폭발\n자연·물: 전기체인 슛 · 물 슬라임 무리 · 덩굴 정령 · 나무 골렘 · 물 폭발"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000061
+    m_Localized: "지옥불 정령 · 돌 부족"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000062
+    m_Localized: "자연의 정령 · 물 슬라임 부족"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000063
+    m_Localized: "다시 시도"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000064
+    m_Localized: "다음 전투"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000065
+    m_Localized: "첫 실습부터 다시 시작"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000066
+    m_Localized: "연결을 확인한 뒤 다시 시도해 주세요. 진행 중인 전투에 다시 연결합니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000067
+    m_Localized: "선택한 세력을 유지하고 첫 실습부터 다시 시작합니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000068
+    m_Localized: "카드와 마나, 조준 위치를 확인한 뒤 다시 사용해 주세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000069
+    m_Localized: "마나 바를 열고 화염슛을 선택한 뒤 자연 정찰병을 겨누세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000070
+    m_Localized: "마나 바를 열고 전기체인 슛으로 모여 있는 적들을 겨누세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000071
+    m_Localized: "지원 마법 체험: 적이 모인 곳에 메테오를 떨어뜨리세요. 이번 실습에서만 사용할 수 있습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000072
+    m_Localized: "지원 마법 체험: 적이 모인 곳에 메테오를 떨어뜨리세요. 이번 실습에서만 사용할 수 있습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000073
+    m_Localized: "지원 마법 체험: 몰려오는 적 앞에 토네이도를 소환하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000074
+    m_Localized: "지원 마법 체험: 몰려오는 적 앞에 토네이도를 소환하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000075
+    m_Localized: "공중의 적을 막아야 합니다. 락메이지를 전장에 배치하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000076
+    m_Localized: "공중의 적을 막아야 합니다. 아쿠아 아쳐를 전장에 배치하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000077
+    m_Localized: "탱커를 먼저 전방에 배치하세요. 공격을 받으면 근접 유닛을 투입할 수 있습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000078
+    m_Localized: "탱커가 공격을 받고 있습니다. 뒤쪽이나 옆에 근접 유닛을 소환해 함께 공격하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000079
+    m_Localized: "가고일을 배치하세요. 공중에서 이동하며 지상의 적에게 강하해 공격합니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000080
+    m_Localized: "번개 정령을 배치하세요. 공중에서 지상의 적을 공격합니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000081
+    m_Localized: "마지막 실전입니다. 다섯 마법을 자유롭게 사용해 지상 적들을 막으세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000082
+    m_Localized: "공중의 적이 합류했습니다. 남아 있는 동료들과 함께 대응하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000083
+    m_Localized: "마지막 적들이 모여 있습니다. 배운 방법을 활용해 전투를 마무리하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000084
+    m_Localized: "적을 모두 처치했습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000085
+    m_Localized: "다음에는 더 많은 적이 등장합니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000086
+    m_Localized: "메테오의 넓은 공격으로 무리를 정리했습니다. 이제 세력의 실습 유닛을 익혀 봅니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000087
+    m_Localized: "토네이도가 적들을 휩쓸었습니다. 이제 세력의 실습 유닛을 익혀 봅니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000088
+    m_Localized: "공중을 공격할 수 있는 동료로 날아오는 적을 처치했습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000089
+    m_Localized: "탱커가 버티는 사이 근접 유닛이 함께 싸워 적을 쓰러뜨렸습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000090
+    m_Localized: "공중 유닛으로 지상의 적을 처치했습니다. 마지막은 직접 판단해 보세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000091
+    m_Localized: "실습을 완료하지 못했습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000092
+    m_Localized: "이번 구간만 다시 시작합니다. 마나와 카드가 준비된 상태에서 다시 도전하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000093
+    m_Localized: "튜토리얼을 완료했습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000094
+    m_Localized: "기본적인 전투를 배웠습니다. 축하합니다!\n아래 카드들을 획득했습니다!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000095
+    m_Localized: "기본적인 전투를 배웠습니다. 축하합니다!\n아래 카드들을 획득했습니다!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000096
+    m_Localized: "로비로 이동"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000113
+    m_Localized: "메테오가 떨어지고 있습니다. 남아 있는 적들은 기본 슛으로 마무리하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000114
+    m_Localized: 세력 선택
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000115
+    m_Localized: 불타는 군단
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000116
+    m_Localized: 세계수 정령
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000117
+    m_Localized: "시작 마법을 준비하고 있습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000118
+    m_Localized: "튜토리얼 전투에 연결하고 있습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000119
+    m_Localized: "전투에 연결하지 못했습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000120
+    m_Localized: "튜토리얼 전투가 종료되었습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000121
+    m_Localized: "지금은 이 마법을 사용할 수 없습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000122
+    m_Localized: "실습 계속"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000123
+    m_Localized: "시작 정보를 불러오지 못했습니다"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000124
+    m_Localized: "시작 마법과 세력 정보를 불러오지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요."
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

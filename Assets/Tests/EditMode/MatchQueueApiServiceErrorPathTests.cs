@@ -18,10 +18,16 @@ namespace WordOnline.Tests
     {
         private GameObject _gameObject;
         private MatchQueueApiService _service;
+        private MatchingServerOption previousServer;
+        private bool hadServerPreference;
+        private string previousServerPreference;
 
         [SetUp]
         public void SetUp()
         {
+            previousServer = MatchingServerCatalog.Current;
+            hadServerPreference = PlayerPrefs.HasKey("MatchingServer.SelectedKey");
+            previousServerPreference = PlayerPrefs.GetString("MatchingServer.SelectedKey");
             MatchingServerCatalog.Select(MatchingServerCatalog.Local);
             _gameObject = new GameObject("MatchQueueApiServiceErrorPathTestObject");
             _service = _gameObject.AddComponent<MatchQueueApiService>();
@@ -34,6 +40,10 @@ namespace WordOnline.Tests
             {
                 UnityEngine.Object.DestroyImmediate(_gameObject);
             }
+            MatchingServerCatalog.Select(previousServer);
+            if (hadServerPreference) PlayerPrefs.SetString("MatchingServer.SelectedKey", previousServerPreference);
+            else PlayerPrefs.DeleteKey("MatchingServer.SelectedKey");
+            PlayerPrefs.Save();
         }
 
         /// <summary>

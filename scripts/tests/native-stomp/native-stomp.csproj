@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <DefineConstants>UNITY_EDITOR</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../../../Assets/Scripts/Global/Stomp/NativeStompTransport.cs" Link="NativeStompTransport.cs" />
+    <Compile Include="../../../Assets/Scripts/Global/Stomp/IStompTransport.cs" Link="IStompTransport.cs" />
+  </ItemGroup>
+</Project>

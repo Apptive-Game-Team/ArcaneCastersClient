@@ -26,11 +26,7 @@ namespace Global.Stomp
         private ClientWebSocket _ws;
         private CancellationTokenSource _cts;
 
-        /// <summary>
-        /// 우리 쪽에서 종료를 요청했는지. 요청한 종료는 <see cref="DisconnectAsync"/>가
-        /// 이미 Disconnected를 올리므로, 수신 루프가 같은 사실을 한 번 더 알리지 않게 한다.
-        /// </summary>
-        private bool _closeRequested;
+        private int _generation;
 
         // 백그라운드 스레드 → 메인 스레드 디스패치 큐
         private readonly Queue<Action> _mainThreadQueue = new Queue<Action>();
@@ -45,17 +41,28 @@ namespace Global.Stomp
             }
         }
 
-        private void EnqueueMainThread(Action action)
+        private bool IsCurrent(ClientWebSocket socket, int generation)
+            => generation == Volatile.Read(ref _generation) && ReferenceEquals(_ws, socket);
+
+        private void EnqueueMainThread(ClientWebSocket socket, int generation, Action action)
         {
             lock (_queueLock)
-                _mainThreadQueue.Enqueue(action);
+                _mainThreadQueue.Enqueue(() => {
+                    if (IsCurrent(socket, generation)) action();
+                });
         }
 
         // ─── IStompTransport ─────────────────────────────────────────────────
 
         public void Connect(string url, string token)
         {
-            _ = ConnectAsync(url, token);
+            Disconnect();
+            int generation = Interlocked.Increment(ref _generation);
+            var socket = new ClientWebSocket();
+            var cancellation = new CancellationTokenSource();
+            _ws = socket;
+            _cts = cancellation;
+            _ = ConnectAsync(socket, cancellation, generation, url, token);
         }
 
         public void Subscribe(string topic, string subscriptionId)
@@ -75,53 +82,63 @@ namespace Global.Stomp
 
         public void Disconnect()
         {
-            _ = DisconnectAsync();
+            // 종료 중인 비동기 작업이 다음 연결의 상태와 CTS를 건드리지 못하게 먼저 분리한다.
+            Interlocked.Increment(ref _generation);
+            IsConnected = false;
+            var socket = _ws;
+            var cancellation = _cts;
+            _ws = null;
+            _cts = null;
+            cancellation?.Cancel();
+            socket?.Abort();
+            socket?.Dispose();
+            cancellation?.Dispose();
         }
 
         private void OnDestroy()
         {
-            _closeRequested = true;
-            _cts?.Cancel();
-            _ws?.Dispose();
+            Disconnect();
         }
 
         // ─── 내부 구현 ────────────────────────────────────────────────────────
 
-        private async Task ConnectAsync(string url, string token)
+        private async Task ConnectAsync(ClientWebSocket socket, CancellationTokenSource cancellation,
+            int generation, string url, string token)
         {
+            CancellationToken cancellationToken = cancellation.Token;
             try
             {
-                _closeRequested = false;
-                _cts = new CancellationTokenSource();
-
-                var socket = new ClientWebSocket();
-                _ws = socket;
-
-                await socket.ConnectAsync(new Uri(url), _cts.Token);
+                await socket.ConnectAsync(new Uri(url), cancellationToken);
+                if (!IsCurrent(socket, generation)) return;
 
                 // STOMP CONNECT 프레임 전송
                 string connectFrame = $"CONNECT\naccept-version:1.2\nAuthorization:Bearer {token}\n\n\0";
-                await SendFrameAsync(connectFrame);
+                await SendFrameAsync(socket, cancellationToken, generation, connectFrame);
+                if (!IsCurrent(socket, generation)) return;
 
                 // 수신 루프는 자기가 연 소켓만 담당한다. 필드를 매번 다시 읽으면 나중에
                 // 열린 소켓의 상태를 옛 루프가 읽고 새 연결에 대해 종료를 보고하게 된다.
-                _ = ReceiveLoop(socket, _cts.Token);
+                _ = ReceiveLoop(socket, cancellationToken, generation);
             }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { }
             catch (Exception ex)
             {
-                WDebug.LogError("[STOMP:Native] 연결 실패: " + ex.Message);
-                EnqueueMainThread(() => Errored?.Invoke(ex.Message));
+                // 예외 메시지에는 인증 query가 들어갈 수 있으므로 종류만 전달한다.
+                EnqueueMainThread(socket, generation, () => {
+                    IsConnected = false;
+                    Errored?.Invoke("STOMP connection failed: " + ex.GetType().Name);
+                });
             }
         }
 
-        private async Task ReceiveLoop(ClientWebSocket socket, CancellationToken token)
+        private async Task ReceiveLoop(ClientWebSocket socket, CancellationToken token, int generation)
         {
             var buffer = new ArraySegment<byte>(new byte[65536]);
             var sb = new StringBuilder();
 
             // 아무 이벤트도 없이 빠지는 경로를 없앤다. 서버가 Close 프레임을 보낸 경우와
             // 소켓 상태가 Open을 벗어나 while 조건이 거짓이 된 경우가 정상 종료다.
-            // 예외 경로는 이미 Errored를 올렸고, 취소는 우리가 의도한 종료라 조용히 빠진다.
+            // 예외 경로는 Errored를 큐에 넣고, 취소는 의도한 종료라 조용히 빠진다.
             bool cleanClose = true;
 
             while (socket.State == WebSocketState.Open)
@@ -136,7 +153,7 @@ namespace Global.Stomp
                         sb.Append(Encoding.UTF8.GetString(buffer.Array, 0, result.Count));
                     } while (!result.EndOfMessage);
 
-                    ProcessIncomingData(sb.ToString());
+                    ProcessIncomingData(sb.ToString(), socket, generation);
                     sb.Clear();
                 }
                 catch (OperationCanceledException)
@@ -146,8 +163,10 @@ namespace Global.Stomp
                 }
                 catch (Exception ex)
                 {
-                    WDebug.LogError("[STOMP:Native] 수신 오류: " + ex.Message);
-                    EnqueueMainThread(() => Errored?.Invoke(ex.Message));
+                    EnqueueMainThread(socket, generation, () => {
+                        IsConnected = false;
+                        Errored?.Invoke("STOMP receive failed: " + ex.GetType().Name);
+                    });
                     cleanClose = false;
                     break;
                 }
@@ -155,20 +174,14 @@ namespace Global.Stomp
 
             closed:
             // 이 루프가 담당하던 소켓이 이미 교체됐으면 새 연결의 상태를 건드리지 않는다.
-            if (!ReferenceEquals(_ws, socket)) return;
-
-            IsConnected = false;
-
-            // 우리가 요청한 종료는 DisconnectAsync가 알린다. 여기서 또 알리면 중복이다.
-            if (!cleanClose || _closeRequested) return;
-
-            string reason = socket.CloseStatusDescription;
-            string message = string.IsNullOrEmpty(reason) ? "socket closed" : reason;
-            WDebug.Log("[STOMP:Native] 서버가 소켓을 닫았습니다: " + message);
-            EnqueueMainThread(() => Disconnected?.Invoke(message));
+            if (!cleanClose || !IsCurrent(socket, generation)) return;
+            EnqueueMainThread(socket, generation, () => {
+                IsConnected = false;
+                Disconnected?.Invoke("WebSocket closed");
+            });
         }
 
-        private void ProcessIncomingData(string raw)
+        private void ProcessIncomingData(string raw, ClientWebSocket socket, int generation)
         {
             // 단일 WebSocket 메시지에 여러 STOMP 프레임이 포함될 수 있으므로 분리
             int start = 0;
@@ -180,11 +193,11 @@ namespace Global.Stomp
                 string frame = raw.Substring(start, nullPos - start);
                 start = nullPos + 1;
                 if (!string.IsNullOrWhiteSpace(frame))
-                    ParseAndDispatch(frame);
+                    ParseAndDispatch(frame, socket, generation);
             }
         }
 
-        private void ParseAndDispatch(string frame)
+        private void ParseAndDispatch(string frame, ClientWebSocket socket, int generation)
         {
             int headerEnd = frame.IndexOf("\n\n", StringComparison.Ordinal);
             string headerSection = headerEnd >= 0 ? frame.Substring(0, headerEnd) : frame;
@@ -205,32 +218,40 @@ namespace Global.Stomp
             switch (command)
             {
                 case "CONNECTED":
-                    IsConnected = true;
-                    WDebug.Log("[STOMP:Native] 연결됨");
-                    EnqueueMainThread(() => Connected?.Invoke());
+                    EnqueueMainThread(socket, generation, () => {
+                        IsConnected = true;
+                        Connected?.Invoke();
+                    });
                     break;
 
                 case "MESSAGE":
                     headers.TryGetValue("subscription", out string subId);
                     string capturedBody = body;
                     string capturedSubId = subId;
-                    EnqueueMainThread(() => MessageReceived?.Invoke(capturedSubId, capturedBody));
+                    EnqueueMainThread(socket, generation, () => MessageReceived?.Invoke(capturedSubId, capturedBody));
                     break;
 
                 case "ERROR":
-                    IsConnected = false;
-                    string errorBody = body;
-                    WDebug.LogError("[STOMP:Native] 서버 에러: " + errorBody);
-                    EnqueueMainThread(() => Errored?.Invoke(errorBody));
+                    EnqueueMainThread(socket, generation, () => {
+                        IsConnected = false;
+                        Errored?.Invoke("STOMP server error");
+                    });
                     break;
             }
         }
 
-        private async Task SendFrameAsync(string frame)
+        private Task SendFrameAsync(string frame)
         {
             var socket = _ws;
-            if (socket == null || socket.State != WebSocketState.Open) return;
+            int generation = Volatile.Read(ref _generation);
             var cancellationToken = _cts?.Token ?? CancellationToken.None;
+            return SendFrameAsync(socket, cancellationToken, generation, frame);
+        }
+
+        private async Task SendFrameAsync(ClientWebSocket socket, CancellationToken cancellationToken,
+            int generation, string frame)
+        {
+            if (socket == null || !IsCurrent(socket, generation) || socket.State != WebSocketState.Open) return;
             try
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(frame);
@@ -243,30 +264,14 @@ namespace Global.Stomp
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
-                // Disconnecting or destroying this transport cancels pending sends.
+                // 의도한 종료는 전송 취소를 오류로 통보하지 않는다.
             }
             catch (Exception ex)
             {
-                WDebug.LogError("[STOMP:Native] 전송 실패: " + ex.Message);
-            }
-        }
-
-        private async Task DisconnectAsync()
-        {
-            _closeRequested = true;
-            try
-            {
-                if (_ws?.State == WebSocketState.Open)
-                {
-                    await SendFrameAsync("DISCONNECT\n\n\0");
-                    await _ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "disconnect", CancellationToken.None);
-                }
-            }
-            finally
-            {
-                IsConnected = false;
-                _cts?.Cancel();
-                EnqueueMainThread(() => Disconnected?.Invoke("Disconnected"));
+                EnqueueMainThread(socket, generation, () => {
+                    IsConnected = false;
+                    Errored?.Invoke("STOMP send failed: " + ex.GetType().Name);
+                });
             }
         }
     }

@@ -3,6 +3,10 @@
 Enter Play Mode, log in as an administrator, open AdminScene and click
 Magic Playground. The scene is prepared automatically before Play Mode starts;
 no Editor menu or manual preparation is needed. Closing or expiry returns to AdminScene.
+Skip automatic generation in batch mode. EditMode tests also enter Play Mode with
+isolated scenes; opening GameScene from this callback caused `SelectedLocale is null`
+errors and aborted CI before it wrote test results. Batch playground validation
+must call the generator explicitly.
 The editor derives Assets/DevPlayground/Generated/Playground.unity from the current
 GameScene, removes ordinary match/coach/card/network behaviours, and adds panels and
 buttons instantiated from the existing UI prefabs. The generated scene is ignored;

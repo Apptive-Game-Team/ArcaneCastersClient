@@ -257,6 +257,8 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000112
     m_Key: ChestOpenFailed
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000201
     m_Key: QuestTitle
     m_Metadata:
@@ -471,6 +473,116 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 76060000000000428
     m_Key: FriendInviteDialogTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000429
+    m_Key: PracticePreparing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000430
+    m_Key: PracticeFail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000501
+    m_Key: InGameContinue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000502
+    m_Key: InGameSettings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000503
+    m_Key: InGameSurrender
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000504
+    m_Key: SurrenderConfirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000505
+    m_Key: SurrenderRetry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000506
+    m_Key: SurrenderPending
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000507
+    m_Key: ProgressionRetry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000508
+    m_Key: ProgressionChoose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000509
+    m_Key: ProgressionHell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000510
+    m_Key: ProgressionNature
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000511
+    m_Key: ProgressionGold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000512
+    m_Key: ProgressionReceived
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000513
+    m_Key: ProgressionSlots
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000514
+    m_Key: ProgressionChest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000515
+    m_Key: ProgressionLoading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000520
+    m_Key: ProgressionRewards
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000521
+    m_Key: ProgressionPaid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000522
+    m_Key: ProgressionLocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000523
+    m_Key: ProgressionOwnedChests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000524
+    m_Key: ProgressionViewChests
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000525
+    m_Key: ProgressionRetryButton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000526
+    m_Key: ProgressionLoadFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000527
+    m_Key: ProgressionLevelTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000528
+    m_Key: ProgressionFixed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76060000000000529
+    m_Key: ProgressionChestSlots
+    m_Metadata:
+      m_Items: []
   - m_Id: 76060000000000601
     m_Key: LocalServer
     m_Metadata:
@@ -535,36 +647,160 @@ MonoBehaviour:
     m_Key: LocalServerTickRateAuto
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000429
-    m_Key: PracticePreparing
+  - m_Id: 76060000000000617
+    m_Key: GameSessionPreparing
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000430
-    m_Key: PracticeFail
+  - m_Id: 76060000000000618
+    m_Key: PreparingTrees
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000501
-    m_Key: "InGameContinue"
+  - m_Id: 76060000000000619
+    m_Key: PreparingRiver
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000502
-    m_Key: "InGameSettings"
+  - m_Id: 76060000000000620
+    m_Key: GameServerConnecting
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000503
-    m_Key: "InGameSurrender"
+  - m_Id: 76060000000000621
+    m_Key: AdventureComingSoon
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000504
-    m_Key: "SurrenderConfirm"
+  - m_Id: 76110341300000100
+    m_Key: ComputerBattle.Title
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000505
-    m_Key: "SurrenderRetry"
+  - m_Id: 76110341300000101
+    m_Key: ComputerBattle.Back
     m_Metadata:
       m_Items: []
-  - m_Id: 76060000000000506
-    m_Key: "SurrenderPending"
+  - m_Id: 76110341300000102
+    m_Key: ComputerBattle.Quick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000103
+    m_Key: ComputerBattle.Start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000104
+    m_Key: ComputerBattle.Loading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000105
+    m_Key: ComputerBattle.Error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000106
+    m_Key: ComputerBattle.Retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000107
+    m_Key: ComputerBattle.Recommended
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000108
+    m_Key: ComputerBattle.Progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000109
+    m_Key: ComputerBattle.NoRecommendation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000110
+    m_Key: ComputerBattle.Unavailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000111
+    m_Key: ComputerBattle.NoRecord
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000112
+    m_Key: ComputerBattle.Record
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000113
+    m_Key: ComputerBattle.Draws
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000114
+    m_Key: ComputerBattle.Tier.INTRO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000115
+    m_Key: ComputerBattle.Tier.BASIC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000116
+    m_Key: ComputerBattle.Tier.SKILLED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000117
+    m_Key: ComputerBattle.Tier.ADVANCED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000118
+    m_Key: ComputerBattle.Tier.EXPERT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000119
+    m_Key: ComputerBattle.Begin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000120
+    m_Key: ComputerBattle.NoneAvailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000121
+    m_Key: ProgressionLevelUp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000122
+    m_Key: ProgressionPending
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000123
+    m_Key: ProgressionClaim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000124
+    m_Key: ProgressionDaily
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000125
+    m_Key: ProgressionQuest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000126
+    m_Key: ProgressionClaimFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000127
+    m_Key: ProgressionClaimedElsewhere
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000128
+    m_Key: ProgressionNoPending
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000129
+    m_Key: ProgressionPendingUnknown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000130
+    m_Key: ProgressionClaimReceived
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000131
+    m_Key: ProgressionReceiptEmpty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000132
+    m_Key: ResultMatchXp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000133
+    m_Key: ResultFirstWinXp
     m_Metadata:
       m_Items: []
   m_Metadata:

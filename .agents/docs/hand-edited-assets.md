@@ -584,3 +584,44 @@ alias at the top of the file: name lookup walks the enclosing namespaces before 
 file's using directives. Write `UnityEngine.UI.Button`, as
 `LobbyScene/SettingPage/LocalServerPage.cs` does.
 
+
+## Motion comic entry and UI validation
+
+`TutorialScene.unity` retained a `sceneName` override for a `SceneChangeButton`
+that was already listed in `m_RemovedComponents` (#391). Before diagnosing two
+scene transitions, inspect both the persistent calls and the removed-component
+list; an override alone does not prove a component still runs.
+
+`ComicIntroScene` must finish before loading `InteractiveTutorialScene`: the
+battle scene starts its mana and object timers in `Start`. Keep both comic
+completion and skip pointed at the battle scene, not at `SkipOnboardingTutorial`,
+which skips the entire onboarding. The fifth illustration has two dialogue beats.
+
+TMP `ForceMeshUpdate` and Play Mode UI checks populate dynamic font atlases and
+can dirty `Jua SDF.asset` and `LilitaOne SDF.asset`. `AssetDatabase.SaveAssets`
+then persists those glyph caches even when the font was not intentionally edited.
+Compare with the pre-test Git state and exclude only known test-generated font
+changes from a UI feature commit; do not discard pre-existing user edits.
+
+A PlayMode `[SetUp]` can be followed by `Start` before a `[UnityTest]` iterator
+first runs. To test skip before localization initialization, instantiate the comic
+inside the iterator immediately before invoking skip, rather than in `[SetUp]`.
+
+## Custom comic UI geometry
+
+A custom `MaskableGraphic` must explicitly require `CanvasRenderer`. The first
+comic mask compiled and imported but its serialized Viewport had no renderer,
+so EditMode instantiation and Play Mode threw `MissingComponentException`.
+Keep `[RequireComponent(typeof(CanvasRenderer))]` and verify the saved prefab.
+When reflecting `OnPopulateMesh`, select its `VertexHelper` parameter explicitly;
+Graphic also retains a Mesh overload and a name-only lookup is ambiguous.
+
+Test `GraphicRaycaster` routes on a rendered PlayMode canvas. A newly instantiated
+EditMode canvas can still have graphic depth -1 after ForceUpdateCanvases, so an
+empty hit list there does not prove the UI blocks input. Test the actual hit
+object through ExecuteEvents.ExecuteHierarchy as well as checking target flags.
+
+`ComicIntroSetup.Build` updates the reusable prefabs when the comic scene already
+exists. Do not save its temporary additive scene over an open ComicIntroScene:
+Unity rejects that write even though the prefab update succeeded. Create the
+scene only when its asset is absent, and treat SaveScene=false as a failure.

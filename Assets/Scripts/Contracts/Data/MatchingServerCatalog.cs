@@ -19,35 +19,27 @@ namespace Data
         public static readonly MatchingServerOption Local =
             new MatchingServerOption("local", "127.0.0.1", new Server("local", "127.0.0.1", 6209));
 
-        /// <summary>
-        /// The magic-card track's own environment. It runs its own account server with its own
-        /// key pair, so <see cref="ServerList.AccountServer"/> has to point at the same
-        /// environment: this lobby verifies tokens against that account server's JWKS and
-        /// rejects one signed by any other.
-        /// </summary>
-        public static readonly MatchingServerOption MagicCard =
-            new MatchingServerOption("magic-card", "magic-card",
-                new Server("magic-card", "lobby.magic-card.ac.theevilent.com", 443, true));
-
         public static readonly MatchingServerOption Dev =
-            new MatchingServerOption("dev", "dev", new Server("dev", "dev.lobby.ac.yunseong.dev", 443, true));
+            new MatchingServerOption("dev", "dev", new Server("dev", "lobby.dev.ac.theevilent.com", 443, true));
 
         public static readonly MatchingServerOption Deploy =
-            new MatchingServerOption("deploy", "deploy", new Server("deploy", "lobby.ac.yunseong.dev", 443, true));
+            new MatchingServerOption("deploy", "deploy", new Server("deploy", "lobby.ac.theevilent.com", 443, true));
 
         /// <summary>
         /// Options in auto-select priority order: the first healthy one wins when the admin
         /// has no stored choice.
         /// </summary>
-        public static readonly IReadOnlyList<MatchingServerOption> Options = new[] { Local, MagicCard, Dev, Deploy };
+        public static readonly IReadOnlyList<MatchingServerOption> Options = new[] { Local, Dev, Deploy };
 
         /// <summary>
-        /// Server used before an admin picks anything. On this branch that is the magic-card
-        /// environment, because a build from this branch only works against the magic-card data
-        /// model. The dropdown is still the way to reach the other servers, and `main` keeps
-        /// pointing at dev.
+        /// 로비보다 먼저 실행되는 튜토리얼도 에디터에서는 개발 서버를 사용한다.
+        /// 빌드는 운영 서버로 시작하며 관리자는 드롭다운에서 서버를 바꿀 수 있다.
         /// </summary>
+#if UNITY_EDITOR
+        private static readonly MatchingServerOption BuildDefault = Dev;
+#else
         private static readonly MatchingServerOption BuildDefault = Deploy;
+#endif
 
         public static MatchingServerOption Current { get; private set; } = BuildDefault;
 

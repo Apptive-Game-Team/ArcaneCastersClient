@@ -9,12 +9,25 @@ namespace LobbyScene.Matching
     /// </summary>
     public sealed class MatchingPage : MonoBehaviour
     {
+        private const float PreparationMessageSeconds = 2.5f;
+
         [SerializeField] private GameObject content;
         [SerializeField] private LocalizeStringEvent titleLabel;
         [SerializeField] private GameObject[] matchmakingOnly;
 
         private LocalizedString matchingTitle;
-        private readonly LocalizedString practiceTitle = new LocalizedString("LobbyUI", "PracticePreparing");
+        private readonly LocalizedString connectingTitle = new LocalizedString("LobbyUI", "GameServerConnecting");
+        private readonly LocalizedString cancelingTitle = new LocalizedString("LobbyUI", "MatchingStateCancelPending");
+        private readonly LocalizedString[] preparationTitles =
+        {
+            new LocalizedString("LobbyUI", "GameSessionPreparing"),
+            new LocalizedString("LobbyUI", "PreparingTrees"),
+            new LocalizedString("LobbyUI", "PreparingRiver"),
+        };
+        private LobbySceneViewModel viewModel;
+        private bool preparingSession;
+        private int preparationMessageIndex;
+        private float nextPreparationMessageAt;
 
         private void Awake()
         {
@@ -23,22 +36,63 @@ namespace LobbyScene.Matching
 
         private void Start()
         {
-            LobbySceneViewModel.Instance.CurrentState.OnStateChange += ApplyLobbyState;
-            ApplyLobbyState(LobbySceneViewModel.Instance.CurrentState.Data);
+            viewModel = LobbySceneViewModel.Instance;
+            viewModel.CurrentState.OnStateChange += ApplyLobbyState;
+            viewModel.TicketState.OnStateChange += ApplyTicketState;
+            viewModel.OnGameConnectionStateChanged += ApplyGameConnectionState;
+            ApplyGameConnectionState();
         }
 
         private void OnDestroy()
         {
-            if (LobbySceneViewModel.Instance == null) return;
-            LobbySceneViewModel.Instance.CurrentState.OnStateChange -= ApplyLobbyState;
+            if (viewModel == null) return;
+            viewModel.CurrentState.OnStateChange -= ApplyLobbyState;
+            viewModel.TicketState.OnStateChange -= ApplyTicketState;
+            viewModel.OnGameConnectionStateChanged -= ApplyGameConnectionState;
+        }
+
+        private void Update()
+        {
+            if (!preparingSession || Time.realtimeSinceStartup < nextPreparationMessageAt) return;
+            preparationMessageIndex = (preparationMessageIndex + 1) % preparationTitles.Length;
+            nextPreparationMessageAt = Time.realtimeSinceStartup + PreparationMessageSeconds;
+            titleLabel.StringReference = preparationTitles[preparationMessageIndex];
         }
 
         private void ApplyLobbyState(LobbySceneViewModel.LobbyState state)
         {
-            bool practice = state == LobbySceneViewModel.LobbyState.PreparingPractice;
-            titleLabel.StringReference = practice ? practiceTitle : matchingTitle;
-            foreach (GameObject widget in matchmakingOnly) widget.SetActive(!practice);
-            content.SetActive(practice || state == LobbySceneViewModel.LobbyState.Matching);
+            Render(state, viewModel.TicketState.Data);
+        }
+
+        private void ApplyTicketState(MatchTicketState state)
+        {
+            Render(viewModel.CurrentState.Data, state);
+        }
+
+        private void ApplyGameConnectionState()
+        {
+            Render(viewModel.CurrentState.Data, viewModel.TicketState.Data);
+        }
+
+        private void Render(LobbySceneViewModel.LobbyState lobbyState, MatchTicketState ticketState)
+        {
+            bool connecting = viewModel.PreparingGameConnection;
+            bool matching = lobbyState == LobbySceneViewModel.LobbyState.Matching;
+            bool preparing = !connecting &&
+                (lobbyState == LobbySceneViewModel.LobbyState.PreparingPractice ||
+                 (matching && ticketState == MatchTicketState.Allocating));
+            if (preparing && !preparingSession)
+            {
+                preparationMessageIndex = 0;
+                nextPreparationMessageAt = Time.realtimeSinceStartup + PreparationMessageSeconds;
+            }
+            preparingSession = preparing;
+
+            titleLabel.StringReference = connecting ? connectingTitle :
+                ticketState == MatchTicketState.CancelPending ? cancelingTitle :
+                preparing ? preparationTitles[preparationMessageIndex] : matchingTitle;
+            foreach (GameObject widget in matchmakingOnly) widget.SetActive(!preparing && !connecting);
+            content.SetActive(connecting || preparing || matching);
         }
     }
 }
