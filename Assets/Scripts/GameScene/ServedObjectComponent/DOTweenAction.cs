@@ -250,7 +250,8 @@ namespace GameScene.ServedObjectComponent
 
         public static Sequence BounceMob(Transform tr)
         {
-            return Bounce(tr, _mobBounceParam.originScale, _mobBounceParam.squashScale,_mobBounceParam.bounceScale, _mobBounceParam.duration);
+            // 피격 반동이 프리팹에서 정한 본체 크기를 바꾸지 않도록 현재 배율로 돌아간다.
+            return Bounce(tr, tr.localScale, _mobBounceParam.squashScale,_mobBounceParam.bounceScale, _mobBounceParam.duration);
         }
 
         public static void HoverMob(Transform tr)

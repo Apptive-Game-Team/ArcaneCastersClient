@@ -255,7 +255,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000065
-    m_Localized: "Reconnect tutorial"
+    m_Localized: "Restart tutorial"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000066
@@ -263,11 +263,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000067
-    m_Localized: "This battle has ended. Restart the lessons with your selected faction."
+    m_Localized: "Restart the lessons with your selected faction."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000068
-    m_Localized: "Check your spell, mana and aim. In the formation lesson, wait for your golem to take a hit before summoning the swarm."
+    m_Localized: "Check your spell, mana and aim, then try casting again."
     m_Metadata:
       m_Items: []
   - m_Id: 318000000069
@@ -359,7 +359,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 318000000091
-    m_Localized: "Retry this lesson"
+    m_Localized: "Lesson failed"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000092
@@ -396,6 +396,38 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000116
     m_Localized: World Tree Spirits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000117
+    m_Localized: "Loading starting spells"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000118
+    m_Localized: "Connecting to the tutorial battle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000119
+    m_Localized: "Could not connect to the battle"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000120
+    m_Localized: "Tutorial battle ended"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000121
+    m_Localized: "Cannot cast this spell yet"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000122
+    m_Localized: "Continue lesson"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000123
+    m_Localized: "Could not load starting information"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000124
+    m_Localized: "Could not load your starting spells and faction. Check your connection and try again."
     m_Metadata:
       m_Items: []
   m_Metadata:

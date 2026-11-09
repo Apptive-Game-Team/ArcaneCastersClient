@@ -17,6 +17,7 @@ namespace DeckScene
         {
             string url = $"{ServerList.MatchingServer.url}/api/users/mine/cardLists";
             using var request = UnityWebRequest.Get(url);
+            request.timeout = 8;
 
             Server.SetAcceptLanguage(request);
             Server.SetAuthorization(request);

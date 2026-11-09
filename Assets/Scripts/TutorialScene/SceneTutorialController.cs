@@ -11,6 +11,7 @@ namespace TutorialScene
         [SerializeField] private TutorialPanel panel;
 
         private const string OnboardingTable = "Onboarding";
+        private const int TutorialMaskOrder = 32;
 
         private readonly TutorialSortingLift lift = new TutorialSortingLift();
 
@@ -48,6 +49,7 @@ namespace TutorialScene
             {
                 mask.SetActive(true);
                 mask.transform.SetAsLastSibling();
+                LiftMaskAboveModals();
             }
 
             if (targetClickBlocker != null)
@@ -99,6 +101,12 @@ namespace TutorialScene
                     return;
                 }
             }
+        }
+
+        private void LiftMaskAboveModals()
+        {
+            Canvas canvas = mask.GetComponentInParent<Canvas>();
+            if (canvas != null) lift.Lift(mask.transform, canvas.sortingLayerID, TutorialMaskOrder);
         }
 
         /// <summary>

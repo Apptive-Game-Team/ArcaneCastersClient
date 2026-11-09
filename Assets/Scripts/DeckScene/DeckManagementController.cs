@@ -131,7 +131,9 @@ namespace DeckScene
         {
             int loadVersion = ++ownedCardLoadVersion;
             CardDto[] ownedCards = viewModel.OwnedCards ?? Array.Empty<CardDto>();
-            DeckOwnedCardEntry[] loadedEntries = await Task.WhenAll(ownedCards.Select(BuildOwnedCardEntry));
+            DeckOwnedCardEntry[] loadedEntries = await Task.WhenAll(ownedCards
+                .Where(card => card != null && card.count > 0)
+                .Select(BuildOwnedCardEntry));
 
             if (loadVersion != ownedCardLoadVersion)
             {
