@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Data.GameConfig;
 using Data.Magic;
+using GameScene.Object;
+using GameScene.ServedObjectComponent;
 using Global;
 using Global.Serialization;
 using UnityEngine;
@@ -93,6 +95,8 @@ namespace GameScene
     {
         /// <summary>indicator document 가 없을 때 쓰는 반지름 parameter 이름.</summary>
         private const string FallbackRadiusParameter = "radius";
+        private const string RockBlastMagicName = "rock_blast";
+        private const float RockBlastOutlineWidth = 0.12f;
 
         private const string LeftPlayerMaster = "LeftPlayer";
 
@@ -176,21 +180,56 @@ namespace GameScene
             if (document == null || !document.Prepare(magic.serverName))
             {
                 AppendFallbackShape(magic, targetPosition, shapes);
+            }
+            else
+            {
+                for (int i = 0; i < document.layers.Count; i++)
+                {
+                    MagicIndicatorLayer layer = document.layers[i];
+                    if (layer == null || !layer.IsReadable)
+                    {
+                        continue;
+                    }
+
+                    if (TryResolveLayer(magic, layer, casterPosition, targetPosition, aimPoint, forward, range,
+                            out ResolvedIndicatorShape shape))
+                    {
+                        shapes.Add(shape);
+                    }
+                }
+            }
+
+            if (magic.serverName == RockBlastMagicName)
+            {
+                AppendRockBlastAreas(aimPoint, shapes);
+            }
+        }
+
+        private static void AppendRockBlastAreas(Vector3 aimPoint, List<ResolvedIndicatorShape> shapes)
+        {
+            ObjectContainer container = ObjectContainer.Instance;
+            if (container == null
+                || !GameParameterResolver.TryGetObjectParameter(RockBlastMagicName, "radius", out float selectionRadius)
+                || !GameParameterResolver.TryGetObjectParameter("rock_explode", "radius", out float damageRadius)
+                || damageRadius <= 0f)
+            {
                 return;
             }
 
-            for (int i = 0; i < document.layers.Count; i++)
+            foreach (ServedObject remnant in container.Values)
             {
-                MagicIndicatorLayer layer = document.layers[i];
-                if (layer == null || !layer.IsReadable)
+                if (remnant == null || remnant.IsDespawning
+                    || (remnant.PrefabType != "RockRemnant" && remnant.PrefabType != "MediumRockRemnant")
+                    || !remnant.TryGetGizmoRadius("Collider", out float remnantRadius))
                 {
                     continue;
                 }
 
-                if (TryResolveLayer(magic, layer, casterPosition, targetPosition, aimPoint, forward, range,
-                        out ResolvedIndicatorShape shape))
+                // 서버는 높이를 포함한 두 중심의 거리가 반지름 합보다 짧을 때 돌무더기를 고른다.
+                Vector3 center = remnant.transform.position;
+                if (Vector3.Distance(center, aimPoint) < selectionRadius + remnantRadius)
                 {
-                    shapes.Add(shape);
+                    shapes.Add(ResolvedIndicatorShape.Circle(center, damageRadius, RockBlastOutlineWidth));
                 }
             }
         }
