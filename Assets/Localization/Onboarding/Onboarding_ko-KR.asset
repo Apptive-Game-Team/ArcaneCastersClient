@@ -220,7 +220,9 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000056
     m_Localized: "튜토리얼 시작"
-    - m_Id: 318000000057
+    m_Metadata:
+      m_Items: []
+  - m_Id: 318000000057
     m_Localized: "함께할 세력을 선택하세요"
     m_Metadata:
       m_Items: []
