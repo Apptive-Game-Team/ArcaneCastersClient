@@ -16,16 +16,17 @@ This decoded claim must never authorize a server operation or grant cards.
 ## Account and session state
 
 The progression API owns faction selection, starter ownership and the starter deck.
-`FactionTutorialCards.Hell` and `.Nature` describe the unchanged starting rewards
-and must stay aligned with Lobby's progression policy. `.HellPractice` and
-`.NaturePractice` describe the separate battle permissions in role order:
+`FactionTutorialCards.Hell` and `.Nature` describe the starting rewards and must
+match Database V125's level-1 policy. They now contain the same five magics as
+`.HellPractice` and `.NaturePractice`, which describe the battle permissions in role order:
 shot, melee, ranged, tank, flyer. HELL uses fire_shot, rock_golem, rock_mage,
 wall_golem, stone_gargoyle; NATURE uses chain_lightning, electric_spearman,
 aqua_archer, tree_golem, thunder_spirit. Keep these in sync with Rust tutorial
 HELL/NATURE arrays. HELL tries Meteor Shower only; NATURE tries Tornado Strike only.
 Keep the server's stage numbers and names stable: NEXT branches after shot and skips
 the other faction's trial, so each faction plays six lessons.
-Neither practice permissions nor completion grant those spells as rewards.
+The Meteor Shower and Tornado Strike trials do not grant those spells as rewards.
+Progression grants the five starting cards and deck at faction selection, before battle.
 
 The sixth lesson retains the wire stage `explosion` for compatibility, but now
 teaches flyers. Its hints and success text must describe aerial units, and its

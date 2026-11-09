@@ -79,9 +79,9 @@ namespace TutorialScene
 
     public static class FactionTutorialCards
     {
-        // 시작 보상은 실습용 카드와 별개다. 로비 지급표와 같은 구성을 유지한다.
-        public static readonly string[] Hell = { "fire_shot", "ember_spirit_swarm", "towerback", "rock_golem", "magma_explosion" };
-        public static readonly string[] Nature = { "chain_lightning", "water_slime_swarm", "vine_spirit", "tree_golem", "water_explosion" };
+        // 시작 보상과 실습은 같은 5종이다. DB V125의 1레벨 지급표와 맞춘다.
+        public static readonly string[] Hell = { "fire_shot", "rock_golem", "rock_mage", "wall_golem", "stone_gargoyle" };
+        public static readonly string[] Nature = { "chain_lightning", "electric_spearman", "aqua_archer", "tree_golem", "thunder_spirit" };
         // 실습 역할 순서: 슛, 근접, 원거리, 탱커, 공중.
         public static readonly string[] HellPractice = { "fire_shot", "rock_golem", "rock_mage", "wall_golem", "stone_gargoyle" };
         public static readonly string[] NaturePractice = { "chain_lightning", "electric_spearman", "aqua_archer", "tree_golem", "thunder_spirit" };
