@@ -46,6 +46,8 @@ namespace GameScene.ServedObjectComponent
         [SerializeField] private float _effectScaleMin = 0.8f;
         [SerializeField] private float _effectScaleMax = 1.8f;
         public int id;
+        internal string PrefabType { get; set; }
+        internal bool IsDespawning { get; private set; }
         private PresentationWorld _presentationWorld;
         public PresentationWorld PresentationWorld
         {
@@ -726,6 +728,7 @@ namespace GameScene.ServedObjectComponent
         
         private void DestroySelf(float delay)
         {
+            IsDespawning = true;
             StartCoroutine(DelayedDestroySelfCoroutine(delay));
         }
         
