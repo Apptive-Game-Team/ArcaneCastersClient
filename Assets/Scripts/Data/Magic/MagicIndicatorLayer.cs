@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Global.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Data.Magic
 {
@@ -9,7 +11,8 @@ namespace Data.Magic
     {
         Unknown,
         Circle,
-        Lane
+        Lane,
+        ObjectCircles
     }
 
     /// <summary>indicator layer 의 기준점.</summary>
@@ -53,6 +56,7 @@ namespace Data.Magic
     {
         private const string ShapeCircle = "circle";
         private const string ShapeLane = "lane";
+        private const string ShapeObjectCircles = "objectCircles";
         private const string OriginCaster = "caster";
         private const string OriginTarget = "target";
         private const string LaneEndTarget = "target";
@@ -73,18 +77,25 @@ namespace Data.Magic
         public MagicIndicatorValue length;
         public MagicIndicatorValue halfWidth;
 
+        /// <summary>objectCircles 전용. origin 주변에서 검사할 서버 prefab type 목록.</summary>
+        public JToken prefabs;
+
+        /// <summary>objectCircles 전용. origin을 중심으로 검사할 충돌 구의 반경.</summary>
+        public MagicIndicatorValue selectionRadius;
+
         /// <summary>
         /// lane 전용 선택 항목. <c>false</c> 면 lane 이 조준점의 높이를 따른다. 없거나 boolean 이 아니면 true 다.
         /// boolean 이 아닌 값이 와도 throw 하지 않도록 object 로 받고 <see cref="Prepare"/> 에서 해석한다.
         /// </summary>
         public object grounded;
 
-        // 아래 네 개는 Prepare 가 한 번 채운다. private 이라 Json.NET 이 직렬화하지 않는다.
+        // Prepare에서 해석한 값은 직렬화하지 않는다.
         private MagicIndicatorShape parsedShape;
         private MagicIndicatorOrigin parsedOrigin;
         private MagicIndicatorLaneEnd parsedEnd;
         private bool parsedGrounded = true;
         private bool readable;
+        private HashSet<string> parsedPrefabs;
 
         // 아래 다섯 개는 Prepare 가 푼 결과를 읽기만 한다. [JsonIgnore] 가 없으면 Json.NET 이 getter 도
         // 직렬화해서 PlayerPrefs cache 에 shape 와 Shape 가 나란히 들어간다.
@@ -105,6 +116,11 @@ namespace Data.Magic
         /// <summary>false 일 때만 lane 이 조준점의 높이를 따른다. 기본은 true.</summary>
         [JsonIgnore]
         public bool Grounded => parsedGrounded;
+
+        public bool MatchesPrefab(string prefabType)
+        {
+            return parsedPrefabs != null && parsedPrefabs.Contains(prefabType);
+        }
 
         /// <summary>
         /// 문자열 필드를 enum 으로 해석하고, 이 layer 를 그릴 수 있는지 알려준다.
@@ -132,10 +148,32 @@ namespace Data.Magic
                 return false;
             }
 
-            if (parsedShape == MagicIndicatorShape.Circle && !radius.IsPresent)
+            if ((parsedShape == MagicIndicatorShape.Circle || parsedShape == MagicIndicatorShape.ObjectCircles)
+                && !radius.IsPresent)
             {
                 problem = "circle layer has no radius";
                 return false;
+            }
+
+            if (parsedShape == MagicIndicatorShape.ObjectCircles)
+            {
+                if (!selectionRadius.IsPresent || !(prefabs is JArray names) || names.Count == 0)
+                {
+                    problem = "objectCircles layer needs selectionRadius and a non-empty prefabs array";
+                    return false;
+                }
+
+                parsedPrefabs = new HashSet<string>(StringComparer.Ordinal);
+                foreach (JToken name in names)
+                {
+                    if (name.Type != JTokenType.String || string.IsNullOrWhiteSpace((string)name))
+                    {
+                        problem = "objectCircles prefab names must be non-empty strings";
+                        return false;
+                    }
+
+                    parsedPrefabs.Add((string)name);
+                }
             }
 
             if (parsedShape == MagicIndicatorShape.Lane)
@@ -169,6 +207,11 @@ namespace Data.Magic
             if (IsSame(value, ShapeCircle))
             {
                 return MagicIndicatorShape.Circle;
+            }
+
+            if (IsSame(value, ShapeObjectCircles))
+            {
+                return MagicIndicatorShape.ObjectCircles;
             }
 
             return IsSame(value, ShapeLane) ? MagicIndicatorShape.Lane : MagicIndicatorShape.Unknown;

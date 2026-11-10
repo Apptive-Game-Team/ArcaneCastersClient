@@ -95,8 +95,6 @@ namespace GameScene
     {
         /// <summary>indicator document 가 없을 때 쓰는 반지름 parameter 이름.</summary>
         private const string FallbackRadiusParameter = "radius";
-        private const string RockBlastMagicName = "rock_blast";
-        private const float RockBlastOutlineWidth = 0.12f;
 
         private const string LeftPlayerMaster = "LeftPlayer";
 
@@ -158,7 +156,7 @@ namespace GameScene
 
         /// <summary>
         /// <paramref name="aimPoint"/> 는 높이를 포함한 조준점이다. <paramref name="targetPosition"/> 은 그 발자국
-        /// (지면에 놓인 점)이라 circle 과 지면 lane 은 이것만 쓰고, <c>grounded: false</c> lane 만 aimPoint 의 높이를 쓴다.
+        /// (지면에 놓인 점)이다. objectCircles의 충돌 검사와 <c>grounded: false</c> lane은 조준점 높이를 사용한다.
         /// 유닛을 겨누지 않으면 둘은 같다.
         /// </summary>
         public static void Resolve(
@@ -180,56 +178,57 @@ namespace GameScene
             if (document == null || !document.Prepare(magic.serverName))
             {
                 AppendFallbackShape(magic, targetPosition, shapes);
-            }
-            else
-            {
-                for (int i = 0; i < document.layers.Count; i++)
-                {
-                    MagicIndicatorLayer layer = document.layers[i];
-                    if (layer == null || !layer.IsReadable)
-                    {
-                        continue;
-                    }
-
-                    if (TryResolveLayer(magic, layer, casterPosition, targetPosition, aimPoint, forward, range,
-                            out ResolvedIndicatorShape shape))
-                    {
-                        shapes.Add(shape);
-                    }
-                }
-            }
-
-            if (magic.serverName == RockBlastMagicName)
-            {
-                AppendRockBlastAreas(aimPoint, shapes);
-            }
-        }
-
-        private static void AppendRockBlastAreas(Vector3 aimPoint, List<ResolvedIndicatorShape> shapes)
-        {
-            ObjectContainer container = ObjectContainer.Instance;
-            if (container == null
-                || !GameParameterResolver.TryGetObjectParameter(RockBlastMagicName, "radius", out float selectionRadius)
-                || !GameParameterResolver.TryGetObjectParameter("rock_explode", "radius", out float damageRadius)
-                || damageRadius <= 0f)
-            {
                 return;
             }
 
-            foreach (ServedObject remnant in container.Values)
+            for (int i = 0; i < document.layers.Count; i++)
             {
-                if (remnant == null || remnant.IsDespawning
-                    || (remnant.PrefabType != "RockRemnant" && remnant.PrefabType != "MediumRockRemnant")
-                    || !remnant.TryGetGizmoRadius("Collider", out float remnantRadius))
+                MagicIndicatorLayer layer = document.layers[i];
+                if (layer == null || !layer.IsReadable)
                 {
                     continue;
                 }
 
-                // 서버는 높이를 포함한 두 중심의 거리가 반지름 합보다 짧을 때 돌무더기를 고른다.
-                Vector3 center = remnant.transform.position;
-                if (Vector3.Distance(center, aimPoint) < selectionRadius + remnantRadius)
+                if (layer.Shape == MagicIndicatorShape.ObjectCircles)
                 {
-                    shapes.Add(ResolvedIndicatorShape.Circle(center, damageRadius, RockBlastOutlineWidth));
+                    Vector3 selectionCenter = layer.Origin == MagicIndicatorOrigin.Caster ? casterPosition : aimPoint;
+                    AppendObjectCircles(magic, layer, selectionCenter, forward, shapes);
+                }
+                else if (TryResolveLayer(magic, layer, casterPosition, targetPosition, aimPoint, forward, range,
+                             out ResolvedIndicatorShape shape))
+                {
+                    shapes.Add(shape);
+                }
+            }
+        }
+
+        private static void AppendObjectCircles(
+            CombinedMagicData magic, MagicIndicatorLayer layer, Vector3 selectionCenter, Vector3 forward,
+            List<ResolvedIndicatorShape> shapes)
+        {
+            ObjectContainer container = ObjectContainer.Instance;
+            if (container == null
+                || !TryResolveValue(magic, layer.selectionRadius, out float selectionRadius)
+                || selectionRadius < 0f
+                || !TryResolveCircle(magic, layer, Vector3.zero, forward, out ResolvedIndicatorShape circle)
+                || circle.radius <= 0f)
+            {
+                return;
+            }
+
+            foreach (ServedObject obj in container.Values)
+            {
+                if (obj == null || obj.IsDespawning || !layer.MatchesPrefab(obj.PrefabType)
+                    || !obj.TryGetGizmoRadius("Collider", out float colliderRadius))
+                {
+                    continue;
+                }
+
+                // 서버의 충돌 구 검사와 같은 3차원 거리와 반경 합을 사용한다.
+                Vector3 center = obj.transform.position;
+                if (Vector3.Distance(center, selectionCenter) < selectionRadius + colliderRadius)
+                {
+                    shapes.Add(ResolvedIndicatorShape.Circle(center + circle.origin, circle.radius, circle.edgeWidth));
                 }
             }
         }
