@@ -280,5 +280,7 @@ ground lanes use only its x and z.
 사거리로 자른 3차원 조준점을 사용하고, `caster`면 시전자 위치를 사용한다.
 서버가 보낸 `Collider` 반경을 더한 값보다 중심 간 거리가 짧을 때만 원을 그린다.
 `radius`, `edgeWidth`, `forwardOffset`은 각 물체를 중심으로 일반 원과 같은 방식으로 해석한다.
-예를 들어 돌 폭발은 `selectionRadius`에서 `rock_blast.radius`를, `radius`에서
-`rock_explode.radius`를 참조한다. 이전 클라이언트는 새 레이어를 건너뛰고 기존 조준 원을 그린다.
+돌 폭발의 두 레이어는 `selectionRadius`에서 `rock_blast.radius`를 공유한다.
+작은 돌무더기의 `radius`는 `rock_explode.radius`, 중간 돌무더기는
+`rock_explode.medium_blast_radius`를 참조한다. 이전 클라이언트는 새 레이어를 건너뛰고
+기존 조준 원을 그린다.
