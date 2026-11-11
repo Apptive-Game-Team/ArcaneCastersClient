@@ -268,6 +268,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 8238241017251229923}
+    - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 3435556207113775675}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
 --- !u!4 &1269473178231215529 stripped
@@ -309,3 +312,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appliedTransform: {fileID: 1269473178231215529}
+--- !u!114 &8238241017251229923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6664926474594645861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  targetRenderer: {fileID: 6283774115668339200}
+  idleSprite: {fileID: 21300000, guid: 264ae0ad5e9d34d9ba0e5aae0abff88a, type: 3}
+  projectilePoses:
+  - type: WindTotemPulse
+    frames:
+    - {fileID: 21300000, guid: 0c2c2caaac8c4265a0d2266b2ee0cbbc, type: 3}
+    - {fileID: 21300000, guid: 0c2c2caaac8c4265a0d2266b2ee0cbbc, type: 3}
+    - {fileID: 21300000, guid: 7d9e78cc51a84d09ade877fde4e49768, type: 3}
+    - {fileID: 21300000, guid: 7d9e78cc51a84d09ade877fde4e49768, type: 3}
+    - {fileID: 21300000, guid: 264ae0ad5e9d34d9ba0e5aae0abff88a, type: 3}
+    followDuration: 0
+    impactFraction: 0
+    impactFrame: 0
+    recoveryDuration: 0
+    faceTarget: 1
+  hurtFrames:
+  - {fileID: 21300000, guid: b4ac77b7f8194cdfabb42ca3516d6aea, type: 3}
+  - {fileID: 21300000, guid: b4ac77b7f8194cdfabb42ca3516d6aea, type: 3}
+  - {fileID: 21300000, guid: b067aa4cb3b04ed8951748d64ff77c8f, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: b6e82eaf14104302b549e9e4742e76dd, type: 3}
+  - {fileID: 21300000, guid: b6e82eaf14104302b549e9e4742e76dd, type: 3}
+  - {fileID: 21300000, guid: b6e82eaf14104302b549e9e4742e76dd, type: 3}
+  - {fileID: 21300000, guid: 7aace02c1fcd4859a3f7fbda37321c4f, type: 3}
+  - {fileID: 21300000, guid: 7aace02c1fcd4859a3f7fbda37321c4f, type: 3}
+  - {fileID: 21300000, guid: 7aace02c1fcd4859a3f7fbda37321c4f, type: 3}

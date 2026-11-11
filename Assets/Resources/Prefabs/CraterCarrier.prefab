@@ -69,3 +69,36 @@ MonoBehaviour:
   carriedSprite: {fileID: 21300000, guid: 15802a6b94034ceead1dddff4cff6514, type: 3}
   deployedSprite: {fileID: 21300000, guid: d4a12b857f8c4fc39581954c671451c7, type: 3}
   recoveringSprite: {fileID: 21300000, guid: 24e3317dae014ad08549b48b76a94714, type: 3}
+  carryFrames:
+  - {fileID: 21300000, guid: e77f309d74a943a6b58177a0849cfb6c, type: 3}
+  - {fileID: 21300000, guid: e77f309d74a943a6b58177a0849cfb6c, type: 3}
+  - {fileID: 21300000, guid: 3269ca401a68456f9a584b3191cdb6ad, type: 3}
+  - {fileID: 21300000, guid: 3269ca401a68456f9a584b3191cdb6ad, type: 3}
+  - {fileID: 21300000, guid: fb7247bc038f4d10b09492b28451271b, type: 3}
+  - {fileID: 21300000, guid: fb7247bc038f4d10b09492b28451271b, type: 3}
+  - {fileID: 21300000, guid: ff9d644adad74174be3e41658d66c1dc, type: 3}
+  - {fileID: 21300000, guid: ff9d644adad74174be3e41658d66c1dc, type: 3}
+  transitionSprite: {fileID: 21300000, guid: ad144f0b1570437aaf5211451d772684, type: 3}
+  recoilSprite: {fileID: 21300000, guid: 11135954763d476fa6acf012262e9e66, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: 16b1124ad3b14251a70414016dfad27d, type: 3}
+  - {fileID: 21300000, guid: 16b1124ad3b14251a70414016dfad27d, type: 3}
+  - {fileID: 21300000, guid: 0cd08ccd1c4f4ee9ab92c81e14d0e0cf, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: a30109e56c8b4ba8a463da0f106f8acc, type: 3}
+  - {fileID: 21300000, guid: a30109e56c8b4ba8a463da0f106f8acc, type: 3}
+  - {fileID: 21300000, guid: a30109e56c8b4ba8a463da0f106f8acc, type: 3}
+  - {fileID: 21300000, guid: 0a0725dbe4164978916cc15934f7df02, type: 3}
+  - {fileID: 21300000, guid: 0a0725dbe4164978916cc15934f7df02, type: 3}
+  - {fileID: 21300000, guid: 0a0725dbe4164978916cc15934f7df02, type: 3}
+  deployedHurtFrames:
+  - {fileID: 21300000, guid: d21551f69f494ff4870abdcb86680348, type: 3}
+  - {fileID: 21300000, guid: d21551f69f494ff4870abdcb86680348, type: 3}
+  - {fileID: 21300000, guid: ef1d3e3413d14ab69e30ca4853253798, type: 3}
+  deployedDeathFrames:
+  - {fileID: 21300000, guid: 0234f8c346b544fabffb2aad41791930, type: 3}
+  - {fileID: 21300000, guid: 0234f8c346b544fabffb2aad41791930, type: 3}
+  - {fileID: 21300000, guid: 0234f8c346b544fabffb2aad41791930, type: 3}
+  - {fileID: 21300000, guid: 0a0725dbe4164978916cc15934f7df02, type: 3}
+  - {fileID: 21300000, guid: 0a0725dbe4164978916cc15934f7df02, type: 3}
+  - {fileID: 21300000, guid: 0a0725dbe4164978916cc15934f7df02, type: 3}

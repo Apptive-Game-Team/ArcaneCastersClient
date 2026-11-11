@@ -111,5 +111,56 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8238241017251229923}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+--- !u!1 &8238241017251229921 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8238241017251229922 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8238241017251229923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8238241017251229921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  targetRenderer: {fileID: 8238241017251229922}
+  idleSprite: {fileID: 21300000, guid: 8d266964b8e504e0581387bf61a3597c, type: 3}
+  projectilePoses:
+  - type: CraterEruption
+    frames:
+    - {fileID: 21300000, guid: ad417fc1e1a0447a901d969795e4c8d6, type: 3}
+    - {fileID: 21300000, guid: ad417fc1e1a0447a901d969795e4c8d6, type: 3}
+    - {fileID: 21300000, guid: d3ec03be6f7d43d9b90cc8eb174c3680, type: 3}
+    - {fileID: 21300000, guid: d3ec03be6f7d43d9b90cc8eb174c3680, type: 3}
+    - {fileID: 21300000, guid: 8d266964b8e504e0581387bf61a3597c, type: 3}
+    followDuration: 0
+    impactFraction: 0
+    impactFrame: 0
+    recoveryDuration: 0
+    faceTarget: 0
+  hurtFrames:
+  - {fileID: 21300000, guid: aed628b7c39b402fbb35f1aea54f70d7, type: 3}
+  - {fileID: 21300000, guid: aed628b7c39b402fbb35f1aea54f70d7, type: 3}
+  - {fileID: 21300000, guid: 3687e6b38e3141cbbcd83a5c6172479c, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 94cff6820aab4da3b81349c07ca9ae8d, type: 3}
+  - {fileID: 21300000, guid: 94cff6820aab4da3b81349c07ca9ae8d, type: 3}
+  - {fileID: 21300000, guid: 94cff6820aab4da3b81349c07ca9ae8d, type: 3}
+  - {fileID: 21300000, guid: 4990eb16e95d46a7b47b2fead5617817, type: 3}
+  - {fileID: 21300000, guid: 4990eb16e95d46a7b47b2fead5617817, type: 3}
+  - {fileID: 21300000, guid: 4990eb16e95d46a7b47b2fead5617817, type: 3}

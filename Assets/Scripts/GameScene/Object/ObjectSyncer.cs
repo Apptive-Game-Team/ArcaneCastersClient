@@ -56,7 +56,7 @@ namespace GameScene.Object
             {
                 if (!snapshotIdSet.Contains(id))
                 {
-                    ObjectContainer.Instance.UnregisterObject(id);
+                    ObjectContainer.Instance.FindById(id)?.DestroySelf();
                 }
             }
         }

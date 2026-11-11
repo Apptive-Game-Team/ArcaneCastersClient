@@ -81,6 +81,7 @@ namespace GameScene.ServedObjectComponent.Effect
 
         private void PlayRecoil()
         {
+            if (servedObject.AuthoredReaction != null && servedObject.AuthoredReaction.HasHurtFrames) return;
             if (_recoil != null && _recoil.IsActive() && _recoil.IsPlaying())
             {
                 return;

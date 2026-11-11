@@ -28,6 +28,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.11
       objectReference: {fileID: 0}
+    - target: {fileID: 7140850829614563192, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
@@ -63,8 +67,30 @@ MonoBehaviour:
   servedObject: {fileID: 0}
   targetRenderer: {fileID: 6729670833582672236}
   idleSprite: {fileID: 21300000, guid: 6ef5b05d68544ec0a99e0789f52fed9f, type: 3}
-  walkLeftSprite: {fileID: 21300000, guid: 6491fe14039e42659dc5ea2ea7017dc4, type: 3}
-  walkRightSprite: {fileID: 21300000, guid: c96734ea096b41f0b9fd57f1b94467d8, type: 3}
-  attackSprite: {fileID: 21300000, guid: ea46a1d301194c4580c316c3dd547091, type: 3}
-  stepDuration: 0.16
-  attackDuration: 0.16
+  hurtFrames:
+  - {fileID: 21300000, guid: 98d2b5ab9f564eb6821fe8208361cff8, type: 3}
+  - {fileID: 21300000, guid: 98d2b5ab9f564eb6821fe8208361cff8, type: 3}
+  - {fileID: 21300000, guid: 86c92e299a64451e8632c1662c566ba4, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 5778893a50084b8496329f6b54d54d55, type: 3}
+  - {fileID: 21300000, guid: 5778893a50084b8496329f6b54d54d55, type: 3}
+  - {fileID: 21300000, guid: 5778893a50084b8496329f6b54d54d55, type: 3}
+  - {fileID: 21300000, guid: 18d17fd3cc1e4a65803172dab013cd3a, type: 3}
+  - {fileID: 21300000, guid: 18d17fd3cc1e4a65803172dab013cd3a, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 6491fe14039e42659dc5ea2ea7017dc4, type: 3}
+  - {fileID: 21300000, guid: ec2f0219e8c24215b3a9ea1004eaf3ca, type: 3}
+  - {fileID: 21300000, guid: ec2f0219e8c24215b3a9ea1004eaf3ca, type: 3}
+  - {fileID: 21300000, guid: 367019af1eed44508bc7abef8f602f65, type: 3}
+  - {fileID: 21300000, guid: c96734ea096b41f0b9fd57f1b94467d8, type: 3}
+  - {fileID: 21300000, guid: ff923d273c2c4cc997fbe2cd05a60d06, type: 3}
+  - {fileID: 21300000, guid: ff923d273c2c4cc997fbe2cd05a60d06, type: 3}
+  - {fileID: 21300000, guid: 367019af1eed44508bc7abef8f602f65, type: 3}
+  moveStopFrame: {fileID: 21300000, guid: 367019af1eed44508bc7abef8f602f65, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: ea46a1d301194c4580c316c3dd547091, type: 3}
+  - {fileID: 21300000, guid: ea46a1d301194c4580c316c3dd547091, type: 3}
+  - {fileID: 21300000, guid: 1347f181700d4deb87d9e1e9e165be29, type: 3}
+  - {fileID: 21300000, guid: 1347f181700d4deb87d9e1e9e165be29, type: 3}
+  - {fileID: 21300000, guid: 367019af1eed44508bc7abef8f602f65, type: 3}
+  - {fileID: 21300000, guid: 6ef5b05d68544ec0a99e0789f52fed9f, type: 3}

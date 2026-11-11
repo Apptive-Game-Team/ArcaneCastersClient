@@ -25,6 +25,7 @@ namespace GameScene.ServedObjectComponent.Effect
         private Sequence sequence;
         private Vector3 currentLocalPosition;
         private bool lastFlipX;
+        private bool poseDriven;
 
         protected override void OnBound()
         {
@@ -34,7 +35,7 @@ namespace GameScene.ServedObjectComponent.Effect
             }
 
             lastFlipX = bodyRenderer.flipX;
-            ApplyPosition(idleLocalPosition);
+            ApplyPosition(poseDriven ? currentLocalPosition : idleLocalPosition);
             Owner.OnAttack += Play;
         }
 
@@ -66,7 +67,7 @@ namespace GameScene.ServedObjectComponent.Effect
 
         private void Play()
         {
-            if (auraAnchor == null || bodyRenderer == null)
+            if (poseDriven || auraAnchor == null || bodyRenderer == null)
             {
                 return;
             }
@@ -86,6 +87,18 @@ namespace GameScene.ServedObjectComponent.Effect
                     ClearSequence(attackSequence);
                     RestoreIdle();
                 });
+        }
+
+        public void SetPosePosition(Vector2 position)
+        {
+            // 프레임을 재생하는 외형은 자세를 고르는 컴포넌트와 같은 순간에 위치를 바꾼다.
+            if (!poseDriven)
+            {
+                poseDriven = true;
+                StopSequence();
+            }
+
+            ApplyPosition(position);
         }
 
         private void ClearSequence(Sequence finished)
@@ -114,7 +127,10 @@ namespace GameScene.ServedObjectComponent.Effect
 
         private void RestoreIdle()
         {
-            ApplyPosition(idleLocalPosition);
+            if (!poseDriven)
+            {
+                ApplyPosition(idleLocalPosition);
+            }
         }
 
         private void ApplyPosition(Vector3 localPosition)

@@ -115,7 +115,8 @@ namespace Global
                     }
                     foreach (var projectile in frame.objects.projectile ?? Array.Empty<GameScene.Dto.Projectile.ProjectileDto>())
                         if (checkedProjectiles.Add(projectile.type) && projectile.type != "SpiritBombBeam" && projectile.type != "ShockOverloadSecondary" &&
-                            projectile.type != "BoulderStrikeImpact" && ProjectileSpawner.GetPrefab(projectile.type) == null)
+                            projectile.type != "BoulderStrikeImpact" && !ProjectileSpawner.IsPoseOnly(projectile.type) &&
+                            ProjectileSpawner.GetPrefab(projectile.type) == null)
                             throw new InvalidOperationException($"Missing runtime projectile: {projectile.type}");
                 }
             }

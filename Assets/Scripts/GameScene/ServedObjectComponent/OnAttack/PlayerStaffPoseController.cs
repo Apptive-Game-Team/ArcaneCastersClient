@@ -2,37 +2,48 @@ using System;
 using Data;
 using Global;
 using DG.Tweening;
+using GameScene.ServedObjectComponent.Effect;
 using UnityEngine;
 using Sequence = DG.Tweening.Sequence;
 
 namespace GameScene.ServedObjectComponent.OnAttack
 {
     /// <summary>
-    /// The single owner of the player body's <see cref="SpriteRenderer.sprite"/>.
-    /// <para>
-    /// The staff is lowered by default, raised while a magic card is selected, and thrust for
-    /// <see cref="thrustDuration"/> when an attack fires. This has to be one component: with
-    /// <see cref="AttackSpriteSwapController"/> also writing the same renderer, the thrust frame
-    /// would be overwritten if the raised/lowered pose changed mid-attack, and that controller's
-    /// own restore would put back a pose that is no longer current. This component replaces
-    /// <see cref="AttackSpriteSwapController"/> on the player prefab.
-    /// </para>
+    /// 카드 상태와 시전이 같은 렌더러를 쓰므로 여기서 자세의 우선순위를 정한다.
     /// </summary>
     public sealed class PlayerStaffPoseController : ServedObjectBehaviour
     {
+        [Serializable]
+        private struct StaffFrame
+        {
+            public Sprite sprite;
+            public Vector2 tip;
+        }
+
+        private const float FrameDuration = 1f / 12f;
+
         [SerializeField] private SpriteRenderer targetRenderer;
         [SerializeField] private Sprite staffLoweredSprite;
         [SerializeField] private Sprite staffRaisedSprite;
         [SerializeField] private Sprite staffThrustSprite;
         [SerializeField] private float thrustDuration = 0.3f;
         [SerializeField] private string[] raisingEffects;
+        [SerializeField] private PlayerStaffAuraController staffAura;
+        [SerializeField] private Vector2 loweredTip;
+        [SerializeField] private Vector2 raisedTip;
+        [SerializeField] private Vector2 thrustTip;
+        [SerializeField] private StaffFrame aimLiftStart;
+        [SerializeField] private StaffFrame aimLiftEnd;
+        [SerializeField] private StaffFrame castRecoil;
+        [SerializeField] private StaffFrame castRecover;
 
         private SpriteRenderer resolvedRenderer;
-        private Sequence thrustSequence;
+        private Sequence motion;
         private bool isThrusting;
-        // Updated only when Owner.OnEffectsChanged fires, so applying the current pose never has
-        // to re-scan ActiveEffects.
         private bool isRaised;
+        private bool hasFrameAnimation;
+
+        public bool UsesFrameAnimation => isActiveAndEnabled && hasFrameAnimation;
 
         protected override void OnBound()
         {
@@ -57,14 +68,22 @@ namespace GameScene.ServedObjectComponent.OnAttack
                 Owner.OnEffectsChanged -= HandleEffectsChanged;
             }
 
-            StopThrustSequence();
-            EndThrust();
+            StopMotion();
         }
 
         private void OnDisable()
         {
-            StopThrustSequence();
-            EndThrust();
+            StopMotion();
+            ApplyCurrentPose();
+        }
+
+        private void OnEnable()
+        {
+            if (resolvedRenderer != null && Owner != null)
+            {
+                isRaised = HasRaisingEffect();
+                ApplyCurrentPose();
+            }
         }
 
         /// <summary>
@@ -88,72 +107,96 @@ namespace GameScene.ServedObjectComponent.OnAttack
             staffLoweredSprite = idle;
             staffRaisedSprite = raised;
             staffThrustSprite = attacking;
+            hasFrameAnimation = loadedId == PlayerAppearanceResolver.DefaultId && staffAura != null
+                && aimLiftStart.sprite != null && aimLiftEnd.sprite != null
+                && castRecoil.sprite != null && castRecover.sprite != null;
         }
 
         private void HandleEffectsChanged()
         {
-            isRaised = HasRaisingEffect();
-            if (isThrusting)
+            if (!isActiveAndEnabled)
             {
-                // The thrust keeps playing; this only changes the pose it returns to.
+                return;
+            }
+
+            bool wasRaised = isRaised;
+            isRaised = HasRaisingEffect();
+            if (isThrusting || wasRaised == isRaised)
+            {
+                return;
+            }
+
+            StopMotion();
+            if (hasFrameAnimation)
+            {
+                StaffFrame first = isRaised ? aimLiftStart : aimLiftEnd;
+                StaffFrame last = isRaised ? aimLiftEnd : aimLiftStart;
+                Sequence transition = StartMotion();
+                if (resolvedRenderer.sprite != last.sprite)
+                {
+                    ApplyFrame(first);
+                    transition.AppendInterval(FrameDuration)
+                        .AppendCallback(() => ApplyFrame(last));
+                }
+                transition.AppendInterval(FrameDuration);
                 return;
             }
 
             ApplyCurrentPose();
         }
 
-        /// <summary>Plays the thrust. Safe to call again while a previous thrust is still running.</summary>
         private void Play()
         {
-            if (resolvedRenderer == null)
+            if (!isActiveAndEnabled || resolvedRenderer == null)
             {
                 return;
             }
 
-            StopThrustSequence();
+            // 공격 이벤트가 오면 조준 중이어도 발사 자세를 즉시 표시한다.
+            StopMotion();
             isThrusting = true;
             ApplyCurrentPose();
 
-            Sequence attackSequence = DOTween.Sequence();
-            thrustSequence = attackSequence;
-            attackSequence.SetLink(gameObject);
-            attackSequence
-                .AppendInterval(thrustDuration)
-                .AppendCallback(EndThrust)
-                .OnComplete(() => ClearSequence(attackSequence))
-                .OnKill(() =>
-                {
-                    ClearSequence(attackSequence);
-                    EndThrust();
-                });
-        }
-
-        private void ClearSequence(Sequence finished)
-        {
-            if (thrustSequence == finished)
+            Sequence cast = StartMotion();
+            if (!hasFrameAnimation)
             {
-                thrustSequence = null;
+                cast.AppendInterval(thrustDuration);
+                return;
             }
+
+            cast.AppendInterval(2f * FrameDuration)
+                .AppendCallback(() => ApplyFrame(castRecoil))
+                .AppendInterval(FrameDuration)
+                .AppendCallback(() => ApplyFrame(castRecover))
+                .AppendInterval(FrameDuration)
+                .AppendCallback(() => ApplyFrame(isRaised ? aimLiftEnd : aimLiftStart))
+                .AppendInterval(FrameDuration);
         }
 
-        private void StopThrustSequence()
+        private Sequence StartMotion()
         {
-            Sequence activeSequence = thrustSequence;
-            thrustSequence = null;
-            if (activeSequence != null && activeSequence.IsActive())
+            motion = DOTween.Sequence();
+            motion.SetLink(gameObject);
+            motion.OnComplete(() =>
             {
-                activeSequence.Kill(false);
-            }
+                motion = null;
+                isThrusting = false;
+                ApplyCurrentPose();
+            });
+            return motion;
         }
 
-        /// <summary>
-        /// Ends the thrust and re-applies whatever pose is current right now, not the pose that was
-        /// current when the thrust started.
-        /// </summary>
-        private void EndThrust()
+        private void StopMotion()
         {
+            motion?.Kill(false);
+            motion = null;
             isThrusting = false;
-            ApplyCurrentPose();
+        }
+
+        private void ApplyFrame(StaffFrame frame)
+        {
+            resolvedRenderer.sprite = frame.sprite;
+            staffAura.SetPosePosition(frame.tip);
         }
 
         private void ApplyCurrentPose()
@@ -164,6 +207,11 @@ namespace GameScene.ServedObjectComponent.OnAttack
             }
 
             resolvedRenderer.sprite = ResolvePoseSprite();
+            if (hasFrameAnimation)
+            {
+                Vector2 tip = isThrusting ? thrustTip : isRaised ? raisedTip : loweredTip;
+                staffAura.SetPosePosition(tip);
+            }
         }
 
         /// <summary>

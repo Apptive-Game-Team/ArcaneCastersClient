@@ -61,6 +61,7 @@ namespace GameScene.Handler
             if (actor != null)
             {
                 actor.FaceTowards(target.transform.position);
+                actor.NotifyHitTarget();
                 HitKnockback.Play(target, actor.transform.position);
             }
 

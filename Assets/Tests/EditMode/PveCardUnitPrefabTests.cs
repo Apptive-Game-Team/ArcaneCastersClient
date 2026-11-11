@@ -23,7 +23,7 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void PveDimensionToadDoesNotWaddleButTheCardDoes()
+        public void OnlyTheCardDimensionToadUsesTravelFrames()
         {
             GameObject pve = Resources.Load<GameObject>("Prefabs/PveDimensionToad");
             GameObject card = Resources.Load<GameObject>("Prefabs/DimensionToad");
@@ -32,12 +32,12 @@ namespace WordOnline.Tests
             Assert.IsNotNull(card);
             Assert.IsFalse(HasComponentNamed(pve, "WaddleMotionController"),
                 "A stationary gate keeper must not rock in place.");
-            Assert.IsTrue(HasComponentNamed(card, "WaddleMotionController"),
-                "The card unit prefab must keep its waddle.");
+            Assert.IsFalse(HasComponentNamed(card, "WaddleMotionController"));
+            Assert.IsTrue(HasComponentNamed(card, "UnitSpriteMotionController"));
         }
 
         [Test]
-        public void PveEvilEntDoesNotHopButThePvpUnitDoes()
+        public void EvilEntUsesAttackFramesAndOnlyThePvpUnitWalks()
         {
             GameObject pve = Resources.Load<GameObject>("Prefabs/PveEvilEnt");
             GameObject pvp = Resources.Load<GameObject>("Prefabs/EvilEnt");
@@ -46,12 +46,19 @@ namespace WordOnline.Tests
             Assert.IsNotNull(pvp);
             Assert.IsFalse(HasComponentNamed(pve, "HoppingMotionController"),
                 "A stationary boss must not hop in place.");
-            Assert.IsTrue(HasComponentNamed(pvp, "HoppingMotionController"),
-                "The PVP unit prefab must keep its hop.");
+            Assert.IsFalse(HasComponentNamed(pvp, "HoppingMotionController"));
+            foreach (GameObject unit in new[] { pve, pvp })
+            {
+                Component motion = unit.GetComponentsInChildren<Component>(true)
+                    .Single(component => component != null && component.GetType().Name == "UnitSpriteMotionController");
+                var serialized = new UnityEditor.SerializedObject(motion);
+                Assert.AreEqual(6, serialized.FindProperty("attackFrames").arraySize);
+                Assert.AreEqual(unit == pve ? 0 : 8, serialized.FindProperty("moveFrames").arraySize);
+            }
         }
 
         [Test]
-        public void PveBrickGolemStaysPlantedAndSwapsToItsAttackFrame()
+        public void PveBrickGolemStaysPlantedAndPlaysItsAttackFrames()
         {
             GameObject golem = Resources.Load<GameObject>("Prefabs/PveBrickGolem");
 
@@ -60,8 +67,13 @@ namespace WordOnline.Tests
                 "The golem rises out of the ground and must not hop.");
             Assert.IsFalse(HasComponentNamed(golem, "WaddleMotionController"),
                 "The golem rises out of the ground and must not rock in place.");
-            Assert.IsTrue(HasComponentNamed(golem, "AttackSpriteSwapController"),
-                "The golem shows its raised-arm frame on attack.");
+            Assert.IsFalse(HasComponentNamed(golem, "AttackSpriteSwapController"));
+            Component motion = golem.GetComponentsInChildren<Component>(true)
+                .Single(component => component != null && component.GetType().Name == "UnitSpriteMotionController");
+            var serialized = new UnityEditor.SerializedObject(motion);
+            Assert.AreEqual(0, serialized.FindProperty("moveFrames").arraySize);
+            Assert.AreSame(Resources.Load<Sprite>("Game/sprites/PveBrickGolem2"),
+                serialized.FindProperty("attackFrames").GetArrayElementAtIndex(0).objectReferenceValue);
         }
 
         [TestCase("BrickGolemSlamWarning")]

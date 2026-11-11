@@ -71,6 +71,7 @@ namespace GameScene.ServedObjectComponent.Effect
 
             played = true;
             Owner.OnDestroyed -= Play;
+            if (Owner.AuthoredReaction != null && Owner.AuthoredReaction.HasDeathFrames) return;
 
             SpriteRenderer source = ResolveRenderer(sourceRenderer);
             if (source == null || source.sprite == null)

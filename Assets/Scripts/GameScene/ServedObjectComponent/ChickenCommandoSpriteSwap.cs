@@ -1,26 +1,39 @@
+using GameScene.ServedObjectComponent.Motion;
 using UnityEngine;
 
 namespace GameScene.ServedObjectComponent
 {
-    public class ChickenCommandoSpriteSwap : MonoBehaviour
+    public sealed class ChickenCommandoSpriteSwap : UnitSpriteMotionController
     {
-        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Sprite elevatedSprite;
-        [SerializeField] private Sprite defaultSprite;
+        [SerializeField] private Sprite landingSprite;
         [SerializeField] private float heightThreshold = 0.5f;
 
-        private void Update()
+        private bool wasElevated;
+        private float landingUntil = float.NegativeInfinity;
+
+        protected override Sprite GetPriorityPose(float now, bool attacking)
         {
-            if (!spriteRenderer)
+            if (transform.position.y > heightThreshold)
             {
-                return;
+                wasElevated = true;
+                return elevatedSprite;
             }
 
-            Sprite targetSprite = transform.position.y > heightThreshold ? elevatedSprite : defaultSprite;
-            if (targetSprite != null && spriteRenderer.sprite != targetSprite)
+            if (wasElevated)
             {
-                spriteRenderer.sprite = targetSprite;
+                wasElevated = false;
+                landingUntil = now + 3f * FrameDuration;
             }
+
+            return !attacking && now < landingUntil ? landingSprite : null;
+        }
+
+        protected override void OnDisable()
+        {
+            wasElevated = false;
+            landingUntil = float.NegativeInfinity;
+            base.OnDisable();
         }
     }
 }

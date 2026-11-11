@@ -53,11 +53,24 @@ namespace WordOnline.Tests
             SpriteRenderer body = prefab.GetComponentsInChildren<SpriteRenderer>(true)
                 .Single(renderer => renderer.sprite == idle);
             AssertScale(new Vector3(0.6f, 0.6f, 1f), body.transform.localScale);
-            Component swap = prefab.GetComponentsInChildren<Component>(true)
-                .Single(component => component != null && component.GetType().Name == "AttackSpriteSwapController");
-            Assert.AreEqual(attack, new SerializedObject(swap).FindProperty("swapSprite").objectReferenceValue);
-            Assert.AreEqual(idle.rect.height / idle.pixelsPerUnit,
-                attack.rect.height / attack.pixelsPerUnit, 0.05f);
+            Component motion = prefab.GetComponentsInChildren<Component>(true)
+                .Single(component => component != null && component.GetType().Name == "UnitSpriteMotionController");
+            var serialized = new SerializedObject(motion);
+            Assert.AreEqual(attack, serialized.FindProperty("attackFrames")
+                .GetArrayElementAtIndex(0).objectReferenceValue);
+            foreach (string field in new[] { "moveFrames", "attackFrames" })
+            {
+                SerializedProperty frames = serialized.FindProperty(field);
+                Assert.AreEqual(8, frames.arraySize);
+                for (int i = 0; i < frames.arraySize; i++)
+                {
+                    var frame = (Sprite)frames.GetArrayElementAtIndex(i).objectReferenceValue;
+                    Assert.IsNotNull(frame, $"{field}[{i}]");
+                    Assert.AreEqual(idle.rect.size, frame.rect.size);
+                    Assert.AreEqual(idle.pixelsPerUnit, frame.pixelsPerUnit);
+                    Assert.AreEqual(idle.pivot, frame.pivot);
+                }
+            }
         }
 
         private static void Seek(object sequence, float seconds)

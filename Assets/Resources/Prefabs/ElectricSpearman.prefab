@@ -36,16 +36,69 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.1
       objectReference: {fileID: 0}
-    - target: {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
-      propertyPath: swapSprite
-      value:
-      objectReference: {fileID: 21300000, guid: 644de68a57b28c51366cfe65d4507f26, type: 3}
-    - target: {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
-      propertyPath: duration
-      value: 0.14
+    - target: {fileID: 7140850829614563192, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8200000000000000013}
   m_SourcePrefab: {fileID: 100100000, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+--- !u!1 &8200000000000000011 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 8000000000000000417}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8200000000000000012 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3630220617462090093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 8000000000000000417}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8200000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8200000000000000012}
+  idleSprite: {fileID: 21300000, guid: 8d0bc472ff75eaed72190ff47884c09e, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: bd4ae26ffc9146fa9846994c58e7c389, type: 3}
+  - {fileID: 21300000, guid: bd4ae26ffc9146fa9846994c58e7c389, type: 3}
+  - {fileID: 21300000, guid: bfa5120e4cdd406eb7b7aa75e916298a, type: 3}
+  dyingSprite: {fileID: 21300000, guid: 6460ca87c00748e8b71a9bca97fc0ec4, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 99dee4f380484b04b147499bd57c0266, type: 3}
+  - {fileID: 21300000, guid: 99dee4f380484b04b147499bd57c0266, type: 3}
+  - {fileID: 21300000, guid: 99dee4f380484b04b147499bd57c0266, type: 3}
+  - {fileID: 21300000, guid: 26e8e0cffe434da8b7e76a80e7c82bc1, type: 3}
+  - {fileID: 21300000, guid: 26e8e0cffe434da8b7e76a80e7c82bc1, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 47644720d35b4073891adda6c8ad57e0, type: 3}
+  - {fileID: 21300000, guid: 47644720d35b4073891adda6c8ad57e0, type: 3}
+  - {fileID: 21300000, guid: b0e2c4e5017ab8dfb62219fe03e469d4, type: 3}
+  - {fileID: 21300000, guid: b0e2c4e5017ab8dfb62219fe03e469d4, type: 3}
+  - {fileID: 21300000, guid: 176a27ea415544ed937dff8a0586457e, type: 3}
+  - {fileID: 21300000, guid: 176a27ea415544ed937dff8a0586457e, type: 3}
+  - {fileID: 21300000, guid: b0e2c4e5017ab8dfb62219fe03e469d4, type: 3}
+  - {fileID: 21300000, guid: b0e2c4e5017ab8dfb62219fe03e469d4, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 644de68a57b28c51366cfe65d4507f26, type: 3}
+  - {fileID: 21300000, guid: 644de68a57b28c51366cfe65d4507f26, type: 3}
+  - {fileID: 21300000, guid: e1fe68eacd0d44c0afd01cd473f95759, type: 3}
+  - {fileID: 21300000, guid: e1fe68eacd0d44c0afd01cd473f95759, type: 3}
+  - {fileID: 21300000, guid: 8d0bc472ff75eaed72190ff47884c09e, type: 3}
+  - {fileID: 21300000, guid: 8d0bc472ff75eaed72190ff47884c09e, type: 3}

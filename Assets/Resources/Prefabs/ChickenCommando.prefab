@@ -216,7 +216,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8841690536847902715}
-  - component: {fileID: 6542150130469813617}
   - component: {fileID: 7643070402292094288}
   - component: {fileID: 5127668626658264087}
   - component: {fileID: 6078493527699891375}
@@ -245,20 +244,6 @@ Transform:
   - {fileID: 3664870540858154723}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6542150130469813617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7556005377799559492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e2a43148c7f4579897f771a6e00a51a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 6456819394278174577}
-  _duration: 0.5
 --- !u!114 &7643070402292094288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,6 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2de688a310124c238a96800ee8f30bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _swingOnAttack: 0
   _spriteRenderer: {fileID: 6137335418506685782}
   _actualTransform: {fileID: 0}
   _teamIndicatorVerticalOffset: 0.1
@@ -293,9 +279,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdbcf83dc7874831b24fd742dd9b8c5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 6137335418506685782}
+  servedObject: {fileID: 7643070402292094288}
+  targetRenderer: {fileID: 6137335418506685782}
+  idleSprite: {fileID: 21300000, guid: 042a1bedeb02142d8942d41d735795f3, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: fa1da63fc3c74317a177fd13fcf78041, type: 3}
+  - {fileID: 21300000, guid: fa1da63fc3c74317a177fd13fcf78041, type: 3}
+  - {fileID: 21300000, guid: d9fbe71aa3f049439934a69a50096622, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 66599ffce140442eab6ebb9544fe680a, type: 3}
+  - {fileID: 21300000, guid: 66599ffce140442eab6ebb9544fe680a, type: 3}
+  - {fileID: 21300000, guid: 66599ffce140442eab6ebb9544fe680a, type: 3}
+  - {fileID: 21300000, guid: 8ef487f2a43248dcbaaf045514d12549, type: 3}
+  - {fileID: 21300000, guid: 8ef487f2a43248dcbaaf045514d12549, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 32efa17df0254b6798c3040551266767, type: 3}
+  - {fileID: 21300000, guid: 32efa17df0254b6798c3040551266767, type: 3}
+  - {fileID: 21300000, guid: 042a1bedeb02142d8942d41d735795f3, type: 3}
+  - {fileID: 21300000, guid: cf3ac4aefa5f479faa60962e19563b58, type: 3}
+  - {fileID: 21300000, guid: cf3ac4aefa5f479faa60962e19563b58, type: 3}
+  - {fileID: 21300000, guid: 042a1bedeb02142d8942d41d735795f3, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 81b81513a0604f2ba4f2e6439d285ef3, type: 3}
+  - {fileID: 21300000, guid: 81b81513a0604f2ba4f2e6439d285ef3, type: 3}
+  - {fileID: 21300000, guid: 24fe4b7f8cac4434a903181d1e02012f, type: 3}
+  - {fileID: 21300000, guid: 24fe4b7f8cac4434a903181d1e02012f, type: 3}
+  - {fileID: 21300000, guid: 042a1bedeb02142d8942d41d735795f3, type: 3}
   elevatedSprite: {fileID: 21300000, guid: b50852ca5a54c4b4799cdfa7fd1ad4d6, type: 3}
-  defaultSprite: {fileID: 21300000, guid: 042a1bedeb02142d8942d41d735795f3, type: 3}
+  landingSprite: {fileID: 21300000, guid: 24fe4b7f8cac4434a903181d1e02012f, type: 3}
   heightThreshold: 0.5
 --- !u!114 &6078493527699891375
 MonoBehaviour:

@@ -258,7 +258,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4482838688472848121, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2044905642425310835}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8200000000000000013}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
 --- !u!4 &1269473178231215529 stripped
 Transform:
@@ -275,4 +278,50 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2de688a310124c238a96800ee8f30bf0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
+--- !u!1 &8200000000000000011 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8200000000000000012 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8200000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8200000000000000012}
+  idleSprite: {fileID: 21300000, guid: 1b52d6d7b039d694d82efc2a18bf4ab9, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: 8bf6836af1ea43249d1072d1bd9305fc, type: 3}
+  - {fileID: 21300000, guid: 8bf6836af1ea43249d1072d1bd9305fc, type: 3}
+  - {fileID: 21300000, guid: 2df4e2db57924542bf465a6b19f805bb, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 42975f647303405f8a4049f2197c6a93, type: 3}
+  - {fileID: 21300000, guid: 42975f647303405f8a4049f2197c6a93, type: 3}
+  - {fileID: 21300000, guid: 42975f647303405f8a4049f2197c6a93, type: 3}
+  - {fileID: 21300000, guid: 89fb455a7de3439da5794adf2ab2283d, type: 3}
+  - {fileID: 21300000, guid: 89fb455a7de3439da5794adf2ab2283d, type: 3}
+  - {fileID: 21300000, guid: 89fb455a7de3439da5794adf2ab2283d, type: 3}
+  moveFrames: []
+  attackFrames: []
+  projectilePoseType: SummonRelease
+  projectilePoseFrames:
+  - {fileID: 21300000, guid: 71e736dda42d40c6bc88e86e698763b1, type: 3}
+  - {fileID: 21300000, guid: 71e736dda42d40c6bc88e86e698763b1, type: 3}
+  - {fileID: 21300000, guid: b97be16a9c11417ca501e97b7acc5f49, type: 3}
+  - {fileID: 21300000, guid: b97be16a9c11417ca501e97b7acc5f49, type: 3}
+  - {fileID: 21300000, guid: 1b52d6d7b039d694d82efc2a18bf4ab9, type: 3}
+  - {fileID: 21300000, guid: 1b52d6d7b039d694d82efc2a18bf4ab9, type: 3}

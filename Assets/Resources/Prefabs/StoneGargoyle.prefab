@@ -32,7 +32,8 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: 0.7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7571628863401072700, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -59,14 +60,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 415050000000000001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  spriteRenderer: {fileID: 415050000000000002}
-  frames:
+  targetRenderer: {fileID: 415050000000000002}
+  idleSprite: {fileID: 21300000, guid: 4a7f3720fd7448de9b91dcae6fe8e295, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: d3774d6b2e57484bb6a8787ec2713f30, type: 3}
+  - {fileID: 21300000, guid: d3774d6b2e57484bb6a8787ec2713f30, type: 3}
+  - {fileID: 21300000, guid: 4e84c4d910de4959ac850aecb7c159da, type: 3}
+  dyingSprite: {fileID: 21300000, guid: 058fd331195e48439cf94509ff4cddda, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: db12d82ee33048c9b0d733f99ae1fcf6, type: 3}
+  - {fileID: 21300000, guid: db12d82ee33048c9b0d733f99ae1fcf6, type: 3}
+  - {fileID: 21300000, guid: db12d82ee33048c9b0d733f99ae1fcf6, type: 3}
+  - {fileID: 21300000, guid: 96ffa71b929f48efb2e9ed8acba5f47e, type: 3}
+  - {fileID: 21300000, guid: 96ffa71b929f48efb2e9ed8acba5f47e, type: 3}
+  moveFrames:
   - {fileID: 21300000, guid: 4a7f3720fd7448de9b91dcae6fe8e295, type: 3}
   - {fileID: 21300000, guid: e1d3934a4dfd4212a45d667c6ade76b2, type: 3}
   - {fileID: 21300000, guid: 2d7cd3b3015f4208ac5f2abefd141a66, type: 3}
   - {fileID: 21300000, guid: e1d3934a4dfd4212a45d667c6ade76b2, type: 3}
-  frameInterval: 0.16
-  loop: 1
+  moveFrameInterval: 0.16
+  loopMovementAtRest: 1

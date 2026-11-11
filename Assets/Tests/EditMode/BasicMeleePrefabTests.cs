@@ -40,14 +40,15 @@ namespace WordOnline.Tests
             Assert.IsTrue(components.All(component => component != null));
             Assert.IsTrue(components.Any(component => component.GetType().Name == "ServedObject"));
             Assert.IsTrue(components.Any(component => component.GetType().Name == "ServedObjectGaugeBar"));
-            Component swap = components.Single(component => component.GetType().Name == "AttackSpriteSwapController");
+            Component motion = components.Single(component => component.GetType().Name == "UnitSpriteMotionController");
             Sprite idle = Resources.Load<Sprite>("Game/sprites/ElectricSpearman");
             Sprite attack = Resources.Load<Sprite>("Game/sprites/ElectricSpearmanAttacking");
             Assert.IsNotNull(idle);
             Assert.IsNotNull(attack);
             Assert.IsTrue(prefab.GetComponentsInChildren<SpriteRenderer>(true)
                 .Any(renderer => renderer.sprite == idle));
-            Assert.AreEqual(attack, new SerializedObject(swap).FindProperty("swapSprite").objectReferenceValue);
+            Assert.AreEqual(attack, new SerializedObject(motion).FindProperty("attackFrames")
+                .GetArrayElementAtIndex(0).objectReferenceValue);
             Assert.AreEqual(idle.rect.size, attack.rect.size);
             Assert.AreEqual(idle.pixelsPerUnit, attack.pixelsPerUnit);
             Assert.AreEqual(idle.pivot, attack.pivot);
@@ -66,7 +67,7 @@ namespace WordOnline.Tests
             Assert.That(body.GetComponent<BoxCollider2D>().size.x * body.transform.localScale.x,
                 Is.EqualTo(0.8f).Within(0.001f));
             Assert.IsTrue(prefab.GetComponentsInChildren<Component>(true)
-                .Any(component => component != null && component.GetType().Name == "AttackSpriteSwapController"));
+                .Any(component => component != null && component.GetType().Name == "UnitSpriteMotionController"));
         }
     }
 }
