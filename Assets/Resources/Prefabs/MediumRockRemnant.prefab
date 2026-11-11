@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6192801485941783048}
   - component: {fileID: 4028759080038655349}
   - component: {fileID: 5254596191887019403}
+  - component: {fileID: 8238241017251229101}
   m_Layer: 0
   m_Name: MediumRockRemnant
   m_TagString: Untagged
@@ -101,3 +102,27 @@ MonoBehaviour:
   id: 0
   hp: 0
   maxHp: 0
+--- !u!114 &8238241017251229101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119443748760810064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dfe7ec4ec6044de91fccb0397c6c458, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  targetRenderer: {fileID: 4028759080038655349}
+  spawnFrames:
+  - {fileID: 21300000, guid: 053c0fadcde84cb784a4ad7ec0d07823, type: 3}
+  - {fileID: 21300000, guid: c7ce91f206a14ec1a8b3978083d49cd7, type: 3}
+  - {fileID: 21300000, guid: 6f5224d548254855b1b2c661effbfa12, type: 3}
+  exitFrames:
+  - {fileID: 21300000, guid: 24c554e04a524765a8074fd9af93d47d, type: 3}
+  - {fileID: 21300000, guid: 24c554e04a524765a8074fd9af93d47d, type: 3}
+  - {fileID: 21300000, guid: a1e35fccdd464edf814362032475c1a4, type: 3}
+  - {fileID: 21300000, guid: a1e35fccdd464edf814362032475c1a4, type: 3}
+  releaseCue:
+  skipExitCue: RockRemnantConsumed

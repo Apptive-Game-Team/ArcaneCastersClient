@@ -259,6 +259,22 @@ MonoBehaviour:
   - LightningIdleAura
   - NatureIdleAura
   - RockIdleAura
+  staffAura: {fileID: 5546332115853614978}
+  loweredTip: {x: -0.358, y: 1.292}
+  raisedTip: {x: -0.396, y: 1.99}
+  thrustTip: {x: 0.891, y: 0.915}
+  aimLiftStart:
+    sprite: {fileID: 21300000, guid: d40a65e642134036b5788c2677f53c8b, type: 3}
+    tip: {x: -0.462, y: 1.528}
+  aimLiftEnd:
+    sprite: {fileID: 21300000, guid: 85207da8db054899b65f9a633a33d161, type: 3}
+    tip: {x: -0.481, y: 1.717}
+  castRecoil:
+    sprite: {fileID: 21300000, guid: 4238741b18a849c682e963e572a243ef, type: 3}
+    tip: {x: 0.713, y: 1.048}
+  castRecover:
+    sprite: {fileID: 21300000, guid: 8bd952b649c449a492ab68aa710dcc9b, type: 3}
+    tip: {x: 0.534, y: 1.244}
 --- !u!114 &5546332115853614978
 MonoBehaviour:
   m_ObjectHideFlags: 0

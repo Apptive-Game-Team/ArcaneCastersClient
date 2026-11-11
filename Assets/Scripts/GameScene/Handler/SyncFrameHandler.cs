@@ -75,6 +75,7 @@ namespace GameScene.Handler
 
             // 동기화
             ObjectSyncer.Instance.Sync(syncFrameInfo.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>());
+            PresentationFramePlayer.ApplyProjectilePoses(syncFrameInfo.projectileDtos);
             
             TimerController.Instance.UpdateTimer(syncFrameInfo.remainingTime);
         }

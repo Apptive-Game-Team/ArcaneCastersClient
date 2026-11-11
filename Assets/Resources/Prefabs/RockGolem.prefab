@@ -116,15 +116,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-      propertyPath: swapSprite
-      value:
-      objectReference: {fileID: 21300000, guid: 189f94f510c474e9a838ff78f253a73c, type: 3}
-    - target: {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-      propertyPath: duration
-      value: 0.2
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     - {fileID: 3003403705979211347, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
@@ -134,11 +131,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4788737005333460884}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
---- !u!4 &5620660338324739072 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6456819394278174577, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-  m_PrefabInstance: {fileID: 1701133380062854001}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &9171564218302571061 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
@@ -153,7 +145,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 9171564218302571061}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d9cb8ecbbf240a79470c1593facb1b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 5620660338324739072}
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8000000000000000005}
+  idleSprite: {fileID: 21300000, guid: b0e4c4742b255431e91e328eb6e247fc, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: b35abf388f6343989bfb6cf4092329c0, type: 3}
+  - {fileID: 21300000, guid: b35abf388f6343989bfb6cf4092329c0, type: 3}
+  - {fileID: 21300000, guid: 45e9c013cc60461dacec9d89ea2740f7, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: ae7f791ef6404f4cadc7d46a15d5b13a, type: 3}
+  - {fileID: 21300000, guid: ae7f791ef6404f4cadc7d46a15d5b13a, type: 3}
+  - {fileID: 21300000, guid: ae7f791ef6404f4cadc7d46a15d5b13a, type: 3}
+  - {fileID: 21300000, guid: 25b4bfe8d9ac455e994196b0c3da474d, type: 3}
+  - {fileID: 21300000, guid: 25b4bfe8d9ac455e994196b0c3da474d, type: 3}
+  - {fileID: 21300000, guid: 25b4bfe8d9ac455e994196b0c3da474d, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 544be797e29b418d9ee500c49b47d4b2, type: 3}
+  - {fileID: 21300000, guid: 544be797e29b418d9ee500c49b47d4b2, type: 3}
+  - {fileID: 21300000, guid: b0e4c4742b255431e91e328eb6e247fc, type: 3}
+  - {fileID: 21300000, guid: a5680367e6f54a5299f70598fa6e94cb, type: 3}
+  - {fileID: 21300000, guid: 930d7778ef554570961e257c5d602da8, type: 3}
+  - {fileID: 21300000, guid: 930d7778ef554570961e257c5d602da8, type: 3}
+  - {fileID: 21300000, guid: b0e4c4742b255431e91e328eb6e247fc, type: 3}
+  - {fileID: 21300000, guid: a5680367e6f54a5299f70598fa6e94cb, type: 3}
+  moveStopFrame: {fileID: 21300000, guid: a5680367e6f54a5299f70598fa6e94cb, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 189f94f510c474e9a838ff78f253a73c, type: 3}
+  - {fileID: 21300000, guid: 189f94f510c474e9a838ff78f253a73c, type: 3}
+  - {fileID: 21300000, guid: d70ce2751b8148b79a7e72fad11e3293, type: 3}
+  - {fileID: 21300000, guid: d70ce2751b8148b79a7e72fad11e3293, type: 3}
+  - {fileID: 21300000, guid: a5680367e6f54a5299f70598fa6e94cb, type: 3}
+  - {fileID: 21300000, guid: a5680367e6f54a5299f70598fa6e94cb, type: 3}
+  - {fileID: 21300000, guid: b0e4c4742b255431e91e328eb6e247fc, type: 3}
+  - {fileID: 21300000, guid: b0e4c4742b255431e91e328eb6e247fc, type: 3}
+--- !u!212 &8000000000000000005 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+  m_PrefabInstance: {fileID: 1701133380062854001}
+  m_PrefabAsset: {fileID: 0}

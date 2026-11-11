@@ -23,7 +23,7 @@ PrefabInstance:
     - target: {fileID: 6532723950483228932, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 60e1abd0dcc174514ae059ec54871d0e, type: 3}
+      objectReference: {fileID: 21300000, guid: e92aff979f54433b8b17aca93e15168b, type: 3}
     - target: {fileID: 8804314480276434358, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.4631863
@@ -64,8 +64,48 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7657981712482016494, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2898933720311739919, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8238241017251229101}
   m_SourcePrefab: {fileID: 100100000, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+--- !u!1 &8238241017251229102 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2898933720311739919, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+  m_PrefabInstance: {fileID: 8431872745115633183}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8238241017251229103 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6532723950483228932, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+  m_PrefabInstance: {fileID: 8431872745115633183}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8238241017251229101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8238241017251229102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dfe7ec4ec6044de91fccb0397c6c458, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  targetRenderer: {fileID: 8238241017251229103}
+  spawnFrames:
+  - {fileID: 21300000, guid: 4d41b503c6994f67bc0328f18093c34a, type: 3}
+  - {fileID: 21300000, guid: 4d41b503c6994f67bc0328f18093c34a, type: 3}
+  - {fileID: 21300000, guid: 4d41b503c6994f67bc0328f18093c34a, type: 3}
+  - {fileID: 21300000, guid: e92aff979f54433b8b17aca93e15168b, type: 3}
+  - {fileID: 21300000, guid: e92aff979f54433b8b17aca93e15168b, type: 3}
+  - {fileID: 21300000, guid: e92aff979f54433b8b17aca93e15168b, type: 3}
+  exitFrames:
+  - {fileID: 21300000, guid: 1ffc4e4079f74bad8d05dcb25967b8cf, type: 3}
+  - {fileID: 21300000, guid: 1ffc4e4079f74bad8d05dcb25967b8cf, type: 3}
+  - {fileID: 21300000, guid: 8f2eaa908a9c44c093233ea91830f67d, type: 3}
+  releaseCue: OvergrowthRelease
+  skipExitCue:

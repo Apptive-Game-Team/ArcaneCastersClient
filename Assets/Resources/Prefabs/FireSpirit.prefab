@@ -188,17 +188,99 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 0.95
       objectReference: {fileID: 0}
+    - target: {fileID: 7140850829614563192, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1018091211532011722, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4301585983589155369, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3056205237258398616}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8200000000000000013}
   m_SourcePrefab: {fileID: 100100000, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
 --- !u!4 &2445935554379995542 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4301585983589155369, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
   m_PrefabInstance: {fileID: 1892629790145436607}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8200000000000000011 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 1892629790145436607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8200000000000000012 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3630220617462090093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 1892629790145436607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8200000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8200000000000000012}
+  idleSprite: {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: 5a5d486cb21a465ab2f297bef5cad031, type: 3}
+  - {fileID: 21300000, guid: 5a5d486cb21a465ab2f297bef5cad031, type: 3}
+  - {fileID: 21300000, guid: a57ac85cb50846a68b2e65a9d3e7abd5, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 627544900c37445cb3651719d7e977b8, type: 3}
+  - {fileID: 21300000, guid: 627544900c37445cb3651719d7e977b8, type: 3}
+  - {fileID: 21300000, guid: 627544900c37445cb3651719d7e977b8, type: 3}
+  - {fileID: 21300000, guid: ab69d278f7b04a84a69f2519c64912c8, type: 3}
+  - {fileID: 21300000, guid: ab69d278f7b04a84a69f2519c64912c8, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 048704a953754627b5b5f4cb8b885b96, type: 3}
+  - {fileID: 21300000, guid: 048704a953754627b5b5f4cb8b885b96, type: 3}
+  - {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+  - {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+  - {fileID: 21300000, guid: 973d78dbef8a44818e956deb86b0cf55, type: 3}
+  - {fileID: 21300000, guid: 973d78dbef8a44818e956deb86b0cf55, type: 3}
+  - {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+  - {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+  - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+  - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+  - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+  - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+  - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+  - {fileID: 21300000, guid: 82da6f34833241e1be39f3e6e2bac9ca, type: 3}
+  - {fileID: 21300000, guid: 82da6f34833241e1be39f3e6e2bac9ca, type: 3}
+  - {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+  - {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+  projectilePoses:
+  - type: SprayRelease
+    frames:
+    - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+    - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+    - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+    - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+    - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+    - {fileID: 21300000, guid: d786e53b957f422cb4cd4101aa717297, type: 3}
+    - {fileID: 21300000, guid: 82da6f34833241e1be39f3e6e2bac9ca, type: 3}
+    - {fileID: 21300000, guid: 82da6f34833241e1be39f3e6e2bac9ca, type: 3}
+    - {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+    - {fileID: 21300000, guid: a492524c7813b4506a289e30a7118448, type: 3}
+    followDuration: 1
+    impactFraction: 1
+    impactFrame: 6
+    recoveryDuration: 0.33333333
+    faceTarget: 1

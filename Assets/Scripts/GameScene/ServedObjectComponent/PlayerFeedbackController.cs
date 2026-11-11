@@ -1,5 +1,6 @@
 using System.Linq;
 using GameScene.Player;
+using GameScene.ServedObjectComponent.OnAttack;
 using Global;
 using UnityEngine;
 
@@ -34,6 +35,13 @@ namespace GameScene.ServedObjectComponent
 
         public void PlayCardSelectFeedback()
         {
+            if (PlayerObject != null
+                && PlayerObject.TryGetComponent(out PlayerStaffPoseController pose)
+                && pose.UsesFrameAnimation)
+            {
+                return;
+            }
+
             Transform spriteTr = GetPlayerVisualTransform();
             if (spriteTr == null)
             {

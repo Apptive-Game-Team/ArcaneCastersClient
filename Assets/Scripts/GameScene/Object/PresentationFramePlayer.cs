@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GameScene.Dto;
 using GameScene.Dto.Event;
+using GameScene.Dto.Projectile;
 using GameScene.Handler;
 
 namespace GameScene.Object
@@ -18,6 +19,19 @@ namespace GameScene.Object
                 foreach (var projectile in objects.projectile) ProjectileSpawner.SpawnShared(projectile, world);
             if (objects?.update != null)
                 foreach (UpdatedObjectDto updated in objects.update) PresentationWorld.Find(updated.id, world)?.UpdateObject(updated);
+            ApplyProjectilePoses(objects?.projectile, world);
+        }
+
+        internal static void ApplyProjectilePoses(IEnumerable<ProjectileDto> projectiles, PresentationWorld world = null)
+        {
+            if (projectiles == null) return;
+
+            // A projectile identifies the specific pose when the same packet also carries a generic Attack.
+            foreach (ProjectileDto projectile in projectiles)
+            {
+                if (projectile.start is ReferenceProjectileTarget source)
+                    PresentationWorld.Find(source.id, world)?.NotifyProjectilePose(projectile);
+            }
         }
     }
 }

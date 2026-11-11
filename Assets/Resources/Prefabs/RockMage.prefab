@@ -104,9 +104,70 @@ PrefabInstance:
       propertyPath: m_Name
       value: rock_mage
       objectReference: {fileID: 0}
+    - target: {fileID: 7140850829614563192, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1018091211532011722, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8200000000000000013}
   m_SourcePrefab: {fileID: 100100000, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+--- !u!1 &8200000000000000011 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 1892629790145436607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8200000000000000012 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3630220617462090093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 1892629790145436607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8200000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8200000000000000012}
+  idleSprite: {fileID: 21300000, guid: de71dc1be5f0dbb4fbf7a0cd4eb4367b, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: db4b5c31186c4d3bb233b6e5f1c7c6f1, type: 3}
+  - {fileID: 21300000, guid: db4b5c31186c4d3bb233b6e5f1c7c6f1, type: 3}
+  - {fileID: 21300000, guid: 823594f6724a4f06acf56a0217c8973b, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 8e5def1870234a9497f34f56ebd03a30, type: 3}
+  - {fileID: 21300000, guid: 8e5def1870234a9497f34f56ebd03a30, type: 3}
+  - {fileID: 21300000, guid: 8e5def1870234a9497f34f56ebd03a30, type: 3}
+  - {fileID: 21300000, guid: 85ae476b7c5649f1be6ac009407943f5, type: 3}
+  - {fileID: 21300000, guid: 85ae476b7c5649f1be6ac009407943f5, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: abacc857021648b688ebbaf19ae2b88e, type: 3}
+  - {fileID: 21300000, guid: abacc857021648b688ebbaf19ae2b88e, type: 3}
+  - {fileID: 21300000, guid: de71dc1be5f0dbb4fbf7a0cd4eb4367b, type: 3}
+  - {fileID: 21300000, guid: 69933eb6d9ec495e9433bbfb8b60a1d2, type: 3}
+  - {fileID: 21300000, guid: 1dc67e7235bc46399faffb46ec604af4, type: 3}
+  - {fileID: 21300000, guid: 1dc67e7235bc46399faffb46ec604af4, type: 3}
+  - {fileID: 21300000, guid: de71dc1be5f0dbb4fbf7a0cd4eb4367b, type: 3}
+  - {fileID: 21300000, guid: 69933eb6d9ec495e9433bbfb8b60a1d2, type: 3}
+  moveStopFrame: {fileID: 21300000, guid: 69933eb6d9ec495e9433bbfb8b60a1d2, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: f069d549bf7444888cc01556ee91f030, type: 3}
+  - {fileID: 21300000, guid: f069d549bf7444888cc01556ee91f030, type: 3}
+  - {fileID: 21300000, guid: 75cbcda020a7429aa1ae86aae2f77f19, type: 3}
+  - {fileID: 21300000, guid: 75cbcda020a7429aa1ae86aae2f77f19, type: 3}
+  - {fileID: 21300000, guid: 69933eb6d9ec495e9433bbfb8b60a1d2, type: 3}
+  - {fileID: 21300000, guid: de71dc1be5f0dbb4fbf7a0cd4eb4367b, type: 3}

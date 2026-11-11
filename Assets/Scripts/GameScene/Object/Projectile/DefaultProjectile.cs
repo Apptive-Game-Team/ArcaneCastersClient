@@ -13,8 +13,14 @@ namespace GameScene.Object.Projectile
         public void Init(ProjectileDto projectileDto)
         {
             var world = PresentationWorld.For(this);
-            actualObject.rotation = ProjectileUtil.GetRotation(projectileDto, world);
-            transform.position = ProjectileUtil.GetPosition(projectileDto.start, world);
+            Init(projectileDto, ProjectileUtil.GetPosition(projectileDto.start, world));
+        }
+
+        public void Init(ProjectileDto projectileDto, Vector3 start)
+        {
+            var world = PresentationWorld.For(this);
+            actualObject.rotation = ProjectileUtil.GetRotation(start, ProjectileUtil.GetPosition(projectileDto.end, world), world);
+            transform.position = start;
             
             switch (projectileDto.end)
             {

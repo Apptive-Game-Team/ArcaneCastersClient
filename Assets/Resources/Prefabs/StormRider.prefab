@@ -56,10 +56,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.17
       objectReference: {fileID: 0}
-    - target: {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-      propertyPath: _duration
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 6928872084569727094, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -124,9 +120,70 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3003403705979211347, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+    - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8200000000000000013}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+--- !u!1 &8200000000000000011 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+  m_PrefabInstance: {fileID: 1701133380062854001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8200000000000000012 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+  m_PrefabInstance: {fileID: 1701133380062854001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8200000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8200000000000000012}
+  idleSprite: {fileID: 21300000, guid: 13c10ed661d254298848fa810b1892c4, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: 9819dc38bc844c2e812fff150fc2e194, type: 3}
+  - {fileID: 21300000, guid: 9819dc38bc844c2e812fff150fc2e194, type: 3}
+  - {fileID: 21300000, guid: 80be9ceb7e7f46f1b7631bd6a4dcef34, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 060edd341d4b4d7993960be2f0f4a336, type: 3}
+  - {fileID: 21300000, guid: 060edd341d4b4d7993960be2f0f4a336, type: 3}
+  - {fileID: 21300000, guid: 060edd341d4b4d7993960be2f0f4a336, type: 3}
+  - {fileID: 21300000, guid: c1db68f37df547058d0e875bfb08b12c, type: 3}
+  - {fileID: 21300000, guid: c1db68f37df547058d0e875bfb08b12c, type: 3}
+  - {fileID: 21300000, guid: c1db68f37df547058d0e875bfb08b12c, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: d834fd2d5251490ab19849655769ec8f, type: 3}
+  - {fileID: 21300000, guid: d834fd2d5251490ab19849655769ec8f, type: 3}
+  - {fileID: 21300000, guid: 13c10ed661d254298848fa810b1892c4, type: 3}
+  - {fileID: 21300000, guid: 13c10ed661d254298848fa810b1892c4, type: 3}
+  - {fileID: 21300000, guid: 667992aeeb3847b0adc81d046d047438, type: 3}
+  - {fileID: 21300000, guid: 667992aeeb3847b0adc81d046d047438, type: 3}
+  - {fileID: 21300000, guid: 13c10ed661d254298848fa810b1892c4, type: 3}
+  - {fileID: 21300000, guid: 13c10ed661d254298848fa810b1892c4, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 069be8cd9fac419ca0ed358a181b9d25, type: 3}
+  - {fileID: 21300000, guid: 069be8cd9fac419ca0ed358a181b9d25, type: 3}
+  - {fileID: 21300000, guid: 9324df621f91465985fa6c95e212fd09, type: 3}
+  - {fileID: 21300000, guid: 9324df621f91465985fa6c95e212fd09, type: 3}
+  - {fileID: 21300000, guid: 13c10ed661d254298848fa810b1892c4, type: 3}
+  - {fileID: 21300000, guid: 13c10ed661d254298848fa810b1892c4, type: 3}

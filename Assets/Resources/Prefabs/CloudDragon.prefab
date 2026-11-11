@@ -172,7 +172,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -0.27
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7774054542688849500, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7571628863401072700, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1110374062031602233, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
@@ -181,7 +186,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4133848519264727152, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4600000000000000001}
+      addedObject: {fileID: 8200000000000000013}
   m_SourcePrefab: {fileID: 100100000, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
 --- !u!4 &2438902218797027340 stripped
 Transform:
@@ -193,7 +198,12 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4133848519264727152, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
   m_PrefabInstance: {fileID: 3364312027865322037}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4600000000000000001
+--- !u!212 &8200000000000000012 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3475341198290787986, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+  m_PrefabInstance: {fileID: 3364312027865322037}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8200000000000000013
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -202,10 +212,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 4600000000000000000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16be94cbed504f2fbb2acaf552cd2c4c, type: 3}
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   servedObject: {fileID: 0}
-  targetRenderer: {fileID: 0}
-  swapSprite: {fileID: 21300000, guid: a4a7ac2fe33248619a43330ff4af99a1, type: 3}
-  duration: 0.1
+  targetRenderer: {fileID: 8200000000000000012}
+  idleSprite: {fileID: 21300000, guid: 25bfe0e8bd5e543f0bd5c02ca072331f, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: 58295fd39c9c474e9c46253387b202a8, type: 3}
+  - {fileID: 21300000, guid: 58295fd39c9c474e9c46253387b202a8, type: 3}
+  - {fileID: 21300000, guid: d2611ee489654bc299ae4c9359bab289, type: 3}
+  dyingSprite: {fileID: 21300000, guid: 89543cba84984a16b2161bab5bb9b6b6, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 0a11a4bb9d48407e87c46fe695080fe4, type: 3}
+  - {fileID: 21300000, guid: 0a11a4bb9d48407e87c46fe695080fe4, type: 3}
+  - {fileID: 21300000, guid: 0a11a4bb9d48407e87c46fe695080fe4, type: 3}
+  - {fileID: 21300000, guid: 05efcbf3a3244dd988bc1b72aaeb91ec, type: 3}
+  - {fileID: 21300000, guid: 05efcbf3a3244dd988bc1b72aaeb91ec, type: 3}
+  - {fileID: 21300000, guid: 05efcbf3a3244dd988bc1b72aaeb91ec, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: fead6bcc63ba41cc9e4e80d345e7bfa2, type: 3}
+  - {fileID: 21300000, guid: fead6bcc63ba41cc9e4e80d345e7bfa2, type: 3}
+  - {fileID: 21300000, guid: 25bfe0e8bd5e543f0bd5c02ca072331f, type: 3}
+  - {fileID: 21300000, guid: 9a25e316290949a0a9d22910a0773302, type: 3}
+  - {fileID: 21300000, guid: 9a25e316290949a0a9d22910a0773302, type: 3}
+  - {fileID: 21300000, guid: 25bfe0e8bd5e543f0bd5c02ca072331f, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: a4a7ac2fe33248619a43330ff4af99a1, type: 3}
+  - {fileID: 21300000, guid: a4a7ac2fe33248619a43330ff4af99a1, type: 3}
+  - {fileID: 21300000, guid: 81b3aa814a7642658357288e83c45db6, type: 3}
+  - {fileID: 21300000, guid: 81b3aa814a7642658357288e83c45db6, type: 3}
+  - {fileID: 21300000, guid: 25bfe0e8bd5e543f0bd5c02ca072331f, type: 3}
+  - {fileID: 21300000, guid: 25bfe0e8bd5e543f0bd5c02ca072331f, type: 3}
+  loopMovementAtRest: 1

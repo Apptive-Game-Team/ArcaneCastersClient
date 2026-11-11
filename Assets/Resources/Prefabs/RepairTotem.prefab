@@ -267,10 +267,61 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7043489956950792422, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5831740926104553219}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8238241017251229923}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
 --- !u!4 &5831740926104553223 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7043489956950792422, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
   m_PrefabInstance: {fileID: 3434044365886374736}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8238241017251229921 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8238241017251229922 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8238241017251229923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8238241017251229921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  targetRenderer: {fileID: 8238241017251229922}
+  idleSprite: {fileID: 21300000, guid: e7613cdc7dc0657a5e970ce0965a0ea3, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: e7613cdc7dc0657a5e970ce0965a0ea3, type: 3}
+  - {fileID: 21300000, guid: e7613cdc7dc0657a5e970ce0965a0ea3, type: 3}
+  - {fileID: 21300000, guid: df598704ee54475e863b5282a5957c7b, type: 3}
+  - {fileID: 21300000, guid: df598704ee54475e863b5282a5957c7b, type: 3}
+  - {fileID: 21300000, guid: 98f931e2f8c046329008f8266ffb84b2, type: 3}
+  - {fileID: 21300000, guid: 98f931e2f8c046329008f8266ffb84b2, type: 3}
+  - {fileID: 21300000, guid: df598704ee54475e863b5282a5957c7b, type: 3}
+  - {fileID: 21300000, guid: df598704ee54475e863b5282a5957c7b, type: 3}
+  - {fileID: 21300000, guid: e7613cdc7dc0657a5e970ce0965a0ea3, type: 3}
+  - {fileID: 21300000, guid: e7613cdc7dc0657a5e970ce0965a0ea3, type: 3}
+  moveFrameInterval: 0.083333336
+  loopMovementAtRest: 1
+  hurtFrames:
+  - {fileID: 21300000, guid: ff4a5efba9e54479b11e0016849a9070, type: 3}
+  - {fileID: 21300000, guid: ff4a5efba9e54479b11e0016849a9070, type: 3}
+  - {fileID: 21300000, guid: 3b434a7189be498e830ced42ff3ea7ca, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: 52ab94c1b94540b39321ddedafae47d5, type: 3}
+  - {fileID: 21300000, guid: 52ab94c1b94540b39321ddedafae47d5, type: 3}
+  - {fileID: 21300000, guid: 52ab94c1b94540b39321ddedafae47d5, type: 3}
+  - {fileID: 21300000, guid: d4a42600e35b473fb5954079e89c0bf3, type: 3}
+  - {fileID: 21300000, guid: d4a42600e35b473fb5954079e89c0bf3, type: 3}
+  - {fileID: 21300000, guid: d4a42600e35b473fb5954079e89c0bf3, type: 3}

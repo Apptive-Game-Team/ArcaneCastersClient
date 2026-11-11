@@ -54,8 +54,11 @@ namespace WordOnline.Tests
                 SpriteRenderer renderer = instance.AddComponent<SpriteRenderer>();
                 Component presenter = instance.AddComponent(authored.GetType());
                 Set(presenter, "targetRenderer", renderer);
-                foreach (string name in new[] { "carriedSprite", "deployedSprite", "recoveringSprite" })
+                foreach (string name in new[] { "carriedSprite", "deployedSprite", "recoveringSprite", "transitionSprite", "recoilSprite" })
+                {
+                    Assert.NotNull(Get(authored, name));
                     Set(presenter, name, Get(authored, name));
+                }
                 presenter.GetType().GetMethod("Bind").Invoke(presenter, new object[] { owner });
                 MethodInfo update = ownerType.GetMethod("UpdateObject");
                 Type dtoType = update.GetParameters()[0].ParameterType;
@@ -75,14 +78,19 @@ namespace WordOnline.Tests
                 status("Deployed");
                 Assert.AreSame(Get(authored, "deployedSprite"), renderer.sprite);
                 status("Attack");
-                Assert.AreSame(Get(authored, "deployedSprite"), renderer.sprite);
+                Assert.AreSame(Get(authored, "recoilSprite"), renderer.sprite);
+                status("Deployed");
+                Assert.AreSame(Get(authored, "recoilSprite"), renderer.sprite);
                 status("Damaged");
                 status("Recovering");
                 Assert.AreSame(Get(authored, "recoveringSprite"), renderer.sprite);
                 status("Idle");
                 Assert.AreSame(Get(authored, "carriedSprite"), renderer.sprite);
                 status("Deploying");
-                Assert.AreSame(Get(authored, "recoveringSprite"), renderer.sprite);
+                Assert.AreSame(Get(authored, "carriedSprite"), renderer.sprite);
+                Set(presenter, "phaseStarted", Time.time - 0.25f);
+                status("Deploying");
+                Assert.AreSame(Get(authored, "transitionSprite"), renderer.sprite);
             }
             finally { Object.DestroyImmediate(instance); }
         }

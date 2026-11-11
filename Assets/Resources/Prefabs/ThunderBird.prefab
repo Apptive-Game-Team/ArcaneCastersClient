@@ -96,8 +96,69 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.214
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7774054542688849500, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7571628863401072700, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4133848519264727152, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8200000000000000013}
   m_SourcePrefab: {fileID: 100100000, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+--- !u!1 &8200000000000000011 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4133848519264727152, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+  m_PrefabInstance: {fileID: 3135081171793523449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8200000000000000012 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3475341198290787986, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+  m_PrefabInstance: {fileID: 3135081171793523449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8200000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8200000000000000012}
+  idleSprite: {fileID: 21300000, guid: df87da42603854463a161c38712fc3bd, type: 3}
+  hurtFrames:
+  - {fileID: 21300000, guid: 75ad4c92e67d4e69981c016854cf186f, type: 3}
+  - {fileID: 21300000, guid: 75ad4c92e67d4e69981c016854cf186f, type: 3}
+  - {fileID: 21300000, guid: 24666daba81d499a931e716b47d87102, type: 3}
+  dyingSprite: {fileID: 21300000, guid: 03994580e3d2479284650c73dee045b6, type: 3}
+  deathFrames:
+  - {fileID: 21300000, guid: e7cdf08737324fc4b9ff0ad09a0be48b, type: 3}
+  - {fileID: 21300000, guid: e7cdf08737324fc4b9ff0ad09a0be48b, type: 3}
+  - {fileID: 21300000, guid: e7cdf08737324fc4b9ff0ad09a0be48b, type: 3}
+  - {fileID: 21300000, guid: e3d2a32a829047049ccfea3cc58f1d81, type: 3}
+  - {fileID: 21300000, guid: e3d2a32a829047049ccfea3cc58f1d81, type: 3}
+  moveFrames:
+  - {fileID: 21300000, guid: 109cf6eb40874f7ba8584e9c75bede97, type: 3}
+  - {fileID: 21300000, guid: 109cf6eb40874f7ba8584e9c75bede97, type: 3}
+  - {fileID: 21300000, guid: df87da42603854463a161c38712fc3bd, type: 3}
+  - {fileID: 21300000, guid: d41c3e2ad4614e33a327ec60ce14e0ae, type: 3}
+  - {fileID: 21300000, guid: d41c3e2ad4614e33a327ec60ce14e0ae, type: 3}
+  - {fileID: 21300000, guid: df87da42603854463a161c38712fc3bd, type: 3}
+  loopMovementAtRest: 1
+  attackFrames:
+  - {fileID: 21300000, guid: 6968d89a2aa55c3108ade4117ebf5ff4, type: 3}
+  - {fileID: 21300000, guid: 6968d89a2aa55c3108ade4117ebf5ff4, type: 3}
+  - {fileID: 21300000, guid: 5e6fe375d0ee4011a4de4f0c1627ebc2, type: 3}
+  - {fileID: 21300000, guid: 5e6fe375d0ee4011a4de4f0c1627ebc2, type: 3}
+  - {fileID: 21300000, guid: 6893c54943ce48cb826f443527737e3d, type: 3}
+  - {fileID: 21300000, guid: 6893c54943ce48cb826f443527737e3d, type: 3}
+  - {fileID: 21300000, guid: df87da42603854463a161c38712fc3bd, type: 3}
+  - {fileID: 21300000, guid: df87da42603854463a161c38712fc3bd, type: 3}

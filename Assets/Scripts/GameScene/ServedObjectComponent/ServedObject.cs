@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Data;
 using GameScene.Dto;
 using GameScene.Dto.debug;
+using GameScene.Dto.Projectile;
 using GameScene.Object;
+using GameScene.ServedObjectComponent.Motion;
 using Global;
 using UnityEngine;
 
@@ -87,6 +89,8 @@ namespace GameScene.ServedObjectComponent
         private PositionUpdater _positionUpdater;
 
         public event Action OnAttack;
+        public event Action OnHitTarget;
+        internal event Action<ProjectileDto> OnProjectilePose;
         public event Action OnDamaged;
         public event Action<string> OnOtherStatus;
         public event Action OnDestroyed;
@@ -102,6 +106,7 @@ namespace GameScene.ServedObjectComponent
         
         public event Action OnHpIncreased;
         public event Action OnHpDecreased;
+        internal UnitSpriteMotionController AuthoredReaction { get; set; }
 
         /// <summary>
         /// Raised once, right after spawning, only when the spawn presentation should play. Objects
@@ -326,6 +331,16 @@ namespace GameScene.ServedObjectComponent
             {
                 DOTweenAction.SwingMobAttack(GetActualTransform());
             }
+        }
+
+        internal void NotifyHitTarget()
+        {
+            OnHitTarget?.Invoke();
+        }
+
+        internal void NotifyProjectilePose(ProjectileDto projectile)
+        {
+            OnProjectilePose?.Invoke(projectile);
         }
         
         /// <summary>
@@ -703,8 +718,12 @@ namespace GameScene.ServedObjectComponent
             return _teamIndicatorSprite;
         }
 
-        private void DestroySelf()
+        private bool removalCompleted;
+
+        internal void DestroySelf()
         {
+            if (removalCompleted) return;
+            removalCompleted = true;
             OnDestroyed?.Invoke();
             if (PresentationWorld != null) PresentationWorld.Unregister(id);
             else ObjectContainer.Instance?.UnregisterObject(id);
@@ -712,6 +731,7 @@ namespace GameScene.ServedObjectComponent
 
         private void FlashDamage()
         {
+            if (AuthoredReaction != null && AuthoredReaction.HasHurtFrames) return;
             float interval = HasEffect("Burn") || HasEffect("SandStorm") ? 1f : 0.05f;
             if (PresentationWorld != null) interval = Mathf.Max(interval, PresentationWorld.DamageFlashInterval);
             if (Time.time - lastDamageFlash < interval) return;

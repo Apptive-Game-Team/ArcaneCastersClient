@@ -11,15 +11,44 @@ namespace GameScene.ServedObjectComponent
 
         private int frameIndex;
         private float elapsed;
+        private bool destroyAfterPlayback;
 
         private void Awake()
         {
             ApplyFrame(0);
         }
 
+        public void PlayOnce(SpriteRenderer target, Sprite[] sequence, float interval, bool destroyAfterPlayback = false)
+        {
+            spriteRenderer = target;
+            frames = sequence;
+            frameInterval = interval;
+            loop = false;
+            this.destroyAfterPlayback = destroyAfterPlayback;
+            elapsed = 0f;
+            ApplyFrame(0);
+        }
+
         private void Update()
         {
-            if (frames == null || frames.Length <= 1 || frameInterval <= 0f)
+            if (destroyAfterPlayback)
+            {
+                elapsed += Time.deltaTime;
+                if (elapsed < frameInterval) return;
+
+                if (frames == null || frameIndex >= frames.Length - 1)
+                {
+                    Destroy(gameObject);
+                    return;
+                }
+
+                elapsed = 0f;
+                ApplyFrame(frameIndex + 1);
+                return;
+            }
+
+            if (frames == null || frames.Length <= 1 || frameInterval <= 0f ||
+                (!loop && frameIndex == frames.Length - 1))
             {
                 return;
             }

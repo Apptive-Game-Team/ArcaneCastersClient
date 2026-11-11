@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using Global;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace GameScene.ServedObjectComponent.Motion
     public class SeaSerpentBodyTrail : ServedObjectBehaviour
     {
         private const string BodyRootName = "SeaSerpentBody";
+        private const float DefeatDuration = 0.5f;
 
         /// <summary>The master name <see cref="ServedObject.SetMaster"/> reads; its units face -X.</summary>
         private const string RightPlayerMaster = "RightPlayer";
@@ -77,14 +79,14 @@ namespace GameScene.ServedObjectComponent.Motion
 
             BuildSegments();
             SeedTrail(Owner.transform.position);
-            Owner.OnDestroyed += RemoveSegments;
+            Owner.OnDestroyed += FadeSegments;
         }
 
         protected override void OnUnbound()
         {
             if (Owner != null)
             {
-                Owner.OnDestroyed -= RemoveSegments;
+                Owner.OnDestroyed -= FadeSegments;
             }
 
             RemoveSegments();
@@ -150,6 +152,21 @@ namespace GameScene.ServedObjectComponent.Motion
         private float GetTaper(int index)
         {
             return segmentCount <= 1 ? 0f : (float) index / (segmentCount - 1);
+        }
+
+        private void FadeSegments()
+        {
+            if (bodyRoot == null) return;
+            GameObject defeatedBody = bodyRoot.gameObject;
+            defeatedBody.transform.SetParent(null, true);
+            Owner.PresentationWorld?.Own(defeatedBody);
+            bodyRoot = null;
+
+            var fade = DOTween.Sequence().SetLink(defeatedBody);
+            foreach (SpriteRenderer segment in segmentRenderers)
+                fade.Join(segment.DOFade(0f, DefeatDuration).SetEase(Ease.InQuad));
+            Destroy(defeatedBody, DefeatDuration);
+            RemoveSegments();
         }
 
         private void RemoveSegments()

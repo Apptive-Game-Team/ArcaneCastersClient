@@ -101,33 +101,41 @@ PrefabInstance:
     - {fileID: 2233061409166612173, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 790713194785081376, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4363250258731440198}
+      addedObject: {fileID: 8238241017251229101}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
---- !u!4 &1667181112348000304 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4482838688472848121, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
-  m_PrefabInstance: {fileID: 2960336558121752265}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2588469296268189417 stripped
+--- !u!1 &8238241017251229102 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 790713194785081376, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
   m_PrefabInstance: {fileID: 2960336558121752265}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4363250258731440198
+--- !u!212 &8238241017251229103 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 2960336558121752265}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8238241017251229101
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2588469296268189417}
+  m_GameObject: {fileID: 8238241017251229102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd90c7abb3534869ae221a3a28779995, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetTransform: {fileID: 1667181112348000304}
-  startScaleMultiplier: 0.15
-  duration: 0.28
-  ease: 27
+  m_Script: {fileID: 11500000, guid: 7dfe7ec4ec6044de91fccb0397c6c458, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  targetRenderer: {fileID: 8238241017251229103}
+  spawnFrames:
+  - {fileID: 21300000, guid: 573e6ecf3df34513a14232f26d3c943d, type: 3}
+  - {fileID: 21300000, guid: 384df6aa3afd4cda9ae4763934a443cb, type: 3}
+  - {fileID: 21300000, guid: 55625a5476c142659cb54e038cea76e5, type: 3}
+  - {fileID: 21300000, guid: 79d3aa29092b4446eadb02ab6de1e87e, type: 3}
+  exitFrames:
+  - {fileID: 21300000, guid: 55625a5476c142659cb54e038cea76e5, type: 3}
+  - {fileID: 21300000, guid: 384df6aa3afd4cda9ae4763934a443cb, type: 3}
+  - {fileID: 21300000, guid: 4da8e22d1a51462a8b5941fd5ae50f18, type: 3}
+  releaseCue:
+  skipExitCue:
