@@ -150,7 +150,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 758ac9d43cfa6ac3c231081e6a94f588, type: 3}
   - {fileID: 21300000, guid: 322d345f2c3027201604f2f2ed0a4c00, type: 3}
   - {fileID: 21300000, guid: e2e3f7b25bbf547ec9dbdb17939b7562, type: 3}
-  keepAttackPoseOnHit: 1
   hurtFrames:
   - {fileID: 21300000, guid: dc23535d092c4cdfa85dc9e804380448, type: 3}
   - {fileID: 21300000, guid: dc23535d092c4cdfa85dc9e804380448, type: 3}

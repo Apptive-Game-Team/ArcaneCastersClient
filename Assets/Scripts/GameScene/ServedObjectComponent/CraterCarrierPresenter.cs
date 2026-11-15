@@ -109,16 +109,17 @@ namespace GameScene.ServedObjectComponent
         {
             if (phase == SiegePhase.Deploying || phase == SiegePhase.Recovering)
                 return TransitionPose(now - phaseStarted);
-            return phase == SiegePhase.Deployed && now < recoilUntil ? recoilSprite : null;
+            if (phase == SiegePhase.Deployed)
+                return now < recoilUntil ? recoilSprite : null;
+            if (now >= moveUntil) return null;
+
+            int frame = Mathf.Max(0, Mathf.FloorToInt((now - moveStarted) / FrameDuration));
+            return carryFrames[frame % carryFrames.Length];
         }
 
         protected override Sprite GetRestingPose(float now)
         {
-            if (phase == SiegePhase.Deployed) return deployedSprite;
-            if (now >= moveUntil) return carriedSprite;
-
-            int frame = Mathf.Max(0, Mathf.FloorToInt((now - moveStarted) / FrameDuration));
-            return carryFrames[frame % carryFrames.Length];
+            return phase == SiegePhase.Deployed ? deployedSprite : carriedSprite;
         }
 
         private Sprite TransitionPose(float elapsed)

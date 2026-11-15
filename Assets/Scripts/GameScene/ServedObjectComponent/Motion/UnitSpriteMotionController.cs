@@ -20,7 +20,6 @@ namespace GameScene.ServedObjectComponent.Motion
         [SerializeField] private bool loopMovementAtRest;
         [SerializeField] private Sprite moveStopFrame;
         [SerializeField] private Sprite[] attackFrames = Array.Empty<Sprite>();
-        [SerializeField] private bool keepAttackPoseOnHit;
         [SerializeField] private Sprite[] contactFrames = Array.Empty<Sprite>();
         [SerializeField] private string projectilePoseType;
         [SerializeField] private Sprite[] projectilePoseFrames = Array.Empty<Sprite>();
@@ -43,6 +42,7 @@ namespace GameScene.ServedObjectComponent.Motion
         private AttackPoseSource attackPoseSource;
         private float spawnUntil = float.NegativeInfinity;
         private float hurtStarted = float.NegativeInfinity;
+        private bool hurtPosePending;
         private bool dying;
         private bool deathPlayed;
 
@@ -96,8 +96,8 @@ namespace GameScene.ServedObjectComponent.Motion
         {
             float now = Time.time;
             if (!HasHurtFrames || dying || now - hurtStarted < HurtCooldown) return;
-            if (keepAttackPoseOnHit && IsAttacking(now)) return;
             hurtStarted = now;
+            hurtPosePending = true;
             ApplyPose(now);
         }
 
@@ -210,23 +210,20 @@ namespace GameScene.ServedObjectComponent.Motion
             float attackElapsed = now - attackStarted;
             bool attacking = IsAttacking(now);
             Sprite priorityPose = GetPriorityPose(now, attacking);
-            if (priorityPose != null) return priorityPose;
-
-            float hurtElapsed = now - hurtStarted;
-            Sprite[] reaction = HurtFrames;
-            if (isActiveAndEnabled && (!attacking || (attackPoseSource == AttackPoseSource.Ordinary && !keepAttackPoseOnHit)) &&
-                reaction != null && hurtElapsed >= 0f && hurtElapsed < reaction.Length * FrameDuration)
+            if (priorityPose != null)
             {
-                int frame = Mathf.Min(Mathf.FloorToInt(hurtElapsed / FrameDuration), reaction.Length - 1);
-                return reaction[frame];
+                hurtPosePending = false;
+                return priorityPose;
             }
             if (attacking)
             {
+                hurtPosePending = false;
                 int frame = GetAttackFrame(attackElapsed / attackDuration);
                 return activeAttackFrames[frame];
             }
             if (now < spawnUntil)
             {
+                hurtPosePending = false;
                 return spawnFrame;
             }
             if (activeAttackFrames != null)
@@ -236,7 +233,15 @@ namespace GameScene.ServedObjectComponent.Motion
                 movementStarted = now;
             }
             float moveInterval = moveFrameInterval > 0f ? moveFrameInterval : FrameDuration;
-            if ((now < movementUntil || loopMovementAtRest) && moveFrames != null && moveFrames.Length > 0)
+            bool moving = now < movementUntil;
+            if (moving) hurtPosePending = false;
+            float hurtElapsed = now - hurtStarted;
+            Sprite[] reaction = HurtFrames;
+            if (hurtPosePending && isActiveAndEnabled && reaction != null && hurtElapsed < reaction.Length * FrameDuration)
+            {
+                return reaction[Mathf.FloorToInt(hurtElapsed / FrameDuration)];
+            }
+            if ((moving || loopMovementAtRest) && moveFrames != null && moveFrames.Length > 0)
             {
                 int frame = Mathf.FloorToInt((now - movementStarted) / moveInterval) % moveFrames.Length;
                 return moveFrames[frame];
@@ -271,6 +276,7 @@ namespace GameScene.ServedObjectComponent.Motion
             movementUntil = attackStarted = spawnUntil = hurtStarted = float.NegativeInfinity;
             activeAttackFrames = null;
             attackPoseSource = AttackPoseSource.Ordinary;
+            hurtPosePending = false;
             dying = false;
             deathPlayed = false;
             movementStarted = Time.time;

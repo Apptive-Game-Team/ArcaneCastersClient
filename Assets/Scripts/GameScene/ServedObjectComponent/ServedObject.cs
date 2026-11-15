@@ -731,7 +731,6 @@ namespace GameScene.ServedObjectComponent
 
         private void FlashDamage()
         {
-            if (AuthoredReaction != null && AuthoredReaction.HasHurtFrames) return;
             float interval = HasEffect("Burn") || HasEffect("SandStorm") ? 1f : 0.05f;
             if (PresentationWorld != null) interval = Mathf.Max(interval, PresentationWorld.DamageFlashInterval);
             if (Time.time - lastDamageFlash < interval) return;

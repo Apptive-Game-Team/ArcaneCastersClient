@@ -67,7 +67,7 @@ namespace WordOnline.Tests
                 Assert.AreSame(attacks[2], renderer.sprite);
                 Set(presenter, "attackStarted", float.NegativeInfinity);
                 refresh();
-                Assert.AreSame(movement[1], renderer.sprite);
+                Assert.AreSame(movement[0], renderer.sprite);
                 Set(presenter, "movementUntil", Time.time - 0.5f / 12f);
                 refresh();
                 Assert.AreSame(stop, renderer.sprite);
@@ -91,6 +91,56 @@ namespace WordOnline.Tests
                 yield return null;
                 Assert.AreSame(idle, renderer.sprite);
                 Assert.IsTrue(renderer.flipX);
+            }
+            finally { Object.DestroyImmediate(instance); }
+        }
+
+        [UnityTest]
+        public IEnumerator DamageDoesNotReplaceMovementOrAttackOrReplayAfterwards()
+        {
+            var prefab = Resources.Load<GameObject>("Prefabs/ArcaneInfantry");
+            var authored = prefab.GetComponentsInChildren<MonoBehaviour>(true)
+                .Single(c => c != null && c.GetType().Name == "UnitSpriteMotionController");
+            var ownerType = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(a => a.GetType("GameScene.ServedObjectComponent.ServedObject")).First(t => t != null);
+            var instance = new GameObject("infantry-hit-priority-test");
+            try
+            {
+                var owner = instance.AddComponent(ownerType);
+                var renderer = instance.AddComponent<SpriteRenderer>();
+                var presenter = instance.AddComponent(authored.GetType());
+                var idle = (Sprite)Get(authored, "idleSprite");
+                var move = (Sprite[])Get(authored, "moveFrames");
+                var attack = (Sprite[])Get(authored, "attackFrames");
+                var hurt = (Sprite[])Get(authored, "hurtFrames");
+                Set(presenter, "targetRenderer", renderer);
+                Set(presenter, "idleSprite", idle);
+                Set(presenter, "moveFrames", move);
+                Set(presenter, "attackFrames", attack);
+                Set(presenter, "hurtFrames", hurt);
+                presenter.GetType().GetMethod("Bind").Invoke(presenter, new object[] { owner });
+                void Raise(string name) => ((Action)ownerType.GetField(name, BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(owner))?.Invoke();
+                void Refresh() => presenter.GetType().GetMethod("ApplyPose", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(presenter, new object[] { Time.time });
+
+                Raise("OnHpDecreased");
+                Assert.AreSame(hurt[0], renderer.sprite);
+                // 체력 갱신이 공격 상태보다 먼저 들어오는 같은 패킷을 재현한다.
+                Raise("OnAttack");
+                Assert.AreSame(attack[0], renderer.sprite);
+                Set(presenter, "attackStarted", float.NegativeInfinity);
+                Refresh();
+                Assert.AreSame(idle, renderer.sprite);
+
+                Set(presenter, "hurtStarted", float.NegativeInfinity);
+                Raise("OnMoved");
+                Raise("OnHpDecreased");
+                Assert.AreSame(move[0], renderer.sprite);
+                Set(presenter, "movementUntil", float.NegativeInfinity);
+                Refresh();
+                Assert.AreSame(idle, renderer.sprite);
+                yield return null;
             }
             finally { Object.DestroyImmediate(instance); }
         }
