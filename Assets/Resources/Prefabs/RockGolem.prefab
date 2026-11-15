@@ -163,6 +163,34 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 25b4bfe8d9ac455e994196b0c3da474d, type: 3}
   - {fileID: 21300000, guid: 25b4bfe8d9ac455e994196b0c3da474d, type: 3}
   moveFrameInterval: 0.041666668
+  moveCycleDistance: 0.54
+  moveFootX:
+  - 0.37
+  - 0.37
+  - 0.37
+  - 0.41
+  - 0.41
+  - 0.41
+  - 0.41
+  - 0.41
+  - 0.32
+  - 0.32
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.48
+  - 0.48
+  - 0.48
+  - 0.42
+  - 0.42
+  - 0.42
+  - 0.42
+  - 0.42
+  - -0.09
+  - -0.09
+  - -0.09
+  - -0.27
+  - -0.27
   moveFrames:
   - {fileID: 21300000, guid: 544be797e29b418d9ee500c49b47d4b2, type: 3}
   - {fileID: 21300000, guid: 544be797e29b418d9ee500c49b47d4b2, type: 3}

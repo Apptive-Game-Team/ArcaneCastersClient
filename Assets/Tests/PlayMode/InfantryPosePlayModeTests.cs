@@ -196,6 +196,59 @@ namespace WordOnline.Tests
                 CollectionAssert.Contains(new[] { TextureFormat.RGBA32, TextureFormat.ARGB32, TextureFormat.RGB24 }, frame.texture.format, frame.name);
         }
 
+        [UnityTest]
+        public IEnumerator RockGolemWalkUsesDistanceAndKeepsContactFootPlanted()
+        {
+            var prefab = Resources.Load<GameObject>("Prefabs/RockGolem");
+            var authored = prefab.GetComponentsInChildren<MonoBehaviour>(true)
+                .Single(component => component != null && component.GetType().Name == "UnitSpriteMotionController");
+            var ownerType = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(a => a.GetType("GameScene.ServedObjectComponent.ServedObject")).First(t => t != null);
+            var instance = new GameObject("rock-walk-test");
+            try
+            {
+                var owner = instance.AddComponent(ownerType);
+                var visual = new GameObject("sprite");
+                visual.transform.SetParent(instance.transform, false);
+                var renderer = visual.AddComponent<SpriteRenderer>();
+                var presenter = instance.AddComponent(authored.GetType());
+                var frames = (Sprite[])Get(authored, "moveFrames");
+                Set(presenter, "targetRenderer", renderer);
+                foreach (var field in new[] { "idleSprite", "moveFrames", "moveCycleDistance", "moveFootX" })
+                    Set(presenter, field, Get(authored, field));
+                Assert.AreEqual(frames.Length, ((float[])Get(presenter, "moveFootX")).Length);
+                presenter.GetType().GetMethod("Bind").Invoke(presenter, new object[] { owner });
+                var move = (Action)ownerType.GetField("OnMoved", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(owner);
+                var apply = presenter.GetType().GetMethod("ApplyPose", BindingFlags.Instance | BindingFlags.NonPublic);
+                void Refresh(float now) => apply.Invoke(presenter, new object[] { now });
+
+                move();
+                Set(presenter, "movementUntil", Time.time + 5f);
+                Refresh(Time.time + 2f);
+                Assert.AreSame(frames[0], renderer.sprite);
+
+                instance.transform.position = new Vector3(0.04f, 0f, 0f);
+                Refresh(Time.time);
+                Assert.That(visual.transform.position.x, Is.EqualTo(0f).Within(0.001f));
+                instance.transform.position = new Vector3(0.08f, 0f, 0f);
+                Refresh(Time.time);
+                Assert.AreSame(frames[3], renderer.sprite);
+                Assert.That(visual.transform.position.x, Is.EqualTo(-0.04f).Within(0.001f));
+
+                renderer.flipX = true;
+                Refresh(Time.time);
+                instance.transform.position = new Vector3(0.04f, 0f, 0f);
+                Refresh(Time.time);
+                Assert.That(visual.transform.position.x, Is.EqualTo(0.08f).Within(0.001f));
+                Set(presenter, "movementUntil", float.NegativeInfinity);
+                Refresh(Time.time);
+                Assert.That(visual.transform.localPosition.x, Is.EqualTo(0f).Within(0.001f));
+                yield return null;
+            }
+            finally { Object.DestroyImmediate(instance); }
+        }
+
         private static object Get(object target, string field) => target.GetType()
             .GetField(field, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(target);
         private static void Set(object target, string field, object value) => target.GetType()

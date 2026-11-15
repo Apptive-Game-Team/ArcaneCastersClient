@@ -17,6 +17,8 @@ namespace GameScene.ServedObjectComponent.Motion
         [SerializeField] private Sprite idleSprite;
         [SerializeField] private Sprite[] moveFrames = Array.Empty<Sprite>();
         [SerializeField] private float moveFrameInterval = FrameDuration;
+        [SerializeField, Min(0f)] private float moveCycleDistance;
+        [SerializeField] private float[] moveFootX = Array.Empty<float>();
         [SerializeField] private bool loopMovementAtRest;
         [SerializeField] private Sprite moveStopFrame;
         [SerializeField] private Sprite[] attackFrames = Array.Empty<Sprite>();
@@ -34,6 +36,11 @@ namespace GameScene.ServedObjectComponent.Motion
         private Sprite restingSprite;
         private float movementUntil = float.NegativeInfinity;
         private float movementStarted;
+        private Vector3 lastWalkPosition;
+        private float walkDistance;
+        private bool walkFacingLeft;
+        private float walkSpriteOffset;
+        private Vector3 appliedWalkOffset;
         private float attackStarted = float.NegativeInfinity;
         private Sprite[] activeAttackFrames;
         private float attackDuration;
@@ -123,7 +130,7 @@ namespace GameScene.ServedObjectComponent.Motion
             if (!isActiveAndEnabled || moveFrames == null || moveFrames.Length == 0) return;
             float now = Time.time;
             // 연속 이동 패킷은 종료 시각만 연장한다. 매번 위상을 초기화하면 첫 발만 보인다.
-            if (!loopMovementAtRest && now >= movementUntil) movementStarted = now;
+            if (!loopMovementAtRest && now >= movementUntil) RestartWalk(now);
             movementUntil = now + Mathf.Max(0.08f, 2f * GameConfig.FrameDuration);
             ApplyPose(now);
         }
@@ -200,7 +207,9 @@ namespace GameScene.ServedObjectComponent.Motion
         protected void ApplyPose(float now)
         {
             if (resolvedRenderer == null) return;
+            walkSpriteOffset = 0f;
             Sprite pose = ResolvePose(now) ?? restingSprite;
+            ApplyWalkOffset();
             if (pose != resolvedRenderer.sprite) resolvedRenderer.sprite = pose;
         }
 
@@ -230,7 +239,7 @@ namespace GameScene.ServedObjectComponent.Motion
             {
                 activeAttackFrames = null;
                 // 복귀 자세 뒤에는 이동 루프를 첫 자세부터 잇는다.
-                movementStarted = now;
+                RestartWalk(now);
             }
             float moveInterval = moveFrameInterval > 0f ? moveFrameInterval : FrameDuration;
             bool moving = now < movementUntil;
@@ -243,7 +252,9 @@ namespace GameScene.ServedObjectComponent.Motion
             }
             if ((moving || loopMovementAtRest) && moveFrames != null && moveFrames.Length > 0)
             {
-                int frame = Mathf.FloorToInt((now - movementStarted) / moveInterval) % moveFrames.Length;
+                int frame = moveCycleDistance > 0f && !loopMovementAtRest
+                    ? ResolveDistanceWalkFrame(now)
+                    : Mathf.FloorToInt((now - movementStarted) / moveInterval) % moveFrames.Length;
                 return moveFrames[frame];
             }
             if (now < movementUntil + Mathf.Max(moveInterval, FrameDuration))
@@ -251,6 +262,59 @@ namespace GameScene.ServedObjectComponent.Motion
                 return moveStopFrame;
             }
             return GetRestingPose(now);
+        }
+
+        private Vector3 GetWalkPosition()
+        {
+            var world = Owner.PresentationWorld;
+            Vector3 position = Owner.transform.position;
+            return world != null ? world.transform.InverseTransformPoint(position) : position;
+        }
+
+        private void RestartWalk(float now)
+        {
+            movementStarted = now;
+            if (moveCycleDistance <= 0f || resolvedRenderer == null) return;
+            lastWalkPosition = GetWalkPosition();
+            walkFacingLeft = resolvedRenderer.flipX;
+            walkDistance = 0f;
+        }
+
+        private int ResolveDistanceWalkFrame(float now)
+        {
+            if (walkFacingLeft != resolvedRenderer.flipX) RestartWalk(now);
+            Vector3 position = GetWalkPosition();
+            Vector3 delta = position - lastWalkPosition;
+            delta.y = 0f;
+            lastWalkPosition = position;
+            walkDistance = Mathf.Repeat(walkDistance + delta.magnitude, moveCycleDistance);
+
+            int count = moveFrames.Length;
+            int frame = Mathf.Min(Mathf.FloorToInt(walkDistance / moveCycleDistance * count), count - 1);
+            if (moveFootX.Length != count || (count & 1) != 0 || resolvedRenderer.transform == Owner.transform)
+                return frame;
+
+            // 두 발의 접지 지점을 각각 기준으로 삼되 머리와 몸통이 크게 밀리지 않도록 제한한다.
+            int stepStart = frame < count / 2 ? 0 : count / 2;
+            float stepDistance = walkDistance - (stepStart == 0 ? 0f : moveCycleDistance * 0.5f);
+            Transform worldTransform = Owner.PresentationWorld?.transform;
+            float worldScale = worldTransform != null ? worldTransform.TransformVector(Vector3.right).magnitude : 1f;
+            float spriteScale = resolvedRenderer.transform.TransformVector(Vector3.right).magnitude;
+            float offset = (moveFootX[stepStart] - moveFootX[frame]) * spriteScale - stepDistance * worldScale;
+            float distanceUntilNextStep = moveCycleDistance * 0.5f - stepDistance;
+            float release = Mathf.Clamp01(distanceUntilNextStep / (moveCycleDistance * 0.1f));
+            walkSpriteOffset = Mathf.Clamp(offset, -0.12f * worldScale, 0.12f * worldScale) * release;
+            return frame;
+        }
+
+        private void ApplyWalkOffset()
+        {
+            Transform visual = resolvedRenderer.transform;
+            if (walkSpriteOffset == 0f && appliedWalkOffset == Vector3.zero) return;
+            Vector3 worldOffset = visual.right * (resolvedRenderer.flipX ? -walkSpriteOffset : walkSpriteOffset);
+            Vector3 localOffset = visual.parent != null ? visual.parent.InverseTransformVector(worldOffset) : worldOffset;
+            visual.localPosition += localOffset - appliedWalkOffset;
+            appliedWalkOffset = localOffset;
         }
 
         protected virtual Sprite GetPriorityPose(float now, bool attacking) => null;
@@ -280,6 +344,9 @@ namespace GameScene.ServedObjectComponent.Motion
             dying = false;
             deathPlayed = false;
             movementStarted = Time.time;
+            walkDistance = 0f;
+            walkSpriteOffset = 0f;
+            if (resolvedRenderer != null) ApplyWalkOffset();
             if (resolvedRenderer != null && restingSprite != null) resolvedRenderer.sprite = restingSprite;
         }
 
