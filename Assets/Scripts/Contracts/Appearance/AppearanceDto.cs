@@ -31,7 +31,7 @@ namespace Data.Appearances
 
     public static class AppearanceCatalog
     {
-        /// <summary>By sortOrder, then key, with null entries and blank keys dropped.</summary>
+        /// <summary>보유 스킨을 먼저 표시하고 각 그룹은 sortOrder, key 순으로 정렬한다.</summary>
         public static AppearanceDto[] Order(IEnumerable<AppearanceDto> appearances)
         {
             if (appearances == null)
@@ -41,7 +41,8 @@ namespace Data.Appearances
 
             return appearances
                 .Where(appearance => appearance != null && !string.IsNullOrWhiteSpace(appearance.key))
-                .OrderBy(appearance => appearance.sortOrder)
+                .OrderByDescending(appearance => appearance.owned)
+                .ThenBy(appearance => appearance.sortOrder)
                 .ThenBy(appearance => appearance.key, StringComparer.Ordinal)
                 .ToArray();
         }
