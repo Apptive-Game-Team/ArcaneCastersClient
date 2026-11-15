@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class BuildScript
 {
-    private const string DevDefine = "DEV_BUILD";
+    private const string DevLobbyDefine = "DEV_WEBGL_LOBBY";
 
     public static void BuildDevWebGL() => Build(devBuild: true);
     public static void BuildWebGL() => Build(devBuild: false);
@@ -15,7 +15,6 @@ public static class BuildScript
     private static void Build(bool devBuild)
     {
         PlaygroundBuildGuard.Validate();
-        SetDefine(DevDefine, devBuild);
 
         // game-ci passes -customBuildPath; fall back to convention
         var outputPath = GetArg("-customBuildPath")
@@ -31,7 +30,8 @@ public static class BuildScript
             scenes = scenes,
             locationPathName = outputPath,
             target = BuildTarget.WebGL,
-            options = BuildOptions.None
+            options = BuildOptions.None,
+            extraScriptingDefines = devBuild ? new[] { DevLobbyDefine } : Array.Empty<string>()
         });
 
         if (report.summary.result != BuildResult.Succeeded)
@@ -39,24 +39,6 @@ public static class BuildScript
             Debug.LogError($"[BuildScript] Build failed: {report.summary.result}");
             EditorApplication.Exit(1);
         }
-    }
-
-    private static void SetDefine(string define, bool enable)
-    {
-        const BuildTargetGroup group = BuildTargetGroup.WebGL;
-        var list = new List<string>(
-            PlayerSettings.GetScriptingDefineSymbolsForGroup(group)
-                .Split(';')
-                .Where(d => !string.IsNullOrWhiteSpace(d))
-        );
-
-        if (enable && !list.Contains(define))
-            list.Add(define);
-        else if (!enable)
-            list.Remove(define);
-
-        PlayerSettings.SetScriptingDefineSymbolsForGroup(group, string.Join(";", list));
-        Debug.Log($"[BuildScript] DEV_BUILD={enable}, defines: {string.Join(";", list)}");
     }
 
     private static string GetArg(string name)

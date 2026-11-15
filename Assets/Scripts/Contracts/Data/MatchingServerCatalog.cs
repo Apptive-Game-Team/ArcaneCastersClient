@@ -32,10 +32,10 @@ namespace Data
         public static readonly IReadOnlyList<MatchingServerOption> Options = new[] { Local, Dev, Deploy };
 
         /// <summary>
-        /// 로비보다 먼저 실행되는 튜토리얼도 에디터에서는 개발 서버를 사용한다.
-        /// 빌드는 운영 서버로 시작하며 관리자는 드롭다운에서 서버를 바꿀 수 있다.
+        /// 로비보다 먼저 실행되는 튜토리얼도 에디터와 dev WebGL 빌드에서는 개발 서버를 사용한다.
+        /// 관리자는 로비 드롭다운에서 서버를 바꿀 수 있다.
         /// </summary>
-#if UNITY_EDITOR
+#if UNITY_EDITOR || (UNITY_WEBGL && DEV_WEBGL_LOBBY)
         private static readonly MatchingServerOption BuildDefault = Dev;
 #else
         private static readonly MatchingServerOption BuildDefault = Deploy;

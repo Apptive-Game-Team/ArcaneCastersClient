@@ -2,7 +2,8 @@
 
 `dev` 또는 `deploy`에 push하면 Unity WebGL 빌드 후 Nginx 이미지를 검사하고 GHCR에 게시합니다.
 `workflow_dispatch`도 두 브랜치에서만 게시합니다. Unity 버전은 `ProjectVersion.txt`를 읽습니다.
-`dev`는 `BuildDevWebGL`, `deploy`는 `BuildWebGL`로 빌드합니다.
+`dev`는 `BuildDevWebGL`로 빌드해 개발 로비에 연결합니다.
+`deploy`는 `BuildWebGL`로 빌드해 운영 로비에 연결합니다.
 `ArcaneCastersPlay`와 `WORD_ONLINE_PLAY_TOKEN`은 이 workflow에서 사용하지 않습니다.
 다른 track과 itch.io workflow는 변경하지 않습니다.
 
