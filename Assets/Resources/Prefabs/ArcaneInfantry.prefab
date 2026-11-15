@@ -77,13 +77,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5778893a50084b8496329f6b54d54d55, type: 3}
   - {fileID: 21300000, guid: 18d17fd3cc1e4a65803172dab013cd3a, type: 3}
   - {fileID: 21300000, guid: 18d17fd3cc1e4a65803172dab013cd3a, type: 3}
+  moveFrameInterval: 0.11111111
   moveFrames:
   - {fileID: 21300000, guid: 6491fe14039e42659dc5ea2ea7017dc4, type: 3}
   - {fileID: 21300000, guid: ec2f0219e8c24215b3a9ea1004eaf3ca, type: 3}
-  - {fileID: 21300000, guid: ec2f0219e8c24215b3a9ea1004eaf3ca, type: 3}
   - {fileID: 21300000, guid: 367019af1eed44508bc7abef8f602f65, type: 3}
   - {fileID: 21300000, guid: c96734ea096b41f0b9fd57f1b94467d8, type: 3}
-  - {fileID: 21300000, guid: ff923d273c2c4cc997fbe2cd05a60d06, type: 3}
   - {fileID: 21300000, guid: ff923d273c2c4cc997fbe2cd05a60d06, type: 3}
   - {fileID: 21300000, guid: 367019af1eed44508bc7abef8f602f65, type: 3}
   moveStopFrame: {fileID: 21300000, guid: 367019af1eed44508bc7abef8f602f65, type: 3}

@@ -25,7 +25,7 @@ namespace WordOnline.Tests
             Sprite stop = (Sprite)Get(authored, "moveStopFrame");
             Assert.NotNull(idle);
             Assert.NotNull(stop);
-            Assert.AreEqual(8, movement.Length);
+            Assert.AreEqual(6, movement.Length);
             Assert.AreEqual(6, attacks.Length);
             Assert.IsTrue(movement.All(frame => frame != null));
             Assert.IsTrue(attacks.All(frame => frame != null));
@@ -40,6 +40,9 @@ namespace WordOnline.Tests
                 Set(presenter, "targetRenderer", renderer);
                 Set(presenter, "idleSprite", idle);
                 Set(presenter, "moveFrames", movement);
+                float moveInterval = (float)Get(authored, "moveFrameInterval");
+                Set(presenter, "moveFrameInterval", moveInterval);
+                Assert.That(movement.Length * moveInterval, Is.EqualTo(8f / 12f).Within(0.001f));
                 Set(presenter, "attackFrames", attacks);
                 Set(presenter, "moveStopFrame", stop);
                 presenter.GetType().GetMethod("Bind").Invoke(presenter, new object[] { owner });
@@ -54,7 +57,7 @@ namespace WordOnline.Tests
                 raise("OnMoved");
                 Assert.AreSame(movement[0], renderer.sprite);
                 // 연속 이동 이벤트가 이전 보행 위상을 덮어쓰지 않는지 확인한다.
-                float started = Time.time - 1.5f / 12f;
+                float started = Time.time - 1.5f * moveInterval;
                 Set(presenter, "movementStarted", started);
                 for (int i = 0; i < 5; i++) raise("OnMoved");
                 Assert.AreEqual(started, Get(presenter, "movementStarted"));
@@ -68,10 +71,10 @@ namespace WordOnline.Tests
                 Set(presenter, "attackStarted", float.NegativeInfinity);
                 refresh();
                 Assert.AreSame(movement[0], renderer.sprite);
-                Set(presenter, "movementUntil", Time.time - 0.5f / 12f);
+                Set(presenter, "movementUntil", Time.time - 0.5f * moveInterval);
                 refresh();
                 Assert.AreSame(stop, renderer.sprite);
-                Set(presenter, "movementUntil", Time.time - 2f / 12f);
+                Set(presenter, "movementUntil", Time.time - 2f * moveInterval);
                 refresh();
                 Assert.AreSame(idle, renderer.sprite);
                 raise("OnAttack");
@@ -143,6 +146,28 @@ namespace WordOnline.Tests
                 yield return null;
             }
             finally { Object.DestroyImmediate(instance); }
+        }
+
+        [TestCase("ArcaneInfantry")]
+        [TestCase("RockGolem")]
+        [TestCase("WallGolem")]
+        [TestCase("Towerback")]
+        public void WalkUsesSixEvenlyTimedFramesWithUncompressedColors(string unit)
+        {
+            var prefab = Resources.Load<GameObject>($"Prefabs/{unit}");
+            var motion = prefab.GetComponentsInChildren<MonoBehaviour>(true)
+                .Single(component => component != null && component.GetType().Name == "UnitSpriteMotionController");
+            var frames = (Sprite[])Get(motion, "moveFrames");
+            var interval = (float)Get(motion, "moveFrameInterval");
+            Assert.AreEqual(6, frames.Length);
+            Assert.That(frames.Length * interval, Is.EqualTo(8f / 12f).Within(0.001f));
+            for (int i = 0; i < frames.Length; i++)
+            {
+                Assert.IsNotNull(frames[i]);
+                Assert.AreNotSame(frames[i], frames[(i + 1) % frames.Length]);
+            }
+            foreach (var frame in frames.Append((Sprite)Get(motion, "idleSprite")).Distinct())
+                CollectionAssert.Contains(new[] { TextureFormat.RGBA32, TextureFormat.ARGB32, TextureFormat.RGB24 }, frame.texture.format, frame.name);
         }
 
         private static object Get(object target, string field) => target.GetType()

@@ -172,15 +172,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 44abb261713d4ea896ef8ab7cf61b3d1, type: 3}
   - {fileID: 21300000, guid: 44abb261713d4ea896ef8ab7cf61b3d1, type: 3}
   - {fileID: 21300000, guid: 44abb261713d4ea896ef8ab7cf61b3d1, type: 3}
+  moveFrameInterval: 0.11111111
   moveFrames:
   - {fileID: 21300000, guid: 0cf5e947ab024fceb9304de8299c33eb, type: 3}
-  - {fileID: 21300000, guid: 0cf5e947ab024fceb9304de8299c33eb, type: 3}
-  - {fileID: 21300000, guid: f73a7971ca9540888e10bd2c9d6be558, type: 3}
   - {fileID: 21300000, guid: dddf819caa054658a5b50067e0385bf8, type: 3}
-  - {fileID: 21300000, guid: 203f5ce7b5ed4e6b97654e36310f8388, type: 3}
-  - {fileID: 21300000, guid: 203f5ce7b5ed4e6b97654e36310f8388, type: 3}
   - {fileID: 21300000, guid: f73a7971ca9540888e10bd2c9d6be558, type: 3}
+  - {fileID: 21300000, guid: 203f5ce7b5ed4e6b97654e36310f8388, type: 3}
   - {fileID: 21300000, guid: dddf819caa054658a5b50067e0385bf8, type: 3}
+  - {fileID: 21300000, guid: f73a7971ca9540888e10bd2c9d6be558, type: 3}
   moveStopFrame: {fileID: 21300000, guid: dddf819caa054658a5b50067e0385bf8, type: 3}
   attackFrames:
   - {fileID: 21300000, guid: c5d79fffa21b4d9d801bd6aa575193f2, type: 3}
