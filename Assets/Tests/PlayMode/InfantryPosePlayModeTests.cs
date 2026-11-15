@@ -152,19 +152,33 @@ namespace WordOnline.Tests
         [TestCase("RockGolem")]
         [TestCase("WallGolem")]
         [TestCase("Towerback")]
-        public void WalkUsesSixEvenlyTimedFramesWithUncompressedColors(string unit)
+        public void WalkUsesAuthoredCadenceWithUncompressedColors(string unit)
         {
             var prefab = Resources.Load<GameObject>($"Prefabs/{unit}");
             var motion = prefab.GetComponentsInChildren<MonoBehaviour>(true)
                 .Single(component => component != null && component.GetType().Name == "UnitSpriteMotionController");
             var frames = (Sprite[])Get(motion, "moveFrames");
             var interval = (float)Get(motion, "moveFrameInterval");
-            Assert.AreEqual(6, frames.Length);
-            Assert.That(frames.Length * interval, Is.EqualTo(8f / 12f).Within(0.001f));
-            for (int i = 0; i < frames.Length; i++)
+            Assert.IsTrue(frames.All(frame => frame != null));
+            if (unit == "ArcaneInfantry")
             {
-                Assert.IsNotNull(frames[i]);
-                Assert.AreNotSame(frames[i], frames[(i + 1) % frames.Length]);
+                Assert.AreEqual(6, frames.Length);
+                Assert.That(frames.Length * interval, Is.EqualTo(8f / 12f).Within(0.001f));
+                for (int i = 0; i < frames.Length; i++)
+                    Assert.AreNotSame(frames[i], frames[(i + 1) % frames.Length]);
+            }
+            else
+            {
+                Assert.AreEqual(10, frames.Length);
+                Assert.That(frames.Length * interval, Is.EqualTo(10f / 12f).Within(0.001f));
+                Assert.AreNotSame(frames[0], frames[5]);
+                for (int i = 0; i < frames.Length; i += 5)
+                {
+                    Assert.AreSame(frames[i], frames[i + 1]);
+                    Assert.AreNotSame(frames[i + 1], frames[i + 2]);
+                    Assert.AreSame(frames[i + 2], frames[i + 3]);
+                    Assert.AreNotSame(frames[i + 3], frames[i + 4]);
+                }
             }
             foreach (var frame in frames.Append((Sprite)Get(motion, "idleSprite")).Distinct())
                 CollectionAssert.Contains(new[] { TextureFormat.RGBA32, TextureFormat.ARGB32, TextureFormat.RGB24 }, frame.texture.format, frame.name);
