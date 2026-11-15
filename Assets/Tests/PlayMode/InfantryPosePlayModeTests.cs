@@ -172,9 +172,9 @@ namespace WordOnline.Tests
                 CollectionAssert.AreEqual(new[]
                 {
                     "RockGolemStepNear", "RockGolemLoadNear", "RockGolemLoadNear",
-                    "RockGolemSupportNear", "RockGolemSupportNear",
+                    "RockGolemSupportNear", "RockGolemPassNear",
                     "RockGolemStepFar", "RockGolemLoadFar", "RockGolemLoadFar",
-                    "RockGolemSupportFar", "RockGolemSupportFar"
+                    "RockGolemPassFar", "RockGolemSupportFar"
                 }, frames.Select(frame => frame.name).ToArray());
                 Assert.That(frames.Length * interval, Is.EqualTo(10f / 12f).Within(0.001f));
             }
