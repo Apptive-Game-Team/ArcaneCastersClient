@@ -143,6 +143,7 @@ namespace GameScene
             if (!TryGetGroundPosition(Input.mousePosition, out Vector3 mouseWorldPos))
             {
                 rangeShapeRenderer.SetCircle(casterPosition, range, true, RangeIndicatorSortingOrder, 0f);
+                HideSkillIndicatorLayersFrom(0);
                 return;
             }
 

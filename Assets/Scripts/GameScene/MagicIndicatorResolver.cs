@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Data.GameConfig;
 using Data.Magic;
+using GameScene.Object;
+using GameScene.ServedObjectComponent;
 using Global;
 using Global.Serialization;
 using UnityEngine;
@@ -154,7 +156,7 @@ namespace GameScene
 
         /// <summary>
         /// <paramref name="aimPoint"/> 는 높이를 포함한 조준점이다. <paramref name="targetPosition"/> 은 그 발자국
-        /// (지면에 놓인 점)이라 circle 과 지면 lane 은 이것만 쓰고, <c>grounded: false</c> lane 만 aimPoint 의 높이를 쓴다.
+        /// (지면에 놓인 점)이다. objectCircles의 충돌 검사와 <c>grounded: false</c> lane은 조준점 높이를 사용한다.
         /// 유닛을 겨누지 않으면 둘은 같다.
         /// </summary>
         public static void Resolve(
@@ -187,10 +189,46 @@ namespace GameScene
                     continue;
                 }
 
-                if (TryResolveLayer(magic, layer, casterPosition, targetPosition, aimPoint, forward, range,
-                        out ResolvedIndicatorShape shape))
+                if (layer.Shape == MagicIndicatorShape.ObjectCircles)
+                {
+                    Vector3 selectionCenter = layer.Origin == MagicIndicatorOrigin.Caster ? casterPosition : aimPoint;
+                    AppendObjectCircles(magic, layer, selectionCenter, forward, shapes);
+                }
+                else if (TryResolveLayer(magic, layer, casterPosition, targetPosition, aimPoint, forward, range,
+                             out ResolvedIndicatorShape shape))
                 {
                     shapes.Add(shape);
+                }
+            }
+        }
+
+        private static void AppendObjectCircles(
+            CombinedMagicData magic, MagicIndicatorLayer layer, Vector3 selectionCenter, Vector3 forward,
+            List<ResolvedIndicatorShape> shapes)
+        {
+            ObjectContainer container = ObjectContainer.Instance;
+            if (container == null
+                || !TryResolveValue(magic, layer.selectionRadius, out float selectionRadius)
+                || selectionRadius < 0f
+                || !TryResolveCircle(magic, layer, Vector3.zero, forward, out ResolvedIndicatorShape circle)
+                || circle.radius <= 0f)
+            {
+                return;
+            }
+
+            foreach (ServedObject obj in container.Values)
+            {
+                if (obj == null || obj.IsDespawning || !layer.MatchesPrefab(obj.PrefabType)
+                    || !obj.TryGetGizmoRadius("Collider", out float colliderRadius))
+                {
+                    continue;
+                }
+
+                // 서버의 충돌 구 검사와 같은 3차원 거리와 반경 합을 사용한다.
+                Vector3 center = obj.transform.position;
+                if (Vector3.Distance(center, selectionCenter) < selectionRadius + colliderRadius)
+                {
+                    shapes.Add(ResolvedIndicatorShape.Circle(center + circle.origin, circle.radius, circle.edgeWidth));
                 }
             }
         }
