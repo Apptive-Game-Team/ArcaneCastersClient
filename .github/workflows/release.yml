@@ -256,8 +256,7 @@ jobs:
             Library-WebGL-
             Library-
 
-      # 릴리스는 프로덕션 빌드다. BuildScript.BuildWebGL 은 DEV_BUILD 를 끄고 굽는다.
-      # (deploy-test.yml 이 쓰는 BuildDevWebGL 은 DEV_BUILD 를 켠다.)
+      # BuildScript.BuildWebGL은 운영 로비를 기본값으로 사용한다.
       - name: Build WebGL
         uses: game-ci/unity-builder@v4
         env:
