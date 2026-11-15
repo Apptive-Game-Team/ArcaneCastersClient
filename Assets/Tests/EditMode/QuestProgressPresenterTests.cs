@@ -204,20 +204,21 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void OrdersAppearanceCatalogBySortOrderThenKey()
+        public void OrdersOwnedAppearancesFirstThenBySortOrderAndKey()
         {
             AppearanceDto[] ordered = AppearanceCatalog.Order(new[]
             {
                 new AppearanceDto { key = "tide", sortOrder = 2 },
                 new AppearanceDto { key = "storm", sortOrder = 1 },
                 new AppearanceDto { key = "blaze", sortOrder = 1 },
+                new AppearanceDto { key = "corrupted_finn", sortOrder = 7, owned = true },
                 new AppearanceDto { key = " ", sortOrder = 0 },
                 null,
                 new AppearanceDto { key = "default", sortOrder = 0, owned = true, selected = true },
             });
 
             CollectionAssert.AreEqual(
-                new[] { "default", "blaze", "storm", "tide" },
+                new[] { "default", "corrupted_finn", "blaze", "storm", "tide" },
                 System.Array.ConvertAll(ordered, appearance => appearance.key));
             Assert.AreEqual("default", AppearanceCatalog.FindSelectedKey(ordered, "fallback"));
         }
