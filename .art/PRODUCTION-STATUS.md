@@ -40,6 +40,7 @@
 | `FireTadpole.png` | `concept-art/fire-tadpole.webp` | 차원 유랑종 화산편 방향 적용 |
 | `RockGolem.png` | `concept-art/rock-golem.webp` | 이끼바위 골렘 기본 자세 |
 | `RockGolemStepFar.png` | 클라이언트 PR #457 | 반대쪽 발을 앞으로 내딛는 보행 자세. 기존 256×244 RGBA, Bottom Center 피벗을 사용한다. |
+| `RockGolemSupportNear.png`, `RockGolemSupportFar.png` | 클라이언트 PR #457 | 가까운 다리와 먼 다리가 각각 몸을 받치는 보행 중간 자세. 256×244 RGBA, Bottom Center 피벗이다. |
 | `RockGolem2.png` | `game-assets/rock-golem-attack.webp` | 이끼바위 골렘 공격 자세 |
 | `RockRemnant.png` | `game-assets/rock-remnant.webp` | 사망 후 이동 방해 잔해 |
 | `EarthCall.png` | 클라이언트 PR #181 검수 | 돌 골렘 재사용 이미지를 돌무더기 각성 마법 전용 아트로 교체. `MasterStyleKey.png`·`RockGolem.png`·`ArcaneImpact.png` 고정 앵커를 사용한 2.5D cut-paper 효과다. v2는 내용 비율이 1.01이라 기존 0.89보다 넓어 반려했고, v3는 생성물 0.867·최종 내용 207x238로 원본 212x238과 2.4% 이내다. 최종 256x244 RGBA, Bottom Center, 바닥 여백 0px, 네 모서리 alpha 0, 투명 60.8%, 불투명 픽셀의 magenta 잔색 0, 64px 실루엣 검수 완료 |

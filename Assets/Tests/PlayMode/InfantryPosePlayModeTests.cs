@@ -167,6 +167,17 @@ namespace WordOnline.Tests
                 for (int i = 0; i < frames.Length; i++)
                     Assert.AreNotSame(frames[i], frames[(i + 1) % frames.Length]);
             }
+            else if (unit == "RockGolem")
+            {
+                CollectionAssert.AreEqual(new[]
+                {
+                    "RockGolemStepNear", "RockGolemStepNear",
+                    "RockGolemSupportNear", "RockGolemSupportNear", "RockGolemSupportNear",
+                    "RockGolemStepFar", "RockGolemStepFar",
+                    "RockGolemSupportFar", "RockGolemSupportFar", "RockGolemSupportFar"
+                }, frames.Select(frame => frame.name).ToArray());
+                Assert.That(frames.Length * interval, Is.EqualTo(10f / 12f).Within(0.001f));
+            }
             else
             {
                 Assert.AreEqual(10, frames.Length);
