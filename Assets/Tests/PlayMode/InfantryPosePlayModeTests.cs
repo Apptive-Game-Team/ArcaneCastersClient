@@ -171,12 +171,13 @@ namespace WordOnline.Tests
             {
                 CollectionAssert.AreEqual(new[]
                 {
-                    "RockGolemStepNear", "RockGolemLoadNear", "RockGolemLoadNear",
-                    "RockGolemSupportNear", "RockGolemPassNear",
-                    "RockGolemStepFar", "RockGolemLoadFar", "RockGolemLoadFar",
-                    "RockGolemPassFar", "RockGolemSupportFar"
-                }, frames.Select(frame => frame.name).ToArray());
-                Assert.That(frames.Length * interval, Is.EqualTo(10f / 12f).Within(0.001f));
+                    ("RockGolemStepNear", 2), ("RockGolemLoadNear", 5),
+                    ("RockGolemSupportNear", 1), ("RockGolemPassNear", 2),
+                    ("RockGolemStepFar", 2), ("RockGolemLoadFar", 5),
+                    ("RockGolemPassFar", 2), ("RockGolemSupportFar", 1)
+                }.SelectMany(pose => Enumerable.Repeat(pose.Item1, pose.Item2)),
+                    frames.Select(frame => frame.name).ToArray());
+                Assert.That(frames.Length * interval, Is.EqualTo(20f / 24f).Within(0.001f));
             }
             else
             {

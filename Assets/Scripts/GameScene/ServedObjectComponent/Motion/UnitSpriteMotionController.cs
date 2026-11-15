@@ -246,7 +246,7 @@ namespace GameScene.ServedObjectComponent.Motion
                 int frame = Mathf.FloorToInt((now - movementStarted) / moveInterval) % moveFrames.Length;
                 return moveFrames[frame];
             }
-            if (now < movementUntil + moveInterval)
+            if (now < movementUntil + Mathf.Max(moveInterval, FrameDuration))
             {
                 return moveStopFrame;
             }
