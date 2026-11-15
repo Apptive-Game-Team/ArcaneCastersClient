@@ -229,6 +229,12 @@ namespace GameScene.ServedObjectComponent.Motion
             {
                 return spawnFrame;
             }
+            if (activeAttackFrames != null)
+            {
+                activeAttackFrames = null;
+                // 복귀 자세 뒤에는 이동 루프를 첫 자세부터 잇는다.
+                movementStarted = now;
+            }
             float moveInterval = moveFrameInterval > 0f ? moveFrameInterval : FrameDuration;
             if ((now < movementUntil || loopMovementAtRest) && moveFrames != null && moveFrames.Length > 0)
             {

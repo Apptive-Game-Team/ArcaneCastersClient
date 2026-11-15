@@ -141,7 +141,7 @@ MonoBehaviour:
   hurtFrames:
   - {fileID: 21300000, guid: 937caf1451644f3fb243cd72ce9506b2, type: 3}
   - {fileID: 21300000, guid: 937caf1451644f3fb243cd72ce9506b2, type: 3}
-  - {fileID: 21300000, guid: 042f782d347a4f26adb6297ca257b1ea, type: 3}
+  - {fileID: 21300000, guid: d21f4d4790e14ec9ab02562bab4a5737, type: 3}
   dyingSprite: {fileID: 21300000, guid: d38406e3b5c742ceb930ee13b52ac23a, type: 3}
   deathFrames:
   - {fileID: 21300000, guid: 0aa49f5434b34a9a961a36881be93769, type: 3}
