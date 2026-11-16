@@ -69,6 +69,8 @@ namespace DevPlayground {
             BalanceLabWindow.SetLabel(host.clearAllButton, "재시작 / 다시 연결");
             BalanceLabWindow.SetLabel(host.closeButton, "테스트 종료");
             host.targetText.enableWordWrapping = false;
+            host.targetText.fontSize = 14;
+            host.targetText.margin = Vector4.zero;
             host.targetText.overflowMode = TMPro.TextOverflowModes.Ellipsis;
             host.targetText.text = "마법 선택 후 전장을 클릭하세요.";
             world = new GameObject("Balance Presentation").AddComponent<PresentationWorld>();

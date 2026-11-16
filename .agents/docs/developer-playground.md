@@ -82,3 +82,6 @@ Run `BalanceLabValidation.Validate` with the loopback server available. It verif
 actual field casting, server pause, candidate restart, export and replay in Play
 Mode. Captures go under `Logs`, since Unity deletes `Temp` when the batch Editor
 exits. Keep generated font atlas changes out of the feature commit.
+When reusing a button's TMP label in a short status row, reset its inherited
+margins before enabling ellipsis. The 25-pixel balance target row showed only
+`...` because its inherited top/bottom margins left too little line height.

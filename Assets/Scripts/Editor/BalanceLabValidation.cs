@@ -64,6 +64,7 @@ public static class BalanceLabValidation {
                     break;
                 case 2:
                     if (EditorApplication.timeSinceStartup - phaseTime < 1.0) return;
+                    Require(!host.targetText.isTextTruncated, "Selected magic name is truncated.");
                     Require(UnityEngine.Object.FindObjectsOfType<ServedObject>().Length > initialBodies,
                         "Field click did not create a production unit through HTTP.");
                     host.immuneAllyButton.onClick.Invoke();
