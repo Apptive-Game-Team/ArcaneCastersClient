@@ -61,3 +61,24 @@ Do not merely disable ordinary match/network components in the generated scene.
 Disabled MonoBehaviours still run Awake: PingSender dereferenced MatchInfo before
 the independent session was ready and StompConnector created another transport.
 Remove those components; preserve FieldSelector disabled only for its ground raycast.
+
+## Balance Test
+
+Open `Tools > ArcaneCasters > Balance Test` for the login-free local balance scene.
+Start Rust `ac-balance serve <snapshot.json> <suite.json>` first; the default port
+is 6211 on loopback only. The scene generator reuses this playground's prefab UI
+and GameScene framing. `PlaygroundHost.balanceMode` chooses the balance controller.
+Both generated scenes and the host stay excluded from all player builds.
+
+Use the catalog's snapshot values and selected overrides on a dedicated
+`PresentationWorld`. Do not use the logged-in parameter cache: a local candidate
+can have different aura radii. Reuse native prefab rendering and frame dispatch.
+Filter `Wall` from presentation creation and snapshots: it is a server boundary
+collider with no client prefab. Passing it to an isolated world throws
+`Missing runtime prefab: Wall` and stops initial playback. Retain the boundary in
+the Rust simulation.
+
+Run `BalanceLabValidation.Validate` with the loopback server available. It verifies
+actual field casting, server pause, candidate restart, export and replay in Play
+Mode. Captures go under `Logs`, since Unity deletes `Temp` when the batch Editor
+exits. Keep generated font atlas changes out of the feature commit.
