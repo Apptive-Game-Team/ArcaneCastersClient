@@ -11,11 +11,11 @@ namespace WordOnline.Tests
             new ConnectAttemptSchedule(maxAttempts: 3, attemptSeconds: 2f, loopStallSeconds: 0.5f);
 
         [Test]
-        public void DefaultSchedule_WaitsForTenSecondsBeforeFirstRetry()
+        public void DefaultSchedule_WaitsForTwentySecondsBeforeFirstRetry()
         {
             var schedule = new ConnectAttemptSchedule();
-            Assert.That(ConnectAttemptSchedule.DefaultAttemptSeconds, Is.EqualTo(10f));
-            for (int quarterSeconds = 1; quarterSeconds < 40; quarterSeconds++)
+            Assert.That(ConnectAttemptSchedule.DefaultAttemptSeconds, Is.EqualTo(20f));
+            for (int quarterSeconds = 1; quarterSeconds < 80; quarterSeconds++)
                 Assert.That(schedule.Advance(0.25f), Is.EqualTo(ConnectAttemptDecision.Wait),
                     $"{quarterSeconds * 0.25f}초에는 진행 중인 연결을 기다려야 합니다.");
             Assert.That(schedule.Attempt, Is.EqualTo(1));

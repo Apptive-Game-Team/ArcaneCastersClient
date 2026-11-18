@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using Data;
 using Global;
 using Global.Stomp;
@@ -228,6 +230,86 @@ namespace WordOnline.Tests
             return new MatchedInfoDto { sessionId = sessionId, server = "https://game.example.test" };
         }
 
+        [UnityTest]
+        public IEnumerator StartProtocol_WaitsForBothConnectionsAndAcknowledgesOnlyAppliedSnapshot()
+        {
+            var match = Match("prepared");
+            match.startProtocolVersion = 1;
+            var connection = CreateConnection(match, out var transport);
+            transport.ConnectImmediately = true;
+            bool? completed = null;
+            connection.StartCoroutine(connection.Prepare(match, owner, value => completed = value));
+            yield return null;
+            transport.Control("waiting", "epoch-1");
+            yield return null;
+            Assert.That(completed, Is.Null);
+            Assert.That(connection.HasStarted, Is.False);
+            transport.Control("loadGame", "epoch-1");
+            yield return null;
+            Assert.That(completed, Is.True);
+            connection.ClaimForGameplay();
+            bool applySucceeds = false;
+            connection.ApplyStartSnapshot = _ => applySucceeds;
+            transport.Control("snapshot", "epoch-1");
+            Assert.That(transport.SentTypes, Does.Not.Contain("startReady"));
+            connection.MarkSceneReady();
+            transport.Control("snapshot", "epoch-1");
+            Assert.That(transport.SentTypes, Does.Not.Contain("startReady"));
+            applySucceeds = true;
+            transport.Control("snapshot", "epoch-1");
+            Assert.That(transport.SentTypes, Does.Contain("startReady"));
+            Assert.That(connection.HasStarted, Is.False);
+            transport.Control("countdown", "epoch-1", 3);
+            Assert.That(connection.PreparationPhase, Is.EqualTo("countdown"));
+            Assert.That(connection.Countdown, Is.EqualTo(3));
+            Assert.That(connection.HasStarted, Is.False);
+            transport.Control("countdown", "epoch-1", 2);
+            transport.Control("countdown", "epoch-1", 1);
+            Assert.That(connection.Countdown, Is.EqualTo(1));
+            Assert.That(connection.HasStarted, Is.False);
+            transport.Control("running", "epoch-1");
+            Assert.That(connection.HasStarted, Is.True);
+            transport.Disconnect();
+            Assert.That(connection.HasStarted, Is.False);
+            transport.SignalConnected();
+            transport.Control("running", "epoch-2");
+            Assert.That(connection.HasStarted, Is.False, "재접속은 새 snapshot을 적용해야 합니다.");
+        }
+
+        [UnityTest]
+        public IEnumerator SceneHandoff_PreservesConnectionBeforeGameplayAwake()
+        {
+            var match = Match("scene-loading");
+            var connection = CreateConnection(match, out var transport);
+            transport.ConnectImmediately = true;
+            yield return connection.Prepare(match, owner, _ => { });
+            connection.BeginSceneLoad();
+            Object.Destroy(owner);
+            yield return null;
+            yield return null;
+            Assert.That(connection != null, Is.True);
+            Assert.That(transport.IsConnected, Is.True);
+            connection.ClaimForGameplay();
+        }
+
+        [UnityTest]
+        public IEnumerator StartProtocol_UsesAbsolutePreparationDeadline()
+        {
+            var match = Match("preparation-timeout");
+            match.startProtocolVersion = 1;
+            var connection = CreateConnection(match, out var transport);
+            transport.ConnectImmediately = true;
+            bool? completed = null;
+            connection.StartCoroutine(connection.Prepare(match, owner, value => completed = value));
+            yield return null;
+            typeof(GameServerConnection).GetField("preparationDeadline", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(connection, Time.realtimeSinceStartup - 1f);
+            yield return null;
+            yield return null;
+            Assert.That(completed, Is.False);
+            Assert.That(transport.IsConnected, Is.False);
+        }
+
         private static GameServerConnection CreateConnection(MatchedInfoDto match, out FakeTransport transport)
         {
             var connection = GameServerConnection.ForMatch(match);
@@ -249,7 +331,15 @@ namespace WordOnline.Tests
             public event Action Connected;
             public event Action<string> Disconnected;
             public event Action<string> Errored;
-            public event Action<string, string> MessageReceived { add { } remove { } }
+            public event Action<string, string> MessageReceived;
+            public readonly List<string> SentTypes = new List<string>();
+
+            public void Control(string phase, string epoch, int count = 0)
+            {
+                var response = new JObject { ["countdown"] = count, ["version"] = 1, ["phase"] = phase, ["epoch"] = epoch,
+                    ["snapshotToken"] = epoch + "-snapshot", ["snapshot"] = new JObject() };
+                MessageReceived?.Invoke("start-sub", response.ToString());
+            }
 
             public void Connect(string url, string token)
             {
@@ -277,7 +367,7 @@ namespace WordOnline.Tests
                 LastSubscribedTopic = topic;
             }
             public void Unsubscribe(string subscriptionId) { }
-            public void Send(string topic, string message) { }
+            public void Send(string topic, string message) { SentTypes.Add((string)JObject.Parse(message)["type"]); }
         }
     }
 }

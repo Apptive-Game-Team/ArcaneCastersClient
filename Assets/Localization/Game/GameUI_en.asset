@@ -30,6 +30,94 @@ MonoBehaviour:
     m_Localized: Connection to the game server is unstable. Returning to the lobby.
     m_Metadata:
       m_Items: []
+  - m_Id: 38521835636121601
+    m_Localized: Preparing the game…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121602
+    m_Localized: Connecting to the battlefield…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121603
+    m_Localized: Waiting for the other player…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121604
+    m_Localized: Loading the battlefield…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121605
+    m_Localized: Setting the river in place…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121606
+    m_Localized: Setting up the cards and battlefield…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121607
+    m_Localized: The match is starting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121608
+    m_Localized: Go!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121609
+    m_Localized: Restoring the connection…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121610
+    m_Localized: Reconnecting to the battlefield…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121611
+    m_Localized: Couldn’t connect to the game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121612
+    m_Localized: Unable to join the battlefield.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121613
+    m_Localized: The game took too long to get ready.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121614
+    m_Localized: The match start signal didn’t arrive.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121615
+    m_Localized: Unable to reconnect to the battlefield.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121616
+    m_Localized: Player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121617
+    m_Localized: Leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121618
+    m_Localized: Try again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121619
+    m_Localized: Preparing the adventure…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121620
+    m_Localized: Waiting for the adventure to begin…
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121621
+    m_Localized: The adventure is starting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121622
+    m_Localized: Stage {0} / Scenario {1}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
