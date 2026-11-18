@@ -10,6 +10,15 @@ namespace WordOnline.Tests
     public class UserAppearanceTests
     {
         [Test]
+        public void MatchingMmrDistinguishesZeroFromUnknown()
+        {
+            var known = JsonCodec.Deserialize<User>("{\"id\":7,\"matchMmr\":0}");
+            var unknown = JsonCodec.Deserialize<User>("{\"id\":7}");
+            Assert.That(known.matchMmr, Is.EqualTo(0));
+            Assert.That(unknown.matchMmr, Is.Null);
+        }
+
+        [Test]
         public void GameUserParsesAppearance()
         {
             GameUser gameUser = JsonCodec.Deserialize<GameUser>("{\"id\":7,\"selectedDeckId\":3,\"mmr\":10,\"appearance\":\"storm\"}");

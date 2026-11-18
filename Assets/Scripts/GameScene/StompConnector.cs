@@ -23,21 +23,21 @@ namespace GameScene
     ///     ├─ ConnectAttemptSchedule     ← 최초 연결 재시도 예산
     ///     └─ FrameSilenceWatch          ← FrameInfo 무음 단계 판정
     ///
-    /// 끊김 처리는 두 단계다. 무음 1초에는 씬을 유지한 채 제자리 재연결만 시도하고,
-    /// 무음 3초 또는 재연결 사다리 소진에서 세션을 신고하고 메인으로 돌아간다.
+    /// 끊김 처리는 두 단계다. 무음 5초에는 씬을 유지한 채 제자리 재연결만 시도하고,
+    /// 무음 30초 또는 재연결 사다리 소진에서 세션을 신고하고 메인으로 돌아간다.
     /// </summary>
     public class StompConnector : LocalSingletonObject<StompConnector>
     {
         private const string StompPath = "ws";
         private const string MessageTable = "SystemMessageUI";
 
-        /// <summary>인게임 재연결 간격(초). 합이 무음 3초 이탈 예산 안에 들어가야 한다.</summary>
-        private static readonly float[] DefaultReconnectDelays = { 0f, 0.5f, 1f };
+        /// <summary>인게임 재연결 간격(초). 무응답을 신고하기 전까지 단계적으로 재시도한다.</summary>
+        private static readonly float[] DefaultReconnectDelays = { 0f, 2f, 5f, 10f, 10f, 10f };
 
         [SerializeField] private bool isSpectator;
 
-        [Tooltip("인게임 재연결 간격(초). 비워두면 즉시 → 0.5초 → 1초를 쓴다.")]
-        [SerializeField] private float[] inGameReconnectDelays = { 0f, 0.5f, 1f };
+        [Tooltip("인게임 재연결 간격(초). 비워두면 즉시 → 2초 → 5초 → 10초 간격을 쓴다.")]
+        [SerializeField] private float[] inGameReconnectDelays = { 0f, 2f, 5f, 10f, 10f, 10f };
 
         public LocalizedString notConnectedToServer;
         public LocalizedString connectionClosed;
@@ -53,6 +53,7 @@ namespace GameScene
 
         private IStompTransport _transport;
         private GameServerConnection _connection;
+        private GamePreparationOverlay preparationOverlay;
         private StompSubscriptionRegistry _registry;
         private StompReconnectController _reconnect;
 
@@ -84,10 +85,12 @@ namespace GameScene
         public bool HasMatchEnded => _matchEnded;
 
         public bool MatchEnded => _matchEnded;
+        public bool IsPreparing => !_matchEnded && ((preparationOverlay != null && preparationOverlay.IsVisible) ||
+            (_connection != null && _connection.UsesStartProtocol && !_connection.HasStarted));
 
         public bool TrySurrender()
         {
-            if (isSpectator || _matchEnded || _transport == null || !_transport.IsConnected ||
+            if (isSpectator || _matchEnded || IsPreparing || _transport == null || !_transport.IsConnected ||
                 string.IsNullOrEmpty(SceneContext.MatchInfo?.sessionId)) return false;
             SendMessageToServer($"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}",
                 "{\"type\":\"surrender\"}");
@@ -110,14 +113,26 @@ namespace GameScene
             _registry = new StompSubscriptionRegistry();
             _reconnect = gameObject.AddComponent<StompReconnectController>();
 
-            // 이탈 예산이 3초뿐이라 기본 지수 백오프(1→2→4→8→16초)로는 첫 재시도도 들어가지 않는다.
+            // 이탈 예산이 30초이라 기본 지수 백오프(1→2→4→8→16초)로는 첫 재시도도 들어가지 않는다.
             _reconnect.UseFixedSchedule(
-                inGameReconnectDelays != null && inGameReconnectDelays.Length > 0
+                inGameReconnectDelays != null && inGameReconnectDelays.Length >= 5
                     ? inGameReconnectDelays
                     : DefaultReconnectDelays);
 
             _connection = GameServerConnection.ForMatch(SceneContext.MatchInfo);
-            _connection.ClaimForGameplay();
+            _connection.ClaimForGameplay(isSpectator);
+            _connection.ApplyStartSnapshot = TryApplyStartSnapshot;
+            if (_connection.UsesStartProtocol)
+            {
+                preparationOverlay = GamePreparationOverlay.Show(SceneContext.MatchInfo);
+                if (preparationOverlay != null)
+                {
+                    preparationOverlay.OnCancel += CancelPreparation;
+                    preparationOverlay.OnRetry += RetryPreparation;
+                }
+                _connection.PreparationChanged += RenderPreparation;
+                RenderPreparation(_connection.PreparationPhase, _connection.Countdown);
+            }
             _transport = _connection.Transport;
 
             _transport.Connected += HandleConnected;
@@ -157,7 +172,12 @@ namespace GameScene
                 _transport.Errored -= HandleError;
                 _transport.MessageReceived -= _registry.Dispatch;
             }
-            if (_connection != null) _connection.Close();
+            if (_connection != null)
+            {
+                _connection.PreparationChanged -= RenderPreparation;
+                _connection.Close();
+            }
+            if (preparationOverlay != null) Destroy(preparationOverlay.gameObject);
         }
 
         /// <summary>
@@ -175,6 +195,7 @@ namespace GameScene
         public void ConnectToServer()
         {
             if (_intentionalDisconnect || _matchEnded) return;
+            if (_connection.UsesStartProtocol) { _connection.EnsureStartConnection(); return; }
 
             float now = Time.unscaledTime;
             switch (_connectGate.Decide(_transport.IsConnected, now))
@@ -218,6 +239,7 @@ namespace GameScene
 
         public void SendMessageToServer(string topic, string message)
         {
+            if (_connection.UsesStartProtocol && !_connection.HasStarted) return;
             if (!_transport.IsConnected)
             {
                 SystemMessageUI.Instance.ShowMessage(notConnectedToServer);
@@ -229,7 +251,7 @@ namespace GameScene
 
         public bool TrySendCardHover(bool hovering)
         {
-            if (isSpectator || _matchEnded || _transport == null || !_transport.IsConnected
+            if (isSpectator || _matchEnded || IsPreparing || _transport == null || !_transport.IsConnected
                 || string.IsNullOrEmpty(SceneContext.MatchInfo?.sessionId)) return false;
             string destination = $"/app/game/input/{SceneContext.MatchInfo.sessionId}/{SceneContext.UserID}";
             _transport.Send(destination, hovering
@@ -276,12 +298,15 @@ namespace GameScene
             yield return AwaitConnection();
             if (!_transport.IsConnected) yield break;
 
+            // 씬의 다른 컴포넌트 Start가 끝난 다음 준비 완료를 보낸다.
+            yield return null;
             UnsubscribeFromTopic("match-sub");
             long userId = isSpectator ? 0 : SceneContext.UserID;
             _pveSync.Reset();
             SubscribeToTopic($"/game/{sessionId}/frameInfos/{userId}", OnFrameInfoReceived, "frame-sub");
             _frameSubscribed = true;
-            RequestPveSync();
+            if (_connection.UsesStartProtocol) _connection.MarkSceneReady();
+            else RequestPveSync();
 
             yield return WatchFrameSilence();
         }
@@ -291,6 +316,19 @@ namespace GameScene
         /// </summary>
         private IEnumerator AwaitConnection()
         {
+            if (_connection.UsesStartProtocol)
+            {
+                while (!_transport.IsConnected)
+                {
+                    if (_connection.StartFailed)
+                    {
+                        _connection.CancelPreparation();
+                        yield return AbandonSession(SessionLossReason.ConnectTimeout, _connection.RetryPreparation);
+                    }
+                    yield return null;
+                }
+                yield break;
+            }
             while (!_transport.IsConnected)
             {
                 yield return null;
@@ -334,6 +372,23 @@ namespace GameScene
                 yield return null;
 
                 if (_matchEnded) yield break;
+                if (_connection.UsesStartProtocol && !_connection.HasStarted)
+                {
+                    if (_connection.StartFailed)
+                    {
+                        SystemMessageUI.Instance?.ShowMessage(connectionClosed);
+                        _connection.CancelPreparation();
+                        yield return AbandonSession(SessionLossReason.ConnectTimeout, _connection.RetryPreparation);
+                    }
+                    _silence.NoteSignal(Time.unscaledTime);
+                    continue;
+                }
+                if (_connection.UsesStartProtocol && !_startStateRestored)
+                {
+                    _startStateRestored = true;
+                    _silence.NoteSignal(Time.unscaledTime);
+                    RequestPveSync();
+                }
 
                 SilenceEscalation escalation = _silence.Tick(Time.unscaledTime, Time.unscaledDeltaTime);
                 if (escalation == SilenceEscalation.None) continue;
@@ -342,7 +397,8 @@ namespace GameScene
                 {
                     WDebug.LogWarning($"[STOMP] FrameInfo 무음 {_silence.SilenceSeconds(Time.unscaledTime):F1}초 – 제자리 재연결");
                     SystemMessageUI.Instance.ShowMessage(reconnecting);
-                    _reconnect.NotifyConnectionLost();
+                    if (_connection.UsesStartProtocol) _connection.RecoverSilentConnection();
+                    else _reconnect.NotifyConnectionLost();
                     continue;
                 }
 
@@ -359,8 +415,42 @@ namespace GameScene
             }
         }
 
+        private void RenderPreparation(string phase, int count)
+        {
+            if (_matchEnded || preparationOverlay == null) return;
+            preparationOverlay.Render(phase, count);
+            if (phase == "running") preparationOverlay.HideAfterStarted();
+        }
+
+        private void CancelPreparation()
+        {
+            if (_reportingSessionLoss || _matchEnded) return;
+            StartCoroutine(CancelPreparationAndReport());
+        }
+
+        private IEnumerator CancelPreparationAndReport()
+        {
+            _connection.CancelPreparation();
+            yield return new WaitForSecondsRealtime(0.2f);
+            yield return AbandonSession(SessionLossReason.ConnectTimeout, _connection.RetryPreparation);
+        }
+
+        private void RetryPreparation()
+        {
+            if (!_reportingSessionLoss && !_matchEnded) _connection.RetryPreparation();
+        }
+
+        private bool _startStateRestored;
+
+        private bool TryApplyStartSnapshot(string json)
+        {
+            if (!Global.Serialization.JsonCodec.TryDeserialize(json, out SyncFrameInfo sync)) return false;
+            return new SyncFrameHandler().TryApplyInitial(sync);
+        }
+
         private void OnFrameInfoReceived(string json)
         {
+            if (_connection.UsesStartProtocol && !_connection.HasStarted) return;
             _silence.NoteSignal(Time.unscaledTime);
             _frameInfoHandler.Handler(json);
         }
@@ -375,7 +465,8 @@ namespace GameScene
             _registry.ResubscribeAll(_transport);
             if (_frameSubscribed)
             {
-                RequestPveSync();
+                if (_connection.UsesStartProtocol) { _startStateRestored = false; _connection.MarkSceneReady(); }
+                else RequestPveSync();
             }
         }
 
@@ -403,6 +494,7 @@ namespace GameScene
                 return;
             }
 
+            if (_connection.UsesStartProtocol) { _startStateRestored = false; return; }
             SystemMessageUI.Instance.ShowMessage(connectionClosed);
             _reconnect.NotifyConnectionLost();
         }
@@ -414,13 +506,14 @@ namespace GameScene
 
             if (_intentionalDisconnect || _matchEnded) return;
 
+            if (_connection.UsesStartProtocol) { _startStateRestored = false; return; }
             SystemMessageUI.Instance.ShowMessage(connectionDelayed);
             _reconnect.NotifyConnectionLost();
         }
 
         private void HandleMaxRetriesExceeded()
         {
-            if (_matchEnded) return;
+            if (_matchEnded || _connection.UsesStartProtocol) return;
 
             WDebug.LogError("[STOMP] 재연결 불가 – 최대 횟수 초과");
             StartCoroutine(AbandonSession(SessionLossReason.ReconnectAttemptsExhausted, RetryFromScratch));

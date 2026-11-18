@@ -70,6 +70,7 @@ namespace GameScene.Card
 
         private void Update()
         {
+            if (StompConnector.Instance != null && StompConnector.Instance.IsPreparing) return;
             if (GameMenu.BlocksGameplayInput) return;
             if (Input.GetMouseButtonDown(1))
             {

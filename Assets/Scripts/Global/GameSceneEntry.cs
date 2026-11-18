@@ -9,7 +9,7 @@ namespace Global
 {
     public static class GameSceneEntry
     {
-        /// <summary>STOMP CONNECTED를 받은 연결을 유지한 채 게임 씬을 연다.</summary>
+        /// <summary>준비 프로토콜을 지원하면 씬을 먼저 열고 준비 화면 뒤에서 연결한다.</summary>
         public static IEnumerator PrepareAndLoad(UnityEngine.Object owner, Action onFailure = null,
             string sceneName = "GameScene")
         {
@@ -26,6 +26,12 @@ namespace Global
                 onFailure?.Invoke();
                 yield break;
             }
+            if (match.startProtocolVersion == 1)
+            {
+                connection.BeginSceneLoad();
+                yield return SceneManager.LoadSceneAsync(sceneName);
+                yield break;
+            }
             bool ready = false;
             yield return connection.Prepare(match, owner, result => ready = result);
             if (!ready || owner == null || !ReferenceEquals(SceneContext.MatchInfo, match) ||
@@ -40,6 +46,7 @@ namespace Global
                 yield break;
             }
             // 연결 안내를 표시한 프레임을 유지하면서 씬을 준비한다.
+            connection.BeginSceneLoad();
             yield return SceneManager.LoadSceneAsync(sceneName);
         }
     }

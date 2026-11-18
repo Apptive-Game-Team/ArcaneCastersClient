@@ -11,7 +11,28 @@ namespace GameScene.Handler
     {
         private readonly GameEventHandler gameEventHandler = new GameEventHandler();
 
-        public void Handler(SyncFrameInfo syncFrameInfo)
+        public void Handler(SyncFrameInfo syncFrameInfo) => Apply(syncFrameInfo, false);
+
+        public bool TryApplyInitial(SyncFrameInfo sync)
+        {
+            if (sync?.snapshotResponseDto?.objects == null || sync.snapshotResponseDto.myCards == null ||
+                GameSceneUIController.Instance == null || ObjectSyncer.Instance == null ||
+                ObjectContainer.Instance == null || TimerController.Instance == null) return false;
+            try
+            {
+                Apply(sync, true);
+                var actual = GameSceneUIController.Instance.GetAllCards().OrderBy(id => id);
+                var expected = sync.snapshotResponseDto.myCards.OrderBy(id => id);
+                return actual.SequenceEqual(expected) && sync.snapshotResponseDto.objects.All(obj => ObjectContainer.Instance.IsExist(obj.id));
+            }
+            catch (System.Exception error)
+            {
+                WDebug.LogWarning($"[SessionStart] 초기 상태 적용 실패: {error.Message}");
+                return false;
+            }
+        }
+
+        private void Apply(SyncFrameInfo syncFrameInfo, bool strict)
         {
             if (syncFrameInfo?.snapshotResponseDto == null)
             {
@@ -59,6 +80,7 @@ namespace GameScene.Handler
             }
             catch
             {
+                if (strict) throw;
                 WDebug.Log("[SyncFrameHandler] 카드 추가 중 오류 발생");
             }
  

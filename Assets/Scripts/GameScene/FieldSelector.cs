@@ -117,6 +117,7 @@ namespace GameScene
 
         void Update()
         {
+            if (StompConnector.Instance != null && StompConnector.Instance.IsPreparing) return;
             if (!CardInputSender.Instance.IsFieldSelectMode())
             {
                 if (currentAimObj.activeSelf) currentAimObj.SetActive(false);

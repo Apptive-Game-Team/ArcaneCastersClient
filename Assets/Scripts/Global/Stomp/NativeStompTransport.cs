@@ -27,6 +27,7 @@ namespace Global.Stomp
         private CancellationTokenSource _cts;
 
         private int _generation;
+        private readonly SemaphoreSlim sendLock = new SemaphoreSlim(1, 1);
 
         // 백그라운드 스레드 → 메인 스레드 디스패치 큐
         private readonly Queue<Action> _mainThreadQueue = new Queue<Action>();
@@ -254,13 +255,17 @@ namespace Global.Stomp
             if (socket == null || !IsCurrent(socket, generation) || socket.State != WebSocketState.Open) return;
             try
             {
-                byte[] bytes = Encoding.UTF8.GetBytes(frame);
-                await socket.SendAsync(
-                    new ArraySegment<byte>(bytes),
-                    WebSocketMessageType.Text,
-                    true,
-                    cancellationToken
-                );
+                // ClientWebSocket은 동시에 여러 SendAsync를 실행할 수 없다.
+                // SUBSCRIBE와 바로 뒤 ready가 같은 순서로 전송되게 한다.
+                await sendLock.WaitAsync(cancellationToken);
+                try
+                {
+                    if (!IsCurrent(socket, generation) || socket.State != WebSocketState.Open) return;
+                    byte[] bytes = Encoding.UTF8.GetBytes(frame);
+                    await socket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text,
+                        true, cancellationToken);
+                }
+                finally { sendLock.Release(); }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {

@@ -27,6 +27,94 @@ MonoBehaviour:
     m_Key: TimeoutMessage
     m_Metadata:
       m_Items: []
+  - m_Id: 38521835636121601
+    m_Key: Preparation.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121602
+    m_Key: Preparation.Connecting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121603
+    m_Key: Preparation.Waiting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121604
+    m_Key: Preparation.Loading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121605
+    m_Key: Preparation.River
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121606
+    m_Key: Preparation.Applying
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121607
+    m_Key: Preparation.Ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121608
+    m_Key: Preparation.Start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121609
+    m_Key: Preparation.ReconnectTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121610
+    m_Key: Preparation.Reconnecting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121611
+    m_Key: Preparation.FailedTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121612
+    m_Key: Preparation.ConnectionFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121613
+    m_Key: Preparation.TimedOut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121614
+    m_Key: Preparation.HandshakeFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121615
+    m_Key: Preparation.RecoveryFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121616
+    m_Key: Preparation.Player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121617
+    m_Key: Preparation.Leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121618
+    m_Key: Preparation.Retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121619
+    m_Key: Preparation.AdventureTitle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121620
+    m_Key: Preparation.AdventureWaiting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121621
+    m_Key: Preparation.AdventureReady
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38521835636121622
+    m_Key: Preparation.AdventureStage
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

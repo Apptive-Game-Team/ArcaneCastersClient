@@ -13,7 +13,7 @@ namespace LobbyScene
 {
     public class MatchQueueApiService : MonoBehaviour
     {
-        private const int TicketRequestTimeoutSeconds = 8;
+        private const int TicketRequestTimeoutSeconds = 20;
         private static ServerEndpoint MatchTickets =>
             ServerList.MatchingServer.Api.Path("api", "match", "tickets");
 
