@@ -75,7 +75,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000014
-    m_Localized: "Whips up a dust storm at the target point that lingers and keeps damaging every enemy standing inside it. It only reaches ground enemies."
+    m_Localized: "Creates a sandstorm that continuously damages and slows enemies inside it. Damage and slowing stop when they leave."
     m_Metadata:
       m_Items: []
   - m_Id: 1000015
@@ -127,7 +127,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000027
-    m_Localized: "Opens a magma rift at the target point that erupts after a short delay, damaging every unit and building in the area, your own included, and setting enemies on fire. Flying units are out of reach."
+    m_Localized: "The ground swells and glows through cracks before erupting. Damages all units and buildings in the area, including allies."
     m_Metadata:
       m_Items: []
   - m_Id: 1000028
@@ -358,10 +358,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000061
-    m_Localized: Plants a giant vine that damages and slows enemies around it at
-      once, then a moment later grows two rings of vines that hit each enemy once
-      more. Each enemy the vines hit leaves you a seed spirit, and your seed spirits
-      touched by the vines grow into vine spirits.
+    m_Localized: "A giant vine erupts, followed by rings of smaller vines that damage and snare enemies. Summons seed spirits for each distinct enemy hit, counting each enemy once across all vines. Allied seed spirits touched by the vines evolve into vine spirits."
     m_Metadata:
       m_Items: []
   - m_Id: 1000062
@@ -651,7 +648,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507581
-    m_Localized: Creates a lingering sandstorm that repeatedly damages ground enemies.
+    m_Localized: "Creates a sandstorm that continuously damages and slows enemies inside it."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507582
@@ -719,8 +716,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507596
-    m_Localized: Erupts magma that burns ground enemies. The explosion also hurts
-      allies.
+    m_Localized: "The ground swells and cracks glow before erupting, damaging targets in the area, including allies."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507597
@@ -829,8 +825,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507619
-    m_Localized: Spreads vines that damage enemies and create seed spirits. Turns
-      allied seed spirits into vine spirits.
+    m_Localized: "Vines attack enemies and summon seed spirits. Allied seed spirits touched by the vines evolve into vine spirits."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507620
