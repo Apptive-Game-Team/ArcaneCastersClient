@@ -260,16 +260,17 @@ namespace GameScene
             return true;
         }
 
-        public void SubscribeToTopic(string topic, Action<string> callback, string subscriptionId)
+        private bool TrySubscribeToTopic(string topic, Action<string> callback, string subscriptionId)
         {
             if (!_transport.IsConnected)
             {
                 SystemMessageUI.Instance.ShowMessage(notConnectedToServer);
                 WDebug.LogError("[STOMP] 미연결 상태에서 구독 시도: " + topic);
-                return;
+                return false;
             }
             _registry.Register(topic, subscriptionId, body => callback(CustomBattleConnection.Incoming(body)));
             _transport.Subscribe(topic, subscriptionId);
+            return true;
         }
 
         public void UnsubscribeFromTopic(string subscriptionId)
@@ -295,15 +296,16 @@ namespace GameScene
 
         private IEnumerator GameFlowCoroutine(string sessionId)
         {
+            // 씬의 다른 컴포넌트 Start가 끝난 다음 준비 완료를 보낸다.
+            yield return null;
             yield return AwaitConnection();
             if (!_transport.IsConnected) yield break;
 
-            // 씬의 다른 컴포넌트 Start가 끝난 다음 준비 완료를 보낸다.
-            yield return null;
             UnsubscribeFromTopic("match-sub");
             long userId = isSpectator ? 0 : SceneContext.UserID;
             _pveSync.Reset();
-            SubscribeToTopic($"/game/{sessionId}/frameInfos/{userId}", OnFrameInfoReceived, "frame-sub");
+            if (!TrySubscribeToTopic($"/game/{sessionId}/frameInfos/{userId}", OnFrameInfoReceived, "frame-sub"))
+                yield break;
             _frameSubscribed = true;
             if (_connection.UsesStartProtocol) _connection.MarkSceneReady();
             else RequestPveSync();
