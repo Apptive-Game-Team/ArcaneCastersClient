@@ -59,10 +59,6 @@ MonoBehaviour:
     m_Key: onboarding.magicBook.grassSeedSlime
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000015
-    m_Key: onboarding.magicBook.elementChart
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000016
     m_Key: onboarding.magicBook.returnToLobby
     m_Metadata:
@@ -121,10 +117,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000031
     m_Key: onboarding.magicBook.readMagicInfo
-    m_Metadata:
-      m_Items: []
-  - m_Id: 318000000032
-    m_Key: onboarding.magicBook.chartDescription
     m_Metadata:
       m_Items: []
   - m_Id: 318000000033

@@ -19,7 +19,8 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 1000000
-    m_Localized: "Summons a swarm of water slimes that attack the nearest ground target from a distance and cannot hit flying units. Their trail leaves water fields that make any non-water unit wet, your own included."
+    m_Localized: Summons a swarm of water slimes that attack the nearest ground
+      enemy from range.
     m_Metadata:
       m_Items: []
   - m_Id: 1000001
@@ -59,15 +60,20 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000010
-    m_Localized: "Summons lesser demons that walk to the nearest ground enemy and spray flames in a line, burning whatever they hit. Their fiery aura also burns every nearby unit that is not fire, your own included."
+    m_Localized: Summons demons that spray flames in a line at ground enemies. Their
+      aura can also burn nearby units, including allies.
     m_Metadata:
       m_Items: []
   - m_Id: 1000011
-    m_Localized: "Calls down lightning on a narrow column at the target point at once and twice more after short pauses, hitting every enemy in the column on the ground or in the air. Your own lightning units in the column are charged instead, and each strike leaves a brief electric field that stuns non-lightning units that enter it."
+    m_Localized: Repeatedly strikes a narrow column, hitting ground and flying enemies.
+      The strikescharge allied lightning summons and leave a brief electric field
+      that can stun nearby units.
     m_Metadata:
       m_Items: []
   - m_Id: 1000012
-    m_Localized: "Summons a heavy magma demon that, on reaching a ground enemy, slams a burst of fire onto its position that damages and burns every enemy around it. It cannot target flying units, its aura burns every nearby unit that is not fire, and it leaves rubble when it falls."
+    m_Localized: Summons a magma demon that strikes the ground around its target,
+      damaging and burning nearby enemies. Its aura can burn allies, and it leaves
+      rubble whenit falls.
     m_Metadata:
       m_Items: []
   - m_Id: 1000013
@@ -95,11 +101,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000019
-    m_Localized: "Summons a slow, sturdy tree golem that melee-attacks ground enemies and slowly heals itself. It leaves a trail of leaves that heals anyone standing on it, friend or foe, and slows units that are not nature."
+    m_Localized: Summons a slow, sturdy tree golem that attacks ground enemies in
+      melee and gradually heals itself.
     m_Metadata:
       m_Items: []
   - m_Id: 1000020
-    m_Localized: "Summons vine spirits that shoot the nearest enemy, ground or air, from range. Each hit snares the target, slowing it and pulling flying units down, and fire damage tears the snare off for extra damage. Nature enemies are immune."
+    m_Localized: Summons vine spirits that shoot ground or flying enemies. Their
+      attacks snare and slow targets, bringing flying units down.
     m_Metadata:
       m_Items: []
   - m_Id: 1000021
@@ -115,7 +123,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000024
-    m_Localized: "Summons a swarm of small ember demons that walk to the nearest ground target and hit it in melee, but cannot attack flying units. Their trail leaves burning fields that scorch any non-fire unit that steps in, your own included."
+    m_Localized: Summons a swarm of small ember demons that move toward the nearest
+      ground enemy and attack in melee.
     m_Metadata:
       m_Items: []
   - m_Id: 1000025
@@ -147,11 +156,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000032
-    m_Localized: "Erupts a line of vines from the caster toward the target one after another, damaging each enemy ground unit, building or base along the line once and snaring it to slow it down. Units do not block the line, flying units are out of reach, and fire damage on a snared target breaks the snare for extra damage."
+    m_Localized: Raises a line of vines toward the target. The vines pass through
+      units, hitting and snaring ground enemies, buildings and bases along the way.
     m_Metadata:
       m_Items: []
   - m_Id: 1000033
-    m_Localized: "Calls a water tide that rolls through the field, pushing every enemy ground unit it touches in its direction of travel and dealing only slight damage once to each. It leaves water fields along its path that make any non-water unit wet, your own included, and fades after a short time."
+    m_Localized: Sends a wave that hits each ground enemy once, wets it, and pushes
+      it in the direction the wave is traveling.
     m_Metadata:
       m_Items: []
   - m_Id: 1000034
@@ -327,9 +338,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000056
-    m_Localized: Summons a slow ground serpent that leaves water fields along its
-      path. It fires a water beam that hits every enemy standing in a line, flying
-      ones included.
+    m_Localized: Summons a slow ground serpent that fires a water beam through ground
+      and flying enemies in a line.
     m_Metadata:
       m_Items: []
   - m_Id: 1000057
@@ -362,9 +372,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000062
-    m_Localized: Builds a nest that spawns a ground seed spirit at regular intervals
-      until the nest expires or is destroyed. Seed spirits fight in melee and leave
-      leaf fields behind as they walk.
+    m_Localized: Builds a nest that periodically summons seed spirits. The spirits
+      attack ground enemies in melee.
     m_Metadata:
       m_Items: []
   - m_Id: 1000063
@@ -442,7 +451,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507534
-    m_Localized: Summons ranged slimes that attack ground enemies and leave wet trails.
+    m_Localized: Summons slimes that attack ground enemies from range.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507535
@@ -450,7 +459,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507536
-    m_Localized: Summons nature slimes that fight ground enemies and leave leaf fields.
+    m_Localized: Summons nature slimes that attack ground enemies.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507537
@@ -572,8 +581,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507565
-    m_Localized: Summons flame-spraying demons. Their aura can also burn non-fire
-      allies.
+    m_Localized: Summons flame-spraying demons. Their aura can also burn allies.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507566
@@ -638,8 +646,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507579
-    m_Localized: Summons a heavy demon that blasts and burns ground enemies. Its
-      aura also burns non-fire allies.
+    m_Localized: Summons a magma demon that burns ground enemies. Its aura can also
+      burn allies.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507580
@@ -656,7 +664,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507583
-    m_Localized: Sends a tide that pushes ground enemies and leaves wet trails.
+    m_Localized: Sends a wave that damages and pushes ground enemies.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507584
@@ -674,13 +682,12 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507587
-    m_Localized: Summons a sturdy golem that heals itself. Its leaf trail can heal
-      enemies too.
+    m_Localized: Summons a sturdy melee golem that heals itself.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507588
-    m_Localized: Summons spirits that shoot and snare ground and flying enemies.
-      Nature enemies are immune to the snare.
+    m_Localized: Summons vine spirits that snare enemies and bring flying units
+      down.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507589
@@ -698,8 +705,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507592
-    m_Localized: Summons small demons that fight ground enemies and leave fire trails.
-      The trails can burn allies too.
+    m_Localized: Summons small demons that attack ground enemies in melee.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507593
@@ -829,8 +835,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507620
-    m_Localized: Builds a nest that keeps spawning seed spirits that fight on the
-      ground and leave leaf trails.
+    m_Localized: Builds a nest that keeps summoning seed spirits that attack on
+      the ground.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507621
@@ -883,8 +889,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507631
-    m_Localized: Summons a serpent that leaves wet trails and fires a beam through
-      ground and flying enemies.
+    m_Localized: Summons a serpent that fires a beam through ground and flying enemies.
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507632
