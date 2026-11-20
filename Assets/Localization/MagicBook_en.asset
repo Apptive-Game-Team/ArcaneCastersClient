@@ -65,9 +65,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000011
-    m_Localized: Repeatedly strikes a narrow column, hitting ground and flying enemies.
-      The strikescharge allied lightning summons and leave a brief electric field
-      that can stun nearby units.
+    m_Localized: "Repeatedly strikes a narrow column, hitting ground and flying enemies. Each strike leaves a brief electric field that can stun units."
     m_Metadata:
       m_Items: []
   - m_Id: 1000012
@@ -284,9 +282,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507529
-    m_Localized: Summons a thunder stag that builds up speed and rams ground enemies,
-      hitting harder the faster it is going. It bolts away after each hit and zaps
-      nearby enemies with small lightning.
+    m_Localized: "Summons a thunder stag that gains speed and rams ground enemies. It hits harder at higher speeds and retreats after each hit."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507530
@@ -623,8 +619,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507574
-    m_Localized: Repeatedly strikes a narrow area with lightning. Charges allied
-      lightning units.
+    m_Localized: "Strikes a narrow area repeatedly and leaves a brief stunning electric field."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507575
@@ -849,8 +844,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507623
-    m_Localized: Summons a stag that rams ground enemies harder as it speeds up and
-      zaps nearby foes.
+    m_Localized: "Summons a stag that rams ground enemies harder as it speeds up."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507624
@@ -942,7 +936,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1000079
-    m_Localized: "Summons a swift lightning spearman that stabs one ground enemy at a time. It has less health but attacks faster and harder than Arcane Infantry. It cannot hit flying enemies. When defeated, it overcharges nearby allied lightning units."
+    m_Localized: "Summons a swift lightning spearman that stabs one ground enemy at a time. It has less health but attacks faster and harder than Arcane Infantry. It cannot hit flying enemies."
     m_Metadata:
       m_Items: []
   - m_Id: 1864750230507642
