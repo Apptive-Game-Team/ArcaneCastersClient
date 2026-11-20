@@ -62,10 +62,6 @@ MonoBehaviour:
     m_Localized: "Take Grass Seed Slime as an example"
     m_Metadata:
       m_Items: []
-  - m_Id: 318000000015
-    m_Localized: "Press the element chart button"
-    m_Metadata:
-      m_Items: []
   - m_Id: 318000000016
     m_Localized: "Guide done. Press the lobby button"
     m_Metadata:
@@ -124,10 +120,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 318000000031
     m_Localized: "Read the spell description"
-    m_Metadata:
-      m_Items: []
-  - m_Id: 318000000032
-    m_Localized: "The chart shows element matchups"
     m_Metadata:
       m_Items: []
   - m_Id: 318000000033

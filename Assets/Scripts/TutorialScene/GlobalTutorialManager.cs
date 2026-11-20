@@ -172,7 +172,6 @@ namespace TutorialScene
                 case OnboardingProgress.MagicBook_ExplainMagicBook:
                 case OnboardingProgress.MagicBook_SelectMagic:
                 case OnboardingProgress.MagicBook_ExplainMagicInfo:
-                case OnboardingProgress.MagicBook_OpenElementChart:
                 case OnboardingProgress.MagicBook_ReturnToLobby:
                     return true;
                 default:
