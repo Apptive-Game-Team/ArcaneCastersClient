@@ -511,6 +511,70 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator RallyingTotemEmbersLoopWithFixedGroundRadius()
+        {
+            Create();
+            Component world = CreateWorld();
+            const float radius = 2.75f;
+            world.transform.localScale = Vector3.one * 0.4f;
+            world.transform.rotation = Quaternion.Euler(0f, 15f, 0f);
+            world.GetType().GetMethod("SetParameters").Invoke(world, new object[]
+            {
+                new System.Collections.Generic.Dictionary<string, float> { { "rallying_totem.effect_radius", radius } }
+            });
+
+            Type dtoType = Runtime("GameScene.Dto.CreatedObjectDto");
+            object dto = Activator.CreateInstance(dtoType);
+            dtoType.GetField("id").SetValue(dto, 42);
+            dtoType.GetField("type").SetValue(dto, "RallyingTotem");
+            dtoType.GetField("master").SetValue(dto, "LeftPlayer");
+            dtoType.GetField("position").SetValue(dto, new Vector3(3f, 2f, 4f));
+
+            int previousRate = Time.captureFramerate;
+            try
+            {
+                Time.captureFramerate = 100;
+                var totem = (Component)Runtime("GameScene.Object.ObjectSpawner").GetMethod("SpawnShared")
+                    .Invoke(null, new[] { dto, world, false });
+                var renderer = totem.GetComponentsInChildren<SpriteRenderer>().Single(item => item.name == "RallyZone");
+                var observed = new System.Collections.Generic.List<string>();
+                Vector3 localPosition = new Vector3(3f, 2f, 4f);
+                for (int frame = 0; frame < 190; frame++)
+                {
+                    // 낙하하는 토템의 위치가 바뀌어도 구역은 월드 바닥을 따른다.
+                    if (frame == 90)
+                    {
+                        localPosition = new Vector3(4f, 0.5f, 5f);
+                        totem.transform.position = world.transform.TransformPoint(localPosition);
+                    }
+                    yield return null;
+                    Sprite sprite = renderer.sprite;
+                    if (observed.Count == 0 || observed[observed.Count - 1] != sprite.name)
+                        observed.Add(sprite.name);
+
+                    Transform ring = renderer.transform;
+                    Vector3 localRing = world.transform.InverseTransformPoint(ring.position);
+                    if (frame == 0) continue; // 첫 LateUpdate에서 고리의 높이와 회전이 설정된다.
+                    Vector3 expectedGround = new Vector3(localPosition.x, 0.02f, localPosition.z);
+                    Assert.That(Vector3.Distance(localRing, expectedGround), Is.LessThan(0.005f));
+                    Assert.That(Vector3.Angle(ring.forward, -world.transform.up), Is.LessThan(0.05f));
+                    Vector2 halfSize = sprite.rect.size / (2f * sprite.pixelsPerUnit);
+                    float xRadius = world.transform.InverseTransformVector(ring.TransformVector(Vector3.right * halfSize.x)).magnitude;
+                    float zRadius = world.transform.InverseTransformVector(ring.TransformVector(Vector3.up * halfSize.y)).magnitude;
+                    Assert.That(xRadius, Is.EqualTo(radius).Within(0.001f));
+                    Assert.That(zRadius, Is.EqualTo(radius).Within(0.001f));
+                    Assert.That(renderer.color.a, Is.EqualTo(0.5f).Within(0.001f));
+                }
+                CollectionAssert.AreEqual(Enumerable.Range(1, 8).Append(1)
+                    .Select(index => $"RallyZoneEmber{index:00}"), observed);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator BrickGolemSweepPoseInRecordingUsesSourceDirectionAndDuration()
         {
             Create();
