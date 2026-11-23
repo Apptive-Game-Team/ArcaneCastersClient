@@ -93,7 +93,7 @@
 | `explode/water_explode.png` | 클라이언트 PR (이슈 #683) | 192x134 RGBA, 원본 크기 유지. 물보라 파편, 물결 밑동에서 물방울 결정이 솟는 구도 유지. magenta 키 제거, enclosed_pixels=1, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
 | `explode/wind_explode.png` | 클라이언트 PR (이슈 #683) | 192x144 RGBA, 원본 크기 유지. 첫 생성이 4방향 완전 대칭 바람개비로 나와 "아이템처럼 보인다"는 기준으로 탈락시키고, 길이·각도·간격이 제각각인 낱개 파편으로 다시 생성해 통과시켰다. magenta 키 제거, enclosed_pixels=2, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
 | `explode/lava_fist.png` | 클라이언트 PR (이슈 #683) | 130x192 RGBA, 원본 크기 유지. 용암 주먹, HellfireDemon.png 재질(어두운 갑각+주황 갈라진 빛)로 교체. magenta 키 제거, enclosed_pixels=0, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
-| `electric_field.png` | 클라이언트 이슈 #681 재작업 검수 | 192x84 RGBA. 번개 정령 팔레트, 굵은 아크 서너 줄기가 타원 바깥쪽 1/3에 몰리고 가운데 1/3은 거의 맨 그을린 땅. 소환수 스프라이트를 얹어 실루엣이 읽히는지 확인했다 |
+| `electric_field.png`, `electric_field_frame_02.png`–`electric_field_frame_04.png` | 클라이언트 이슈 #488 | 192×84 RGBA, PPU 100, Bottom Center. 기존 타원 알파와 중앙 그을음을 유지하고 가장자리 전기를 0.18초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
 | `fire_field.png`, `fire_field_frame_02.png`–`fire_field_frame_04.png` | 클라이언트 이슈 #484 | 192×68 RGBA, PPU 100, Bottom Center. 기존 중앙 그을음 위로 테두리 불꽃이 0.18초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
 | `leaf_field.png` | 클라이언트 이슈 #681 재작업 검수 | 192x79 RGBA. 자연 정령 팔레트, 땅에서 자란 풀잎이 타원 전체를 덮는다. 테두리가 가장 높고 중앙으로 갈수록 낮아져 소환수 자리가 남는다 |
 | `water_field.png`, `water_field_frame_02.png`–`water_field_frame_04.png` | 클라이언트 이슈 #486 | 192×69 RGBA, PPU 100, Bottom Center. 기존 타원 알파와 중앙 물빛을 유지하고 가장자리 물결을 0.24초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
