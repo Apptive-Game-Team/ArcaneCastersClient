@@ -412,7 +412,9 @@ false positive를 낸다 — 숫자만 보지 말고 pivot 기준으로 겹친 �
 
 ### 합성
 
-프레임은 생성물이 아니라 결정적 합성 결과다. 원본 두 장
+이슈 #479에서는 기존 일곱 장의 y=168 위에 같은 다면체 먹구름을 합성했다. y=168부터 지면까지의 픽셀은 기존 프레임과 같다.
+
+초기 프레임은 아래 명령으로 합성했다. 원본 두 장
 (`.art/concept/lightning-strike/`)에서 다시 만들 수 있다. 검수 시트는
 `.art/sheets/lightning-strike-review.png`.
 

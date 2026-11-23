@@ -269,7 +269,7 @@ v1 은 alpha 덩어리가 정확히 날 넷으로 갈라지므로(281x31, 450x68
 
 | 리소스 | 판단할 것 |
 |---|---|
-| `LightningCloud.png`, `LightningCloudStrike0.png` ~ `LightningCloudStrike5.png` | 일곱 장 모두 둥글고 부드러운 구름 덩어리인데, 같은 구름 소재인 `RainCloud.png` 는 각진 다면체다. 한 게임 안에 구름 기법이 두 가지로 갈려 있다. 이슈 #548 에서 이 형태로 올라온 것이라 반려가 아니라 결정 사항이다 |
+| `LightningCloud.png`, `LightningCloudStrike0.png`~`LightningCloudStrike5.png` | 이슈 #479에서 `RainCloud.png`와 같은 무광 다면체 기법으로 먹구름을 다시 그렸다. 320×640 RGBA와 구름 영역 312×153을 유지했고, 일곱 장의 y=168 아래 픽셀이 기존 PNG와 일치한다. Unity 플레이 검수 대기 |
 
 ### 통일 범위에 넣을지 정할 자산 27장
 
