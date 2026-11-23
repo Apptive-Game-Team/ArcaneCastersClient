@@ -305,7 +305,7 @@ PPU·pivot·앵커 좌표를 같이 출력한다.
 
 | 실제 파일 | 의미 이름 | 사용 방식 |
 |---|---|---|
-| `Effect/AreaOfEffect/RepairAura.png` | repair_totem · 수리 범위 경계 | `RepairTotem.prefab` 자식 SpriteRenderer, `AuraRadiusScaler`가 크기 결정 |
+| `Effect/AreaOfEffect/RepairAura.png`, `RepairAuraLight02.png`–`RepairAuraLight06.png` | repair_totem · 수리 범위 경계와 잎의 불빛 | `RepairTotem.prefab`의 `RepairAura`에 연결. `effect_radius`를 기준으로 XZ 바닥에 두고, 0.28초 간격으로 여섯 장을 재생한다 |
 | `Effect/AreaOfEffect/RallyZone.png`, `RallyZoneEmber01.png`–`RallyZoneEmber08.png` | rallying_totem · 집결 구역 경계와 불씨 | `RallyingTotem.prefab`의 `RallyZone`에 연결. `AuraRadiusScaler`가 `effect_radius`로 크기를 정하고 `GroundPinnedChild`가 낙하 중에도 XZ 바닥에 놓는다. 불빛은 0.22초 간격으로 시계 방향으로 이어진다 |
 
 - **상태 오라를 키워서 범위 표시로 쓰지 않는다.** element 오라 6종은 전부 가로

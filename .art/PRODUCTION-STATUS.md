@@ -242,6 +242,7 @@
 |---|---|---|
 | `Resources/Projectiles/wind.png`, `wind_totem_flow_02.png`–`wind_totem_flow_08.png` | `WindTotem.prefab`의 `Wind` SpriteRenderer | 클라이언트 이슈 #475. 승인한 민트색 다면체 바람 8프레임 연결. 512×91 RGBA, PPU 140, 중앙 피벗. `SpriteFrameAnimator`가 0.175초 간격으로 1.4초간 반복한다. Unity 플레이 검수 대기 |
 | `Effect/AreaOfEffect/RallyZone.png`, `RallyZoneEmber01–08.png` | `RallyingTotem.prefab`의 `RallyZone` SpriteRenderer | 클라이언트 이슈 #534. 기존 돌 고리의 알파와 512×512 RGBA, PPU 400, 중앙 피벗을 기준으로 불빛 여덟 장을 그렸다. 실효 범위의 크기를 고정하고 0.22초 간격으로 불빛을 이어 표시한다. 실제 경기 검수 대기 |
+| `Effect/AreaOfEffect/RepairAura.png`, `RepairAuraLight02–06.png` | `RepairTotem.prefab`의 `RepairAura` SpriteRenderer | 클라이언트 이슈 #536. 512×512 RGBA, PPU 400, 중앙 피벗과 같은 알파를 가진 잎 불빛 여섯 장. 바깥 잎끝을 중심에서 약 252px에 정렬했다. `effect_radius` 값에 따라 고리를 XZ 바닥에 배치하고 0.28초 간격으로 재생한다. 실제 경기 검수 대기 |
 
 #### `wind.png` 을 세 번 만에 미룬 이유
 

@@ -9,15 +9,11 @@ namespace GameScene.ServedObjectComponent.Effect
     /// <summary>
     /// Scales an aura sprite so the circle it draws has the radius the server actually uses. The
     /// value comes from the shared parameter table that <see cref="ParametersDataSource"/> caches,
-    /// which is the same table the server reads, so changing <c>repair_totem.radius</c> in the
+    /// which is the same table the server reads, so changing <c>repair_totem.effect_radius</c> in the
     /// database moves this ring without a client change.
     /// <para>
-    /// The sprite is a ring standing in the world XY plane while the aura it stands for is a circle
-    /// lying on the ground XZ plane. Both project to an ellipse of horizontal radius r and vertical
-    /// radius r·cos45, because <c>GameScene.unity</c>'s camera is tilted exactly 45°, where sine and
-    /// cosine are equal. The two ellipses differ only by the perspective between the ring's top and
-    /// the ground circle's far edge, a few percent at this field size. At any other tilt they would
-    /// disagree outright. See <c>.agents/docs/scene-space.md</c>.
+    /// <see cref="GroundPinnedChild"/>가 있는 고리는 지면 XZ 평면을 따른다.
+    /// 스케일러는 스프라이트의 로컬 두 축만 조정하므로 배치 방향은 프리팹에서 정한다.
     /// </para>
     /// <para>
     /// This runs in <c>Awake</c> so that <see cref="IdleAuraEffect"/> reads the scaled value as its
