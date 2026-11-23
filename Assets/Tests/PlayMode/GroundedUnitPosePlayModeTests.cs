@@ -17,12 +17,12 @@ namespace WordOnline.Tests
         private const float WalkSpeed = 0.5f;
 
         [UnityTest]
-        public IEnumerator TreeGolemWalksAtBothTickRatesAndShowsTheHitBeforeRecovery() => CheckBothTickRates("TreeGolem");
+        public IEnumerator TreeGolemWalksAtBothTickRatesAndShowsTheHitBeforeRecovery() => CheckBothTickRates("TreeGolem", 8);
 
         [UnityTest]
-        public IEnumerator RockGolemWalksAtBothTickRatesAndShowsTheHitBeforeRecovery() => CheckBothTickRates("RockGolem");
+        public IEnumerator RockGolemWalksAtBothTickRatesAndShowsTheHitBeforeRecovery() => CheckBothTickRates("RockGolem", 9);
 
-        private static IEnumerator CheckBothTickRates(string prefabName)
+        private static IEnumerator CheckBothTickRates(string prefabName, int walkPoseCount)
         {
             var gameConfig = Runtime("GameScene.GameConfig");
             var setTickRate = gameConfig.GetMethod("SetTickRate");
@@ -34,7 +34,7 @@ namespace WordOnline.Tests
                 foreach (int tickRate in new[] { 20, 60 })
                 {
                     setTickRate.Invoke(null, new object[] { tickRate });
-                    yield return CheckAtTickRate(prefabName, tickRate, tickRate == 60 ? -1 : 1);
+                    yield return CheckAtTickRate(prefabName, walkPoseCount, tickRate, tickRate == 60 ? -1 : 1);
                 }
             }
             finally
@@ -44,7 +44,7 @@ namespace WordOnline.Tests
             }
         }
 
-        private static IEnumerator CheckAtTickRate(string prefabName, int tickRate, int direction)
+        private static IEnumerator CheckAtTickRate(string prefabName, int walkPoseCount, int tickRate, int direction)
         {
             var root = new GameObject($"{prefabName}-{tickRate}Hz");
             try
@@ -76,7 +76,7 @@ namespace WordOnline.Tests
                 Sprite hit = Resources.Load<Sprite>($"Game/sprites/{prefabName}2");
                 Assert.That(idle.name, Is.EqualTo(prefabName));
                 Assert.That(attack[0], Is.SameAs(hit));
-                AssertFrames(walk, 8, idle);
+                AssertFrames(walk, walkPoseCount, idle);
                 AssertFrames(attack, 4, hit);
 
                 Type updatedType = Runtime("GameScene.Dto.UpdatedObjectDto");

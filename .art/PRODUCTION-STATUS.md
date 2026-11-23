@@ -40,7 +40,7 @@
 | `FireTadpole.png` | `concept-art/fire-tadpole.webp` | 차원 유랑종 화산편 방향 적용 |
 | `RockGolem.png` | `concept-art/rock-golem.webp` | 이끼바위 골렘 기본 자세 |
 | `RockGolem2.png` | `game-assets/rock-golem-attack.webp` | 이끼바위 골렘 공격 자세. 이슈 #514에서도 공격 이벤트의 첫 자세로 사용 |
-| `RockGolemWalk01–08.png`, `RockGolemRecover01–03.png` | 클라이언트 이슈 #514 | 256×244, PPU 100, Bottom Center. 가까운 발의 보행 4장을 재사용하고 먼 발의 보행 4장을 새로 그렸다. 실제 지면 이동 0.66칸마다 보행 한 바퀴. 펀치 복귀 3장을 추가해 기존 0.2초 안에서 재생한다. |
+| `RockGolemWalk01–08.png`, `RockGolemWalk04To05.png`, `RockGolemRecover01–03.png` | 클라이언트 이슈 #514 | 256×244, PPU 100, Bottom Center. 보행 9장 중 4번과 5번 사이에 먼 발을 들어 앞으로 내미는 자세가 들어간다. 지면 이동 0.66칸마다 보행 한 바퀴. 펀치 복귀 3장을 추가해 기존 0.2초 안에서 재생한다. |
 | `RockRemnant.png` | `game-assets/rock-remnant.webp` | 사망 후 이동 방해 잔해 |
 | `EarthCall.png` | 클라이언트 PR #181 검수 | 돌 골렘 재사용 이미지를 돌무더기 각성 마법 전용 아트로 교체. `MasterStyleKey.png`·`RockGolem.png`·`ArcaneImpact.png` 고정 앵커를 사용한 2.5D cut-paper 효과다. v2는 내용 비율이 1.01이라 기존 0.89보다 넓어 반려했고, v3는 생성물 0.867·최종 내용 207x238로 원본 212x238과 2.4% 이내다. 최종 256x244 RGBA, Bottom Center, 바닥 여백 0px, 네 모서리 alpha 0, 투명 60.8%, 불투명 픽셀의 magenta 잔색 0, 64px 실루엣 검수 완료 |
 | `TitanRemnant.png` | 클라이언트 이슈 #593 재작업 검수 | 거신의 잔해 본체 |
@@ -208,7 +208,7 @@
 | `Adventure/gate_adventure_map_stage6.png` | 클라이언트 PR (이슈 #506) | **모험 화면 검수 대기.** 5단계 지도와 같은 무광 암반을 적용했다. 길 끝의 속 빈 그루터기와 주황·보라 차원문 두 개를 유지했다. 867×256 RGB와 Stage6의 Sprite 참조를 확인했다. 비교한 가로 단면 6곳에서 길 중심 차이는 최대 2.5px이고 폭은 기존 72–75px에서 21–22px로 줄었다. |
 | `Background/Gate/background.png` | 클라이언트 PR (이슈 #510) | **플레이 검수 대기.** 차원문 5·6단계 지도와 같은 무광 암반 면을 적용하고 어두운 균열의 밀도를 줄였다. 1254×1254 RGB와 Repeat 임포트 설정을 유지했다. 양쪽 가장자리의 RGB 값이 행·열 단위로 일치하며 2×2 반복 위에 차원문 유닛 4종을 합성해 확인했다. |
 | `Background/Gate/tree_1.png` | 클라이언트 PR (이슈 #520) | **실제 경기 검수 대기.** 끝이 부러진 줄기와 기울어진 실루엣을 살린 무광 컷페이퍼 아트다. 277×242 RGBA, 기존 GUID·임포트와 알파 가로 외곽 및 바닥 높이를 유지했다. 알파 외곽의 위쪽은 3px 낮아졌다. |
-| `Background/Gate/tree_2.png` | 클라이언트 PR (이슈 #519) | **실제 경기 검수 대기.** 양쪽으로 갈라지는 가지와 그을린 줄기을 살린 무광 컷페이퍼 아트다. 265×222 RGBA, 기존 GUID·임포트와 알파 가로 외곽 및 바닥 높이를 유지했다. 알파 외곽의 위쪽은 1px 낮아졌다. |
+| `Background/Gate/tree_2.png` | 클라이언트 PR (이슈 #519) | **실제 경기 검수 대기.** 양쪽으로 갈라지는 가지와 그을린 줄기를 살린 무광 컷페이퍼 아트다. 265×222 RGBA, 기존 GUID·임포트와 알파 가로 외곽 및 바닥 높이를 유지했다. 알파 외곽의 위쪽은 1px 낮아졌다. |
 | `Background/Gate/tree_3.png` | 클라이언트 PR (이슈 #515) | **실제 경기 검수 대기.** 차원문 6단계 지도와 맞춘 무광 그루터기다. 열린 윗부분과 돌출된 뿌리, 어두운 주황 균열을 남겼다. 234×218, PPU 100, 하단 중앙 피벗. 알파 바닥선은 기존과 같고 외곽 폭은 207px에서 201px로 줄었다. |
 | `Background/Gate/tree_4.png` | 클라이언트 PR (이슈 #518) | **실제 경기 검수 대기.** 굽은 큰 가지와 넓게 뻗은 뿌리을 살린 무광 컷페이퍼 아트다. 328×264 RGBA, 기존 GUID·임포트와 알파 가로 외곽 및 바닥 높이를 유지했다. 알파 외곽의 위쪽은 4px 낮아졌다. |
 | `Background/Gate/rock.png` | 클라이언트 PR (이슈 #521) | **실제 경기 검수 대기.** 낮고 넓게 쌓인 바위와 옅은 균열을 살린 무광 컷페이퍼 아트다. 452×166 RGBA, 기존 GUID·임포트와 알파 가로 외곽 및 바닥 높이를 유지했다. 알파 외곽의 위쪽은 5px 낮아졌다. |
