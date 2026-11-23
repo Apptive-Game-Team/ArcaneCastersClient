@@ -807,6 +807,22 @@ MonoBehaviour:
     m_Key: AppearanceCorruptedFinn
     m_Metadata:
       m_Items: []
+  - m_Id: 76110341300000135
+    m_Key: FriendReceivedRequestsLoadFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000136
+    m_Key: FriendReceivedRequestsEmpty
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000137
+    m_Key: FriendSentRequestsLoadFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000138
+    m_Key: FriendSentRequestsEmpty
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
