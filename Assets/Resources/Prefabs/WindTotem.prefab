@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7324149257973461962}
   - component: {fileID: 5464359186005485028}
   - component: {fileID: 2677118302549975843}
+  - component: {fileID: 5898812507090722013}
   m_Layer: 0
   m_Name: Wind
   m_TagString: Untagged
@@ -99,6 +100,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _referRenderer: {fileID: 6283774115668339200}
   initialPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &5898812507090722013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7602420987117933168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 5464359186005485028}
+  frames:
+  - {fileID: 21300000, guid: 5878dc89b3cda4fc988aee1d526e4beb, type: 3}
+  - {fileID: 21300000, guid: 450ca92c44a74ff0a5eaa2043af8b62b, type: 3}
+  - {fileID: 21300000, guid: da6a76fa19c0459cbf98408a4fe40d22, type: 3}
+  - {fileID: 21300000, guid: 2b78828f3f7f4f008f069b448e9147c3, type: 3}
+  - {fileID: 21300000, guid: 8facf67a4e79472bbe9e6fd218d7ace2, type: 3}
+  - {fileID: 21300000, guid: 6f2673942abe4007bd1198e991483aa9, type: 3}
+  - {fileID: 21300000, guid: 3ee1a5f6994c40e59a5c2987866a2f6c, type: 3}
+  - {fileID: 21300000, guid: 5c47397044994bc791d2b640094b8dec, type: 3}
+  frameInterval: 0.175
+  loop: 1
 --- !u!1001 &3434044365886374736
 PrefabInstance:
   m_ObjectHideFlags: 0
