@@ -547,6 +547,14 @@ new code side by side on real sprites from `Assets/Resources/Game/sprites` at ab
 screen pixels tall, enlarged 4x with nearest neighbour. #352 did this
 (`docs/pr-media/352/outline-before-after-90px.png`). The render does not prove the shader
 compiles for WebGL; say so in the pull request and leave that to an Editor check.
+## Legacy InputField 안내 문구의 글자 크기
+
+`Text`에서 `Best Fit`과 세로 `Overflow`를 함께 켜면 입력칸 높이보다 큰
+글자가 선택될 수 있습니다. 옵션 회원가입 창은 40포인트로 커진 영어
+비밀번호 안내 문구가 두 줄로 꺾여 테두리를 넘었습니다. 한 줄 안내 문구를
+검수할 때는 각 언어의 줄 수와 생성된 글자 정점이 입력칸 안에 드는지
+확인합니다.
+
 # Admin room search text clipping
 
 When changing a legacy `InputField` height, inspect the nested text area's actual
