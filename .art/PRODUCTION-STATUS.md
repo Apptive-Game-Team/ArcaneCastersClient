@@ -281,7 +281,7 @@ v1 은 alpha 덩어리가 정확히 날 넷으로 갈라지므로(281x31, 450x68
 
 - `Art/Images/UI/Card/` 5장 — `magic_build`·`magic_drop`·`magic_explode`·`magic_shoot`·`magic_spawn`. 평면 vector 아이콘으로 자기들끼리는 일관돼 있다. 같은 폴더의 원소 아이콘 `type_*` 6장은 이슈 #304 에서 다시 그려 완료 표로 옮겼다
 - `Art/Images/Customize/` 9장 — 모자·망토와 그 아이콘, `check.png`
-- `Art/Images/Adventure/` — 숲 모험 공용 지도 `forest_adventure_stage_1.png`에 이슈 #498의 무광 컷페이퍼 아트를 적용했다. 867×256 RGBA, 마을·숲과 길 위치 유지. 직선 길과 남쪽 갈림길의 중앙은 대조한 표본에서 기존과 최대 2px 차이다. 모험 화면 검수 대기. 나머지 지도·배경은 추가 대조 대상이다. `Resources/Game/pve/` 3장 (`pve_nature_slime_nest.png`, `pve_water_slime_nest.png`, `pve_vine_witch.png`)은 이슈 #169에서 교체했다
+- `Art/Images/Adventure/` — 숲 모험 공용 지도 `forest_adventure_stage_1.png`에 이슈 #498의 무광 컷페이퍼 아트를 적용했다. 867×256 RGBA, 마을·숲과 길 위치 유지. 직선 길과 남쪽 갈림길의 중앙은 대조한 표본에서 기존과 최대 2px 차이다. 모험 화면 검수 대기. 요새 모험 아이콘 `stone_fortress.png`는 이슈 #500에서 무광 석재와 기존 붉은 깃발을 적용했다. 256×183 RGBA와 기존 참조를 유지했다. 나머지 지도·배경은 추가 대조 대상이다. `Resources/Game/pve/` 3장 (`pve_nature_slime_nest.png`, `pve_water_slime_nest.png`, `pve_vine_witch.png`)은 이슈 #169에서 교체했다
 - 기타 UI 7장 — `Art/Images/Card.png`, `Art/Images/UI/Catalog.png`·`SpeechBubble.png`·`lockImage.png`, `Art/Images/Obstacle/CircleObstacle.png`, `Resources/UI/ObjectIndicator.png`·`SpeechBubble.png`
 - `Art/Images/Background/background.png` — PR #61 에서 교체 중이다
 
