@@ -45,7 +45,9 @@ namespace WordOnline.Tests
 
             Assert.That(File.ReadAllText(Path.Combine(root, "Contents/MacOS/ArcaneCasters")), Is.EqualTo("game executable"));
             var plist = new XmlDocument { XmlResolver = null };
-            plist.Load(Path.Combine(root, "Contents/Info.plist"));
+            string xml = File.ReadAllText(Path.Combine(root, "Contents/Info.plist"));
+            Assert.That(xml, Does.Not.Match(@"<!DOCTYPE\s+plist[^>]*\["));
+            plist.LoadXml(xml);
             Assert.That(plist.SelectSingleNode("/plist/dict/key[.='CFBundleExecutable']/following-sibling::string[1]").InnerText,
                 Is.EqualTo("ArcaneCasters"));
             Assert.That(plist.SelectSingleNode("/plist/dict/key[.='CFBundleName']/following-sibling::string[1]").InnerText,
