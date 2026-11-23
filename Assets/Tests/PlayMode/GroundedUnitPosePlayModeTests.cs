@@ -10,14 +10,19 @@ using Object = UnityEngine.Object;
 
 namespace WordOnline.Tests
 {
-    public class TreeGolemPosePlayModeTests
+    public class GroundedUnitPosePlayModeTests
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
         private const int RenderRate = 120;
         private const float WalkSpeed = 0.5f;
 
         [UnityTest]
-        public IEnumerator TreeGolemWalksAtBothTickRatesAndShowsTheHitBeforeRecovery()
+        public IEnumerator TreeGolemWalksAtBothTickRatesAndShowsTheHitBeforeRecovery() => CheckBothTickRates("TreeGolem");
+
+        [UnityTest]
+        public IEnumerator RockGolemWalksAtBothTickRatesAndShowsTheHitBeforeRecovery() => CheckBothTickRates("RockGolem");
+
+        private static IEnumerator CheckBothTickRates(string prefabName)
         {
             var gameConfig = Runtime("GameScene.GameConfig");
             var setTickRate = gameConfig.GetMethod("SetTickRate");
@@ -29,7 +34,7 @@ namespace WordOnline.Tests
                 foreach (int tickRate in new[] { 20, 60 })
                 {
                     setTickRate.Invoke(null, new object[] { tickRate });
-                    yield return CheckAtTickRate(tickRate, tickRate == 60 ? -1 : 1);
+                    yield return CheckAtTickRate(prefabName, tickRate, tickRate == 60 ? -1 : 1);
                 }
             }
             finally
@@ -39,9 +44,9 @@ namespace WordOnline.Tests
             }
         }
 
-        private static IEnumerator CheckAtTickRate(int tickRate, int direction)
+        private static IEnumerator CheckAtTickRate(string prefabName, int tickRate, int direction)
         {
-            var root = new GameObject($"TreeGolem-{tickRate}Hz");
+            var root = new GameObject($"{prefabName}-{tickRate}Hz");
             try
             {
                 // 재생용 월드가 축소되어도 서버 좌표 거리로 보행 위상을 계산한다.
@@ -50,7 +55,7 @@ namespace WordOnline.Tests
                 Type createdType = Runtime("GameScene.Dto.CreatedObjectDto");
                 object created = Activator.CreateInstance(createdType);
                 createdType.GetField("id").SetValue(created, 42);
-                createdType.GetField("type").SetValue(created, "TreeGolem");
+                createdType.GetField("type").SetValue(created, prefabName);
                 createdType.GetField("master").SetValue(created, "LeftPlayer");
                 var spawner = Runtime("GameScene.Object.ObjectSpawner");
                 var golem = (Component)spawner.GetMethod("SpawnShared").Invoke(null, new[] { created, world, false });
@@ -58,13 +63,21 @@ namespace WordOnline.Tests
                     .Single(component => component.GetType().Name == "GroundedUnitPoseController");
                 Assert.That(golem.GetComponents<MonoBehaviour>()
                     .Any(component => component.GetType().Name == "OnAttackSpriteSwapper"), Is.False);
+                var inheritedSwap = golem.GetComponents<MonoBehaviour>()
+                    .SingleOrDefault(component => component.GetType().Name == "AttackSpriteSwapController");
+                if (inheritedSwap != null)
+                {
+                    Assert.That(inheritedSwap.GetType().BaseType.GetField("swapSprite", Private).GetValue(inheritedSwap), Is.Null);
+                }
                 var renderer = (SpriteRenderer)presenter.GetType().GetField("targetRenderer", Private).GetValue(presenter);
                 var walk = (Sprite[])presenter.GetType().GetField("walkFrames", Private).GetValue(presenter);
                 var attack = (Sprite[])presenter.GetType().GetField("attackFrames", Private).GetValue(presenter);
                 Sprite idle = renderer.sprite;
-                AssertFrames(walk, 8, 240);
-                AssertFrames(attack, 4, 312);
-                Assert.That(attack[0].name, Is.EqualTo("TreeGolem2"));
+                Sprite hit = Resources.Load<Sprite>($"Game/sprites/{prefabName}2");
+                Assert.That(idle.name, Is.EqualTo(prefabName));
+                Assert.That(attack[0], Is.SameAs(hit));
+                AssertFrames(walk, 8, idle);
+                AssertFrames(attack, 4, hit);
 
                 Type updatedType = Runtime("GameScene.Dto.UpdatedObjectDto");
                 object frame = Activator.CreateInstance(updatedType);
@@ -74,7 +87,7 @@ namespace WordOnline.Tests
                 var target = Vector3.zero;
                 var seenWalk = new HashSet<Sprite>();
                 yield return null;
-                // 기존 방향 전환 대기 0.5초 뒤에도 보행 주기 1.8초가 온전히 지나야 한다.
+                // 기존 방향 전환 대기 0.5초 뒤에도 보행 주기가 온전히 지나야 한다.
                 for (int tick = 0; tick < tickRate * 3; tick++)
                 {
                     target.x += direction * WalkSpeed / tickRate;
@@ -87,7 +100,8 @@ namespace WordOnline.Tests
                     }
                 }
 
-                CollectionAssert.IsSubsetOf(walk, seenWalk, $"{tickRate}Hz 보행이 모든 자세를 지나야 한다.");
+                CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
+                    $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
                 Assert.That(renderer.flipX, Is.EqualTo(direction < 0));
                 status.SetValue(frame, "Attack");
                 update.Invoke(golem, new[] { frame });
@@ -129,15 +143,15 @@ namespace WordOnline.Tests
             }
         }
 
-        private static void AssertFrames(Sprite[] frames, int count, int width)
+        private static void AssertFrames(Sprite[] frames, int count, Sprite reference)
         {
             Assert.That(frames.Distinct().Count(), Is.EqualTo(count));
             foreach (Sprite frame in frames)
             {
                 Assert.That(frame, Is.Not.Null);
-                Assert.That(frame.rect.size, Is.EqualTo(new Vector2(width, 256)));
-                Assert.That(frame.pivot, Is.EqualTo(new Vector2(width / 2f, 0f)));
-                Assert.That(frame.pixelsPerUnit, Is.EqualTo(85f));
+                Assert.That(frame.rect.size, Is.EqualTo(reference.rect.size));
+                Assert.That(frame.pivot, Is.EqualTo(reference.pivot));
+                Assert.That(frame.pixelsPerUnit, Is.EqualTo(reference.pixelsPerUnit));
             }
         }
 
