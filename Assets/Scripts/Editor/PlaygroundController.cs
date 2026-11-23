@@ -25,7 +25,10 @@ namespace DevPlayground {
     [UnityEditor.InitializeOnLoad]
     public static class PlaygroundEditorBridge {
         static PlaygroundEditorBridge() {
-            PlaygroundHost.Configure = host => new PlaygroundController(host).Bind();
+            PlaygroundHost.Configure = host => {
+                if (host.balanceMode) new BalanceController(host).Bind();
+                else new PlaygroundController(host).Bind();
+            };
         }
     }
 

@@ -8,6 +8,7 @@ namespace DevPlayground {
     // Define-constrained assembly: usable in Editor Play Mode, absent in every player build.
     // The Editor bridge owns game-specific logic without referencing Assembly-CSharp here.
     public sealed class PlaygroundHost : MonoBehaviour {
+        public bool balanceMode;
         public TMP_Dropdown sideDropdown;
         public TMP_Text statusText;
         public TMP_Text timerText;
