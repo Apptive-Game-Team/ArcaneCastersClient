@@ -17,7 +17,7 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `MagmaExplosion.png` | 마그마 폭발 · 기본/초기 갑각 자세 | `MagmaExplosion.prefab` 기본 SpriteRenderer |
 | `MagmaExplosionStrike1.png`–`MagmaExplosionStrike4.png` | 마그마 폭발 · 균열 시작 → 개방 → 피크 → 냉각 | `SpriteFrameAnimator`, 0.1초 간격, 비반복 |
 | `RockGolem.png` | 이끼바위 골렘 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |
-| `RockGolemWalk01.png`–`RockGolemWalk08.png` | 이끼바위 골렘 · 양발 보행 | 실제 XZ 이동 0.66칸마다 한 바퀴. 기준 속도 0.5칸/초에서 1.32초 |
+| `RockGolemWalk01.png`–`RockGolemWalk08.png`, `RockGolemWalk04To05.png` | 이끼바위 골렘 · 양발 보행과 내딛는 중간 자세 | 실제 XZ 이동 0.66칸마다 한 바퀴. 기준 속도 0.5칸/초에서 1.32초 |
 | `RockGolem2.png`, `RockGolemRecover01.png`–`RockGolemRecover03.png` | 이끼바위 골렘 · 펀치 타격과 복귀 | 기존 타격을 공격 이벤트에서 즉시 표시한다. 0.05초 간격 네 자세 |
 | `TreeGolem.png` | 고목 수호자 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |
 | `TreeGolemWalk01.png`–`TreeGolemWalk08.png` | 고목 수호자 · 양발의 접촉, 체중 이동, 지나가기, 다음 착지 | 실제 XZ 이동 0.9칸마다 한 바퀴. 기준 속도 0.5칸/초에서 1.8초 |
@@ -79,8 +79,8 @@ Transform 스케일 변형은 적용하지 않는다.
 검증할 때 두 PNG를 같은 PPU로 겹쳐 발점, 골반, 머리 중심을 대조한다.
 `RockGolem`과 `RockGolem2`는 256x244, PPU 100, Bottom Center로 교정했다.
 이끼바위 골렘의 보행과 펀치 복귀도 같은 캔버스와 피벗을 사용한다. 보행의 고유 자세는
-8개다. 양쪽 체중 이동과 양발이 가까워지는 자세는 프리팹의 배열에서 각각 4칸으로
-길게 표시하고, 지지 자세는 2칸으로 연결한다.
+9개다. 4번 자세의 기존 4칸 중 뒤 2칸을 먼 발이 앞으로 나가는 중간 자세에 사용한다.
+체중 이동은 양쪽 모두 기존 배열의 4칸 동안 이어진다.
 `TreeGolem`과 `TreeGolem2`는 240×256 / 312×256, PPU 85, Bottom Center다.
 이슈 #482에서 펀치 자세의 발 간격을 75px로 조정했다. 기본 자세는 77px이며 두 자세의 지면 접점 차이는 1px 이하다.
 보행 프레임에는 기본 자세의 캔버스를, 펀치 복귀에는 타격 자세의 캔버스를 사용한다.
