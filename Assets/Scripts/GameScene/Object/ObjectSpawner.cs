@@ -37,6 +37,7 @@ namespace GameScene.Object
             PopupBookVisualPresenter popupBookPresenter = PopupBookVisualPresenter.Attach(servedObject);
 
             servedObject.PresentationWorld = world;
+            servedObject.PrefabType = createdObjectDto.type;
             servedObject.SetMaster(createdObjectDto.master);
             servedObject.id = createdObjectDto.id;
 

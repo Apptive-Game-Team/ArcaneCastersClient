@@ -60,6 +60,9 @@ namespace Data
         {
             string token = JwtTokenProvider != null ? JwtTokenProvider() : null;
             webRequest.SetRequestHeader("Authorization", "Bearer " + token);
+            if (webRequest.url.Contains("/api/match/") || webRequest.url.Contains("/api/scenarios/") ||
+                webRequest.url.Contains("/api/friends/"))
+                webRequest.SetRequestHeader("X-Game-Start-Protocol", "1");
         }
 
         /// <summary>

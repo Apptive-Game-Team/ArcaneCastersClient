@@ -83,20 +83,7 @@ namespace TutorialScene
         {
             magicBookController.MagicSelected -= OnMagicSelected;
             GlobalTutorialManager.Instance.SetProgress(OnboardingProgress.MagicBook_ExplainMagicInfo);
-            magicBookController.ShowMagicInfo(ShowElementChartStep);
-        }
-
-        private void ShowElementChartStep()
-        {
-            GlobalTutorialManager.Instance.SetProgress(OnboardingProgress.MagicBook_OpenElementChart);
-            magicBookController.ElementChartOpened += OnElementChartOpened;
-            magicBookController.ShowElementChart(null);
-        }
-
-        private void OnElementChartOpened()
-        {
-            magicBookController.ElementChartOpened -= OnElementChartOpened;
-            magicBookController.ShowOpenedElementChart(ShowReturnToLobbyStep);
+            magicBookController.ShowMagicInfo(ShowReturnToLobbyStep);
         }
 
         private void ShowReturnToLobbyStep()
@@ -130,7 +117,6 @@ namespace TutorialScene
             if (magicBookController != null)
             {
                 magicBookController.MagicSelected -= OnMagicSelected;
-                magicBookController.ElementChartOpened -= OnElementChartOpened;
                 magicBookController.ReturnToLobbySelected -= OnReturnToLobbySelected;
                 magicBookController.Hide();
                 magicBookController = null;

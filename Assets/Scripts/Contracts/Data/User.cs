@@ -6,6 +6,8 @@ namespace Data
         public long id;
         public long selectedDeckId;
         public int mmr;
+        /// <summary>매칭 시점에 서버가 확인한 MMR. 구버전 응답이나 미확인 값은 null이다.</summary>
+        public long? matchMmr;
         public string name;
         public string email;
         /// <summary>Look key for a bot player body; null for human users. See <see cref="PlayerAppearanceResolver"/>.</summary>

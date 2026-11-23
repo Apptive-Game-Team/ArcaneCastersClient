@@ -523,9 +523,7 @@ namespace WordOnline.Tests
             Assert.That(Step, Is.EqualTo("MagicBook_SelectMagic"));
             Invoke(State, "OnMagicSelected");
             Invoke(panel, "OnNextClicked");
-            Assert.That(Step, Is.EqualTo("MagicBook_OpenElementChart"));
-            Invoke(State, "OnElementChartOpened");
-            Invoke(panel, "OnNextClicked");
+            Assert.That(Step, Is.EqualTo("MagicBook_ReturnToLobby"));
             yield return SceneManager.LoadSceneAsync("LobbyScene");
             Assert.That(Step, Is.EqualTo("Common_SelectDeck"));
             controller = (Component)GetStatic("TutorialScene.LobbyTutorialController", "Instance");

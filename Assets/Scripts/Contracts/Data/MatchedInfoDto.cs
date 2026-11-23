@@ -13,6 +13,7 @@ namespace Data
         public User leftUser;
         public User rightUser;
         public string sessionId;
+        public int startProtocolVersion;
 
         [JsonIgnore]
         public bool IsPracticeMatch { get; set; }

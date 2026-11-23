@@ -43,7 +43,8 @@ namespace GameScene.ServedObjectComponent.Sound
 
             ServedObjectSfxController controller =
                 target.gameObject.AddComponent<ServedObjectSfxController>();
-            controller.Initialize(target, resolvedProfile, resolvedAttack, resolvedHit, playSpawn);
+            controller.Initialize(target, resolvedProfile, resolvedAttack, resolvedHit,
+                playSpawn && target.GetComponent<MagmaEruptionPresentation>() == null);
         }
 
         private static bool TryResolveProfile(

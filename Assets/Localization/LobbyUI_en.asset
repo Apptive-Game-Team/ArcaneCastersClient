@@ -798,6 +798,10 @@ MonoBehaviour:
     m_Localized: First win of the day +{0} XP
     m_Metadata:
       m_Items: []
+  - m_Id: 76110341300000134
+    m_Localized: Corrupted Finn
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

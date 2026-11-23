@@ -8,10 +8,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 527266173196447051, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
-      propertyPath: m_audioClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 862f95b72dac34fd8bbe327d8b374906, type: 3}
     - target: {fileID: 2898933720311739919, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
       propertyPath: m_Name
       value: MagmaExplosion
@@ -70,6 +66,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2898933720311739919, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6103482917744521001}
+    - targetCorrespondingSourceObject: {fileID: 2898933720311739919, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6103482917744521010}
   m_SourcePrefab: {fileID: 100100000, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
 --- !u!212 &2895397235357675001 stripped
 SpriteRenderer:
@@ -125,3 +124,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   servedObject: {fileID: 6103482917744521003}
   referenceRadius: 1.05
+--- !u!114 &6103482917744521010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6103482917744521002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec41b1fb7cf44454a05e893ff7619fb5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 6103482917744521003}
+  eruptionRenderer: {fileID: 2895397235357675001}
+  eruptionFrames:
+  - {fileID: 21300000, guid: e730db8d8706425ba096d22a954abdc8, type: 3}
+  - {fileID: 21300000, guid: de91742cc7c04670b8fb1f2147dc6242, type: 3}
+  - {fileID: 21300000, guid: fcbf7bc9190240e09db6437853c2c9ff, type: 3}
+  - {fileID: 21300000, guid: 319d730d1a8849ce9663873a3ae8d011, type: 3}
+  burstDuration: 0.65

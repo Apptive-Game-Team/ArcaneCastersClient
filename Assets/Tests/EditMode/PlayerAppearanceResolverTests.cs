@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Data;
 using Global.Serialization;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace WordOnline.Tests
 {
@@ -11,6 +12,19 @@ namespace WordOnline.Tests
     /// </summary>
     public class PlayerAppearanceResolverTests
     {
+        [Test]
+        public void CorruptedFinnLoadsAllThreePosesWithOnePivot()
+        {
+            string id = PlayerAppearanceResolver.Resolve("corrupted_finn", Resources.Load<Sprite>,
+                out Sprite idle, out Sprite raised, out Sprite attacking);
+
+            Assert.AreEqual("corrupted_finn", id);
+            Assert.AreEqual(idle.pivot, raised.pivot);
+            Assert.AreEqual(idle.pivot, attacking.pivot);
+            Assert.AreEqual(idle.pixelsPerUnit, raised.pixelsPerUnit);
+            Assert.AreEqual(idle.pixelsPerUnit, attacking.pixelsPerUnit);
+        }
+
         private static string[] Set(string id)
         {
             return new[] { "PlayerAppearances/" + id + "/idle", "PlayerAppearances/" + id + "/raised", "PlayerAppearances/" + id + "/attacking" };

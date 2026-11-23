@@ -16,8 +16,8 @@ namespace GameScene
     /// <summary>
     /// FrameInfo 무음을 단계로 나눠 판정한다.
     ///
-    /// FrameInfo는 초당 20회 도착하므로 1초 무음이면 이미 20프레임이 비어 있다. 그 시점에는
-    /// 아직 게임을 살릴 수 있으므로 씬을 유지한 채 재연결만 시도하고, 3초까지 회복하지 못하면
+    /// FrameInfo는 초당 20회 도착하므로 5초 무음이면 이미 20프레임이 비어 있다. 그 시점에는
+    /// 아직 게임을 살릴 수 있으므로 씬을 유지한 채 재연결만 시도하고, 30초까지 회복하지 못하면
     /// 그때 세션을 포기한다.
     ///
     /// 각 단계는 한 무음 구간에서 한 번만 보고한다. 매 프레임 <see cref="Tick"/>을 부르는
@@ -29,11 +29,11 @@ namespace GameScene
     /// </summary>
     public sealed class FrameSilenceWatch
     {
-        /// <summary>무음 20프레임. 여기서 제자리 재연결을 시작한다.</summary>
-        public const float DefaultReconnectAfterSeconds = 1f;
+        /// <summary>무음 100프레임. 여기서 제자리 재연결을 시작한다.</summary>
+        public const float DefaultReconnectAfterSeconds = 5f;
 
         /// <summary>재연결 사다리가 다 돌아갈 만큼 기다린 뒤 포기하는 지점.</summary>
-        public const float DefaultAbandonAfterSeconds = 3f;
+        public const float DefaultAbandonAfterSeconds = 30f;
 
         /// <summary>
         /// 한 틱 간격이 이 값을 넘으면 게임 루프 자체가 멈춰 있었다고 본다.

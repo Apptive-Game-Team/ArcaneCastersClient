@@ -7,6 +7,17 @@ namespace WordOnline.Tests
     {
         private const float Frame = 0.05f; // FrameInfo 20Hz 기준 한 프레임
 
+        [Test]
+        public void Defaults_AllowThirtySecondsForRecovery()
+        {
+            var watch = new FrameSilenceWatch();
+            watch.NoteSignal(0f);
+            Assert.That(watch.Tick(3f, Frame), Is.EqualTo(SilenceEscalation.None));
+            Assert.That(watch.Tick(5f, Frame), Is.EqualTo(SilenceEscalation.Reconnect));
+            Assert.That(watch.Tick(29f, Frame), Is.EqualTo(SilenceEscalation.None));
+            Assert.That(watch.Tick(30f, Frame), Is.EqualTo(SilenceEscalation.Abandon));
+        }
+
         private static FrameSilenceWatch NewWatch() =>
             new FrameSilenceWatch(reconnectAfterSeconds: 1f, abandonAfterSeconds: 3f, loopStallSeconds: 0.5f);
 
