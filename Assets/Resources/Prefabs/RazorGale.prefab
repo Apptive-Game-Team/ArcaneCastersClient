@@ -139,6 +139,8 @@ MonoBehaviour:
   frames:
   - {fileID: 21300000, guid: 7f7533622e904ec88d8c98e1755b6315, type: 3}
   - {fileID: 21300000, guid: 643526d92b76492186d6fc33e8a7e340, type: 3}
+  - {fileID: 21300000, guid: 966ca850ff89485eb2f4e6970ee7d687, type: 3}
+  - {fileID: 21300000, guid: 438a0877c42c41db9a9305384a033ac1, type: 3}
   frameInterval: 0.12
   loop: 1
 --- !u!114 &6411574646945516204

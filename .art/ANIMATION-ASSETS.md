@@ -425,16 +425,16 @@ false positive를 낸다 — 숫자만 보지 말고 pivot 기준으로 겹친 �
   --frame-out 'Assets/Resources/Game/sprites/LightningCloudStrike{index}.png'
 ```
 
-## 폭발 이펙트 프레임 쌍 (`razor_gale`, `electric_explode`)
+## 폭발 이펙트 프레임 (`razor_gale`, `electric_explode`)
 
-`Assets/Resources/Game/explode/` 의 `razor_gale_frame_0/1` (192x155) 과
-`electric_explode_frame_0/1` (192x116) 은 각각 `SpriteFrameAnimator` 가 0.12초
-간격에 `loop: 1` 로 돌리는 두 프레임이다. 두 장의 캔버스 크기가 같아야 하고,
-`spritePixelsToUnits` 는 둘 다 100 이다.
+`Assets/Resources/Game/explode/`의 `razor_gale_frame_0`~`razor_gale_frame_3`
+(192×155)는 4프레임이며, `electric_explode_frame_0/1` (192×116)은 2프레임이다.
+두 효과는 `SpriteFrameAnimator`에서 0.12초 간격으로 반복하고 PPU는 100이다.
+칼바람 회오리의 네 프레임은 공통 투명 캔버스와 하단 기준선을 사용한다.
 
 ### `.meta` 의 `spritePivot` 을 믿지 마라. `alignment` 가 이긴다
 
-네 파일 모두 `spritePivot: {x: 0.5, y: 0.5}` 로 적혀 있지만 `alignment: 7` 이다.
+두 세트 모두 `spritePivot: {x: 0.5, y: 0.5}` 로 적혀 있지만 `alignment: 7` 이다.
 Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런타임 피벗은
 중앙이 아니라 **Bottom Center** 다. `Cloud Dragon 프레임` 절이 같은 함정을 이미
 적어 뒀다.
