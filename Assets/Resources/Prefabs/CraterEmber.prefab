@@ -83,10 +83,43 @@ PrefabInstance:
     - target: {fileID: 8896401521967180672, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4da3741325e7b41698de82157950d547, type: 3}
+      objectReference: {fileID: 21300000, guid: 027b95a11fa740bbaf32ef325b8e1324, type: 3}
     m_RemovedComponents:
     - {fileID: 1623593914299506320, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4391076218535157276, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4707314801239161403}
   m_SourcePrefab: {fileID: 100100000, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+--- !u!1 &4707314801239161401 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4391076218535157276, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+  m_PrefabInstance: {fileID: 1507525255229892684}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &4707314801239161402 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8896401521967180672, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+  m_PrefabInstance: {fileID: 1507525255229892684}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4707314801239161403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4707314801239161401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 4707314801239161402}
+  frames:
+  - {fileID: 21300000, guid: 027b95a11fa740bbaf32ef325b8e1324, type: 3}
+  - {fileID: 21300000, guid: 825a45ef49f74830a686a62f86f0fdc3, type: 3}
+  - {fileID: 21300000, guid: 5889664565ed48039fdd36df549c6c03, type: 3}
+  - {fileID: 21300000, guid: 54118666c08947a3bb7c97a92147be61, type: 3}
+  frameInterval: 0.08
+  loop: 1
