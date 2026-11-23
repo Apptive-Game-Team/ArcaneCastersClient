@@ -22,6 +22,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `TreeGolem.png` | 고목 수호자 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |
 | `TreeGolemWalk01.png`–`TreeGolemWalk08.png` | 고목 수호자 · 양발의 접촉, 체중 이동, 지나가기, 다음 착지 | 실제 XZ 이동 0.9칸마다 한 바퀴. 기준 속도 0.5칸/초에서 1.8초 |
 | `TreeGolem2.png`, `TreeGolemRecover01.png`–`TreeGolemRecover03.png` | 고목 수호자 · 펀치 타격과 복귀 | 공격 이벤트에서 타격 프레임을 즉시 표시하고 0.05초 간격으로 복귀. 총 0.2초 |
+| `BeanShooter.png`, `BeanShooterWalk01.png`–`BeanShooterWalk06.png` | BeanShooter · 대기와 뿌리발 보행 | `GroundedUnitPoseController`가 실제 XZ 이동 0.6칸마다 여섯 자세를 한 바퀴 재생한다. 기준 속도 0.6칸/초에서 1초 |
+| `BeanShooterAttack.png`, `BeanShooterRecover01.png`–`BeanShooterRecover02.png` | BeanShooter · 발사와 줄기 복귀 | 공격 이벤트에서 발사 자세를 즉시 표시한다. 세 자세가 각각 0.08초씩 이어진다 |
 | `EvilEnt.png` | 사악한 고목 · 기본 자세 | `EvilEnt.prefab` 기본 SpriteRenderer |
 | `EvilEnt2.png` | 사악한 고목 · 팔을 뻗은 공격 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
 | `PlayerCharacterBase.png` | 수습 마법생 · 지팡이를 세운 기본 자세 | `Player.prefab` 의 `PlayerImage` SpriteRenderer |
