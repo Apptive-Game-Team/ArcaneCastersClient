@@ -67,7 +67,9 @@ public static class DesktopBuildScript
     {
         string plistPath = Path.Combine(root, "Contents/Info.plist");
         var plist = new XmlDocument { XmlResolver = null };
-        plist.Load(plistPath);
+        // Unity의 plist 선언을 다시 쓰면 Mono가 빈 DTD 내부 서브셋([])을 추가해 PlistBuddy가 읽지 못한다.
+        using (var reader = XmlReader.Create(plistPath, new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore }))
+            plist.Load(reader);
         var executable = plist.SelectSingleNode("/plist/dict/key[.='CFBundleExecutable']/following-sibling::*[1][self::string]");
         string name = executable?.InnerText;
         if (string.IsNullOrWhiteSpace(name) || name == "." || name == ".." || name.IndexOfAny(new[] { '/', '\\' }) >= 0)

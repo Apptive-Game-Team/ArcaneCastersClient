@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 
 namespace LobbyScene
@@ -55,8 +57,10 @@ namespace LobbyScene
         [Header("Requests Tab")]
         [SerializeField] private Transform receivedRequestsContainer;
         [SerializeField] private TMP_Text receivedStatusText;
+        [SerializeField] private LocalizeStringEvent receivedStatusLocalization;
         [SerializeField] private Transform sentRequestsContainer;
         [SerializeField] private TMP_Text sentStatusText;
+        [SerializeField] private LocalizeStringEvent sentStatusLocalization;
 
         [Header("Row Prefabs")]
         [SerializeField] private FriendItemView friendRowPrefab;
@@ -363,13 +367,13 @@ namespace LobbyScene
 
                 if (!success)
                 {
-                    ShowStatus(receivedStatusText, "받은 친구 요청을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.", SlateTextColor);
+                    ShowRequestStatus(receivedStatusText, receivedStatusLocalization, "FriendReceivedRequestsLoadFailed");
                     return;
                 }
 
                 if (requests == null || requests.Count == 0)
                 {
-                    ShowStatus(receivedStatusText, "받은 친구 요청이 없습니다.", SlateTextColor);
+                    ShowRequestStatus(receivedStatusText, receivedStatusLocalization, "FriendReceivedRequestsEmpty");
                     return;
                 }
 
@@ -386,13 +390,13 @@ namespace LobbyScene
 
                 if (!success)
                 {
-                    ShowStatus(sentStatusText, "보낸 친구 요청을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.", SlateTextColor);
+                    ShowRequestStatus(sentStatusText, sentStatusLocalization, "FriendSentRequestsLoadFailed");
                     return;
                 }
 
                 if (requests == null || requests.Count == 0)
                 {
-                    ShowStatus(sentStatusText, "보낸 친구 요청이 없습니다.", SlateTextColor);
+                    ShowRequestStatus(sentStatusText, sentStatusLocalization, "FriendSentRequestsEmpty");
                     return;
                 }
 
@@ -446,6 +450,15 @@ namespace LobbyScene
             if (status == null) return;
             status.text = message;
             status.color = color;
+            status.gameObject.SetActive(true);
+        }
+
+        private static void ShowRequestStatus(TMP_Text status, LocalizeStringEvent localization, string key)
+        {
+            if (status == null || localization == null) return;
+            status.text = string.Empty;
+            status.color = SlateTextColor;
+            localization.StringReference = new LocalizedString("LobbyUI", key);
             status.gameObject.SetActive(true);
         }
 

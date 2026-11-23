@@ -802,6 +802,22 @@ MonoBehaviour:
     m_Localized: Corrupted Finn
     m_Metadata:
       m_Items: []
+  - m_Id: 76110341300000135
+    m_Localized: Could not load received requests. Try again shortly.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000136
+    m_Localized: No received friend requests.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000137
+    m_Localized: Could not load sent requests. Try again shortly.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76110341300000138
+    m_Localized: No sent friend requests.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
