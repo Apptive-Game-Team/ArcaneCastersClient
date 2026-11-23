@@ -25,6 +25,7 @@ namespace TutorialScene
         MagicBook_ExplainMagicBook,
         MagicBook_SelectMagic,
         MagicBook_ExplainMagicInfo,
+        // 이후 항목의 값이 바뀌지 않도록 삭제한 상성표 단계의 값을 남긴다.
         MagicBook_OpenElementChart,
         MagicBook_ReturnToLobby,
 
