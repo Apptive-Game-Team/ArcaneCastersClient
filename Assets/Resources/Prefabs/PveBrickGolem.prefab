@@ -76,10 +76,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 1724676e569e476dbd5eed5b306688d3, type: 3}
-    - target: {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
-      propertyPath: swapSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8d6831a8034e4b2386e216eecc51f940, type: 3}
     - target: {fileID: 4479202527324724850, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       propertyPath: m_Size.x
       value: 3.66
@@ -102,7 +98,41 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7100000000000005313}
   m_SourcePrefab: {fileID: 100100000, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+--- !u!1 &7100000000000005311 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000003901}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7100000000000005312 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3630220617462090093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000003901}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7100000000000005313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7100000000000005311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a573cca02da4b768f1ed91d21d55fa1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 7100000000000005312}
+  raisedArmSprite: {fileID: 21300000, guid: 8d6831a8034e4b2386e216eecc51f940, type: 3}
+  sweepFrames:
+  - {fileID: 21300000, guid: 3b53e82de37b4b2aab5abebfd6326dd5, type: 3}
+  - {fileID: 21300000, guid: 75183aac1386474c9440ca69f73461ea, type: 3}
+  - {fileID: 21300000, guid: d6c11f9c8096439c96719d76809fd914, type: 3}
+  - {fileID: 21300000, guid: 38461da519d04c5a8d1e4bf275cd4934, type: 3}

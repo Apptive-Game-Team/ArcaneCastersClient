@@ -511,6 +511,85 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator BrickGolemSweepPoseInRecordingUsesSourceDirectionAndDuration()
+        {
+            Create();
+            object clip = ((Array)Field("clips")).GetValue(0);
+            const string sweep = "{\"type\":\"BrickGolemSweepPose\",\"duration\":0.4,\"start\":{\"targetType\":\"reference\",\"id\":42},\"end\":{\"targetType\":\"position\",\"x\":1,\"y\":0,\"z\":5}}";
+            const string golems = "[{\"id\":42,\"master\":\"LeftPlayer\",\"type\":\"PveBrickGolem\",\"position\":{\"x\":4,\"y\":0,\"z\":5}},{\"id\":43,\"master\":\"LeftPlayer\",\"type\":\"PveBrickGolem\",\"position\":{\"x\":8,\"y\":0,\"z\":5}}]";
+            var recording = new TextAsset("{\"version\":1,\"magic\":\"fire_shot\",\"frameDuration\":0.05,\"duration\":2," +
+                "\"frames\":[{\"time\":0,\"objects\":{\"create\":" + golems + ",\"projectile\":[" + sweep + "]," +
+                "\"update\":[{\"id\":42,\"master\":\"LeftPlayer\",\"position\":{\"x\":4,\"y\":0,\"z\":5},\"status\":\"Attack\"}]}}]}");
+            clip.GetType().GetField("recordingAsset").SetValue(clip, recording);
+
+            var previewCameraField = previewType.GetField("previewCamera", Private);
+            Camera previewCamera = null;
+            int previousRate = Time.captureFramerate;
+            try
+            {
+                Time.captureFramerate = 100;
+                Assert.That(Configure("fire_shot"), Is.True);
+                // 그래픽을 끈 배치 모드에서도 녹화 로딩과 자세 재생을 검증한다.
+                previewCamera = (Camera)previewCameraField.GetValue(preview);
+                previewCameraField.SetValue(preview, null);
+                Assert.That(Property("ScenarioCount"), Is.EqualTo(1));
+                Component actor = Target(42);
+                Component spectator = Target(43);
+                Type presenterType = Runtime("GameScene.ServedObjectComponent.Motion.BrickGolemPoseController");
+                var presenter = (Behaviour)actor.GetComponent(presenterType);
+                var rendererField = presenterType.GetField("targetRenderer", Private);
+                var renderer = (SpriteRenderer)rendererField.GetValue(presenter);
+                var otherRenderer = (SpriteRenderer)rendererField.GetValue(spectator.GetComponent(presenterType));
+                var idle = Resources.Load<Sprite>("Game/sprites/PveBrickGolem");
+                var raised = Resources.Load<Sprite>("Game/sprites/PveBrickGolem2");
+                Sprite[] frames = Enumerable.Range(1, 4)
+                    .Select(index => Resources.Load<Sprite>($"Game/sprites/PveBrickGolemSweep{index:00}")).ToArray();
+                Assert.That(renderer.sprite, Is.SameAs(frames[0]));
+                Assert.That(renderer.flipX, Is.True);
+                Assert.That(otherRenderer.sprite, Is.SameAs(idle));
+                Assert.That(otherRenderer.flipX, Is.False);
+                Vector3 rootPosition = actor.transform.position;
+                float started = Time.time;
+                var observed = new System.Collections.Generic.List<Sprite>();
+                while (Time.time < started + 0.45f)
+                {
+                    if (!observed.Contains(renderer.sprite)) observed.Add(renderer.sprite);
+                    if (Time.time < started + 0.39f) Assert.That(renderer.sprite, Is.Not.SameAs(raised));
+                    yield return null;
+                }
+                CollectionAssert.AreEqual(frames.Append(idle).ToArray(), observed);
+                Assert.That(actor.transform.position, Is.EqualTo(rootPosition));
+                foreach (Sprite frame in frames)
+                {
+                    Assert.That(frame.bounds.size, Is.EqualTo(idle.bounds.size));
+                    Assert.That(frame.pivot, Is.EqualTo(idle.pivot));
+                }
+
+                // 실시간 갱신에서 Attack이 먼저 도착해도 뒤따른 휩쓸기 신호가 자세를 선택한다.
+                actor.GetType().GetMethod("PlayAttackPresentation").Invoke(actor, null);
+                Assert.That(renderer.sprite, Is.SameAs(raised));
+                var deserialize = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize")
+                    .MakeGenericMethod(Runtime("GameScene.Dto.Projectile.ProjectileDto"));
+                object cue = deserialize.Invoke(null, new object[] { sweep });
+                Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnShared")
+                    .Invoke(null, new[] { cue, Field("world") });
+                Assert.That(renderer.sprite, Is.SameAs(frames[0]));
+                presenter.enabled = false;
+                Assert.That(renderer.sprite, Is.SameAs(idle));
+            }
+            finally
+            {
+                if (previewCamera != null)
+                {
+                    previewCameraField.SetValue(preview, previewCamera);
+                    preview.gameObject.SetActive(false);
+                }
+                Time.captureFramerate = previousRate;
+                UnityEngine.Object.Destroy(recording);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator LegacyRecordingWorksAndMalformedRecordingHidesPreview()
         {
             Create();
