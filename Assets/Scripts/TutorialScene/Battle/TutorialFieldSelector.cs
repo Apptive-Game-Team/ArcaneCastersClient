@@ -1,6 +1,7 @@
 using Data.GameConfig;
 using Data.Magic;
 using GameScene;
+using Global;
 using UnityEngine;
 
 namespace TutorialScene
@@ -98,7 +99,7 @@ namespace TutorialScene
 
             if (!currentSkillIndicator.activeSelf) currentSkillIndicator.SetActive(true);
 
-            if (!TryGetGroundPosition(Input.mousePosition, out Vector3 mouseWorldPos))
+            if (!TryGetGroundPosition(AimPointerSource.GetScreenPosition(casterPosition), out Vector3 mouseWorldPos))
             {
                 return;
             }
@@ -109,9 +110,10 @@ namespace TutorialScene
             UpdateSkillIndicator(wantLine, casterPosition, previewPosition, magicRange, magicRadius);
 
 
-            if (PointerInputUtility.IsPointerOverUi()) return;
+            bool gamepadConfirm = GamepadInput.SubmitDown;
+            if (!gamepadConfirm && PointerInputUtility.IsPointerOverUi()) return;
 
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0) || gamepadConfirm)
             {
                 cardInputSender.SendInput(previewPosition);
                 currentAimObj.SetActive(false);
