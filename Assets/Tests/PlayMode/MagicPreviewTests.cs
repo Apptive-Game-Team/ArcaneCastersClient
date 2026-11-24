@@ -2119,7 +2119,8 @@ namespace WordOnline.Tests
                 Assert.That(FindProjectile("ElectricShot"), Is.Null);
 
                 yield return PlayUntil(start + .025f);
-                Assert.That(Target(2), Is.Null);
+                Assert.That((bool)rider.GetType().GetProperty("IsDespawning", Private).GetValue(rider), Is.True);
+                Assert.That(body.sprite.name, Is.EqualTo("StormRider"));
                 var bolt = FindProjectile("ElectricShot");
                 Assert.That(bolt, Is.Not.Null);
                 var ally = Target(targetId);
@@ -2129,6 +2130,7 @@ namespace WordOnline.Tests
                 float initialDistance = Vector3.Distance(bolt.position, ally.transform.position);
 
                 yield return PlayUntil(start + duration * .65f);
+                Assert.That(Target(2), Is.Null);
                 Assert.That(Vector3.Distance(bolt.position, ally.transform.position), Is.LessThan(initialDistance));
                 yield return PlayUntil(start + duration + .065f);
                 Assert.That(FindProjectile("ElectricShot"), Is.Null);
