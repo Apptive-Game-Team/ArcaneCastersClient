@@ -2023,6 +2023,123 @@ namespace WordOnline.Tests
         }
 
 
+
+        [UnityTest]
+        public IEnumerator StormRiderGlidesAndThrustsOnTheRecordedDamageTicks()
+        {
+            Create();
+            Assert.That(Configure("storm_rider"), Is.True);
+            var scenarios = (JArray)Recording("storm_rider")["scenarios"];
+            var ground = scenarios.Single(scenario => (string)scenario["id"] == "ground");
+            Scenario(scenarios.IndexOf(ground));
+
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/StormRiderCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                yield return PlayUntil(.63f);
+                Component rider = Target(3);
+                Assert.That(rider.GetComponent("HoppingMotionController"), Is.Null);
+                Assert.That(rider.GetComponent("AttackSpriteSwapController"), Is.Null);
+                var body = (SpriteRenderer)rider.GetType().GetField("_spriteRenderer", Private).GetValue(rider);
+                Assert.That(body.sprite.name, Is.EqualTo("StormRider"));
+                var sequence = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 1.92f)
+                {
+                    string pose = body.sprite.name;
+                    if (pose.StartsWith("StormRiderGlide", StringComparison.Ordinal) && pose != sequence.LastOrDefault())
+                    {
+                        sequence.Add(pose);
+                        if (capture && sequence.Count <= 8) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+
+                CollectionAssert.AreEqual(
+                    Enumerable.Range(1, 8).Select(index => $"StormRiderGlide{index:00}"),
+                    sequence.Take(8));
+                Assert.That(sequence.Count, Is.GreaterThan(8));
+                Assert.That(sequence[8], Is.EqualTo("StormRiderGlide01"));
+                var hits = ground["frames"].Where(frame => frame["events"].Any(e =>
+                    (string)e["type"] == "hit" && (int)e["actorId"] == 3 && (int)e["targetId"] == 2))
+                    .Take(2).Select(frame => (float)frame["time"]).ToArray();
+                Assert.That(hits, Has.Length.EqualTo(2));
+                Assert.That(hits[0], Is.EqualTo(2.65f).Within(.001f));
+                Assert.That(hits[1], Is.EqualTo(3.45f).Within(.001f));
+                var target = Target(2);
+
+                for (int hit = 0; hit < hits.Length; hit++)
+                {
+                    yield return PlayUntil(hits[hit] - .025f);
+                    Assert.That(body.sprite.name, Is.EqualTo("StormRider"));
+                    Assert.That(CurrentHp(target), Is.EqualTo(10000 - 100 * hit));
+                    for (int pose = 1; pose <= 5; pose++)
+                    {
+                        yield return PlayUntil(hits[hit] + .02f + (pose - 1) * .08f);
+                        Assert.That(body.sprite.name, Is.EqualTo($"StormRiderThrust{pose:00}"));
+                        Assert.That(body.flipX, Is.False);
+                        Assert.That(CurrentHp(target), Is.EqualTo(9900 - 100 * hit));
+                        if (capture && hit == 0) SaveViewport(directory, body.sprite.name, true);
+                    }
+
+                    yield return PlayUntil(hits[hit] + .45f);
+                    Assert.That(body.sprite.name, Is.EqualTo("StormRider"));
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator StormRiderRemovalStillSendsTheRecordedAbsorptionProjectile()
+        {
+            Create();
+            Assert.That(Configure("storm_rider"), Is.True);
+            var scenarios = (JArray)Recording("storm_rider")["scenarios"];
+            var death = scenarios.Single(scenario => (string)scenario["id"] == "death_energy");
+            var (start, duration, targetId) = FirstProjectile(death, "ElectricAbsorb");
+            Assert.That(start, Is.EqualTo(1.20f).Within(.001f));
+            Assert.That(duration, Is.EqualTo(.35f).Within(.001f));
+            Assert.That(targetId, Is.EqualTo(3));
+            Scenario(scenarios.IndexOf(death));
+
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(start - .026f);
+                var rider = Target(2);
+                var body = (SpriteRenderer)rider.GetType().GetField("_spriteRenderer", Private).GetValue(rider);
+                Assert.That(body.sprite.name, Is.EqualTo("StormRider"));
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+
+                yield return PlayUntil(start + .025f);
+                Assert.That(Target(2), Is.Null);
+                var bolt = FindProjectile("ElectricShot");
+                Assert.That(bolt, Is.Not.Null);
+                var ally = Target(targetId);
+                var activeEffects = (System.Collections.Generic.IReadOnlyCollection<string>)
+                    ally.GetType().GetProperty("ActiveEffects").GetValue(ally);
+                Assert.That(activeEffects, Does.Contain("Overcharge"));
+                float initialDistance = Vector3.Distance(bolt.position, ally.transform.position);
+
+                yield return PlayUntil(start + duration * .65f);
+                Assert.That(Vector3.Distance(bolt.position, ally.transform.position), Is.LessThan(initialDistance));
+                yield return PlayUntil(start + duration + .065f);
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+
         private Transform FindProjectile(string type)
         {
             var world = (Component)Field("world");

@@ -35,6 +35,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `DimensionToad.png`, `DimensionToadRetreat01.png`–`DimensionToadRetreat08.png` | 차원 두꺼비 · 대기와 여섯 발 도주 | 실제 지면 이동 1.28칸마다 여덟 자세를 재생한다. 가까운 앞발·먼 중간발·가까운 뒷발이 체중을 받다가 반대편 세 발에 넘긴다 |
 | `MiniRockSwarm.png`, `MiniRockWalk01.png`–`MiniRockWalk08.png` | 꼬마돌 · 대기와 양발 보행 | 실제 지면 이동 0.48칸마다 여덟 자세를 재생한다. 기본 속도 0.5칸/초에서 0.96초 |
 | `MiniRockPunch01.png`–`MiniRockPunch04.png` | 꼬마돌 · 짧은 주먹 타격과 회수 | `HitEvent`에서 표적 쪽으로 돌고 첫 자세를 표시한다. 네 자세가 0.08초씩 이어진다 |
+| `StormRider.png`, `StormRiderGlide01.png`–`StormRiderGlide08.png` | 폭풍 기수 · 대기와 구름 질주 | 실제 지면 이동 1.92칸마다 구름의 앞뒤가 부풀고 눌리는 여덟 자세를 재생한다. 기본 속도 3칸/초에서 한 주기는 0.64초다 |
+| `StormRiderThrust01.png`–`StormRiderThrust05.png` | 폭풍 기수 · 창 타격과 회수 | `HitEvent`에서 표적 방향으로 창을 내민다. 창을 거두고 자세를 정돈하는 다섯 장을 0.08초씩 재생한다 |
 | `TreeGolem.png` | 고목 수호자 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |
 | `TreeGolemWalk01.png`–`TreeGolemWalk08.png` | 고목 수호자 · 양발의 접촉, 체중 이동, 지나가기, 다음 착지 | 실제 XZ 이동 0.9칸마다 한 바퀴. 기준 속도 0.5칸/초에서 1.8초 |
 | `TreeGolem2.png`, `TreeGolemRecover01.png`–`TreeGolemRecover03.png` | 고목 수호자 · 펀치 타격과 복귀 | 공격 이벤트에서 타격 프레임을 즉시 표시하고 0.05초 간격으로 복귀. 총 0.2초 |

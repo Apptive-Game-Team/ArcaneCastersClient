@@ -56,10 +56,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.17
       objectReference: {fileID: 0}
-    - target: {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-      propertyPath: _duration
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 6928872084569727094, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -124,9 +120,61 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
+    - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     - {fileID: 3003403705979211347, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5680000000000000003}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+--- !u!1 &5680000000000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+  m_PrefabInstance: {fileID: 1701133380062854001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &5680000000000000002 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+  m_PrefabInstance: {fileID: 1701133380062854001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5680000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5680000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 5680000000000000002}
+  walkFrames:
+  - {fileID: 21300000, guid: 52633aabe291434793a069ee0ae1ce20, type: 3}
+  - {fileID: 21300000, guid: 2875290310614de3adf861614e82a53a, type: 3}
+  - {fileID: 21300000, guid: 3fd0b4acf3c54f0fbffbcf0d6532699f, type: 3}
+  - {fileID: 21300000, guid: 7af40a4a4ef543bda1be89b5ca0802bb, type: 3}
+  - {fileID: 21300000, guid: 8d7b4f5cc11544f5ae09ea0db6e77e58, type: 3}
+  - {fileID: 21300000, guid: 1c074320fc0c457fba57de0d65c13241, type: 3}
+  - {fileID: 21300000, guid: 1aa040c366f94441b6a4be95b1607321, type: 3}
+  - {fileID: 21300000, guid: 46c51641f456412097812c3d770511bc, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: a295e17b0f1e48ad891ecdefa700f7d0, type: 3}
+  - {fileID: 21300000, guid: 1fc46ed9bd1d4ad89fde9afd553678e7, type: 3}
+  - {fileID: 21300000, guid: eb85e92ba8a0408e94fcc0bfbbb666af, type: 3}
+  - {fileID: 21300000, guid: bc2ec0eac4974d07bb1e8f86ae5f5440, type: 3}
+  - {fileID: 21300000, guid: 5544e420513d4bb8a1448f535eba51ac, type: 3}
+  walkCycleDistance: 1.92
+  attackDuration: 0.4
+  attackOnHit: 1
+  maximumGroundSpeed: 3.3
