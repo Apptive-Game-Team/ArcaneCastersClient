@@ -10,11 +10,15 @@ namespace GameScene.ServedObjectComponent.Motion
         [SerializeField] private Sprite[] attackFrames;
         [SerializeField] private float walkCycleDistance = 0.54f;
         [SerializeField] private float attackDuration = 0.2f;
+        [SerializeField] private bool attackOnHit;
+        [SerializeField] private float maximumGroundSpeed;
 
         private const float MinimumGroundStep = 0.00025f;
         private const float MinimumMovementGrace = 0.08f;
         private const float MinimumCorrectionDistance = 0.25f;
         private const float CorrectionSpeed = 2f;
+        private const float MinimumServerCorrectionDistance = 0.15f;
+        private const float MinimumFacingSpeed = 0.1f;
 
         private SpriteRenderer resolvedRenderer;
         private Sprite idleSprite;
@@ -24,6 +28,12 @@ namespace GameScene.ServedObjectComponent.Motion
         private float walkDistance;
         private float movingUntil = float.NegativeInfinity;
         private float attackStarted = float.NegativeInfinity;
+        private Vector2 lastServerGround;
+        private bool hasServerGround;
+        private bool correctingServerGround;
+        private int precedingServerDirection;
+        private int confirmedServerDirection;
+        private bool impactFlip;
 
         protected override void OnBound()
         {
@@ -34,7 +44,15 @@ namespace GameScene.ServedObjectComponent.Motion
             }
 
             idleSprite = resolvedRenderer.sprite;
-            Owner.OnAttack += HandleAttack;
+            if (!attackOnHit)
+            {
+                Owner.OnAttack += HandleAttack;
+            }
+
+            if (maximumGroundSpeed > 0f)
+            {
+                Owner.OnServerPositionUpdated += HandleServerGround;
+            }
         }
 
         protected override void OnUnbound()
@@ -42,6 +60,7 @@ namespace GameScene.ServedObjectComponent.Motion
             if (Owner != null)
             {
                 Owner.OnAttack -= HandleAttack;
+                Owner.OnServerPositionUpdated -= HandleServerGround;
             }
 
             ResetPose();
@@ -49,15 +68,63 @@ namespace GameScene.ServedObjectComponent.Motion
 
         private void OnDisable() => ResetPose();
 
+        internal void PlayHitPose()
+        {
+            if (attackOnHit)
+            {
+                HandleAttack();
+            }
+        }
+
         private void HandleAttack()
         {
-            if (!isActiveAndEnabled || attackFrames == null || attackFrames.Length == 0 || attackDuration <= 0f)
+            if (!isActiveAndEnabled || resolvedRenderer == null || attackFrames == null ||
+                attackFrames.Length == 0 || attackDuration <= 0f)
             {
                 return;
             }
 
             attackStarted = Time.time;
+            impactFlip = resolvedRenderer.flipX;
             resolvedRenderer.sprite = attackFrames[0];
+        }
+
+        private void HandleServerGround(Vector3 position)
+        {
+            if (!isActiveAndEnabled)
+            {
+                return;
+            }
+
+            var ground = new Vector2(position.x, position.z);
+            Vector2 step = ground - (hasServerGround ? lastServerGround : GroundPosition());
+            if (correctingServerGround)
+            {
+                // PositionUpdater가 새 보간 전에 직전 목표 좌표에 맞춘다.
+                lastGroundPosition = lastServerGround;
+                hasGroundSample = true;
+            }
+
+            lastServerGround = ground;
+            hasServerGround = true;
+            float tick = GameConfig.FrameDuration;
+            float limit = Mathf.Max(MinimumServerCorrectionDistance, maximumGroundSpeed * tick);
+            correctingServerGround = step.sqrMagnitude > limit * limit;
+            if (correctingServerGround)
+            {
+                precedingServerDirection = confirmedServerDirection = 0;
+                movingUntil = float.NegativeInfinity;
+                walkDistance = 0f;
+                return;
+            }
+
+            int direction = Mathf.Abs(step.x) >= MinimumFacingSpeed * tick ? (step.x < 0f ? -1 : 1) : 0;
+            if (direction != 0 && direction == precedingServerDirection)
+            {
+                confirmedServerDirection = direction;
+            }
+
+            precedingServerDirection = direction;
         }
 
         private void LateUpdate()
@@ -70,6 +137,15 @@ namespace GameScene.ServedObjectComponent.Motion
             float now = Time.time;
             float attackElapsed = now - attackStarted;
             bool attacking = attackElapsed < attackDuration;
+            if (attackOnHit && attacking)
+            {
+                resolvedRenderer.flipX = impactFlip;
+            }
+            else if (confirmedServerDirection != 0)
+            {
+                resolvedRenderer.flipX = confirmedServerDirection < 0;
+            }
+
             UpdateWalk(now, attacking);
 
             Sprite pose = idleSprite;
@@ -92,13 +168,7 @@ namespace GameScene.ServedObjectComponent.Motion
 
         private void UpdateWalk(float now, bool attacking)
         {
-            Vector3 rootPosition = Owner.transform.position;
-            if (Owner.PresentationWorld != null)
-            {
-                rootPosition = Owner.PresentationWorld.transform.InverseTransformPoint(rootPosition);
-            }
-
-            var groundPosition = new Vector2(rootPosition.x, rootPosition.z);
+            Vector2 groundPosition = GroundPosition();
             bool flipped = resolvedRenderer.flipX;
             bool changedDirection = hasGroundSample && flipped != lastFlip;
             float distance = hasGroundSample ? Vector2.Distance(lastGroundPosition, groundPosition) : 0f;
@@ -106,8 +176,11 @@ namespace GameScene.ServedObjectComponent.Motion
             lastFlip = flipped;
             hasGroundSample = true;
 
-            // 큰 좌표 보정은 걸음으로 처리하지 않는다. 매 프레임 새 좌표를 기준으로 삼는다.
-            if (distance > Mathf.Max(MinimumCorrectionDistance, CorrectionSpeed * Time.deltaTime))
+            // 빠른 이동은 서버 좌표에서 보정을 판별하고 해당 보간 구간을 모두 건너뛴다.
+            bool correcting = maximumGroundSpeed > 0f
+                ? correctingServerGround
+                : distance > Mathf.Max(MinimumCorrectionDistance, CorrectionSpeed * Time.deltaTime);
+            if (correcting)
             {
                 movingUntil = float.NegativeInfinity;
                 walkDistance = 0f;
@@ -131,9 +204,22 @@ namespace GameScene.ServedObjectComponent.Motion
             }
         }
 
+        private Vector2 GroundPosition()
+        {
+            Vector3 rootPosition = Owner.transform.position;
+            if (Owner.PresentationWorld != null)
+            {
+                rootPosition = Owner.PresentationWorld.transform.InverseTransformPoint(rootPosition);
+            }
+
+            return new Vector2(rootPosition.x, rootPosition.z);
+        }
+
         private void ResetPose()
         {
             hasGroundSample = false;
+            hasServerGround = correctingServerGround = false;
+            precedingServerDirection = confirmedServerDirection = 0;
             walkDistance = 0f;
             movingUntil = attackStarted = float.NegativeInfinity;
             if (resolvedRenderer != null && idleSprite != null)

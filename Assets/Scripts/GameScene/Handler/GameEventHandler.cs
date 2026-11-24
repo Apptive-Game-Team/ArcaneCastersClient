@@ -4,6 +4,7 @@ using GameScene.Dto.Event;
 using GameScene.Object;
 using GameScene.ServedObjectComponent;
 using GameScene.ServedObjectComponent.Effect;
+using GameScene.ServedObjectComponent.Motion;
 using GameScene.ServedObjectComponent.Sound;
 using Global;
 using UnityEngine;
@@ -61,6 +62,7 @@ namespace GameScene.Handler
             if (actor != null)
             {
                 actor.FaceTowards(target.transform.position);
+                actor.GetComponent<GroundedUnitPoseController>()?.PlayHitPose();
                 HitKnockback.Play(target, actor.transform.position);
             }
 

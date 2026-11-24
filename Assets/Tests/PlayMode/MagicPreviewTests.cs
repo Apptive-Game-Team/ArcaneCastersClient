@@ -424,6 +424,179 @@ namespace WordOnline.Tests
             int.Parse(sprite.name.Substring("RockRollingRoll".Length)) - 1;
 
         [UnityTest]
+        public IEnumerator StormStagRecordingUsesFourLegGaitAndOnlyBracesOnContact()
+        {
+            Create();
+            const string magic = "storm_stag";
+            Assert.That(Configure(magic), Is.True);
+            var frames = (JArray)Recording(magic)["scenarios"][0]["frames"];
+            int id = (int)frames.SelectMany(frame => frame["objects"]["create"])
+                .First(created => (string)created["type"] == "StormStag")["id"];
+            var impacts = frames.Where(frame => frame["events"]
+                .Any(hit => (string)hit["type"] == "hit" && (int)hit["actorId"] == id))
+                .Select(frame => (float)frame["time"]).Take(2).ToArray();
+            Assert.That(impacts, Has.Length.EqualTo(2));
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                string directory = System.IO.Path.Combine(Application.dataPath, "../Library/StormStagCaptures");
+                bool canCapture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+                if (canCapture) System.IO.Directory.CreateDirectory(directory);
+
+                yield return PlayUntil(impacts[0] - .18f);
+                Component actor = Target(id);
+                Assert.That(actor, Is.Not.Null);
+                var renderer = (SpriteRenderer)actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor);
+                Assert.That(renderer.sprite.name, Does.StartWith("StormStagGallop"));
+                Assert.That(renderer.flipX, Is.False);
+                if (canCapture) SaveViewport(directory, "gallop", true);
+
+                foreach (float impact in impacts)
+                {
+                    yield return PlayUntil(impact + .025f);
+                    Assert.That(renderer.sprite.name, Is.EqualTo("StormStagImpact01"));
+                    Assert.That(renderer.flipX, Is.False);
+                    if (canCapture && impact == impacts[0]) SaveViewport(directory, "impact", true);
+                    yield return PlayUntil(impact + .085f);
+                    Assert.That(renderer.sprite.name, Is.EqualTo("StormStagImpact02"));
+                    Assert.That(renderer.flipX, Is.False);
+                    yield return PlayUntil(impact + .145f);
+                    Assert.That(renderer.sprite.name, Is.EqualTo("StormStagImpact03"));
+                    Assert.That(renderer.flipX, Is.False);
+                    yield return PlayUntil(impact + .24f);
+                    Assert.That(renderer.sprite.name, Does.StartWith("StormStagGallop"));
+                    Assert.That(renderer.flipX, Is.True);
+                    if (canCapture && impact == impacts[0]) SaveViewport(directory, "retreat", true);
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator StormStagGaitDistinguishesRetreatFromCorrectionAtBothTickRates()
+        {
+            Create();
+            Type config = Runtime("GameScene.GameConfig");
+            MethodInfo setRate = config.GetMethod("SetTickRate");
+            int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
+            int previousRenderRate = Time.captureFramerate;
+            try
+            {
+                foreach (int tickRate in new[] { 20, 60 })
+                foreach (int renderRate in new[] { 30, 60 })
+                {
+                    setRate.Invoke(null, new object[] { tickRate });
+                    Time.captureFramerate = renderRate;
+                    yield return CheckStormStagGait(tickRate);
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+                setRate.Invoke(null, new object[] { previousTickRate });
+            }
+        }
+
+        private IEnumerator CheckStormStagGait(int tickRate)
+        {
+            Component world = CreateWorld();
+            Type info = Runtime("GameScene.Dto.ObjectsInfo");
+            var decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize").MakeGenericMethod(info);
+            var apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            Type hitType = Runtime("GameScene.Dto.Event.HitEvent");
+            object hit = Activator.CreateInstance(hitType);
+            hitType.GetField("actorId").SetValue(hit, 41);
+            hitType.GetField("targetId").SetValue(hit, 42);
+            var events = (IList)Activator.CreateInstance(typeof(System.Collections.Generic.List<>)
+                .MakeGenericType(Runtime("GameScene.Dto.Event.GameEvent")));
+            events.Add(hit);
+
+            void Apply(string json, bool withHit = false) =>
+                apply.Invoke(null, new[] { decode.Invoke(null, new object[] { json }), withHit ? events : null, world });
+
+            void Send(float x, string status = "Idle", string effects = "", bool withHit = false) =>
+                Apply(FormattableString.Invariant(
+                    $"{{\"update\":[{{\"id\":41,\"position\":{{\"x\":{x},\"y\":0,\"z\":5}},\"status\":\"{status}\",\"effects\":[{effects}]}}]}}"), withHit);
+
+            Apply("{\"create\":[" +
+                "{\"id\":41,\"type\":\"StormStag\",\"master\":\"LeftPlayer\",\"position\":{\"x\":5,\"y\":0,\"z\":5}}," +
+                "{\"id\":42,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":22,\"y\":0,\"z\":5}}]}");
+            Component actor = (Component)world.GetType().GetMethod("FindById").Invoke(world, new object[] { 41 });
+            var renderer = (SpriteRenderer)actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor);
+            Assert.That(actor.GetComponent("HoppingMotionController"), Is.Null);
+            Assert.That((bool)actor.GetType().GetField("_swingOnAttack", Private).GetValue(actor), Is.False);
+            Sprite idle = renderer.sprite;
+            Send(5f, "Attack");
+            Assert.That(renderer.sprite, Is.SameAs(idle));
+            Send(5f, "Hindered", "\"Panic\"");
+            Assert.That(renderer.sprite, Is.SameAs(idle));
+            yield return null;
+
+            var seen = new System.Collections.Generic.HashSet<string>();
+            float x = 5f;
+            IEnumerator MoveFor(float seconds, Func<float, float> getSpeed, string effects = "")
+            {
+                seen.Clear();
+                int sent = 0;
+                int expected = Mathf.RoundToInt(seconds * tickRate);
+                float start = Time.time;
+                while (sent < expected)
+                {
+                    float elapsed = Time.time - start;
+                    int due = Mathf.Min(expected, Mathf.FloorToInt(elapsed * tickRate + .001f));
+                    while (sent < due)
+                    {
+                        sent++;
+                        x += getSpeed((float)sent / tickRate) / tickRate;
+                        Send(x, effects: effects);
+                    }
+
+                    yield return null;
+                    seen.Add(renderer.sprite.name);
+                }
+            }
+
+            yield return MoveFor(3f, elapsed => Mathf.Min(3f, 1.5f * elapsed));
+            Assert.That(seen.Count(name => name.StartsWith("StormStagGallop", StringComparison.Ordinal)), Is.EqualTo(8));
+            Assert.That(renderer.flipX, Is.False);
+            Send(x, effects: "\"StormStagCharge2\"");
+            Send(x, "Attack", "\"Panic\"", withHit: true);
+            Assert.That(renderer.sprite.name, Is.EqualTo("StormStagImpact01"));
+            yield return new WaitForSeconds(.09f);
+            Assert.That(renderer.sprite.name, Is.AnyOf("StormStagImpact02", "StormStagImpact03"));
+            Sprite currentImpact = renderer.sprite;
+            Send(x, "Attack", "\"Panic\"");
+            Assert.That(renderer.sprite, Is.SameAs(currentImpact));
+
+            yield return MoveFor(1.2f, _ => -3.75f, "\"Panic\"");
+            Assert.That(seen.Count(name => name.StartsWith("StormStagGallop", StringComparison.Ordinal)), Is.EqualTo(8));
+            Assert.That(renderer.flipX, Is.True);
+            Send(x + .02f);
+            yield return null;
+            Assert.That(renderer.flipX, Is.True);
+            yield return MoveFor(.8f, _ => -7.5f, "\"Panic\"");
+            Assert.That(seen.Count(name => name.StartsWith("StormStagGallop", StringComparison.Ordinal)), Is.GreaterThanOrEqualTo(7));
+            Assert.That(renderer.flipX, Is.True);
+
+            x += 6f;
+            Send(x);
+            for (int i = 0; i < 5; i++)
+            {
+                yield return null;
+                Assert.That(renderer.sprite, Is.SameAs(idle));
+                Assert.That(renderer.flipX, Is.True);
+            }
+            Send(x);
+            yield return null;
+            Assert.That(renderer.sprite, Is.SameAs(idle));
+            UnityEngine.Object.Destroy(world.gameObject);
+        }
+
+        [UnityTest]
         public IEnumerator ChickenCommandoRecordingPlaysDescentLandingRunAndHits()
         {
             Create();
