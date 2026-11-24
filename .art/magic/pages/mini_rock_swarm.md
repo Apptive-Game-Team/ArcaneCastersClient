@@ -13,7 +13,7 @@
 
 ## 컨셉 설명
 
-꼬마돌 돌격대은 돌 골렘 부족의 소환 마법이다. 소스에서 지속 이동 AI를 확인하지 못했다. 전투에서는 전투 개체 역할을 맡으며, 지상 대상을 직접 공격 없음 또는 별도 효과 방식으로 다룬다. 추가 특수 이동은 없다. 시각적으로는 따뜻한 석재 조각과 이끼. 인간제 회색 기계와 구분한다.
+꼬마 돌 무리는 돌 골렘 부족의 꼬마돌을 소환한다. 꼬마돌은 지상 표적까지 걸어가 근접 공격을 한다. 따뜻한 돌몸과 어깨의 이끼를 유지하며 주먹을 짧게 내민다.
 
 ## 설명
 
@@ -24,14 +24,15 @@
 ## 동작
 
 1. 목표 지점에 아군 개체를 소환한다.
+2. 꼬마돌이 지상 표적의 사거리까지 걸어가 근접 공격을 한다.
 
 ## 전투 프로필
 
 | 항목 | 분류 | 코드 근거 |
 |---|---|---|
-| 기동 방식 | 이동 없음 | 소스에서 지속 이동 AI를 확인하지 못했다. |
-| 전투 역할 | 전투 개체 | 부착 AI·마법 컴포넌트 기준 |
-| 공격 형태 | 직접 공격 없음 또는 별도 효과 | 공격 컴포넌트와 시전 계열 기준 |
+| 기동 방식 | 지상 보행 | `Slime`이 `SPEED`를 사용한다. |
+| 전투 역할 | 근접 소환수 | 지상 표적을 추적하고 사거리에서 멈춘다. |
+| 공격 형태 | 단일 타격 | 지상 표적에 피해를 준다. |
 | 표적 | 지상 | `TargetMask` 기준 |
 | 특수 이동·행동 | 추가 특수 이동 없음 | 부착 컴포넌트 기준 |
 | 생명주기 | 소스에서 시간 제한을 직접 확인하지 못함 | 파괴·시간제한 컴포넌트 기준 |
@@ -66,3 +67,4 @@
 
 - Magic: `game/src/main/java/com/wordonline/server/game/domain/magic/implement/spawn/MiniRockSwarmMagic.java`
 - Prefab initializer: `game/src/main/java/com/wordonline/server/game/domain/object/prefab/implement/rock/MiniRockPrefabInitializer.java`
+- 이동과 근접 공격: `game-rust/crates/sim/src/game/domain/object/prefab/implement/rock/mini_rock_prefab_initializer.rs`
