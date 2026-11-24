@@ -88,35 +88,59 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4684667972734256309}
+      addedObject: {fileID: 5700000000000000003}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
---- !u!4 &1753495551214140852 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6456819394278174577, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-  m_PrefabInstance: {fileID: 4741887910458233541}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2959642540811881345 stripped
+--- !u!1 &5700000000000000001 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
   m_PrefabInstance: {fileID: 4741887910458233541}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4684667972734256309
+--- !u!212 &5700000000000000002 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+  m_PrefabInstance: {fileID: 4741887910458233541}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5700000000000000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2959642540811881345}
+  m_GameObject: {fileID: 5700000000000000001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42101c1db2194fc0a1a4f2ad54b57413, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 1753495551214140852}
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 5700000000000000002}
+  walkFrames:
+  - {fileID: 21300000, guid: 5732036e6336bd8603d691b5a62ea6c7, type: 3}
+  - {fileID: 21300000, guid: 5709b807340545596bf770c7292f7ecc, type: 3}
+  - {fileID: 21300000, guid: 57514a64e11a5480308ebd89df172ff0, type: 3}
+  - {fileID: 21300000, guid: 57fac90e5d5763ef98214586762e5a13, type: 3}
+  - {fileID: 21300000, guid: 5751dadd8ffb84ccb729c1703b518af5, type: 3}
+  - {fileID: 21300000, guid: 57a5fb8b119b6ccfb15ddc5991f2c217, type: 3}
+  - {fileID: 21300000, guid: 575b9f6a41cf1c34062b25391b913e31, type: 3}
+  - {fileID: 21300000, guid: 57c0451e516cfa74a700a754dfc2fa2c, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 57d368e240a67b813d09bd8629e9163f, type: 3}
+  - {fileID: 21300000, guid: 572db9b636356f7eb1f4dce531d22a55, type: 3}
+  - {fileID: 21300000, guid: 574a463cd4b047dc7925758fe1e21577, type: 3}
+  - {fileID: 21300000, guid: 57339baeba18767824ba5e638b69b392, type: 3}
+  walkCycleDistance: 0.72
+  attackDuration: 0.32
+  attackOnHit: 1
+  maximumGroundSpeed: 2.4

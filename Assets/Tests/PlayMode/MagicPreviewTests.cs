@@ -2142,6 +2142,110 @@ namespace WordOnline.Tests
         }
 
 
+
+        [UnityTest]
+        public IEnumerator EmberSpiritSwarmUsesIndependentStepsAndDamagePoses()
+        {
+            Create();
+            Assert.That(Configure("ember_spirit_swarm"), Is.True);
+            var scenarios = (JArray)Recording("ember_spirit_swarm")["scenarios"];
+            var ground = scenarios.Single(scenario => (string)scenario["id"] == "ground");
+            Scenario(scenarios.IndexOf(ground));
+
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/EmberSpiritCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                yield return PlayUntil(.65f);
+                int[] ids = { 3, 4, 5, 6, 7 };
+                var bodies = ids.ToDictionary(id => id, id =>
+                {
+                    var unit = Target(id);
+                    Assert.That(unit.GetComponent("CrawlMotionController"), Is.Null);
+                    Assert.That(unit.GetComponent("HoppingMotionController"), Is.Null);
+                    return (SpriteRenderer)unit.GetType().GetField("_spriteRenderer", Private).GetValue(unit);
+                });
+                Assert.That(bodies.Values.Select(body => body.sprite.name), Is.All.EqualTo("EmberSpiritSwarm"));
+                var gaits = ids.ToDictionary(id => id, _ => new System.Collections.Generic.HashSet<string>());
+                while ((float)Field("elapsed") < 2.34f)
+                {
+                    foreach (int id in ids)
+                    {
+                        string pose = bodies[id].sprite.name;
+                        if (!pose.StartsWith("EmberSpiritTrot", StringComparison.Ordinal)) continue;
+                        if (gaits[id].Add(pose) && capture && id == 6) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                Assert.That(gaits.Values.Select(set => set.Count), Is.All.EqualTo(8));
+
+                var hits = ground["frames"].SelectMany(frame => frame["events"]
+                    .Where(evt => (string)evt["type"] == "hit" && ids.Contains((int)evt["actorId"]))
+                    .Select(evt => (actor: (int)evt["actorId"], target: (int)evt["targetId"], time: (float)frame["time"])))
+                    .Take(10).ToArray();
+                CollectionAssert.AreEqual(new[] { 7, 4, 3, 5, 6, 7, 4, 3, 5, 6 }, hits.Select(hit => hit.actor));
+                Assert.That(hits.Select(hit => hit.target), Is.All.EqualTo(2));
+                for (int i = 0; i < 5; i++)
+                {
+                    Assert.That(hits[i].time, Is.EqualTo(new[] { 2.55f, 2.75f, 2.85f, 3f, 3.05f }[i]).Within(.001f));
+                    Assert.That(hits[i + 5].time - hits[i].time, Is.EqualTo(.8f).Within(.001f));
+                }
+
+                var target = Target(2);
+                var lastHit = new System.Collections.Generic.Dictionary<int, float>();
+                var recovered = new System.Collections.Generic.HashSet<int>();
+                bool overlappingRecovery = false;
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    var hit = hits[i];
+                    yield return PlayUntil(hit.time - .026f);
+                    Assert.That(CurrentHp(target), Is.EqualTo(10000 - 100 * i));
+                    Assert.That(bodies[hit.actor].sprite.name, Is.EqualTo("EmberSpiritSwarm"));
+
+                    yield return PlayUntil(hit.time + .015f);
+                    Assert.That(CurrentHp(target), Is.EqualTo(9900 - 100 * i));
+                    Assert.That(bodies[hit.actor].sprite.name, Is.EqualTo("EmberSpiritSwipe01"));
+                    Assert.That(bodies[hit.actor].flipX, Is.False);
+                    lastHit[hit.actor] = hit.time;
+                    float now = (float)Field("elapsed");
+                    foreach (int id in ids.Where(id => id != hit.actor))
+                    {
+                        string pose = bodies[id].sprite.name;
+                        if (!lastHit.TryGetValue(id, out float previousHit))
+                        {
+                            Assert.That(pose, Is.EqualTo("EmberSpiritSwarm"), $"개체 {id}는 첫 타격 전이다.");
+                            continue;
+                        }
+
+                        float age = now - previousHit;
+                        if (age > .34f)
+                        {
+                            Assert.That(pose, Is.EqualTo("EmberSpiritSwarm"));
+                            recovered.Add(id);
+                        }
+                        else if (age > .1f && age < .30f)
+                        {
+                            Assert.That(pose, Does.StartWith("EmberSpiritSwipe").And.Not.EqualTo("EmberSpiritSwipe01"));
+                            overlappingRecovery = true;
+                        }
+                    }
+
+                    if (capture && i is 0 or 2 or 4) SaveViewport(directory, $"swarm-hit-{i + 1:00}", true);
+                }
+
+                Assert.That(overlappingRecovery, Is.True);
+                CollectionAssert.AreEquivalent(ids, recovered);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+
         private Transform FindProjectile(string type)
         {
             var world = (Component)Field("world");
