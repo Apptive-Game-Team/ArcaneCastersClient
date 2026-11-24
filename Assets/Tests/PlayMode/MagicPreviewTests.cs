@@ -2833,6 +2833,141 @@ namespace WordOnline.Tests
             }
         }
 
+        [UnityTest]
+        public IEnumerator FireTadpoleWalksStrikesSeparatelyAndKeepsTheNextPortalArrival()
+        {
+            Create();
+            Assert.That(Configure("dimension_toad"), Is.True);
+            var scenarios = (JArray)Recording("dimension_toad")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "ground")));
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/FireTadpoleCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.772f);
+                Component first = Target(4);
+                var body = ServedObjectRenderer(first);
+                Assert.That(first.name, Does.StartWith("FireTadpole"));
+                Assert.That(first.GetComponent("CrawlMotionController"), Is.Null);
+                Assert.That(first.GetComponentsInChildren<Transform>(true).Any(child => child.name == "TTLBar"), Is.True);
+                var poses = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 1.97f)
+                {
+                    string pose = body.sprite.name;
+                    if (pose.StartsWith("FireTadpoleWalk", StringComparison.Ordinal) && poses.Add(pose) && capture)
+                        SaveViewport(directory, pose, true);
+                    yield return null;
+                }
+                CollectionAssert.AreEquivalent(Enumerable.Range(1, 8).Select(i => $"FireTadpoleWalk{i:00}"), poses);
+
+                yield return PlayUntil(2.823f);
+                Component second = Target(6);
+                var secondBody = ServedObjectRenderer(second);
+                var target = Target(2);
+                Assert.That(CurrentHp(target), Is.EqualTo(10000));
+                Assert.That(body.sprite.name, Is.EqualTo("FireTadpoleIdle"));
+                for (int i = 0; i < 4; i++)
+                {
+                    yield return PlayUntil(2.875f + .08f * i);
+                    string pose = $"FireTadpoleStomp{i + 1:00}";
+                    Assert.That(body.sprite.name, Is.EqualTo(pose));
+                    Assert.That(body.flipX, Is.False);
+                    Assert.That(secondBody.sprite.name, Does.Not.StartWith("FireTadpoleStomp"));
+                    Assert.That(CurrentHp(target), Is.EqualTo(9900));
+                    if (capture) SaveViewport(directory, pose, true);
+                }
+
+                yield return PlayUntil(3.674f);
+                Assert.That(body.sprite.name, Is.EqualTo("FireTadpoleStomp01"));
+                Assert.That(secondBody.sprite.name, Does.Not.StartWith("FireTadpoleStomp"));
+                Assert.That(CurrentHp(target), Is.EqualTo(9700));
+
+                yield return PlayUntil(3.932f);
+                Component third = Target(8);
+                var thirdBody = ServedObjectRenderer(third);
+                Vector3 inPortal = third.transform.position;
+                yield return PlayUntil(4.077f);
+                var world = (Component)Field("world");
+                Assert.That(third.transform.position.x, Is.GreaterThan(inPortal.x));
+                Assert.That(world.transform.InverseTransformPoint(third.transform.position).y, Is.GreaterThan(.03f));
+                Assert.That(thirdBody.sprite.name, Is.EqualTo("FireTadpoleIdle"));
+                if (capture) SaveViewport(directory, "portal-landing", true);
+
+                yield return PlayUntil(4.174f);
+                Assert.That(secondBody.sprite.name, Is.EqualTo("FireTadpoleStomp01"));
+                Assert.That(body.sprite.name, Does.Not.StartWith("FireTadpoleStomp"));
+                Assert.That(CurrentHp(target), Is.EqualTo(9600));
+                yield return PlayUntil(4.28f);
+                Assert.That(thirdBody.sprite.name, Does.StartWith("FireTadpoleWalk"));
+
+                yield return PlayUntil(8.672f);
+                Assert.That((bool)first.GetType().GetProperty("IsDespawning", Private).GetValue(first), Is.True);
+                Component newest = Target(14);
+                Assert.That(newest, Is.Not.Null);
+                Assert.That(FireTadpoleTtl(first), Is.EqualTo(0f).Within(.001f));
+                Assert.That(FireTadpoleTtl(second), Is.EqualTo(1.6f).Within(.001f));
+                Assert.That(FireTadpoleTtl(newest), Is.EqualTo(8f).Within(.001f));
+                if (capture) SaveViewport(directory, "old-and-new", true);
+
+                yield return PlayUntil(8.762f);
+                Assert.That(Target(4), Is.Null);
+                Assert.That(Target(6), Is.SameAs(second));
+                Assert.That(Target(14), Is.SameAs(newest));
+                yield return PlayUntil(8.973f);
+                Assert.That(secondBody.sprite.name, Is.EqualTo("FireTadpoleStomp01"));
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator FireTadpoleTakesDamageAndCompletesAStompInTheSameExchange()
+        {
+            Create();
+            Assert.That(Configure("dimension_toad"), Is.True);
+            var scenarios = (JArray)Recording("dimension_toad")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "panic")));
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(1.968f);
+                var target = Target(2);
+                var tadpole = Target(4);
+                var body = ServedObjectRenderer(tadpole);
+                Assert.That(CurrentHp(target), Is.EqualTo(1000));
+                Assert.That(CurrentHp(tadpole), Is.EqualTo(1000));
+                for (int i = 0; i < 4; i++)
+                {
+                    yield return PlayUntil(2.025f + .08f * i);
+                    Assert.That(body.sprite.name, Is.EqualTo($"FireTadpoleStomp{i + 1:00}"));
+                    Assert.That(CurrentHp(target), Is.EqualTo(900));
+                    Assert.That(CurrentHp(tadpole), Is.EqualTo(950));
+                    if (i == 0)
+                        Assert.That(ServedObjectRenderer(target).sprite.name, Is.EqualTo("MiniRockPunch01"));
+                }
+                yield return PlayUntil(2.36f);
+                Assert.That(body.sprite.name, Is.EqualTo("FireTadpoleIdle"));
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        private static float FireTadpoleTtl(Component tadpole)
+        {
+            var gauges = (IList)tadpole.GetType().GetField("gauges").GetValue(tadpole);
+            object ttl = gauges.Cast<object>()
+                .Single(gauge => (string)gauge.GetType().GetField("category").GetValue(gauge) == "TTL");
+            return (float)ttl.GetType().GetField("value").GetValue(ttl);
+        }
+
         private JToken SelectThunderBirdScenario(string magic, string id)
         {
             var scenarios = (JArray)Recording(magic)["scenarios"];

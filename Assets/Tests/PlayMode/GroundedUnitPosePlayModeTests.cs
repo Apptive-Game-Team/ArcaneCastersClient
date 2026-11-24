@@ -74,6 +74,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(304, 184));
 
         [UnityTest]
+        public IEnumerator FireTadpoleWalksAtItsDefaultSpeedAndFacesTheHitAtBothTickRates() =>
+            CheckBothTickRates("FireTadpole", 8, "FireTadpoleStomp01", 4, 1.15f, .08f,
+                walkSize: new Vector2(288, 152), idleSprite: "FireTadpoleIdle");
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
