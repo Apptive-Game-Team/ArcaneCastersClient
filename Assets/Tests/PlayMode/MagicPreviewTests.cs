@@ -627,7 +627,9 @@ namespace WordOnline.Tests
                     int casterId = (int)scenarios[index]["frames"].SelectMany(frame => frame["objects"]["create"])
                         .First(unit => (string)unit["type"] == "EvilEnt")["id"];
                     yield return PlayUntil(shot.start + .12f);
-                    SpriteRenderer body = ServedObjectRenderer(Target(casterId));
+                    Component caster = Target(casterId);
+                    Assert.That(caster, Is.Not.Null);
+                    var body = (SpriteRenderer)caster.GetType().GetField("_spriteRenderer", Private).GetValue(caster);
                     Assert.That(body.sprite.name, Is.EqualTo("EvilEntBrace02"));
                     AssertEvilEntArmMount(attack.type, body);
                     if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
