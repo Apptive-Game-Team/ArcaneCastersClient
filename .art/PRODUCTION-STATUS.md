@@ -363,3 +363,7 @@ commit 그대로였다.
 ## 타락한 바람 정령 공중 모션
 
 `PveCorruptedWindSpirit.png`, `PveCorruptedWindSpiritHover01–04.png`, `PveCorruptedWindSpiritGlide01–04.png`, `PveCorruptedWindSpiritDescent01–04.png`에 해당한다. 이슈 #538. 206×256 RGBA, PPU 200, 하단 중앙 피벗. 정지 상태의 말린 바람과 활공 자세에 각각 네 장, 하강량에 따라 표시할 네 장을 `PveCorruptedWindSpirit.prefab`에 연결했다. 실제 모험 전투 화면 검수는 남아 있다.
+
+## 타락한 덩굴 정령 지면 모션
+
+`PveCorruptedVineSpirit.png`, `PveCorruptedVineSpiritCrawl01–08.png`, `PveCorruptedVineSpiritLash01–04.png`에 해당한다. 이슈 #540. 180×256 RGBA, PPU 200, 하단 중앙 피벗. 뿌리 이동 여덟 장과 덩굴 타격 및 복귀 네 장을 `PveCorruptedVineSpirit.prefab`에 연결했다. 실제 모험 전투 화면 검수는 남아 있다.

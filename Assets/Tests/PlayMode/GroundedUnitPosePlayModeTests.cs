@@ -26,6 +26,18 @@ namespace WordOnline.Tests
         public IEnumerator BeanShooterWalksAtBothTickRatesAndFiresWithTheBean() =>
             CheckBothTickRates("BeanShooter", 8, "BeanShooterAttack", 3, 0.6f, 0.08f, "Bean");
 
+        [UnityTest]
+        public IEnumerator CorruptedVineCrawlsOnItsRootAndLashesAtBothTickRates()
+        {
+            const string prefabName = "PveCorruptedVineSpirit";
+            GameObject prefab = Resources.Load<GameObject>("Prefabs/" + prefabName);
+            Assert.That(prefab.GetComponents<MonoBehaviour>()
+                .Any(component => component.GetType().Name == "HoppingMotionController"), Is.False);
+            Type servedObject = Runtime("GameScene.ServedObjectComponent.ServedObject");
+            Assert.That((bool)servedObject.GetField("_swingOnAttack", Private).GetValue(prefab.GetComponent(servedObject)), Is.False);
+            yield return CheckBothTickRates(prefabName, 8, prefabName + "Lash01", secondsPerAttackPose: 0.06f);
+        }
+
         private static IEnumerator CheckBothTickRates(string prefabName, int walkPoseCount,
             string attackSprite = null, int attackPoseCount = 4, float walkSpeed = WalkSpeed,
             float secondsPerAttackPose = 0.05f, string shotPrefab = null)
