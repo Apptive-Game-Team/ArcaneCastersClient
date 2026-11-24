@@ -515,3 +515,9 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 `ThunderBirdFlap01–08`은 0.115초 간격으로 반복한다. 가까운 날개가 먼저 각도를 바꾸면 반대쪽 날개가 조금 늦게 따라온다. `ThunderBirdDive01–04`는 하강 시작 고도에서 0.4 월드 단위씩 내려갈 때 바뀐다. `ThunderBirdStrike01–04`는 피해 이벤트에서 시작해 0.08초 간격으로 부리 타격과 회수를 보여준다. `ThunderBirdClimb01–04`는 상승 중 0.125초 간격으로 반복한다. `ThunderBirdFall01–04`는 사망 시작 고도부터 지면까지 내려온 거리에 맞춰 날개를 접는다.
 
 24장은 368×280 RGBA, Full Rect, 200 PPU다. 공통 피벗은 이미지 하단에서 45px 위의 중앙 `(184, 45)`다. 머리와 몸통이 날갯짓 중에 크게 흔들리지 않도록 위치를 맞췄다. 전투 개체는 `ThunderBirdFlightPresenter`가 표시하고 마법 아이콘은 `ThunderBirdSwarm.png`를 사용한다.
+
+## 바람 정령 활공
+
+`WindSpiritHover01–04`는 0.28초, `WindSpiritGlide01–04`는 0.19초 간격으로 순환한다. `WindSpiritDescent01–04`는 하강을 시작한 고도에서 0.08 월드 단위씩 내려갈 때 바뀐다. 곡선 띠의 두꺼운 부분이 몸통 뒤에서 흐르고 하강 중에는 꼬리 쪽 띠가 몸통에 붙는다.
+
+12장은 206×256 RGBA, 200 PPU, 하단 중앙 피벗이다. 두 바람 정령 변형은 `WindSpiritFlightPresenter`에서 각자의 프레임과 간격을 사용한다. 제거가 시작되면 마지막 자세를 보여주고 기존 `Explode`가 이어진다.

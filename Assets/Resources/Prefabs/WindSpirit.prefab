@@ -79,7 +79,7 @@ PrefabInstance:
     - target: {fileID: 3475341198290787986, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 9c3f19d78b9234d29825ac52bd2e8203, type: 3}
+      objectReference: {fileID: 21300000, guid: 98c7a91cd3dd43299ce82b3a7cc32380, type: 3}
     - target: {fileID: 3875386937707293702, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.64
@@ -100,13 +100,17 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.693
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7571628863401072700, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4133848519264727152, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6847283349778472194}
+    - targetCorrespondingSourceObject: {fileID: 4133848519264727152, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8193040000000000579}
   m_SourcePrefab: {fileID: 100100000, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
 --- !u!1 &1359078717741646473 stripped
 GameObject:
@@ -138,3 +142,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2de688a310124c238a96800ee8f30bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!212 &8193040000000000578 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3475341198290787986, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+  m_PrefabInstance: {fileID: 3135081171793523449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8193040000000000579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359078717741646473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 212c5591f5264a85b5629e87fa3541dd, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 4638979048926592165}
+  targetRenderer: {fileID: 8193040000000000578}
+  hoverFrames:
+  - {fileID: 21300000, guid: 98c7a91cd3dd43299ce82b3a7cc32380, type: 3}
+  - {fileID: 21300000, guid: 59e6f414543b43b99b927767a7136230, type: 3}
+  - {fileID: 21300000, guid: 20b6cdadc18e4a07a791a8a2fac77693, type: 3}
+  - {fileID: 21300000, guid: 90670dc20b4e43308a443990131de544, type: 3}
+  glideFrames:
+  - {fileID: 21300000, guid: 0891dc7946ec46c39e7d0eeb4e10170f, type: 3}
+  - {fileID: 21300000, guid: 73709b122fcb455d91627437030b5a6b, type: 3}
+  - {fileID: 21300000, guid: 9073f07337f948639d83e8c3f28e56b2, type: 3}
+  - {fileID: 21300000, guid: bd9091e5ee4342fab96fe8c6062850a7, type: 3}
+  descentFrames:
+  - {fileID: 21300000, guid: 140ad6f8e7e745b78f6c149cda555608, type: 3}
+  - {fileID: 21300000, guid: b54767f211214d75a56ee8946a845bb6, type: 3}
+  - {fileID: 21300000, guid: 77543cbc27bb434eb92dfc44a9501251, type: 3}
+  - {fileID: 21300000, guid: 109a14b1fdf0492a9ddcd0973cf7fa2d, type: 3}
+  hoverFrameInterval: 0.28
+  glideFrameInterval: 0.19
+  minimumDescentSpeed: 0.18
+  descentPoseDepth: 0.32

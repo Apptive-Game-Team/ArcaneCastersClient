@@ -2765,6 +2765,74 @@ namespace WordOnline.Tests
             }
         }
 
+        [UnityTest]
+        public IEnumerator WindSpiritKeepsTheApproachPoseWhenItHitsBothAirTargets()
+        {
+            Create();
+            const string magic = "wind_spirit";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var air = scenarios.Single(scenario => (string)scenario["id"] == "air");
+            Scenario(scenarios.IndexOf(air));
+            JToken impact = air["frames"].Single(frame => frame["events"].Any(hit => (int?)hit["actorId"] == 4));
+            Assert.That((float)impact["time"], Is.EqualTo(1.95f).Within(.001f));
+            CollectionAssert.AreEquivalent(new[] { 2, 3 }, impact["events"].Select(hit => (int)hit["targetId"]));
+
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WindSpiritCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.645f);
+                var spirit = Target(4);
+                Assert.That(spirit, Is.Not.Null);
+                var body = ServedObjectRenderer(spirit);
+                var world = (Component)Field("world");
+                var glide = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 1.58f)
+                {
+                    string sprite = body.sprite.name;
+                    Assert.That(world.transform.InverseTransformPoint(spirit.transform.position).y, Is.EqualTo(3f).Within(.02f));
+                    if (sprite.StartsWith("WindSpiritGlide", StringComparison.Ordinal) && glide.Add(sprite) && capture)
+                        SaveViewport(directory, sprite, true);
+                    yield return null;
+                }
+                CollectionAssert.AreEquivalent(Enumerable.Range(1, 4).Select(i => $"WindSpiritGlide{i:00}"), glide);
+
+                float[] approachTimes = { 1.65f, 1.75f, 1.85f, 1.90f };
+                for (int i = 0; i < approachTimes.Length; i++)
+                {
+                    yield return PlayUntil(approachTimes[i] + .018f);
+                    string pose = $"WindSpiritDescent{i + 1:00}";
+                    Assert.That(body.sprite.name, Is.EqualTo(pose));
+                    if (capture) SaveViewport(directory, pose, true);
+                }
+
+                Assert.That(CurrentHp(Target(2)), Is.EqualTo(1000));
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(1000));
+                yield return PlayUntil(1.968f);
+                Assert.That(body.sprite.name, Is.EqualTo("WindSpiritDescent04"));
+                Assert.That(CurrentHp(Target(2)), Is.EqualTo(900));
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(900));
+                Assert.That((bool)spirit.GetType().GetProperty("IsDespawning", Private).GetValue(spirit), Is.True);
+                if (capture) SaveViewport(directory, "impact", true);
+
+                yield return PlayUntil(2.08f);
+                Assert.That(Target(4), Is.Null);
+                var effects = world.GetComponentsInChildren<Transform>()
+                    .Where(item => item.name == "Explode(Clone)").ToArray();
+                Assert.That(effects, Has.Length.EqualTo(1));
+                Assert.That(world.transform.InverseTransformPoint(effects[0].position).y, Is.EqualTo(2.72f).Within(.05f));
+                if (capture) SaveViewport(directory, "explosion", true);
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
         private JToken SelectThunderBirdScenario(string magic, string id)
         {
             var scenarios = (JArray)Recording(magic)["scenarios"];
