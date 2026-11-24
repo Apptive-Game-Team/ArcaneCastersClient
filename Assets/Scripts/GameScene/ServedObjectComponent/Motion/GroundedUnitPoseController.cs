@@ -37,6 +37,7 @@ namespace GameScene.ServedObjectComponent.Motion
         private int precedingServerDirection;
         private int confirmedServerDirection;
         private bool impactFlip;
+        private bool lockAttackFacing;
 
         protected override void OnBound()
         {
@@ -83,21 +84,22 @@ namespace GameScene.ServedObjectComponent.Motion
         {
             if (CanPlayAttack(attackFrames))
             {
-                StartAttack(attackFrames);
+                StartAttack(attackFrames, attackOnHit);
             }
         }
 
         internal bool TryLaunchProjectile(Vector3 destination, out Vector3 start)
         {
             start = default;
-            if (!CanPlayAttack(projectileAttackFrames))
+            Sprite[] frames = projectileAttackFrames is { Length: > 0 } ? projectileAttackFrames : attackFrames;
+            if (!CanPlayAttack(frames))
             {
                 return false;
             }
 
             Owner.FaceTowards(destination);
             precedingServerDirection = confirmedServerDirection = 0;
-            StartAttack(projectileAttackFrames);
+            StartAttack(frames, true);
             float x = impactFlip ? -projectileMuzzle.x : projectileMuzzle.x;
             start = resolvedRenderer.transform.TransformPoint(new Vector3(x, projectileMuzzle.y, 0f));
             return true;
@@ -106,11 +108,12 @@ namespace GameScene.ServedObjectComponent.Motion
         private bool CanPlayAttack(Sprite[] frames) =>
             isActiveAndEnabled && resolvedRenderer != null && frames != null && frames.Length > 0 && attackDuration > 0f;
 
-        private void StartAttack(Sprite[] frames)
+        private void StartAttack(Sprite[] frames, bool lockFacing)
         {
             activeAttackFrames = frames;
             attackStarted = Time.time;
             impactFlip = resolvedRenderer.flipX;
+            lockAttackFacing = lockFacing;
             resolvedRenderer.sprite = frames[0];
         }
 
@@ -163,7 +166,7 @@ namespace GameScene.ServedObjectComponent.Motion
             float now = Time.time;
             float attackElapsed = now - attackStarted;
             bool attacking = attackElapsed < attackDuration;
-            if (attacking && (attackOnHit || activeAttackFrames == projectileAttackFrames))
+            if (attacking && lockAttackFacing)
             {
                 resolvedRenderer.flipX = impactFlip;
             }

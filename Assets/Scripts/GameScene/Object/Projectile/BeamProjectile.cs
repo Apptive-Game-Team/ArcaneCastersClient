@@ -36,8 +36,18 @@ namespace GameScene.Object.Projectile
 
         public void Init(ProjectileDto projectileDto)
         {
+            InitBeam(projectileDto, null);
+        }
+
+        internal void InitFromMouth(ProjectileDto projectileDto, Vector3 mouth)
+        {
+            InitBeam(projectileDto, mouth);
+        }
+
+        private void InitBeam(ProjectileDto projectileDto, Vector3? mouth)
+        {
             world = PresentationWorld.For(this);
-            Vector3 start = ProjectileUtil.GetPosition(projectileDto.start, world);
+            Vector3 start = mouth ?? ProjectileUtil.GetPosition(projectileDto.start, world);
 
             if (!TryGetEnd(projectileDto.end, out Vector3 end))
             {

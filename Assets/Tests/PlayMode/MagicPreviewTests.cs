@@ -1544,6 +1544,195 @@ namespace WordOnline.Tests
             Assert.That(tip.enabled, Is.True);
         }
 
+        [UnityTest]
+        public IEnumerator SeaSerpentGlidesAndCompletesHydroPumpInRecordedFights()
+        {
+            Create();
+            const string magic = "sea_serpent";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            const string beamType = "SeaSerpentHydroPump";
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/SeaSerpentCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                for (int i = 0; i < scenarios.Count; i++)
+                {
+                    var scenario = scenarios[i];
+                    string name = (string)scenario["id"];
+                    var frames = scenario["frames"];
+                    int id = (int)frames.SelectMany(f => f["objects"]["create"])
+                        .First(obj => (string)obj["type"] == "SeaSerpent")["id"];
+                    int opponentId = (int)scenario["fixtureTargetIds"][0];
+                    var first = frames.First(f => f["objects"]["projectile"].Any(p => (string)p["type"] == beamType));
+                    float shotTime = (float)first["time"];
+                    Scenario(i);
+                    yield return PlayUntil(.73f);
+                    Component actor = Target(id);
+                    var body = (SpriteRenderer)actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor);
+                    Transform trail = actor.transform.Find("SeaSerpentBody");
+                    Assert.That(trail.childCount, Is.EqualTo(5));
+                    Assert.That(actor.GetComponent("HoppingMotionController"), Is.Null);
+                    if (name == "water_trail")
+                    {
+                        var seen = new System.Collections.Generic.HashSet<string>();
+                        Vector3 originalTail = trail.GetChild(4).position;
+                        while ((float)Field("elapsed") < 2.58f)
+                        {
+                            if (body.sprite.name.StartsWith("SeaSerpentGlide", StringComparison.Ordinal) &&
+                                seen.Add(body.sprite.name) && capture)
+                                SaveViewport(directory, body.sprite.name, true);
+                            yield return null;
+                        }
+                        Assert.That(seen.Count, Is.EqualTo(8));
+                        Assert.That(Vector3.Distance(trail.GetChild(4).position, originalTail), Is.GreaterThan(.5f));
+                    }
+
+                    yield return PlayUntil(shotTime - .024f);
+                    Assert.That(body.sprite.name, Is.EqualTo("SeaSerpentHead"));
+                    Assert.That(FindProjectile(beamType), Is.Null);
+                    Component opponent = Target(opponentId);
+                    float before = CurrentHp(opponent);
+
+                    for (int frame = 0; frame < 4; frame++)
+                    {
+                        yield return PlayUntil(shotTime + .034f + frame * .0875f);
+                        Assert.That(body.sprite.name, Is.EqualTo($"SeaSerpentFire{frame+1:00}"), name);
+                        Assert.That(CurrentHp(opponent), Is.EqualTo(before), name);
+                        Transform beam = FindProjectile(beamType);
+                        Assert.That(beam, Is.Not.Null);
+                        var camera = (Camera)Field("previewCamera");
+                        Vector3 mouth = body.transform.TransformPoint(new Vector3(.36f, 1.23f, 0f));
+                        Assert.That(Vector2.Distance(camera.WorldToViewportPoint(beam.position),
+                            camera.WorldToViewportPoint(mouth)), Is.LessThan(.012f), name);
+                        if (capture && ((frame == 0 && name == "water_trail") || frame == 1))
+                            SaveViewport(directory, name + $"-fire-{frame+1}", true);
+                    }
+
+                    yield return PlayUntil(shotTime + .385f);
+                    Assert.That(body.sprite.name, Is.EqualTo("SeaSerpentHead"), name);
+                    Assert.That(FindProjectile(beamType), Is.Null);
+                    Assert.That(CurrentHp(opponent), Is.EqualTo(before - 100f), name);
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator SeaSerpentConnectsBothBeamsAndKeepsUnmatchedMuzzlesAtTheServerOrigin()
+        {
+            Create();
+            Component world = CreateWorld();
+            Type dtoType = Runtime("GameScene.Dto.ObjectsInfo");
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize").MakeGenericMethod(dtoType);
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            MethodInfo find = world.GetType().GetMethod("FindById");
+            void Apply(JObject packet) =>
+                apply.Invoke(null, new[] { decode.Invoke(null, new object[] { packet.ToString() }), null, world });
+            JObject Created(int id, float x, float z, string master) =>
+                JObject.FromObject(new { id, type = "SeaSerpent", master, position = new { x, y = 0, z } });
+            JObject Attacking(int id, float x, float z) =>
+                JObject.FromObject(new { id, status = "Attack", position = new { x, y = 0, z } });
+            JObject Beam(float x, float z, float endX, float endZ) =>
+                JObject.FromObject(new { type = "SeaSerpentHydroPump", duration = .35f,
+                    start = new { targetType = "position", x, y = 1.6f, z },
+                    end = new { targetType = "position", x = endX, y = 0, z = endZ } });
+            SpriteRenderer Body(int id)
+            {
+                var actor = (Component)find.Invoke(world, new object[] { id });
+                return (SpriteRenderer)actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor);
+            }
+            Transform[] Beams() => world.transform.Find("PresentationContent").Cast<Transform>()
+                .Where(item => item.name == "SeaSerpentHydroPump(Clone)").ToArray();
+
+            Apply(new JObject { ["create"] = new JArray(Created(41, 6, 4, "LeftPlayer"),
+                Created(42, 9, 6, "RightPlayer"), Created(43, 6, 4, "LeftPlayer")) });
+            SpriteRenderer left = Body(41), right = Body(42);
+            Assert.That(left.flipX, Is.False);
+            Assert.That(right.flipX, Is.True);
+            Apply(new JObject
+            {
+                ["update"] = new JArray(Attacking(41, 6, 4), Attacking(42, 9, 6)),
+                ["projectile"] = new JArray(Beam(6, 4, 2, 8), Beam(9, 6, 13, 4))
+            });
+
+            Transform[] shots = Beams();
+            Assert.That(shots, Has.Length.EqualTo(2));
+            Assert.That(left.flipX && !right.flipX, Is.True);
+            Assert.That(left.sprite.name, Is.EqualTo("SeaSerpentFire01"));
+            Assert.That(right.sprite.name, Is.EqualTo("SeaSerpentFire01"));
+            Assert.That(Vector3.Distance(shots[0].position,
+                left.transform.TransformPoint(new Vector3(-.36f, 1.23f, 0f))), Is.LessThan(.005f));
+            Assert.That(Vector3.Distance(shots[1].position,
+                right.transform.TransformPoint(new Vector3(.36f, 1.23f, 0f))), Is.LessThan(.005f));
+            yield return null;
+            yield return null;
+            Assert.That(left.flipX && !right.flipX, Is.True);
+
+            Apply(new JObject
+            {
+                ["update"] = new JArray(Attacking(41, 6, 4), Attacking(43, 6, 4)),
+                ["projectile"] = new JArray(Beam(6, 4, 11, 4), Beam(7, 5, 11, 5))
+            });
+            shots = Beams();
+            Assert.That(shots, Has.Length.EqualTo(4));
+            Assert.That(Vector3.Distance(shots[2].position, world.transform.TransformPoint(new Vector3(6, 1.6f, 4))), Is.LessThan(.005f));
+            Assert.That(Vector3.Distance(shots[3].position, world.transform.TransformPoint(new Vector3(7, 1.6f, 5))), Is.LessThan(.005f));
+        }
+
+
+        [UnityTest]
+        public IEnumerator SeaSerpentSnapshotUsesTheSameMouthAsDeltaPlayback()
+        {
+            root = new GameObject("SeaSerpent snapshot fixture");
+            Component container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+            Component syncer = root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+            Type dtoType = Runtime("GameScene.Dto.ObjectsInfo");
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize");
+            MethodInfo decodeObjects = decode.MakeGenericMethod(dtoType);
+            GameObject projectile = null;
+            try
+            {
+                object initial = decodeObjects.Invoke(null, new object[] {
+                    "{\"create\":[{\"id\":51,\"type\":\"SeaSerpent\",\"master\":\"LeftPlayer\"," +
+                    "\"position\":{\"x\":8,\"y\":0,\"z\":5}}]}" });
+                Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply")
+                    .Invoke(null, new[] { initial, null, null });
+                object launch = decodeObjects.Invoke(null, new object[] {
+                    "{\"projectile\":[{\"type\":\"SeaSerpentHydroPump\",\"duration\":0.35," +
+                    "\"start\":{\"targetType\":\"position\",\"x\":8,\"y\":1.6,\"z\":5}," +
+                    "\"end\":{\"targetType\":\"position\",\"x\":4,\"y\":2,\"z\":5}}]}" });
+                object pending = Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnBeforeObjectUpdates")
+                    .Invoke(null, new[] { dtoType.GetField("projectile").GetValue(launch), null });
+                object snapshot = decode.MakeGenericMethod(Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType())
+                    .Invoke(null, new object[] { "[{\"id\":51,\"prefab\":\"SeaSerpent\",\"master\":\"LeftPlayer\"," +
+                        "\"x\":8,\"y\":0,\"z\":5,\"status\":\"Attack\"}]" });
+                syncer.GetType().GetMethod("Sync").Invoke(syncer, new[] { snapshot, pending });
+                var owner = (Component)container.GetType().GetMethod("FindById").Invoke(container, new object[] { 51 });
+                var head = (SpriteRenderer)owner.GetType().GetField("_spriteRenderer", Private).GetValue(owner);
+                projectile = GameObject.Find("SeaSerpentHydroPump(Clone)");
+                Assert.That(projectile, Is.Not.Null);
+                Assert.That(head.flipX, Is.True);
+                Assert.That(head.sprite.name, Is.EqualTo("SeaSerpentFire01"));
+                Vector3 mouth = head.transform.TransformPoint(new Vector3(-.36f, 1.23f, 0f));
+                Assert.That(Vector3.Distance(projectile.transform.position, mouth), Is.LessThan(.005f));
+                yield return null;
+            }
+            finally
+            {
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                if (projectile != null) UnityEngine.Object.Destroy(projectile);
+            }
+        }
+
+
         private Transform FindProjectile(string type)
         {
             var world = (Component)Field("world");

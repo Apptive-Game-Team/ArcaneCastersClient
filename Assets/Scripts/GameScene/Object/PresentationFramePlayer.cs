@@ -17,7 +17,7 @@ namespace GameScene.Object
             var deferred = ProjectileSpawner.SpawnBeforeObjectUpdates(objects?.projectile, world);
             if (objects?.update != null)
                 foreach (UpdatedObjectDto updated in objects.update) PresentationWorld.Find(updated.id, world)?.UpdateObject(updated);
-            ProjectileSpawner.SpawnDeferred(deferred, world);
+            ProjectileSpawner.SpawnDeferred(deferred, world, objects?.update);
         }
     }
 }
