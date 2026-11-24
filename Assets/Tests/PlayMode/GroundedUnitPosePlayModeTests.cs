@@ -39,6 +39,10 @@ namespace WordOnline.Tests
             CheckBothTickRates("WallGolem", 8, "WallGolemPunch01", 4, 0.3f, 0.08f, walkWidth: 256);
 
         [UnityTest]
+        public IEnumerator TowerbackWalksAtProductionSpeedAndPunchesAtBothTickRates() =>
+            CheckBothTickRates("Towerback", 8, "TowerbackPunch01", 4, 0.325f, 0.08f, walkWidth: 256, walkSeconds: 4);
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
@@ -93,7 +97,7 @@ namespace WordOnline.Tests
 
         private static IEnumerator CheckBothTickRates(string prefabName, int walkPoseCount,
             string attackSprite = null, int attackPoseCount = 4, float walkSpeed = WalkSpeed,
-            float secondsPerAttackPose = 0.05f, string shotPrefab = null, int? walkWidth = null)
+            float secondsPerAttackPose = 0.05f, string shotPrefab = null, int? walkWidth = null, int walkSeconds = 3)
         {
             var gameConfig = Runtime("GameScene.GameConfig");
             var setTickRate = gameConfig.GetMethod("SetTickRate");
@@ -106,7 +110,8 @@ namespace WordOnline.Tests
                 {
                     setTickRate.Invoke(null, new object[] { tickRate });
                     yield return CheckAtTickRate(prefabName, walkPoseCount, tickRate,
-                        attackSprite ?? prefabName + "2", attackPoseCount, walkSpeed, secondsPerAttackPose, shotPrefab, walkWidth);
+                        attackSprite ?? prefabName + "2", attackPoseCount, walkSpeed, secondsPerAttackPose, shotPrefab,
+                        walkWidth, walkSeconds);
                 }
             }
             finally
@@ -118,7 +123,7 @@ namespace WordOnline.Tests
 
         private static IEnumerator CheckAtTickRate(string prefabName, int walkPoseCount, int tickRate,
             string attackSprite, int attackPoseCount, float walkSpeed, float secondsPerAttackPose, string shotPrefab,
-            int? walkWidth)
+            int? walkWidth, int walkSeconds)
         {
             int direction = tickRate == 60 ? -1 : 1;
             var root = new GameObject($"{prefabName}-{tickRate}Hz");
@@ -166,7 +171,7 @@ namespace WordOnline.Tests
                 var seenWalk = new HashSet<Sprite>();
                 yield return null;
                 // 기존 방향 전환 대기 0.5초 뒤에도 보행 주기가 온전히 지나야 한다.
-                for (int tick = 0; tick < tickRate * 3; tick++)
+                for (int tick = 0; tick < tickRate * walkSeconds; tick++)
                 {
                     target.x += direction * walkSpeed / tickRate;
                     position.SetValue(frame, target);

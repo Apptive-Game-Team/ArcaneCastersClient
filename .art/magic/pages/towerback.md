@@ -13,7 +13,7 @@
 
 ## 컨셉 설명
 
-포탑등이는 인간 마법 문명이 납치한 꼬마돌의 등에 지대공 타워를 강제로 결속한 고정형 병기다. 생물 본체는 돌 골렘 부족이지만 전장에서는 인간 진영의 원거리 방어 구조물로 운용되며 지상·공중 대상을 공격한다.
+포탑등이는 인간 마법 문명이 납치한 꼬마돌의 등에 지대공 타워를 강제로 결속한 병기다. 꼬마돌의 두 발로 다니며 가까운 지상 적을 주먹으로 치고 공중 적에게는 포탄을 쏜다.
 
 ## 설명
 
@@ -23,16 +23,17 @@
 
 ## 동작
 
-1. 공격 상태를 수행한다.
-2. 움직이지 않고 탐지 범위 안 적을 공격한다.
+1. 탐지 범위에서 공중 표적을 우선 선택한다.
+2. 표적에 맞는 무기의 사거리까지 걸어가 멈춘다.
+3. 지상 표적은 주먹으로 타격하고 공중 표적은 포신으로 조준해 돌탄을 쏜다.
 
 ## 전투 프로필
 
 | 항목 | 분류 | 코드 근거 |
 |---|---|---|
-| 기동 방식 | 고정형 | 이동 AI 없이 설치 위치에서 행동한다. |
-| 전투 역할 | 원거리 공격 | 부착 AI·마법 컴포넌트 기준 |
-| 공격 형태 | 범위 | 공격 컴포넌트와 시전 계열 기준 |
+| 기동 방식 | 지상 보행 | `TowerbackMob`이 `SUB_SPEED`로 표적을 추적한다. |
+| 전투 역할 | 지상 근접, 대공 원거리 | 각 표적의 무기 사거리를 사용한다. |
+| 공격 형태 | 지상 단일 타격, 대공 범위 피해 | `strike_ground`는 표적에 명중시키고 `shoot_air`는 표적 주변에도 피해를 준다. |
 | 표적 | 지상·공중 | `TargetMask` 기준 |
 | 특수 이동·행동 | 추가 특수 이동 없음 | 부착 컴포넌트 기준 |
 | 생명주기 | HP 소진 시 파괴 | 파괴·시간제한 컴포넌트 기준 |
@@ -67,3 +68,4 @@
 
 - Magic: `game/src/main/java/com/wordonline/server/game/domain/magic/implement/build/TowerbackMagic.java`
 - Prefab initializer: `game/src/main/java/com/wordonline/server/game/domain/object/prefab/implement/misc/TowerbackPrefabInitializer.java`
+- 동작: `game-rust/crates/sim/src/game/domain/object/component/mob/statemachine/attacker/towerback_mob.rs`

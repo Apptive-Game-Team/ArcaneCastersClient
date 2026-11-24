@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using GameScene.Dto;
 using GameScene.Dto.Projectile;
 using GameScene.Object.Projectile;
 using GameScene.ServedObjectComponent;
+using GameScene.ServedObjectComponent.Motion;
 using GameScene.ServedObjectComponent.Sound;
 using Global;
 using UnityEngine;
@@ -58,6 +60,33 @@ namespace GameScene.Object
             Destroy(projectileObject, dto.duration);
             
             projectile.Init(dto);
+        }
+
+        internal static GroundedUnitPoseController FindTowerbackLauncher(ProjectileDto dto, PresentationWorld world)
+        {
+            if (dto?.type != "RockShot" || !(dto.start is ReferenceProjectileTarget reference))
+            {
+                return null;
+            }
+
+            ServedObject source = PresentationWorld.Find(reference.id, world);
+            return source != null && source.PrefabType == "Towerback"
+                ? source.GetComponent<GroundedUnitPoseController>()
+                : null;
+        }
+
+        public static void EndProjectileFrame(IEnumerable<ProjectileDto> projectiles, PresentationWorld world = null)
+        {
+            if (projectiles == null)
+            {
+                return;
+            }
+
+            // 같은 서버 패킷의 Attack만 생략한다. 한 화면 프레임에 서버 패킷이 여러 개 들어올 수 있다.
+            foreach (ProjectileDto projectile in projectiles)
+            {
+                FindTowerbackLauncher(projectile, world)?.EndProjectileFrame();
+            }
         }
 
         private static void SpawnBoulderStrikeImpact(ProjectileDto dto, PresentationWorld world)
