@@ -1786,8 +1786,9 @@ namespace WordOnline.Tests
                                 yield return null;
                             }
                             Assert.That(seen.Count, Is.EqualTo(8));
-                            Assert.That(phases.Zip(phases.Skip(1), (a,b) => (a,b)),
-                                Does.Contain((4,5)).And.Contain((8,1)));
+                            var transitions = phases.Zip(phases.Skip(1), (from, to) => (from, to)).ToArray();
+                            CollectionAssert.Contains(transitions, (4, 5));
+                            CollectionAssert.Contains(transitions, (8, 1));
                         }
 
                         var arrival = arrivals[i];
