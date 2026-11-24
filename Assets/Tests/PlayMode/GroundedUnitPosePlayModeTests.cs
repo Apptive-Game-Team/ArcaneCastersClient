@@ -69,6 +69,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(304, 240), idleSprite: "SeedSpiritSwarm");
 
         [UnityTest]
+        public IEnumerator ZapMouseRunsAndRecoversAtBothTickRates() =>
+            CheckBothTickRates("ZapMouse", 8, "ZapMouseSpikeHit01", 4, 1.2f, .08f,
+                walkSize: new Vector2(304, 184));
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");

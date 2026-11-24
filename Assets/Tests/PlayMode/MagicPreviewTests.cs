@@ -2423,6 +2423,146 @@ namespace WordOnline.Tests
             return (SpriteRenderer)unit.GetType().GetField("_spriteRenderer", Private).GetValue(unit);
         }
 
+
+        [UnityTest]
+        public IEnumerator ZapMouseRunsAtRecordingSpeedAndRecoversOnEachActorsTiming()
+        {
+            Create();
+            Assert.That(Configure("zap_mouse"), Is.True);
+            var scenarios = (JArray)Recording("zap_mouse")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(scenario => (string)scenario["id"] == "ground")));
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/ZapMouseCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                yield return PlayUntil(.634f);
+                var later = ZapMouseBody(3);
+                var earlier = ZapMouseBody(4);
+                Assert.That(later.sprite.name, Is.EqualTo("ZapMouse"));
+                Assert.That(earlier.sprite.name, Is.EqualTo("ZapMouse"));
+                var earlierRun = new System.Collections.Generic.List<string>();
+                var laterRun = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 1.49f)
+                {
+                    string firstPose = earlier.sprite.name;
+                    if (firstPose.StartsWith("ZapMouseRun", StringComparison.Ordinal) &&
+                        firstPose != earlierRun.LastOrDefault())
+                    {
+                        earlierRun.Add(firstPose);
+                        if (capture && earlierRun.Count <= 8) SaveViewport(directory, firstPose, true);
+                    }
+                    string otherPose = later.sprite.name;
+                    if (otherPose.StartsWith("ZapMouseRun", StringComparison.Ordinal) &&
+                        otherPose != laterRun.LastOrDefault())
+                        laterRun.Add(otherPose);
+                    yield return null;
+                }
+                var firstLoop = Enumerable.Range(1, 8).Select(i => $"ZapMouseRun{i:00}").Append("ZapMouseRun01");
+                CollectionAssert.AreEqual(firstLoop, earlierRun.Take(9));
+                CollectionAssert.AreEqual(firstLoop, laterRun.Take(9));
+
+                var target = Target(2);
+                for (int i = 0; i < 2; i++)
+                {
+                    float impact = 2.15f + .8f * i;
+                    float beforeHp = 10000 - 200 * i;
+                    yield return PlayUntil(impact - .027f);
+                    Assert.That(earlier.sprite.name, Is.EqualTo("ZapMouse"));
+                    Assert.That(later.sprite.name, Is.EqualTo("ZapMouse"));
+                    Assert.That(CurrentHp(target), Is.EqualTo(beforeHp));
+                    yield return PlayUntil(impact + .018f);
+                    Assert.That(earlier.sprite.name, Is.EqualTo("ZapMouseSpikeHit01"));
+                    Assert.That(later.sprite.name, Is.EqualTo("ZapMouse"));
+                    Assert.That(earlier.flipX, Is.False);
+                    Assert.That(CurrentHp(target), Is.EqualTo(beforeHp - 100));
+                    if (capture && i == 0) SaveViewport(directory, "first-mouse-hit", true);
+
+                    yield return PlayUntil(impact + .10f);
+                    Assert.That(earlier.sprite.name, Is.EqualTo("ZapMouseSpikeHit02"));
+                    Assert.That(later.sprite.name, Is.EqualTo("ZapMouseSpikeHit01"));
+                    Assert.That(later.flipX, Is.False);
+                    Assert.That(CurrentHp(target), Is.EqualTo(beforeHp - 200));
+                    if (capture && i == 0) SaveViewport(directory, "two-hit-phases", true);
+                    yield return PlayUntil(impact + .348f);
+                    Assert.That(earlier.sprite.name, Is.EqualTo("ZapMouse"));
+                    Assert.That(later.sprite.name, Is.EqualTo("ZapMouseSpikeHit04"));
+                    yield return PlayUntil(impact + .41f);
+                    Assert.That(later.sprite.name, Is.EqualTo("ZapMouse"));
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ZapMouseDeathKeepsTheSurvivorAndSendsEnergyFromTheRemovedMouse()
+        {
+            Create();
+            Assert.That(Configure("zap_mouse"), Is.True);
+            var scenarios = (JArray)Recording("zap_mouse")["scenarios"];
+            var death = scenarios.Single(scenario => (string)scenario["id"] == "death_energy");
+            var (start, duration, targetId) = FirstProjectile(death, "ElectricAbsorb");
+            Assert.That(start, Is.EqualTo(1.20f).Within(.001f));
+            Assert.That(duration, Is.EqualTo(.35f).Within(.001f));
+            Assert.That(targetId, Is.EqualTo(4));
+            Scenario(scenarios.IndexOf(death));
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(start - .025f);
+                var dying = Target(2);
+                var survivor = Target(3);
+                SpriteRenderer dyingBody = ZapMouseBody(2);
+                SpriteRenderer survivorBody = ZapMouseBody(3);
+                Assert.That(dyingBody.sprite.name, Is.EqualTo("ZapMouse"));
+                Assert.That(survivorBody.sprite.name, Is.EqualTo("ZapMouse"));
+                Vector3 origin = dying.transform.position;
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+
+                yield return PlayUntil(start + .001f);
+                var despawning = dying.GetType().GetProperty("IsDespawning", Private);
+                Assert.That((bool)despawning.GetValue(dying), Is.True);
+                Assert.That((bool)despawning.GetValue(survivor), Is.False);
+                Assert.That(dyingBody.sprite.name, Is.EqualTo("ZapMouse"));
+                Transform bolt = FindProjectile("ElectricShot");
+                Assert.That(bolt, Is.Not.Null);
+                Assert.That(Vector3.Distance(bolt.position, origin), Is.LessThan(.16f));
+                Component receiver = Target(targetId);
+                var effects = receiver.GetType().GetProperty("ActiveEffects");
+                Assert.That((IEnumerable)effects.GetValue(receiver), Does.Contain("Overcharge"));
+                Assert.That((IEnumerable)effects.GetValue(survivor), Does.Not.Contain("Overcharge"));
+                float initialDistance = Vector3.Distance(bolt.position, receiver.transform.position);
+
+                yield return PlayUntil(start + .2f);
+                Assert.That(Target(2), Is.Null);
+                Assert.That(Target(3), Is.SameAs(survivor));
+                Assert.That(survivorBody.sprite.name, Is.EqualTo("ZapMouse"));
+                Assert.That(Vector3.Distance(bolt.position, receiver.transform.position), Is.LessThan(initialDistance));
+                yield return PlayUntil(start + duration + .07f);
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+                Assert.That(Target(3), Is.SameAs(survivor));
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        private SpriteRenderer ZapMouseBody(int id)
+        {
+            Component unit = Target(id);
+            Assert.That(unit, Is.Not.Null, $"찌릿쥐 ID {id}");
+            Assert.That(unit.name, Does.StartWith("ZapMouse"));
+            Assert.That(unit.GetComponent("CrawlMotionController"), Is.Null);
+            return (SpriteRenderer)unit.GetType().GetField("_spriteRenderer", Private).GetValue(unit);
+        }
+
         private Transform FindProjectile(string type)
         {
             var world = (Component)Field("world");
