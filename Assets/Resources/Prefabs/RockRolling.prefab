@@ -10,12 +10,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 468314681180972983, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
       propertyPath: m_Name
-      value: RockShot
+      value: RockRolling
       objectReference: {fileID: 0}
-    - target: {fileID: 2555408739639926963, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: c2450ad6666e14dea9bb6888e108855c, type: 3}
+    - target: {fileID: 1293051082466908419, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4511551496717632115, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -63,5 +63,41 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 468314681180972983, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8040500000000005421}
   m_SourcePrefab: {fileID: 100100000, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+--- !u!1 &8040500000000005422 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 468314681180972983, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+  m_PrefabInstance: {fileID: 3310432348342748720}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8040500000000005423 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7077577480859934061, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+  m_PrefabInstance: {fileID: 3310432348342748720}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8040500000000005421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8040500000000005422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c95099d19dfd40248ee7e54b76c9db65, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8040500000000005423}
+  rollFrames:
+  - {fileID: 21300000, guid: c2450ad6666e14dea9bb6888e108855c, type: 3}
+  - {fileID: 21300000, guid: 54e6bd5bc600450f9124278f07ebdc44, type: 3}
+  - {fileID: 21300000, guid: 5ee43e2e39224a4caa7690a855cddab4, type: 3}
+  - {fileID: 21300000, guid: 9e85cc261d8c47a39c8b49a8019c6e00, type: 3}
+  - {fileID: 21300000, guid: 6f794a1f2e5a4686aac6794e49d139e8, type: 3}
+  - {fileID: 21300000, guid: 4115e1a219d040a081c166552581e16a, type: 3}
+  - {fileID: 21300000, guid: 56204e937d6440cda3346fc7cb5e3c74, type: 3}
+  - {fileID: 21300000, guid: bdd22d632ff34f8f82ee1d1da2dfd634, type: 3}

@@ -15,6 +15,7 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `PveCorruptedWindSpiritDescent01.png`–`PveCorruptedWindSpiritDescent04.png` | 타락한 바람 정령 · 몸을 숙이며 하강 | 연속 위치 갱신에서 고도가 내려갈 때 각 하강 높이에 맞는 자세를 고른다. 제거가 시작되면 마지막 자세를 유지한다 |
 | `PveCorruptedVineSpiritCrawl01.png`–`PveCorruptedVineSpiritCrawl08.png` | 타락한 덩굴 정령 · 뿌리를 풀고 감아 지면을 이동 | 이동 0.6칸마다 여덟 자세 한 바퀴. 기준 속도 0.5칸/초에서 1.2초 |
 | `PveCorruptedVineSpiritLash01.png`–`PveCorruptedVineSpiritLash04.png` | 타락한 덩굴 정령 · 덩굴 타격과 복귀 | 공격 이벤트에서 첫 자세를 즉시 표시하고 0.06초 간격으로 복귀한다. 총 0.24초 |
+| `RockRolling.png`, `RockRollingRoll02.png`–`RockRollingRoll08.png` | 구르는 바위 · 기본과 회전 여덟 자세 | 화면 평면의 이동 거리를 바위 둘레로 나누어 자세를 고른다. 반사로 진행 방향이 바뀌면 같은 자세부터 역순으로 재생한다. `RockShot`은 기본 자세를 공유한다 |
 | `MagmaSpirit.png` | 용암 갑각 악마 · 선 기본 자세 | `MagmaSpirit.prefab` 기본 SpriteRenderer |
 | `MagmaSpiritAttacking.png` | 용암 갑각 악마 · 내려찍기 자세 | `OnAttackSpriteSwapper.onAttackSprite` |
 | `MagmaSpiritSpawn.png` | 용암 갑각 악마 · 지면 돌파 소환 자세 | 생성 시 0.28초 표시 |
