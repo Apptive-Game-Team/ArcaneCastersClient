@@ -567,7 +567,7 @@ namespace WordOnline.Tests
             Send(x, "Attack", "\"Panic\"", withHit: true);
             Assert.That(renderer.sprite.name, Is.EqualTo("StormStagImpact01"));
             yield return new WaitForSeconds(.09f);
-            Assert.That(renderer.sprite.name, Is.AnyOf("StormStagImpact02", "StormStagImpact03"));
+            Assert.That(renderer.sprite.name, Is.EqualTo("StormStagImpact02").Or.EqualTo("StormStagImpact03"));
             Sprite currentImpact = renderer.sprite;
             Send(x, "Attack", "\"Panic\"");
             Assert.That(renderer.sprite, Is.SameAs(currentImpact));
