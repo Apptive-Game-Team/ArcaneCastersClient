@@ -31,6 +31,10 @@ namespace WordOnline.Tests
             CheckBothTickRates("EvilEnt", 8, "EvilEnt2", 3, 2f, 0.08f);
 
         [UnityTest]
+        public IEnumerator AquaArcherWalksAndRecoversAtBothTickRates() =>
+            CheckBothTickRates("AquaArcher", 8, "AquaArcherAttack", 3, 1f, 0.08f);
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");

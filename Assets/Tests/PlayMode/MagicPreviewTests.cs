@@ -424,6 +424,78 @@ namespace WordOnline.Tests
             int.Parse(sprite.name.Substring("RockRollingRoll".Length)) - 1;
 
         [UnityTest]
+        public IEnumerator AquaArcherRecordedWalkAndWaterShotUseTheirOwnPoses()
+        {
+            Create();
+            Assert.That(Configure("rallying_totem"), Is.True);
+            var rally = Recording("rallying_totem")["scenarios"][0];
+            int walkerId = AquaArcherId(rally);
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                string directory = System.IO.Path.Combine(Application.dataPath, "../Library/AquaArcherCaptures");
+                bool canCapture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+                if (canCapture) System.IO.Directory.CreateDirectory(directory);
+                yield return PlayUntil(.85f);
+                Component walker = Target(walkerId);
+                var walk = (SpriteRenderer)walker.GetType().GetField("_spriteRenderer", Private).GetValue(walker);
+                var seen = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 1.85f)
+                {
+                    seen.Add(walk.sprite.name);
+                    yield return null;
+                }
+                Assert.That(seen.Count(name => name.StartsWith("AquaArcherWalk", StringComparison.Ordinal)), Is.EqualTo(8));
+                if (canCapture) SaveViewport(directory, "walk", true);
+                yield return PlayUntil(2.05f);
+                Assert.That(walk.sprite.name, Is.EqualTo("AquaArcher"));
+
+                Assert.That(Configure("aqua_archer"), Is.True);
+                var matches = (JArray)Recording("aqua_archer")["scenarios"];
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    string scenarioName = (string)matches[i]["id"];
+                    int id = AquaArcherId(matches[i]);
+                    var shot = FirstProjectile(matches[i], "WaterShot");
+                    Scenario(i);
+                    yield return PlayUntil(shot.start - .035f);
+                    Component archer = Target(id);
+                    Assert.That(archer, Is.Not.Null);
+                    var body = (SpriteRenderer)archer.GetType().GetField("_spriteRenderer", Private).GetValue(archer);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcher"));
+                    Assert.That(FindProjectile("WaterShot"), Is.Null);
+                    yield return PlayUntil(shot.start + .012f);
+                    Transform arrow = FindProjectile("WaterShot");
+                    Assert.That(arrow, Is.Not.Null);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcherAttack"));
+                    var camera = (Camera)Field("previewCamera");
+                    float x = body.flipX ? -.37f : .37f;
+                    Vector3 grip = body.transform.TransformPoint(new Vector3(x, .565f, 0f));
+                    float launchGap = Vector2.Distance(camera.WorldToViewportPoint(grip),
+                        camera.WorldToViewportPoint(arrow.position));
+                    Debug.Log($"{scenarioName}: bow to WaterShot viewport gap {launchGap:F4}");
+                    if (canCapture) SaveViewport(directory, scenarioName + "-release", true);
+                    yield return PlayUntil(shot.start + .11f);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcherRecover01"));
+                    yield return PlayUntil(shot.start + .19f);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcherRecover02"));
+                    if (canCapture) SaveViewport(directory, scenarioName + "-recover", true);
+                    yield return PlayUntil(shot.start + .29f);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcher"));
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        private static int AquaArcherId(JToken scenario) =>
+            (int)scenario["frames"].SelectMany(frame => frame["objects"]["create"])
+                .First(unit => (string)unit["type"] == "AquaArcher")["id"];
+
+        [UnityTest]
         public IEnumerator StormStagRecordingUsesFourLegGaitAndOnlyBracesOnContact()
         {
             Create();
