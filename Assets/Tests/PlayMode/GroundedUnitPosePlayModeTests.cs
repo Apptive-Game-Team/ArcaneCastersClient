@@ -64,6 +64,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(304, 176), idleSprite: "EmberSpiritSwarm");
 
         [UnityTest]
+        public IEnumerator SeedSpiritStepsAndRecoversAtBothTickRates() =>
+            CheckBothTickRates("SeedSpirit", 8, "SeedSpiritLeafHit01", 4, .8f, .08f,
+                walkSize: new Vector2(304, 240), idleSprite: "SeedSpiritSwarm");
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
