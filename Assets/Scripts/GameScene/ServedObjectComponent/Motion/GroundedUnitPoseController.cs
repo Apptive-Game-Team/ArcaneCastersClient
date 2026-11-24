@@ -203,8 +203,9 @@ namespace GameScene.ServedObjectComponent.Motion
             hasGroundSample = true;
 
             // 빠른 이동은 서버 좌표에서 보정을 판별하고 해당 보간 구간을 모두 건너뛴다.
-            bool correcting = correctingServerGround ||
-                distance > Mathf.Max(MinimumCorrectionDistance, CorrectionSpeed * Time.deltaTime);
+            bool correcting = maximumGroundSpeed > 0f
+                ? correctingServerGround
+                : distance > Mathf.Max(MinimumCorrectionDistance, CorrectionSpeed * Time.deltaTime);
             if (correcting)
             {
                 movingUntil = float.NegativeInfinity;

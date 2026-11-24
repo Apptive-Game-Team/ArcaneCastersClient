@@ -234,10 +234,23 @@ namespace WordOnline.Tests
 
                 yield return new WaitForSeconds(0.14f);
                 Assert.That(renderer.sprite, Is.SameAs(idle));
-                unit.transform.position += 3f * Vector3.right + Vector3.up;
-                yield return null;
-                yield return null;
-                Assert.That(renderer.sprite, Is.SameAs(idle));
+                float maximumGroundSpeed = (float)presenter.GetType().GetField("maximumGroundSpeed", Private).GetValue(presenter);
+                if (maximumGroundSpeed > 0f)
+                {
+                    // 서버 좌표를 쓰는 프리팹은 큰 위치 갱신이 보간되는 내내 대기 자세를 유지한다.
+                    position.SetValue(frame, target + 3f * Vector3.right + Vector3.up);
+                    update.Invoke(unit, new[] { frame });
+                }
+                else
+                {
+                    unit.transform.position += 3f * Vector3.right + Vector3.up;
+                }
+
+                for (int render = 0; render < RenderRate / tickRate + 2; render++)
+                {
+                    yield return null;
+                    Assert.That(renderer.sprite, Is.SameAs(idle));
+                }
             }
             finally
             {
