@@ -50,7 +50,12 @@ MonoBehaviour:
   tipRenderer: {fileID: 7100000000000000023}
   tipTransform: {fileID: 7100000000000000022}
   style: 0
-  overshoot: 0
+  tipFrames:
+  - {fileID: 21300000, guid: 9e2eab7ac54842f5b53f4d227397cf4e, type: 3}
+  - {fileID: 21300000, guid: 0b2a54daf8134879b74835db095e4858, type: 3}
+  - {fileID: 21300000, guid: 1f8cbd5dd8b344ca8456365cb1802ba9, type: 3}
+  - {fileID: 21300000, guid: e2ce193ccf424d8a895ac5588c844220, type: 3}
+  overshoot: -0.9
   shoulderHeight: 1.55
   aimHeight: 0.6
 --- !u!1 &7100000000000000011

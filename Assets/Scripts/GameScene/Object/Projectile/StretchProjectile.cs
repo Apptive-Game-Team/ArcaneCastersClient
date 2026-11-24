@@ -74,8 +74,9 @@ namespace GameScene.Object.Projectile
         [SerializeField] private SpriteRenderer tipRenderer;
         [SerializeField] private Transform tipTransform;
         [SerializeField] private ArmStyle style = ArmStyle.Punch;
+        [SerializeField] private Sprite[] tipFrames;
 
-        /// <summary>Extra reach past the target, in world units, so the tip bites in.</summary>
+        /// <summary>대상 쪽으로 보정하는 시각 팔 길이. 주먹 끝이 닿도록 음수를 줄 수 있다.</summary>
         [SerializeField] private float overshoot;
 
         /// <summary>
@@ -142,6 +143,15 @@ namespace GameScene.Object.Projectile
                     .SetEase(motion.RetractEase))
                 .SetLink(gameObject)
                 .SetTarget(this);
+
+            if (tipRenderer != null && tipFrames?.Length == 4)
+            {
+                // 타격 자세는 팔이 최대 길이에 닿는 시점에 표시한다.
+                tipRenderer.sprite = tipFrames[0];
+                sequence.InsertCallback(extend * 0.76f, () => tipRenderer.sprite = tipFrames[1]);
+                sequence.InsertCallback(extend, () => tipRenderer.sprite = tipFrames[2]);
+                sequence.InsertCallback(extend + recoil, () => tipRenderer.sprite = tipFrames[3]);
+            }
         }
 
         // LateUpdate, so this frame's movement of the caster and the target is already applied.
@@ -181,7 +191,9 @@ namespace GameScene.Object.Projectile
 
             transform.position = from;
             transform.rotation = ProjectileUtil.GetRotation(from, to, world);
-            length = Mathf.Max(0f, ProjectileUtil.GetCameraPlaneLength(from, to, world) + overshoot);
+            float targetDistance = ProjectileUtil.GetCameraPlaneLength(from, to, world);
+            // 가까운 대상에게도 팔이 뻗는 구간을 남긴다.
+            length = targetDistance + Mathf.Max(overshoot, -targetDistance * 0.75f);
         }
 
         private void ApplyProgress(float value)
