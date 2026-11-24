@@ -24,7 +24,7 @@ namespace WordOnline.Tests
 
         [UnityTest]
         public IEnumerator BeanShooterWalksAtBothTickRatesAndFiresWithTheBean() =>
-            CheckBothTickRates("BeanShooter", 6, "BeanShooterAttack", 3, 0.6f, 0.08f, "Bean");
+            CheckBothTickRates("BeanShooter", 8, "BeanShooterAttack", 3, 0.6f, 0.08f, "Bean");
 
         private static IEnumerator CheckBothTickRates(string prefabName, int walkPoseCount,
             string attackSprite = null, int attackPoseCount = 4, float walkSpeed = WalkSpeed,
