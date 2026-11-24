@@ -34,6 +34,7 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `EvilEnt.png` | 사악한 고목 · 기본 자세 | `EvilEnt.prefab` 기본 SpriteRenderer |
 | `EvilEnt2.png` | 사악한 고목 · 팔을 뻗은 공격 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
 | `evil_ent_arm_segment.png`, `evil_ent_arm_fist.png`, `evil_ent_arm_fist_02.png`–`evil_ent_arm_fist_04.png` | 사악한 고목 · 뻗는 가지 팔과 주먹 네 자세 | `EvilEntPunchArm`의 팔 길이에 맞춰 가지를 반복한다. 주먹은 조이기, 서버 타격과 맞춘 최대 신장, 회복 순서로 바뀐다 |
+| `evil_ent_grab_segment.png`, `evil_ent_grab_claw.png`, `evil_ent_grab_claw_02.png`–`evil_ent_grab_claw_04.png` | 사악한 고목 · 대상을 붙잡는 발톱 | 펼친 발톱이 22% 시점에 닿아 오므라든다. 끌어오는 0.8초 동안 잡은 자세가 이어진다. 회수 시간이 있으면 발톱을 다시 펼친다 |
 | `PlayerCharacterBase.png` | 수습 마법생 · 지팡이를 세운 기본 자세 | `Player.prefab` 의 `PlayerImage` SpriteRenderer |
 | `PlayerCharacterAttack.png` | 수습 마법생 · 지팡이를 앞으로 뻗은 공격 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.3초 표시 |
 | `AquaArcher.png` | 물결 궁수 · 활시위를 당긴 기본 자세 | `AquaArcherAttackPresenter` 기본 Sprite |

@@ -55,6 +55,7 @@ namespace GameScene.Object.Projectile
 
         private const float MinimumDuration = 0.05f;
         private const float VisibleLength = 0.01f;
+        private const float GrabPullDuration = 0.8f;
 
         // Grab bursts out and then hangs on, so it reaches early and holds for the whole drag.
         // Punch leans back and slams, so most of its time is the wind-up. FireFist is the punch
@@ -125,6 +126,12 @@ namespace GameScene.Object.Projectile
             float extend = total * motion.Extend;
             float recoil = total * motion.Recoil;
             float retract = total * motion.Retract;
+            if (style == ArmStyle.Grab)
+            {
+                // Rust의 끌어오기 시간이 끝난 뒤 남은 재생 시간만 회수에 쓴다.
+                retract = Mathf.Min(retract, Mathf.Max(0f, total - extend - GrabPullDuration));
+                if (retract < 0.00001f) retract = 0f;
+            }
             float hold = Mathf.Max(0f, total - extend - recoil - retract);
 
             Sequence sequence = DOTween.Sequence()
@@ -138,20 +145,39 @@ namespace GameScene.Object.Projectile
                     .SetEase(motion.RecoilEase));
             }
 
-            sequence.AppendInterval(hold)
-                .Append(DOTween.To(() => progress, value => progress = value, 0f, retract)
-                    .SetEase(motion.RetractEase))
-                .SetLink(gameObject)
-                .SetTarget(this);
-
-            if (tipRenderer != null && tipFrames?.Length == 4)
+            sequence.AppendInterval(hold);
+            if (retract > 0f)
             {
-                // 타격 자세는 팔이 최대 길이에 닿는 시점에 표시한다.
-                tipRenderer.sprite = tipFrames[0];
-                sequence.InsertCallback(extend * 0.76f, () => tipRenderer.sprite = tipFrames[1]);
-                sequence.InsertCallback(extend, () => tipRenderer.sprite = tipFrames[2]);
-                sequence.InsertCallback(extend + recoil, () => tipRenderer.sprite = tipFrames[3]);
+                sequence.Append(DOTween.To(() => progress, value => progress = value, 0f, retract)
+                    .SetEase(motion.RetractEase));
             }
+            sequence.SetLink(gameObject).SetTarget(this);
+            AddTipFrames(sequence, extend, recoil, hold, retract);
+        }
+
+        private void AddTipFrames(Sequence sequence, float extend, float recoil, float hold, float retract)
+        {
+            if (tipRenderer == null || tipFrames?.Length != 4)
+            {
+                return;
+            }
+
+            tipRenderer.sprite = tipFrames[0];
+            if (style == ArmStyle.Grab)
+            {
+                sequence.InsertCallback(extend, () => tipRenderer.sprite = tipFrames[1]);
+                sequence.InsertCallback(extend + Mathf.Min(0.065f, hold * 0.25f), () => tipRenderer.sprite = tipFrames[2]);
+                if (retract > 0f)
+                {
+                    sequence.InsertCallback(extend + hold, () => tipRenderer.sprite = tipFrames[3]);
+                }
+                return;
+            }
+
+            // 타격 자세는 팔이 최대 길이에 닿는 시점에 표시한다.
+            sequence.InsertCallback(extend * 0.76f, () => tipRenderer.sprite = tipFrames[1]);
+            sequence.InsertCallback(extend, () => tipRenderer.sprite = tipFrames[2]);
+            sequence.InsertCallback(extend + recoil, () => tipRenderer.sprite = tipFrames[3]);
         }
 
         // LateUpdate, so this frame's movement of the caster and the target is already applied.
