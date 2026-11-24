@@ -768,21 +768,73 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
-        public IEnumerator EvilEntFireFistKeepsItsExistingTipSprite()
+        public IEnumerator EvilEntFireFistShowsImpactInShortRecordedAttack()
         {
             Create();
             const string magic = "evil_ent";
             Assert.That(Configure(magic), Is.True);
             var scenarios = (JArray)Recording(magic)["scenarios"];
             int index = scenarios.IndexOf(scenarios.First(s => (string)s["id"] == "pull"));
-            Scenario(index);
             var shot = FirstProjectile(scenarios[index], "EvilEntFireFist");
-            yield return PlayUntil(shot.start + shot.duration * .6f);
-            Transform projectile = FindProjectile("EvilEntFireFist");
-            Assert.That(projectile, Is.Not.Null);
-            var tip = projectile.Find("Tip").GetComponent<SpriteRenderer>();
-            Assert.That(tip.enabled, Is.True);
-            Assert.That(tip.sprite, Is.SameAs(Resources.Load<Sprite>("Game/shoot/evil_ent_burn_fist")));
+            Assert.That(shot.duration, Is.InRange(.15f, .17f));
+
+            int previousRenderRate = Time.captureFramerate;
+            try
+            {
+                foreach (int renderRate in new[] { 240, 60 })
+                {
+                    Time.captureFramerate = renderRate;
+                    Scenario(index);
+                    yield return PlayUntil(shot.start + .005f);
+                    Transform projectile = FindProjectile("EvilEntFireFist");
+                    Assert.That(projectile, Is.Not.Null);
+                    var tip = projectile.Find("Tip").GetComponent<SpriteRenderer>();
+                    var arm = projectile.Find("Arm").GetComponent<SpriteRenderer>();
+                    Assert.That(arm.sprite.rect.size, Is.EqualTo(new Vector2(64, 96)));
+                    Assert.That(arm.drawMode, Is.EqualTo(SpriteDrawMode.Tiled));
+                    var seen = new System.Collections.Generic.Dictionary<string, float>();
+                    int impactRenders = 0;
+                    float deadline = Time.realtimeSinceStartup + 10f;
+                    while (projectile != null && Time.realtimeSinceStartup < deadline)
+                    {
+                        if (tip.enabled)
+                        {
+                            float age = (float)Field("elapsed") - shot.start;
+                            Sprite pose = tip.sprite;
+                            Assert.That(pose.rect.size, Is.EqualTo(new Vector2(120, 92)));
+                            Assert.That(pose.pivot, Is.EqualTo(new Vector2(0, 46)));
+                            Assert.That(tip.transform.localPosition.x, Is.EqualTo(arm.size.x).Within(.001f));
+                            if (pose.name == "evil_ent_burn_fist_03") impactRenders++;
+                            if (!seen.ContainsKey(pose.name))
+                            {
+                                seen.Add(pose.name, age);
+                                if (renderRate == 240 && SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                                {
+                                    string directory = System.IO.Path.Combine(Application.dataPath, "../Library/EvilEntFireFistCaptures");
+                                    System.IO.Directory.CreateDirectory(directory);
+                                    SaveViewport(directory, $"fire-fist-{seen.Count:00}", true);
+                                }
+                            }
+                        }
+                        yield return null;
+                    }
+                    Assert.That(projectile == null, Is.True);
+                    Assert.That(impactRenders, Is.GreaterThanOrEqualTo(2), $"Visible impact at {renderRate} Hz");
+                    if (renderRate == 240)
+                    {
+                        CollectionAssert.AreEqual(new[]
+                        {
+                            "evil_ent_burn_fist", "evil_ent_burn_fist_02", "evil_ent_burn_fist_03", "evil_ent_burn_fist_04"
+                        }, seen.OrderBy(entry => entry.Value).Select(entry => entry.Key));
+                        Assert.That(seen["evil_ent_burn_fist_03"], Is.EqualTo(shot.duration * .45f).Within(.017f));
+                        Assert.That(seen["evil_ent_burn_fist_04"], Is.EqualTo(shot.duration * .8f).Within(.017f));
+                    }
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
         }
 
         [UnityTest]

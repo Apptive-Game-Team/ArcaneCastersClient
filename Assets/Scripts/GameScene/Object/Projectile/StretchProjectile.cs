@@ -174,10 +174,13 @@ namespace GameScene.Object.Projectile
                 return;
             }
 
-            // 타격 자세는 팔이 최대 길이에 닿는 시점에 표시한다.
-            sequence.InsertCallback(extend * 0.76f, () => tipRenderer.sprite = tipFrames[1]);
+            // 불주먹의 발광은 짧은 타격 뒤 팔을 거두기 시작할 때까지 남긴다.
+            bool fireFist = style == ArmStyle.FireFist;
+            float prepareTime = extend * (fireFist ? 0.64f : 0.76f);
+            float recoverTime = extend + recoil + (fireFist ? hold : 0f);
+            sequence.InsertCallback(prepareTime, () => tipRenderer.sprite = tipFrames[1]);
             sequence.InsertCallback(extend, () => tipRenderer.sprite = tipFrames[2]);
-            sequence.InsertCallback(extend + recoil, () => tipRenderer.sprite = tipFrames[3]);
+            sequence.InsertCallback(recoverTime, () => tipRenderer.sprite = tipFrames[3]);
         }
 
         // LateUpdate, so this frame's movement of the caster and the target is already applied.
