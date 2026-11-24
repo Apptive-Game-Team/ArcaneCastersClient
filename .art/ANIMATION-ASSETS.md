@@ -11,6 +11,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `ArcaneInfantry.png` | 비전 보병 · 기본 준비 자세 | `InfantryPoseController` 정지 상태 |
 | `ArcaneInfantryAttacking.png` | 비전 보병 · 마력 칼날 타격 | 공격 이벤트에서 0.16초 우선 표시 |
 | `ArcaneInfantryWalkLeft.png`, `ArcaneInfantryWalkRight.png` | 비전 보병 · 두 발걸음 | 이동 이벤트가 이어질 때 0.16초마다 교대, 지지하는 발 기준 |
+| `PveCorruptedWindSpiritHover01.png`–`PveCorruptedWindSpiritHover04.png`, `PveCorruptedWindSpiritGlide01.png`–`PveCorruptedWindSpiritGlide04.png` | 타락한 바람 정령 · 떠 있기와 활공 | 서버 위치로 수평 이동을 판정한다. 정지 1.20초와 활공 1.04초 주기 |
+| `PveCorruptedWindSpiritDescent01.png`–`PveCorruptedWindSpiritDescent04.png` | 타락한 바람 정령 · 몸을 숙이며 하강 | 연속 위치 갱신에서 고도가 내려갈 때 각 하강 높이에 맞는 자세를 고른다. 제거가 시작되면 마지막 자세를 유지한다 |
 | `MagmaSpirit.png` | 용암 갑각 악마 · 선 기본 자세 | `MagmaSpirit.prefab` 기본 SpriteRenderer |
 | `MagmaSpiritAttacking.png` | 용암 갑각 악마 · 내려찍기 자세 | `OnAttackSpriteSwapper.onAttackSprite` |
 | `MagmaSpiritSpawn.png` | 용암 갑각 악마 · 지면 돌파 소환 자세 | 생성 시 0.28초 표시 |
