@@ -424,6 +424,135 @@ namespace WordOnline.Tests
             int.Parse(sprite.name.Substring("RockRollingRoll".Length)) - 1;
 
         [UnityTest]
+        public IEnumerator WallGolemRecordingShowsPunchOnTheDamageFrame()
+        {
+            Create();
+            const string magic = "wall_golem";
+            Assert.That(Configure(magic), Is.True);
+            var ground = Recording(magic)["scenarios"][0];
+            var frames = (JArray)ground["frames"];
+            int golemId = (int)frames.SelectMany(frame => frame["objects"]["create"])
+                .First(unit => (string)unit["type"] == "WallGolem")["id"];
+            int targetId = (int)frames.SelectMany(frame => frame["objects"]["create"])
+                .First(unit => (string)unit["master"] == "RightPlayer")["id"];
+            float impact = (float)frames.First(frame => frame["objects"]["update"]
+                .Any(unit => (int)unit["id"] == golemId && (string)unit["status"] == "Attack"))["time"];
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.78f);
+                Component golem = Target(golemId);
+                Assert.That(golem, Is.Not.Null);
+                Assert.That(golem.GetComponent("WaddleMotionController"), Is.Null);
+                Assert.That(golem.GetComponent("HoppingMotionController"), Is.Null);
+                Assert.That((bool)golem.GetType().GetField("_swingOnAttack", Private).GetValue(golem), Is.False);
+                var sprite = (SpriteRenderer)golem.GetType().GetField("_spriteRenderer", Private).GetValue(golem);
+                Component opponent = Target(targetId);
+                var seen = new System.Collections.Generic.HashSet<string>();
+                bool canCapture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+                string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WallGolemCaptures");
+                if (canCapture) System.IO.Directory.CreateDirectory(directory);
+                while ((float)Field("elapsed") < 1.65f)
+                {
+                    seen.Add(sprite.sprite.name);
+                    yield return null;
+                }
+                Assert.That(seen.Count(name => name.StartsWith("WallGolemWalk", StringComparison.Ordinal)), Is.EqualTo(8));
+                Assert.That(sprite.flipX, Is.False);
+                if (canCapture) SaveViewport(directory, "walk", true);
+
+                yield return PlayUntil(impact - .023f);
+                Assert.That(sprite.sprite.name, Is.EqualTo("WallGolem"));
+                float before = CurrentWallGolemOpponentHealth(opponent);
+                Assert.That(before, Is.EqualTo(10000f));
+
+                for (int pose = 1; pose <= 4; pose++)
+                {
+                    yield return PlayUntil(impact + .023f + (pose - 1) * .08f);
+                    Assert.That(sprite.sprite.name, Is.EqualTo($"WallGolemPunch{pose:00}"));
+                    Assert.That(sprite.flipX, Is.False);
+                    Assert.That(CurrentWallGolemOpponentHealth(opponent), Is.EqualTo(9900f));
+                    if (canCapture && pose == 1) SaveViewport(directory, "impact", true);
+                }
+
+                yield return PlayUntil(impact + .37f);
+                Assert.That(sprite.sprite.name, Is.EqualTo("WallGolem"));
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        private static float CurrentWallGolemOpponentHealth(Component opponent)
+        {
+            var gauges = (IList)opponent.GetType().GetField("gauges").GetValue(opponent);
+            return (float)gauges[0].GetType().GetField("value").GetValue(gauges[0]);
+        }
+
+        [UnityTest]
+        public IEnumerator WallGolemRecordingLeavesTheServerRemnantAfterTheLocalFade()
+        {
+            Create();
+            const string magic = "wall_golem";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int deathIndex = scenarios.IndexOf(scenarios.First(s => (string)s["id"] == "death"));
+            var frames = (JArray)scenarios[deathIndex]["frames"];
+            int golemId = (int)frames.SelectMany(frame => frame["objects"]["create"])
+                .First(unit => (string)unit["type"] == "WallGolem")["id"];
+            var killed = frames.First(frame => frame["objects"]["update"]
+                .Any(unit => (int)unit["id"] == golemId && (string)unit["status"] == "Destroyed"));
+            int remnantId = (int)killed["objects"]["create"]
+                .Single(unit => (string)unit["type"] == "MediumRockRemnant")["id"];
+            float death = (float)killed["time"];
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                Scenario(deathIndex);
+                yield return PlayUntil(death - .02f);
+                Component golem = Target(golemId);
+                Assert.That(golem, Is.Not.Null);
+                var renderer = (SpriteRenderer)golem.GetType().GetField("_spriteRenderer", Private).GetValue(golem);
+                Sprite finalPose = renderer.sprite;
+                Vector3 position = golem.transform.position;
+                string fadeName = golem.name + "DeathFade";
+                Assert.That(Target(remnantId), Is.Null);
+
+                yield return PlayUntil(death + .11f);
+                Assert.That(Target(golemId), Is.Null);
+                Component remnant = Target(remnantId);
+                Assert.That(remnant, Is.Not.Null);
+                Assert.That(Vector3.Distance(remnant.transform.position, position), Is.LessThan(.005f));
+                var content = ((Component)Field("world")).transform.Find("PresentationContent");
+                SpriteRenderer fade = content.Find(fadeName)?.GetComponent<SpriteRenderer>();
+                Assert.That(fade, Is.Not.Null);
+                Assert.That(fade.sprite, Is.SameAs(finalPose));
+                int Fragments() => content.Cast<Transform>().Count(child => child.name.EndsWith("DeathFragment", StringComparison.Ordinal));
+                Assert.That(Fragments(), Is.EqualTo(9));
+
+                if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                {
+                    string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WallGolemCaptures");
+                    System.IO.Directory.CreateDirectory(directory);
+                    SaveViewport(directory, "death", true);
+                }
+
+                yield return PlayUntil(death + .65f);
+                Assert.That(content.Find(fadeName), Is.Null);
+                Assert.That(Fragments(), Is.Zero);
+                Assert.That(Target(remnantId), Is.SameAs(remnant));
+                Assert.That(content.Cast<Transform>().Count(child => child.name.StartsWith("MediumRockRemnant", StringComparison.Ordinal)), Is.EqualTo(1));
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator AquaArcherRecordedWalkAndWaterShotUseTheirOwnPoses()
         {
             Create();
