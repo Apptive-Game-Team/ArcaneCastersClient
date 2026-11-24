@@ -807,6 +807,61 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator TowerbackSnapshotLaunchesBeforeRemovingTheTarget()
+        {
+            root = new GameObject("Towerback snapshot fixture");
+            Component container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+            Component syncer = root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+            MethodInfo find = container.GetType().GetMethod("FindById");
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize");
+            Type objectsType = Runtime("GameScene.Dto.ObjectsInfo");
+            MethodInfo decodeObjects = decode.MakeGenericMethod(objectsType);
+            Transform shot = null;
+            try
+            {
+                object initial = decodeObjects.Invoke(null, new object[] {
+                    "{\"create\":[" +
+                    "{\"id\":31,\"type\":\"Towerback\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":5}}," +
+                    "{\"id\":32,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":13,\"y\":2,\"z\":5}}]}"
+                });
+                Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply")
+                    .Invoke(null, new[] { initial, null, null });
+                Assert.That(find.Invoke(container, new object[] { 32 }), Is.Not.Null);
+
+                object launch = decodeObjects.Invoke(null, new object[] {
+                    "{\"projectile\":[{\"type\":\"RockShot\",\"duration\":0.2," +
+                    "\"start\":{\"targetType\":\"reference\",\"id\":31},\"end\":{\"targetType\":\"reference\",\"id\":32}}]}"
+                });
+                object deferred = Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnBeforeObjectUpdates")
+                    .Invoke(null, new[] { objectsType.GetField("projectile").GetValue(launch), null });
+                Assert.That(deferred, Is.Not.Null);
+                Assert.That(GameObject.Find("RockShot(Clone)"), Is.Null);
+
+                Type snapshots = Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType();
+                object snapshot = decode.MakeGenericMethod(snapshots).Invoke(null, new object[] {
+                    "[{\"id\":31,\"prefab\":\"Towerback\",\"master\":\"LeftPlayer\"," +
+                    "\"x\":9,\"y\":0,\"z\":5,\"status\":\"Attack\"}]"
+                });
+                syncer.GetType().GetMethod("Sync").Invoke(syncer, new[] { snapshot, deferred });
+                Assert.That(find.Invoke(container, new object[] { 32 }), Is.Null);
+                var actor = (Component)find.Invoke(container, new object[] { 31 });
+                var body = (SpriteRenderer)actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor);
+                Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire01"));
+                GameObject projectile = GameObject.Find("RockShot(Clone)");
+                Assert.That(projectile, Is.Not.Null);
+                shot = projectile.transform;
+                yield return null;
+                Assert.That(shot != null, Is.True, "스냅샷에서 빠진 표적의 마지막 위치까지 탄이 이동한다.");
+            }
+            finally
+            {
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                if (shot != null) UnityEngine.Object.Destroy(shot.gameObject);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator StormStagRecordingUsesFourLegGaitAndOnlyBracesOnContact()
         {
             Create();

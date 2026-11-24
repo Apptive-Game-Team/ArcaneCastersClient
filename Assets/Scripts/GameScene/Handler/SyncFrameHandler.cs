@@ -84,24 +84,11 @@ namespace GameScene.Handler
                 WDebug.Log("[SyncFrameHandler] 카드 추가 중 오류 발생");
             }
  
-            try
-            {
-                if (syncFrameInfo.projectileDtos != null)
-                {
-                    foreach (var projectile in syncFrameInfo.projectileDtos)
-                    {
-                        ProjectileSpawner.Instance.Spawn(projectile);
-                    }
-                }
+            var deferred = ProjectileSpawner.SpawnBeforeObjectUpdates(syncFrameInfo.projectileDtos);
 
-                // 동기화가 사라진 오브젝트를 지우기 전에 이벤트를 먼저 처리한다.
-                gameEventHandler.Handler(syncFrameInfo.events);
-                ObjectSyncer.Instance.Sync(syncFrameInfo.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>());
-            }
-            finally
-            {
-                ProjectileSpawner.EndProjectileFrame(syncFrameInfo.projectileDtos);
-            }
+            // 동기화가 사라진 오브젝트를 지우기 전에 이벤트를 먼저 처리한다.
+            gameEventHandler.Handler(syncFrameInfo.events);
+            ObjectSyncer.Instance.Sync(syncFrameInfo.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>(), deferred);
             
             TimerController.Instance.UpdateTimer(syncFrameInfo.remainingTime);
         }

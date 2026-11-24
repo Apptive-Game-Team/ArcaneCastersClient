@@ -31,7 +31,6 @@ namespace GameScene.ServedObjectComponent.Motion
         private float movingUntil = float.NegativeInfinity;
         private float attackStarted = float.NegativeInfinity;
         private Sprite[] activeAttackFrames;
-        private bool launchedThisFrame;
         private Vector2 lastServerGround;
         private bool hasServerGround;
         private bool correctingServerGround;
@@ -82,7 +81,7 @@ namespace GameScene.ServedObjectComponent.Motion
 
         private void HandleAttack()
         {
-            if (!launchedThisFrame && CanPlayAttack(attackFrames))
+            if (CanPlayAttack(attackFrames))
             {
                 StartAttack(attackFrames);
             }
@@ -99,13 +98,10 @@ namespace GameScene.ServedObjectComponent.Motion
             Owner.FaceTowards(destination);
             precedingServerDirection = confirmedServerDirection = 0;
             StartAttack(projectileAttackFrames);
-            launchedThisFrame = true;
             float x = impactFlip ? -projectileMuzzle.x : projectileMuzzle.x;
             start = resolvedRenderer.transform.TransformPoint(new Vector3(x, projectileMuzzle.y, 0f));
             return true;
         }
-
-        internal void EndProjectileFrame() => launchedThisFrame = false;
 
         private bool CanPlayAttack(Sprite[] frames) =>
             isActiveAndEnabled && resolvedRenderer != null && frames != null && frames.Length > 0 && attackDuration > 0f;
@@ -207,9 +203,8 @@ namespace GameScene.ServedObjectComponent.Motion
             hasGroundSample = true;
 
             // 빠른 이동은 서버 좌표에서 보정을 판별하고 해당 보간 구간을 모두 건너뛴다.
-            bool correcting = maximumGroundSpeed > 0f
-                ? correctingServerGround
-                : distance > Mathf.Max(MinimumCorrectionDistance, CorrectionSpeed * Time.deltaTime);
+            bool correcting = correctingServerGround ||
+                distance > Mathf.Max(MinimumCorrectionDistance, CorrectionSpeed * Time.deltaTime);
             if (correcting)
             {
                 movingUntil = float.NegativeInfinity;
@@ -248,7 +243,6 @@ namespace GameScene.ServedObjectComponent.Motion
         private void ResetPose()
         {
             hasGroundSample = false;
-            launchedThisFrame = false;
             activeAttackFrames = null;
             hasServerGround = correctingServerGround = false;
             precedingServerDirection = confirmedServerDirection = 0;

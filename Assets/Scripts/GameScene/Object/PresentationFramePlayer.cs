@@ -14,17 +14,10 @@ namespace GameScene.Object
             if (objects?.create != null)
                 foreach (CreatedObjectDto created in objects.create) ObjectSpawner.SpawnShared(created, world);
             eventHandler.Handler(events, world);
-            try
-            {
-                if (objects?.projectile != null)
-                    foreach (var projectile in objects.projectile) ProjectileSpawner.SpawnShared(projectile, world);
-                if (objects?.update != null)
-                    foreach (UpdatedObjectDto updated in objects.update) PresentationWorld.Find(updated.id, world)?.UpdateObject(updated);
-            }
-            finally
-            {
-                ProjectileSpawner.EndProjectileFrame(objects?.projectile, world);
-            }
+            var deferred = ProjectileSpawner.SpawnBeforeObjectUpdates(objects?.projectile, world);
+            if (objects?.update != null)
+                foreach (UpdatedObjectDto updated in objects.update) PresentationWorld.Find(updated.id, world)?.UpdateObject(updated);
+            ProjectileSpawner.SpawnDeferred(deferred, world);
         }
     }
 }

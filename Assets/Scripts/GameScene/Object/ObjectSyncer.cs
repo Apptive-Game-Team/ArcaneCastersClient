@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Data;
 using GameScene.Dto;
+using GameScene.Dto.Projectile;
 using Global;
 
 namespace GameScene.Object
@@ -9,7 +10,7 @@ namespace GameScene.Object
     {
         private bool hasCompletedInitialSync;
 
-        public void Sync(SnapshotObjectDto[] snapshotObjects)
+        public void Sync(SnapshotObjectDto[] snapshotObjects, List<ProjectileDto> deferredProjectiles = null)
         {
             if (snapshotObjects == null)
             {
@@ -37,6 +38,8 @@ namespace GameScene.Object
                 }
             }
 
+            // 같은 틱에 사라지는 발사원과 표적을 참조할 수 있도록 삭제 전에 발사한다.
+            ProjectileSpawner.SpawnDeferred(deferredProjectiles);
             RemoveObjects(snapshotObjects);
             hasCompletedInitialSync = true;
         }

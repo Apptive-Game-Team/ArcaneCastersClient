@@ -172,16 +172,8 @@ namespace DevPlayground {
                     if (sync.snapshotResponseDto.frame <= frame) return;
                     frame = sync.snapshotResponseDto.frame;
                     events.Handler(sync.events);
-                    try
-                    {
-                        if (sync.projectileDtos != null)
-                            foreach (var projectile in sync.projectileDtos) ProjectileSpawner.Instance.Spawn(projectile);
-                        ObjectSyncer.Instance.Sync(sync.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>());
-                    }
-                    finally
-                    {
-                        ProjectileSpawner.EndProjectileFrame(sync.projectileDtos);
-                    }
+                    var deferred = ProjectileSpawner.SpawnBeforeObjectUpdates(sync.projectileDtos);
+                    ObjectSyncer.Instance.Sync(sync.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>(), deferred);
                 }
             } catch (Exception e) {
                 statusText.text = "Frame error: " + e.Message;

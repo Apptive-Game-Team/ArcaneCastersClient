@@ -75,17 +75,41 @@ namespace GameScene.Object
                 : null;
         }
 
-        public static void EndProjectileFrame(IEnumerable<ProjectileDto> projectiles, PresentationWorld world = null)
+        public static List<ProjectileDto> SpawnBeforeObjectUpdates(IEnumerable<ProjectileDto> projectiles, PresentationWorld world = null)
+        {
+            if (projectiles == null)
+            {
+                return null;
+            }
+
+            List<ProjectileDto> deferred = null;
+            foreach (ProjectileDto projectile in projectiles)
+            {
+                // 포탑등이는 이번 틱의 위치와 공격 상태를 적용한 뒤 포구와 발사 자세를 맞춘다.
+                if (FindTowerbackLauncher(projectile, world) != null)
+                {
+                    deferred ??= new List<ProjectileDto>();
+                    deferred.Add(projectile);
+                }
+                else
+                {
+                    SpawnShared(projectile, world);
+                }
+            }
+
+            return deferred;
+        }
+
+        internal static void SpawnDeferred(List<ProjectileDto> projectiles, PresentationWorld world = null)
         {
             if (projectiles == null)
             {
                 return;
             }
 
-            // 같은 서버 패킷의 Attack만 생략한다. 한 화면 프레임에 서버 패킷이 여러 개 들어올 수 있다.
             foreach (ProjectileDto projectile in projectiles)
             {
-                FindTowerbackLauncher(projectile, world)?.EndProjectileFrame();
+                SpawnShared(projectile, world);
             }
         }
 
