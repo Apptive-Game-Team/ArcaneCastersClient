@@ -41,8 +41,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `evil_ent_burn_segment.png`, `evil_ent_burn_fist.png`, `evil_ent_burn_fist_02.png`–`evil_ent_burn_fist_04.png` | 사악한 고목 · 탄 가지 팔과 불주먹 | 주먹 안쪽 균열이 예열과 함께 밝아진다. 서버 타격 시점인 45%에 가장 넓게 벌어지고 회수를 시작하면 좁아진다 |
 | `PlayerCharacterBase.png` | 수습 마법생 · 지팡이를 세운 기본 자세 | `Player.prefab` 의 `PlayerImage` SpriteRenderer |
 | `PlayerCharacterAttack.png` | 수습 마법생 · 지팡이를 앞으로 뻗은 공격 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.3초 표시 |
-| `AquaArcher.png` | 물결 궁수 · 활시위를 당긴 기본 자세 | `AquaArcherAttackPresenter` 기본 Sprite |
-| `AquaArcherAttack.png` | 물결 궁수 · 시위를 놓은 공격 자세 | 공격 이벤트에서 0.08초 표시 |
+| `AquaArcher.png`, `AquaArcherWalk01.png`–`AquaArcherWalk08.png` | 물결 궁수 · 활을 든 대기와 양발 보행 | 실제 지면 이동 0.88칸마다 여덟 자세를 재생한다. 기준 속도 1칸/초에서 0.88초 |
+| `AquaArcherAttack.png`, `AquaArcherRecover01.png`–`AquaArcherRecover02.png` | 물결 궁수 · 시위를 놓은 뒤 손을 내려 다음 화살을 거는 자세 | `WaterShot` 생성과 같은 서버 프레임의 `OnAttack`에 시작한다. 0.08초씩 세 자세를 표시한다 |
 | `RockTurret.png` | 인간제 투석 포탑 · 장전 자세 | `RockTurret.prefab` 기본 SpriteRenderer |
 | `RockTurretAttacking.png` | 인간제 투석 포탑 · 발사 직후 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
 | `WaterSlime.png` | 물 슬라임 · 한 개체 기본 자세 | `WaterSlime.prefab` 기본 SpriteRenderer |
@@ -61,9 +61,10 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 0.2초 뒤 원래 프레임으로 복귀한다. Transform 보정 없이 Sprite만 바꾸므로 두
 이미지가 아래 조건을 만족해야 한다.
 
-`AquaArcherAttackPresenter`는 평상시에 당긴 프레임을 유지하다 공격 이벤트에서
-놓은 프레임으로 즉시 바꾸고 0.08초 뒤 복귀한다. 위치 튐을 막기 위해 별도
-Transform 스케일 변형은 적용하지 않는다.
+`AquaArcher.prefab`의 `GroundedUnitPoseController`는 발사 자세를 먼저 표시하고
+시위와 손이 돌아오는 두 프레임 뒤 이동 또는 대기 자세로 복귀한다. 물결 궁수의
+`WaterShot`은 발사 그림의 활목에 맞춰 74px 오른쪽, 113px 위에서 출발하며
+왼쪽을 쏠 때 가로 위치도 뒤집는다. `Tutorial/AquaArcher.prefab`은 공용 기본 그림을 사용한다.
 
 `MagmaSpiritSpawnPresenter`는 일반 소환 연출을 재생하는 생성에서만 지면 돌파
 프레임을 0.28초 표시한 뒤 선 기본 자세로 복귀한다. 동기화 복구처럼

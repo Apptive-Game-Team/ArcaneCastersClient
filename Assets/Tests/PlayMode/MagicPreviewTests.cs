@@ -474,7 +474,7 @@ namespace WordOnline.Tests
                     Vector3 grip = body.transform.TransformPoint(new Vector3(x, .565f, 0f));
                     float launchGap = Vector2.Distance(camera.WorldToViewportPoint(grip),
                         camera.WorldToViewportPoint(arrow.position));
-                    Debug.Log($"{scenarioName}: bow to WaterShot viewport gap {launchGap:F4}");
+                    Assert.That(launchGap, Is.LessThan(.018f), $"{scenarioName}: 활에서 출발한 직후의 물화살 화면 거리");
                     if (canCapture) SaveViewport(directory, scenarioName + "-release", true);
                     yield return PlayUntil(shot.start + .11f);
                     Assert.That(body.sprite.name, Is.EqualTo("AquaArcherRecover01"));
@@ -489,6 +489,45 @@ namespace WordOnline.Tests
             {
                 Time.captureFramerate = previousRenderRate;
             }
+        }
+
+        [UnityTest]
+        public IEnumerator AquaArcherLaunchesFromItsMirroredBowWhileCloudDragonKeepsItsOrigin()
+        {
+            Create();
+            Component world = CreateWorld();
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize")
+                .MakeGenericMethod(Runtime("GameScene.Dto.ObjectsInfo"));
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            MethodInfo find = world.GetType().GetMethod("FindById");
+            void Apply(string json) =>
+                apply.Invoke(null, new[] { decode.Invoke(null, new object[] { json }), null, world });
+            Component Actor(int id) => (Component)find.Invoke(world, new object[] { id });
+            Transform LastWaterShot() => world.transform.Find("PresentationContent").Cast<Transform>()
+                .Last(child => child.name == "WaterShot(Clone)");
+
+            Apply("{\"create\":[" +
+                "{\"id\":21,\"type\":\"AquaArcher\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":5}}," +
+                "{\"id\":22,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":5,\"y\":0,\"z\":5}}," +
+                "{\"id\":23,\"type\":\"CloudDragon\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":1,\"z\":4}}]}");
+            Component archer = Actor(21);
+            var body = (SpriteRenderer)archer.GetType().GetField("_spriteRenderer", Private).GetValue(archer);
+            Assert.That(body.flipX, Is.False);
+            Apply("{\"projectile\":[{\"type\":\"WaterShot\",\"duration\":0.5," +
+                "\"start\":{\"targetType\":\"reference\",\"id\":21},\"end\":{\"targetType\":\"reference\",\"id\":22}}]," +
+                "\"update\":[{\"id\":21,\"position\":{\"x\":9,\"y\":0,\"z\":5},\"status\":\"Attack\"}]}");
+            Transform archerShot = LastWaterShot();
+            Assert.That(body.flipX, Is.True);
+            Assert.That(body.sprite.name, Is.EqualTo("AquaArcherAttack"));
+            Vector3 bow = body.transform.TransformPoint(new Vector3(-.37f, .565f, 0f));
+            Assert.That(Vector3.Distance(bow, archerShot.position), Is.LessThan(.005f));
+
+            Apply("{\"projectile\":[{\"type\":\"WaterShot\",\"duration\":0.5," +
+                "\"start\":{\"targetType\":\"reference\",\"id\":23},\"end\":{\"targetType\":\"reference\",\"id\":22}}]}");
+            Transform dragonShot = LastWaterShot();
+            Vector3 dragonStart = Actor(23).transform.position;
+            Assert.That(Vector3.Distance(dragonStart, dragonShot.position), Is.LessThan(.005f));
+            yield return null;
         }
 
         private static int AquaArcherId(JToken scenario) =>

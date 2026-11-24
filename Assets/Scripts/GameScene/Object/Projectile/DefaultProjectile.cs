@@ -13,13 +13,15 @@ namespace GameScene.Object.Projectile
         public void Init(ProjectileDto projectileDto)
         {
             var world = PresentationWorld.For(this);
-            actualObject.rotation = ProjectileUtil.GetRotation(projectileDto, world);
-            transform.position = ProjectileUtil.GetPosition(projectileDto.start, world);
+            Vector3 destination = ProjectileUtil.GetPosition(projectileDto.end, world);
+            Vector3 start = VisualStart(projectileDto, destination, world);
+            actualObject.rotation = ProjectileUtil.GetRotation(start, destination, world);
+            transform.position = start;
             
             switch (projectileDto.end)
             {
-                case PositionProjectileTarget position:
-                    transform.DOMove(ProjectileUtil.GetPosition(position, world), projectileDto.duration)
+                case PositionProjectileTarget:
+                    transform.DOMove(destination, projectileDto.duration)
                         .SetEase(Ease.Linear).SetLink(gameObject);
                     break;
                 case ReferenceProjectileTarget reference:
@@ -32,6 +34,26 @@ namespace GameScene.Object.Projectile
                     MoveTo(targetObject.transform, projectileDto.duration);
                     break;
             }
+        }
+
+        private static Vector3 VisualStart(ProjectileDto projectile, Vector3 destination, PresentationWorld world)
+        {
+            if (projectile.type == "WaterShot" && projectile.start is ReferenceProjectileTarget reference)
+            {
+                ServedObject source = PresentationWorld.Find(reference.id, world);
+                if (source != null && source.PrefabType == "AquaArcher")
+                {
+                    var body = source.GetActualTransform().GetComponentInChildren<SpriteRenderer>();
+                    if (body != null)
+                    {
+                        source.FaceTowards(destination);
+                        // 200 PPU 발사 그림의 활목은 하단 중앙 피벗에서 오른쪽 74px, 위 113px에 있다.
+                        return body.transform.TransformPoint(new Vector3(body.flipX ? -.37f : .37f, .565f, 0f));
+                    }
+                }
+            }
+
+            return ProjectileUtil.GetPosition(projectile.start, world);
         }
 
         private void MoveTo(Transform target, float duration)
