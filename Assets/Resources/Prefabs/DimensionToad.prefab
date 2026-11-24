@@ -108,8 +108,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -117,9 +122,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2786839688222515741}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
---- !u!4 &1753495551214140852 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6456819394278174577, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+--- !u!212 &5640000000000000001 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
   m_PrefabInstance: {fileID: 4741887910458233541}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2959642540811881345 stripped
@@ -136,10 +141,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 2959642540811881345}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d9cb8ecbbf240a79470c1593facb1b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 1753495551214140852}
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 5640000000000000001}
+  walkFrames:
+  - {fileID: 21300000, guid: 6018740d7a6e46b6a918fa6ca46ef877, type: 3}
+  - {fileID: 21300000, guid: 4a6c88afca7a4acfa603bd88e8cc70ce, type: 3}
+  - {fileID: 21300000, guid: e605f0cafec546229ff67926bd543799, type: 3}
+  - {fileID: 21300000, guid: 72d77421f0004adbadcd39c60b0a623d, type: 3}
+  - {fileID: 21300000, guid: 38765e8225c140d1a102e1a0effb36f1, type: 3}
+  - {fileID: 21300000, guid: 01d23d453edf477ab85737fc7c5663c3, type: 3}
+  - {fileID: 21300000, guid: 722d3d4cf904498bb92567c384018f6a, type: 3}
+  - {fileID: 21300000, guid: 825ee67f718a4cf9b111b41ce6432758, type: 3}
+  walkCycleDistance: 1.28
+  maximumGroundSpeed: 4.1
 --- !u!114 &3161304730001016725 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}

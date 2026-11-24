@@ -31,7 +31,7 @@
 ## 동작
 
 1. 직접 공격하지 않고 지상 위협에서 거리를 벌린다.
-2. `FireTadpole`과 `LightningTadpole`을 10초마다 번갈아가며 제한 없이 소환한다.
+2. 전장에 나타난 직후 화산편을 불러온다. 이후 서버의 소환 간격에 따라 폭풍편과 화산편을 번갈아 불러온다.
 
 ## 전투 프로필
 
@@ -39,7 +39,7 @@
 |---|---|---|
 | 기동 방식 | 지상 이동형 | 이동 AI가 지면 경로와 `RigidBody` 속도를 사용한다. |
 | 전투 역할 | 원소 올챙이 소환 | 부착 AI·마법 컴포넌트 기준 |
-| 공격 형태 | 10초 간격 교대 소환 | 공격 컴포넌트와 시전 계열 기준 |
+| 공격 형태 | 교대 소환 | `LimitedSequenceSpawner`가 `spawn_interval`을 적용한다. 카드의 기준 DB 값은 5초다. |
 | 표적 | 지상 위협 감지 | `TargetMask` 기준 |
 | 특수 이동·행동 | 위협에서 도주·두 종류 하위 개체 무제한 생성 | 부착 컴포넌트 기준 |
 | 생명주기 | HP 소진 시 파괴 | 파괴·시간제한 컴포넌트 기준 |
@@ -76,3 +76,4 @@
 
 - Magic: `game/src/main/java/com/wordonline/server/game/domain/magic/implement/spawn/DimensionToadMagic.java`
 - Prefab initializer: `game/src/main/java/com/wordonline/server/game/domain/object/prefab/implement/misc/DimensionToadPrefabInitializer.java`
+- 이동과 교대 소환: `game-rust/crates/sim/src/game/domain/object/prefab/implement/misc/dimension_toad_prefab_initializer.rs`

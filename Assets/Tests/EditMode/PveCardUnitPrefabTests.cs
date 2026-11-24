@@ -25,17 +25,28 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void PveDimensionToadDoesNotWaddleButTheCardDoes()
+        public void OnlyTheDimensionToadCardUsesGroundedRetreatPoses()
         {
             GameObject pve = Resources.Load<GameObject>("Prefabs/PveDimensionToad");
             GameObject card = Resources.Load<GameObject>("Prefabs/DimensionToad");
 
             Assert.IsNotNull(pve);
             Assert.IsNotNull(card);
-            Assert.IsFalse(HasComponentNamed(pve, "WaddleMotionController"),
-                "A stationary gate keeper must not rock in place.");
-            Assert.IsTrue(HasComponentNamed(card, "WaddleMotionController"),
-                "The card unit prefab must keep its waddle.");
+            Assert.IsFalse(HasComponentNamed(pve, "WaddleMotionController"));
+            Assert.IsFalse(HasComponentNamed(pve, "GroundedUnitPoseController"));
+            Assert.IsFalse(HasComponentNamed(card, "WaddleMotionController"));
+            Assert.IsFalse(HasComponentNamed(card, "HoppingMotionController"));
+            var pose = card.GetComponents<MonoBehaviour>().Single(component =>
+                component.GetType().Name == "GroundedUnitPoseController");
+            const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
+            var retreat = (Sprite[])pose.GetType().GetField("walkFrames", fields).GetValue(pose);
+            Assert.That(retreat, Has.Length.EqualTo(8));
+            Assert.That(retreat.Distinct().Count(), Is.EqualTo(8));
+            foreach (Sprite sprite in retreat)
+            {
+                Assert.That(sprite.pivot, Is.EqualTo(new Vector2(128, 0)));
+                Assert.That(sprite.pixelsPerUnit, Is.EqualTo(100));
+            }
         }
 
         [TestCase("EvilEnt", 8)]
