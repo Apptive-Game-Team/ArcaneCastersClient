@@ -2554,6 +2554,235 @@ namespace WordOnline.Tests
             }
         }
 
+        [UnityTest]
+        public IEnumerator ThunderBirdFlapsDivesAndStrikesOnTheFirstServerHit()
+        {
+            Create();
+            Assert.That(Configure("thunder_bird_swarm"), Is.True);
+            SelectThunderBirdScenario("thunder_bird_swarm", "ground");
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/ThunderBirdCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.635f);
+                SpriteRenderer[] birds = Enumerable.Range(3, 3).Select(id => ThunderBirdBody(Target(id))).ToArray();
+                var flap = new System.Collections.Generic.HashSet<string>();
+                var dive = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 2.48f)
+                {
+                    string pose = birds[0].sprite.name;
+                    if (pose.StartsWith("ThunderBirdFlap", StringComparison.Ordinal) && flap.Add(pose) && capture)
+                        SaveViewport(directory, pose, true);
+                    if (pose.StartsWith("ThunderBirdDive", StringComparison.Ordinal) && dive.Add(pose) && capture)
+                        SaveViewport(directory, pose, true);
+                    yield return null;
+                }
+                CollectionAssert.AreEquivalent(Enumerable.Range(1, 8).Select(i => $"ThunderBirdFlap{i:00}"), flap);
+                CollectionAssert.AreEquivalent(Enumerable.Range(1, 4).Select(i => $"ThunderBirdDive{i:00}"), dive);
+                var enemy = Target(2);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(1000));
+                Assert.That(birds.All(bird => bird.sprite.name == "ThunderBirdDive04"), Is.True);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    yield return PlayUntil(2.522f + .08f * i);
+                    string pose = $"ThunderBirdStrike{i + 1:00}";
+                    Assert.That(birds.All(bird => bird.sprite.name == pose && !bird.flipX), Is.True, pose);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(751));
+                    if (capture) SaveViewport(directory, pose, true);
+                }
+                yield return PlayUntil(3.12f);
+                Assert.That(birds.All(bird => bird.sprite.name.StartsWith("ThunderBirdClimb", StringComparison.Ordinal)), Is.True);
+                Assert.That(ThunderBirdHeight(Target(3)), Is.GreaterThan(1.45f));
+                if (capture) SaveViewport(directory, "climb", true);
+                yield return PlayUntil(5.922f);
+                Assert.That(birds.All(bird => bird.sprite.name == "ThunderBirdStrike01"), Is.True);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(550));
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ThunderBirdOverchargeShotKeepsTheClimbAfterTheBeakStrike()
+        {
+            Create();
+            Assert.That(Configure("lightning_shot"), Is.True);
+            JToken scenario = SelectThunderBirdScenario("lightning_shot", "overcharge");
+            var shot = FirstProjectile(scenario, "ElectricShot");
+            Assert.That(shot.start, Is.GreaterThan(4.8f).And.LessThan(5.15f));
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(3.82f);
+                SpriteRenderer[] birds = Enumerable.Range(2, 3).Select(id => ThunderBirdBody(Target(id))).ToArray();
+                Assert.That(birds[0].sprite.name, Does.StartWith("ThunderBirdFlap"));
+                yield return PlayUntil(3.93f);
+                Assert.That(birds[0].sprite.name, Does.StartWith("ThunderBirdDive"));
+                yield return PlayUntil(4.822f);
+                Assert.That(birds.All(bird => bird.sprite.name == "ThunderBirdStrike01"), Is.True);
+                Assert.That(CurrentHp(Target(6)), Is.EqualTo(775));
+                yield return PlayUntil(shot.start + .019f);
+                Assert.That(FindProjectile("ElectricShot"), Is.Not.Null);
+                Assert.That(birds.All(bird => bird.sprite.name != "ThunderBirdStrike01"), Is.True);
+                yield return PlayUntil(5.19f);
+                Assert.That(birds.All(bird => bird.sprite.name.StartsWith("ThunderBirdClimb", StringComparison.Ordinal)), Is.True);
+                yield return PlayUntil(6.86f);
+                Assert.That(ThunderBirdHeight(Target(2)), Is.EqualTo(3f).Within(.03f));
+                Assert.That(birds[0].sprite.name, Does.StartWith("ThunderBirdFlap"));
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ThunderBirdFoldsOnDescentAndTransfersEnergyFromTheLandingPoint()
+        {
+            Create();
+            Assert.That(Configure("thunder_bird_swarm"), Is.True);
+            JToken scenario = SelectThunderBirdScenario("thunder_bird_swarm", "death_energy");
+            var shot = FirstProjectile(scenario, "ElectricAbsorb");
+            Assert.That(shot.start, Is.EqualTo(2.25f).Within(.001f));
+            Assert.That(shot.targetId, Is.EqualTo(3));
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/ThunderBirdCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.98f);
+                Component dying = Target(2);
+                Component receiver = Target(3);
+                Component survivor = Target(4);
+                SpriteRenderer body = ThunderBirdBody(dying);
+                Assert.That(body.sprite.name, Does.StartWith("ThunderBirdFlap"));
+                yield return PlayUntil(1.018f);
+                Assert.That(body.sprite.name, Is.EqualTo("ThunderBirdFall01"));
+                Assert.That(ThunderBirdHeight(dying), Is.EqualTo(3f).Within(.02f));
+
+                var fall = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 2.24f)
+                {
+                    if (fall.Add(body.sprite.name) && capture) SaveViewport(directory, body.sprite.name, true);
+                    yield return null;
+                }
+                CollectionAssert.AreEquivalent(Enumerable.Range(1, 4).Select(i => $"ThunderBirdFall{i:00}"), fall);
+                Assert.That(body.sprite.name, Is.EqualTo("ThunderBirdFall04"));
+                Assert.That(ThunderBirdHeight(dying), Is.EqualTo(0f).Within(.06f));
+                Vector3 origin = dying.transform.position;
+
+                yield return PlayUntil(shot.start + .006f);
+                Transform bolt = FindProjectile("ElectricShot");
+                Assert.That(bolt, Is.Not.Null);
+                Assert.That(Vector3.Distance(bolt.position, origin), Is.LessThan(.16f));
+                Assert.That(body.sprite.name, Is.EqualTo("ThunderBirdFall04"));
+                var effects = receiver.GetType().GetProperty("ActiveEffects");
+                Assert.That((IEnumerable)effects.GetValue(receiver), Does.Contain("Overcharge"));
+                Assert.That((IEnumerable)effects.GetValue(survivor), Does.Not.Contain("Overcharge"));
+                if (capture) SaveViewport(directory, "energy-transfer", true);
+
+                yield return PlayUntil(shot.start + .21f);
+                Assert.That(Target(2), Is.Null);
+                Assert.That(Target(3), Is.SameAs(receiver));
+                Assert.That(Target(4), Is.SameAs(survivor));
+                Assert.That(ThunderBirdBody(receiver).sprite.name, Does.StartWith("ThunderBirdFlap"));
+                Assert.That(ThunderBirdBody(survivor).sprite.name, Does.StartWith("ThunderBirdFlap"));
+                yield return PlayUntil(shot.start + shot.duration + .07f);
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ThunderBirdDistinguishesAHeightCorrectionFromFlightAtBothTickRates()
+        {
+            Create();
+            Type gameConfig = Runtime("GameScene.GameConfig");
+            MethodInfo setTickRate = gameConfig.GetMethod("SetTickRate");
+            int priorTickRate = (int)gameConfig.GetProperty("TickRate").GetValue(null);
+            int priorRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                foreach (int tickRate in new[] { 20, 60 })
+                {
+                    setTickRate.Invoke(null, new object[] { tickRate });
+                    Component world = CreateWorld();
+                    Type createdType = Runtime("GameScene.Dto.CreatedObjectDto");
+                    object created = Activator.CreateInstance(createdType);
+                    createdType.GetField("id").SetValue(created, 42);
+                    createdType.GetField("type").SetValue(created, "ThunderBird");
+                    createdType.GetField("master").SetValue(created, "LeftPlayer");
+                    createdType.GetField("position").SetValue(created, new Vector3(5f, 3f, 5f));
+                    Component bird = (Component)Runtime("GameScene.Object.ObjectSpawner").GetMethod("SpawnShared")
+                        .Invoke(null, new[] { created, world, false });
+                    SpriteRenderer sprite = ThunderBirdBody(bird);
+                    Assert.That(bird.GetComponent("HoverMotionController"), Is.Null);
+                    Type updateType = Runtime("GameScene.Dto.UpdatedObjectDto");
+                    object dto = Activator.CreateInstance(updateType);
+                    FieldInfo position = updateType.GetField("position");
+                    updateType.GetField("status").SetValue(dto, "Idle");
+                    MethodInfo update = bird.GetType().GetMethod("UpdateObject");
+
+                    void SetHeight(float height)
+                    {
+                        position.SetValue(dto, new Vector3(5f, height, 5f));
+                        update.Invoke(bird, new[] { dto });
+                    }
+
+                    SetHeight(3f);
+                    SetHeight(2.96f);
+                    yield return null;
+                    Assert.That(sprite.sprite.name, Does.StartWith("ThunderBirdFlap"), $"{tickRate}Hz 한 틱 하강");
+                    SetHeight(2.92f);
+                    yield return null;
+                    Assert.That(sprite.sprite.name, Does.StartWith("ThunderBirdDive"), $"{tickRate}Hz 연속 하강");
+                    SetHeight(2f);
+                    yield return null;
+                    Assert.That(sprite.sprite.name, Does.StartWith("ThunderBirdFlap"), $"{tickRate}Hz 좌표 보정");
+                    SetHeight(2.04f);
+                    SetHeight(2.08f);
+                    yield return null;
+                    Assert.That(sprite.sprite.name, Does.StartWith("ThunderBirdClimb"), $"{tickRate}Hz 연속 상승");
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = priorRenderRate;
+                setTickRate.Invoke(null, new object[] { priorTickRate });
+            }
+        }
+
+        private JToken SelectThunderBirdScenario(string magic, string id)
+        {
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var scenario = scenarios.Single(item => (string)item["id"] == id);
+            Scenario(scenarios.IndexOf(scenario));
+            return scenario;
+        }
+
+        private float ThunderBirdHeight(Component bird) =>
+            ((Component)Field("world")).transform.InverseTransformPoint(bird.transform.position).y;
+
+        private static SpriteRenderer ThunderBirdBody(Component bird)
+        {
+            Assert.That(bird, Is.Not.Null);
+            Assert.That(bird.name, Does.StartWith("ThunderBird"));
+            return (SpriteRenderer)bird.GetType().GetField("_spriteRenderer", Private).GetValue(bird);
+        }
+
         private SpriteRenderer ZapMouseBody(int id)
         {
             Component unit = Target(id);
