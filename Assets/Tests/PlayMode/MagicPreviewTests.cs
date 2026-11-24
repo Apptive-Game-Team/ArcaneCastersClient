@@ -436,8 +436,13 @@ namespace WordOnline.Tests
                 .Any(hit => (string)hit["type"] == "hit" && (int)hit["actorId"] == id))
                 .Select(frame => (float)frame["time"]).Take(2).ToArray();
             Assert.That(impacts, Has.Length.EqualTo(2));
+            Type config = Runtime("GameScene.GameConfig");
+            MethodInfo setRate = config.GetMethod("SetTickRate");
+            int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
             int previousRenderRate = Time.captureFramerate;
             Time.captureFramerate = 120;
+            // 20Hz 기록은 60Hz 서버에 연결되어 있어도 기록 자체의 간격을 사용한다.
+            setRate.Invoke(null, new object[] { 60 });
             try
             {
                 string directory = System.IO.Path.Combine(Application.dataPath, "../Library/StormStagCaptures");
@@ -448,6 +453,7 @@ namespace WordOnline.Tests
                 Component actor = Target(id);
                 Assert.That(actor, Is.Not.Null);
                 var renderer = (SpriteRenderer)actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor);
+                Component pose = actor.GetComponent("GroundedUnitPoseController");
                 Assert.That(renderer.sprite.name, Does.StartWith("StormStagGallop"));
                 Assert.That(renderer.flipX, Is.False);
                 if (canCapture) SaveViewport(directory, "gallop", true);
@@ -465,7 +471,9 @@ namespace WordOnline.Tests
                     Assert.That(renderer.sprite.name, Is.EqualTo("StormStagImpact03"));
                     Assert.That(renderer.flipX, Is.False);
                     yield return PlayUntil(impact + .24f);
-                    Assert.That(renderer.sprite.name, Does.StartWith("StormStagGallop"));
+                    bool correcting = (bool)pose.GetType().GetField("correctingServerGround", Private).GetValue(pose);
+                    Assert.That(renderer.sprite.name, Does.StartWith("StormStagGallop"),
+                        $"충돌 {impact:F2}초 이후 좌표 {actor.transform.position}, 보정 {correcting}");
                     Assert.That(renderer.flipX, Is.True);
                     if (canCapture && impact == impacts[0]) SaveViewport(directory, "retreat", true);
                 }
@@ -473,6 +481,7 @@ namespace WordOnline.Tests
             finally
             {
                 Time.captureFramerate = previousRenderRate;
+                setRate.Invoke(null, new object[] { previousTickRate });
             }
         }
 

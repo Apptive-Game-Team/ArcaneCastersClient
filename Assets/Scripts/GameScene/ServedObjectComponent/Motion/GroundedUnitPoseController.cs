@@ -101,13 +101,14 @@ namespace GameScene.ServedObjectComponent.Motion
             if (correctingServerGround)
             {
                 // PositionUpdater가 새 보간 전에 직전 목표 좌표에 맞춘다.
-                lastGroundPosition = lastServerGround;
+                lastGroundPosition = GroundPosition();
                 hasGroundSample = true;
             }
 
             lastServerGround = ground;
             hasServerGround = true;
-            float tick = GameConfig.FrameDuration;
+            float recordedTick = Owner.PresentationWorld != null ? Owner.PresentationWorld.RecordedFrameDuration : 0f;
+            float tick = recordedTick > 0f ? recordedTick : GameConfig.FrameDuration;
             float limit = Mathf.Max(MinimumServerCorrectionDistance, maximumGroundSpeed * tick);
             correctingServerGround = step.sqrMagnitude > limit * limit;
             if (correctingServerGround)
