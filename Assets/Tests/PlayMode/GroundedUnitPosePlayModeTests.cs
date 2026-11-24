@@ -27,6 +27,51 @@ namespace WordOnline.Tests
             CheckBothTickRates("BeanShooter", 8, "BeanShooterAttack", 3, 0.6f, 0.08f, "Bean");
 
         [UnityTest]
+        public IEnumerator EvilEntWalksWithBothRootsAndBracesAtBothTickRates() =>
+            CheckBothTickRates("EvilEnt", 8, "EvilEnt2", 3, 2f, 0.08f);
+
+        [UnityTest]
+        public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
+        {
+            var root = new GameObject("PveEvilEnt test");
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = RenderRate;
+            try
+            {
+                var world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                Type createdType = Runtime("GameScene.Dto.CreatedObjectDto");
+                object created = Activator.CreateInstance(createdType);
+                createdType.GetField("id").SetValue(created, 42);
+                createdType.GetField("type").SetValue(created, "PveEvilEnt");
+                createdType.GetField("master").SetValue(created, "RightPlayer");
+                createdType.GetField("position").SetValue(created, new Vector3(14f, 0f, 5f));
+                var boss = (Component)Runtime("GameScene.Object.ObjectSpawner").GetMethod("SpawnShared")
+                    .Invoke(null, new[] { created, world, false });
+                var pose = boss.GetComponents<MonoBehaviour>()
+                    .Single(component => component.GetType().Name == "GroundedUnitPoseController");
+                var renderer = (SpriteRenderer)pose.GetType().GetField("targetRenderer", Private).GetValue(pose);
+                Vector3 stationary = boss.transform.position;
+                Quaternion upright = renderer.transform.localRotation;
+                Assert.That(renderer.sprite.name, Is.EqualTo("EvilEnt"));
+                boss.GetType().GetMethod("PlayAttackPresentation").Invoke(boss, null);
+                Assert.That(renderer.sprite.name, Is.EqualTo("EvilEnt2"));
+                yield return new WaitForSeconds(.10f);
+                Assert.That(renderer.sprite.name, Is.EqualTo("EvilEntBrace02"));
+                yield return new WaitForSeconds(.08f);
+                Assert.That(renderer.sprite.name, Is.EqualTo("EvilEntBrace03"));
+                yield return new WaitForSeconds(.10f);
+                Assert.That(renderer.sprite.name, Is.EqualTo("EvilEnt"));
+                Assert.That(renderer.transform.localRotation, Is.EqualTo(upright));
+                Assert.That(boss.transform.position, Is.EqualTo(stationary));
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+                Object.Destroy(root);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator CorruptedVineCrawlsOnItsRootAndLashesAtBothTickRates()
         {
             const string prefabName = "PveCorruptedVineSpirit";
