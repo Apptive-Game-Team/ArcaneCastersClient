@@ -18,6 +18,7 @@ namespace GameScene.Object
             if (objects?.update != null)
                 foreach (UpdatedObjectDto updated in objects.update) PresentationWorld.Find(updated.id, world)?.UpdateObject(updated);
             ProjectileSpawner.SpawnDeferred(deferred, world, objects?.update);
+            eventHandler.PlaySummonAttacks(events, world);
         }
     }
 }

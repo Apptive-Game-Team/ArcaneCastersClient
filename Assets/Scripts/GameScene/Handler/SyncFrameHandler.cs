@@ -90,6 +90,8 @@ namespace GameScene.Handler
             // 동기화가 사라진 오브젝트를 지우기 전에 이벤트를 먼저 처리한다.
             gameEventHandler.Handler(syncFrameInfo.events);
             ObjectSyncer.Instance.Sync(snapshotObjects, deferred);
+            // 이번 스냅샷에서 처음 생성된 주먹도 찾아야 한다.
+            gameEventHandler.PlaySummonAttacks(syncFrameInfo.events);
             
             TimerController.Instance.UpdateTimer(syncFrameInfo.remainingTime);
         }

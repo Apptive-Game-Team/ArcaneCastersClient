@@ -46,6 +46,30 @@ namespace GameScene.Handler
             }
         }
 
+        internal void PlaySummonAttacks(List<GameEvent> events, PresentationWorld world = null)
+        {
+            if (events == null)
+            {
+                return;
+            }
+
+            foreach (GameEvent gameEvent in events)
+            {
+                if (!(gameEvent is SummonAttackEvent summon))
+                {
+                    continue;
+                }
+
+                ServedObject actor = PresentationWorld.Find(summon.actorId, world);
+                ServedObject fist = PresentationWorld.Find(summon.targetId, world);
+                if (actor != null && !actor.IsDespawning && actor.PrefabType == "MagmaSpirit" &&
+                    fist != null && fist.PrefabType == "MagmaFist" && actor.GetMaster() == fist.GetMaster())
+                {
+                    actor.PlayAttackPresentation();
+                }
+            }
+        }
+
         private static void HandleHit(HitEvent hit, PresentationWorld world)
         {
             ServedObject target = PresentationWorld.Find(hit.targetId, world);

@@ -49,8 +49,7 @@
 | `TitanFist.png` | 클라이언트 이슈 #593 재작업 검수 | 주변 적 위치에서 솟구치는 거대한 돌주먹 |
 | `LightningTadpole.png` | `concept-art/lightning-tadpole.webp` | 차원 유랑종 폭풍편 방향 적용 |
 | `MagmaSpirit.png` | `concept-art/magma-spirit-idle.webp` | 기본 자세 |
-| `MagmaSpiritAttacking.png` | `concept-art/magma-spirit-attack.webp` | 공격 자세 |
-| `MagmaSpiritSpawn.png` | `concept-art/magma-spirit-spawn.webp` | 소환 자세 |
+| `MagmaSpiritSpawn01–04.png`, `MagmaSpiritWalk01–08.png`, `MagmaSpiritCast01–04.png` | 클라이언트 PR (이슈 #638) | 256×253 RGBA, PPU 80, 하단 중앙 피벗. 지면 돌파 4장, 양발 보행 8장, 주먹 소환 자세 4장. |
 | `WaterSlimeSwarm.png` | `concept-art/water-slime.webp` | 물방울 생존자 무리 기본 자세 |
 | `WaterSlimeAttackSpit.png` | `game-assets/water-slime-attack.webp` | 물 뱉기 공격 프레임 |
 | `TidalWarhead.png` | 클라이언트 이슈 #597 재작업 검수 | 공중 표적용, 어두운 눈, 256x256 RGBA |
