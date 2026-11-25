@@ -3742,6 +3742,90 @@ namespace WordOnline.Tests
             CheckRecordedProjectileFlight("FireShot", "Game/sprites/FireShot", "fire_lord_spirit", "ground", 6.55f, .4f);
 
         [UnityTest]
+        public IEnumerator DragonFlameLoopsIndependentlyAndKeepsBothRecordedImpacts()
+        {
+            Create();
+            Assert.That(Configure("dragon_tower"), Is.True);
+            var world = (Component)Field("world");
+            Sprite original = Resources.Load<Sprite>("Game/sprites/FireShot");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/DragonFlameCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            Vector3 Position(Component projectile) => world.transform.InverseTransformPoint(projectile.transform.position);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(1.374f);
+                Assert.That(Target(6), Is.Null);
+                yield return PlayUntil(1.422f);
+                Component first = Target(6);
+                Assert.That(first, Is.Not.Null);
+                Assert.That(Vector3.Distance(Position(first), new Vector3(4f, 0f, 5f)), Is.LessThan(.08f));
+                SpriteRenderer firstBody = ServedObjectRenderer(first);
+                Assert.That(firstBody.sprite.rect, Is.EqualTo(original.rect));
+                Assert.That(firstBody.sprite.pivot, Is.EqualTo(original.pivot));
+                Assert.That(firstBody.sprite.pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+                Assert.That(firstBody.flipX, Is.False);
+
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 2.174f)
+                {
+                    string pose = firstBody.sprite.name;
+                    if (poses.LastOrDefault() != pose)
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 6) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 6).Select(index => $"DragonFlameFlight{index:00}").Append("DragonFlameFlight01");
+                CollectionAssert.AreEqual(expected, poses);
+
+                yield return PlayUntil(2.26f);
+                Component second = Target(7);
+                Assert.That(second, Is.Not.Null);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("DragonFlameFlight02"));
+                Assert.That(ServedObjectRenderer(second).sprite.name, Is.EqualTo("DragonFlameFlight01"));
+                Assert.That(Position(first).x - Position(second).x, Is.GreaterThan(1.45f));
+                Assert.That(Position(first).y, Is.EqualTo(0f).Within(.03f));
+                if (capture) SaveViewport(directory, "two-flames", true);
+
+                Component nearest = Target(2);
+                Component outside = Target(3);
+                Component side = Target(4);
+                yield return PlayUntil(2.525f);
+                Assert.That(CurrentHp(nearest), Is.EqualTo(10000));
+                Assert.That(CurrentHp(side), Is.EqualTo(10000));
+                yield return PlayUntil(2.57f);
+                Assert.That(CurrentHp(nearest), Is.EqualTo(9900));
+                Assert.That(CurrentHp(side), Is.EqualTo(9900));
+                Assert.That(nearest.GetType().GetMethod("HasEffect").Invoke(nearest, new object[] { "Burn" }), Is.True);
+                Assert.That(side.GetType().GetMethod("HasEffect").Invoke(side, new object[] { "Burn" }), Is.False);
+                Assert.That(first.GetType().GetProperty("IsDespawning", Private).GetValue(first), Is.True);
+                if (capture) SaveViewport(directory, "first-impact", true);
+
+                yield return PlayUntil(2.825f);
+                Assert.That(Target(6), Is.Null);
+                Assert.That(Target(7), Is.SameAs(second));
+                yield return PlayUntil(3.37f);
+                Assert.That(CurrentHp(nearest), Is.EqualTo(9768));
+                Assert.That(CurrentHp(side), Is.EqualTo(9800));
+                Assert.That(CurrentHp(outside), Is.EqualTo(10000));
+                Assert.That(second.GetType().GetProperty("IsDespawning", Private).GetValue(second), Is.True);
+                Assert.That(Target(8), Is.Not.Null);
+                if (capture) SaveViewport(directory, "second-impact", true);
+                yield return PlayUntil(3.625f);
+                Assert.That(Target(7), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator GroundTidalWarheadCyclesAndKeepsItsRecordedImpact()
         {
             Create();
