@@ -3723,38 +3723,43 @@ namespace WordOnline.Tests
 
         [UnityTest]
         public IEnumerator WaterShotShowsEveryPoseDuringBubbleGeneratorFlight() =>
-            CheckWaterShotFlight("bubble_generator", "support", 1.40f, .125f);
+            CheckRecordedProjectileFlight("WaterShot", "Game/shoot/water_shoot", "bubble_generator", "support", 1.40f, .125f);
 
         [UnityTest]
         public IEnumerator WaterShotShowsEveryPoseDuringWaterSlimeFlight() =>
-            CheckWaterShotFlight("water_slime_swarm", "ground", 2.25f, .5f);
+            CheckRecordedProjectileFlight("WaterShot", "Game/shoot/water_shoot", "water_slime_swarm", "ground", 2.25f, .5f);
 
-        private IEnumerator CheckWaterShotFlight(string magic, string scenarioId, float launch, float duration)
+        [UnityTest]
+        public IEnumerator FireShotShowsEveryPoseDuringFireLordFlight() =>
+            CheckRecordedProjectileFlight("FireShot", "Game/sprites/FireShot", "fire_lord_spirit", "ground", 6.55f, .4f);
+
+        private IEnumerator CheckRecordedProjectileFlight(string projectileName, string sourceSprite, string magic,
+            string scenarioId, float launch, float duration)
         {
             Create();
             Assert.That(Configure(magic), Is.True);
             var scenarios = (JArray)Recording(magic)["scenarios"];
             Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == scenarioId)));
             var world = (Component)Field("world");
-            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WaterShotCaptures");
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library", $"{projectileName}Captures");
             bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
             if (capture) System.IO.Directory.CreateDirectory(directory);
 
-            Transform FirstWaterShot() => world.transform.Find("PresentationContent").Cast<Transform>()
-                .FirstOrDefault(child => child.name == "WaterShot(Clone)");
+            Transform FirstProjectile() => world.transform.Find("PresentationContent").Cast<Transform>()
+                .FirstOrDefault(child => child.name == $"{projectileName}(Clone)");
 
             int prior = Time.captureFramerate;
             Time.captureFramerate = 120;
             try
             {
                 yield return PlayUntil(launch - .023f);
-                Assert.That(FirstWaterShot(), Is.Null);
+                Assert.That(FirstProjectile(), Is.Null);
                 yield return PlayUntil(launch + .012f);
-                Transform shot = FirstWaterShot();
+                Transform shot = FirstProjectile();
                 Assert.That(shot, Is.Not.Null);
-                var source = Resources.Load<Sprite>("Game/shoot/water_shoot");
+                var source = Resources.Load<Sprite>(sourceSprite);
                 var renderer = shot.GetComponentInChildren<SpriteRenderer>();
-                Assert.That(renderer.sprite.name, Is.EqualTo("WaterShotFlight01"));
+                Assert.That(renderer.sprite.name, Is.EqualTo($"{projectileName}Flight01"));
                 Assert.That(renderer.sprite.rect.size, Is.EqualTo(source.rect.size));
                 Assert.That(renderer.sprite.pivot, Is.EqualTo(source.pivot));
                 Assert.That(renderer.sprite.pixelsPerUnit, Is.EqualTo(source.pixelsPerUnit));
@@ -3772,7 +3777,7 @@ namespace WordOnline.Tests
                     lastPosition = shot.position;
                     yield return null;
                 }
-                CollectionAssert.AreEqual(Enumerable.Range(1, 4).Select(i => $"WaterShotFlight{i:00}"), poses);
+                CollectionAssert.AreEqual(Enumerable.Range(1, 4).Select(i => $"{projectileName}Flight{i:00}"), poses);
                 Assert.That(Vector3.Distance(initialPosition, lastPosition), Is.GreaterThan(.04f));
                 Assert.That(shot == null, Is.True);
                 Assert.That((float)Field("elapsed"), Is.InRange(launch + duration - .02f, launch + duration + .05f));
@@ -3919,6 +3924,120 @@ namespace WordOnline.Tests
                 Assert.That(Target(bladeId), Is.SameAs(blade));
                 yield return PlayUntil(2.744f);
                 Assert.That(Target(bladeId), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CastFireShotCyclesAndKeepsItsBurnImpact() =>
+            CheckCastFireShot("burn", 900f);
+
+        [UnityTest]
+        public IEnumerator CastFireShotCyclesAndKeepsItsWetTargetDamage() =>
+            CheckCastFireShot("wet", 950f);
+
+        private IEnumerator CheckCastFireShot(string scenarioId, float firstTargetHp)
+        {
+            Create();
+            const string magic = "fire_shot";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == scenarioId)));
+            var world = (Component)Field("world");
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/FireShotCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.575f);
+                Assert.That(Target(4), Is.Null);
+                yield return PlayUntil(.624f);
+                var shot = Target(4);
+                Assert.That(shot, Is.Not.Null);
+                var renderer = ServedObjectRenderer(shot);
+                Vector3 start = world.transform.InverseTransformPoint(shot.transform.position);
+                Assert.That(Vector3.Distance(start, new Vector3(2f, 0f, 5f)), Is.LessThan(.008f));
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 1.223f)
+                {
+                    string pose = renderer.sprite.name;
+                    if (poses.LastOrDefault() != pose)
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 4) SaveViewport(directory, $"{scenarioId}-{pose}", true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 4).Select(i => $"FireShotFlight{i:00}").Append("FireShotFlight01");
+                CollectionAssert.AreEqual(expected, poses.Take(5));
+
+                var first = Target(2);
+                var second = Target(3);
+                Assert.That(CurrentHp(first), Is.EqualTo(1000));
+                Assert.That(CurrentHp(second), Is.EqualTo(1000));
+                // 렌더러는 1.15초와 1.20초 서버 좌표 사이를 보간한다.
+                Assert.That(world.transform.InverseTransformPoint(shot.transform.position).x, Is.InRange(6.39f, 6.81f));
+                if (capture) SaveViewport(directory, $"{scenarioId}-before-hit", true);
+
+                yield return PlayUntil(1.273f);
+                Assert.That(CurrentHp(first), Is.EqualTo(firstTargetHp));
+                Assert.That(CurrentHp(second), Is.EqualTo(900));
+                var hasEffect = first.GetType().GetMethod("HasEffect");
+                Assert.That(hasEffect.Invoke(first, new object[] { "Burn" }), Is.True);
+                Assert.That(hasEffect.Invoke(first, new object[] { "Wet" }), Is.EqualTo(scenarioId == "wet"));
+                Assert.That(Target(4), Is.SameAs(shot));
+                Assert.That(shot.GetType().GetProperty("IsDespawning", Private).GetValue(shot), Is.True);
+                if (capture) SaveViewport(directory, $"{scenarioId}-hit", true);
+
+                yield return PlayUntil(1.345f);
+                Assert.That(Target(4), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator TutorialFireShotCyclesItsActualSpriteAlongTheExistingPath()
+        {
+            var prefab = Resources.Load<GameObject>("Prefabs/Tutorial/FireShot");
+            Assert.That(prefab, Is.Not.Null);
+            root = new GameObject("Tutorial FireShot motion fixture");
+            root.transform.position = new Vector3(1000, 0, 0);
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                var shot = UnityEngine.Object.Instantiate(prefab, root.transform);
+                var actual = shot.transform.Find("actualObject").GetComponent<SpriteRenderer>();
+                var shadow = shot.transform.Find("Shadow").GetComponent<SpriteRenderer>();
+                var shadowSprite = prefab.transform.Find("Shadow").GetComponent<SpriteRenderer>().sprite;
+                Assert.That(shadowSprite.name, Is.EqualTo("CircleObstacle"));
+                Assert.That(shot.GetComponent("ShotMocker"), Is.Not.Null);
+                Assert.That(shot.GetComponent<Collider2D>().isTrigger, Is.True);
+                var poses = new System.Collections.Generic.List<string>();
+                float started = Time.time;
+                Vector3 start = shot.transform.position;
+                while (Time.time - started < .475f)
+                {
+                    string pose = actual.sprite.name;
+                    if (poses.LastOrDefault() != pose) poses.Add(pose);
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 4).Select(i => $"FireShotFlight{i:00}").Append("FireShotFlight01");
+                CollectionAssert.AreEqual(expected, poses.Take(5));
+                Vector3 travel = shot.transform.position - start;
+                Assert.That(travel.x, Is.EqualTo((Time.time - started) * 5f).Within(.1f));
+                Assert.That(travel.y, Is.EqualTo(0f).Within(.001f));
+                Assert.That(travel.z, Is.EqualTo(0f).Within(.001f));
+                Assert.That(shadow.sprite, Is.SameAs(shadowSprite));
             }
             finally
             {

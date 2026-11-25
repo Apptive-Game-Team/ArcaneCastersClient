@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7251042097566991021}
   - component: {fileID: 457207114334541559}
   - component: {fileID: -5837690803173814810}
+  - component: {fileID: 8320601000000000607}
   m_Layer: 0
   m_Name: FireShot
   m_TagString: Untagged
@@ -264,7 +265,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 12
-  m_Sprite: {fileID: 21300000, guid: 5312e3fae6ccc4d5dbb61e1d59f52233, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 25a30d61d949437d92c14671cc49a9bf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -275,3 +276,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8320601000000000607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3138671488069722503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 5749301866162510685}
+  frames:
+  - {fileID: 21300000, guid: 25a30d61d949437d92c14671cc49a9bf, type: 3}
+  - {fileID: 21300000, guid: a65d5868acb44286acee3c83fe38365d, type: 3}
+  - {fileID: 21300000, guid: abf84d117326476e982ad6d32e9b3c2d, type: 3}
+  - {fileID: 21300000, guid: a9427dab47e54fbb9ac59eeb5f483f41, type: 3}
+  frameInterval: 0.1
+  loop: 1
