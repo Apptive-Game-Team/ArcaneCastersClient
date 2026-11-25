@@ -542,3 +542,8 @@ commit 그대로였다.
 
 - 금색 번개의 굴절과 매듭을 맞추고 밝은 면이 앞으로 옮겨가는 여섯 자세를 적용했다.
 - `ChainLightningFlight01.png` · `ChainLightningFlight02.png` · `ChainLightningFlight03.png` · `ChainLightningFlight04.png` · `ChainLightningFlight05.png` · `ChainLightningFlight06.png`
+
+## 분화구 운반수 보행
+
+- 기존 분화구와 몸통의 실루엣을 유지하고, 발을 번갈아 딛는 `CraterCarrierWalk01–08.png`을 적용했다.
+- 접근 중에는 지면 이동 거리에 맞춰 보행한다. 설치, 발사, 회수 중에는 기존 단계별 자세를 표시한다.

@@ -1,3 +1,4 @@
+using GameScene.ServedObjectComponent.Motion;
 using UnityEngine;
 
 namespace GameScene.ServedObjectComponent
@@ -9,10 +10,14 @@ namespace GameScene.ServedObjectComponent
         [SerializeField] private Sprite carriedSprite;
         [SerializeField] private Sprite deployedSprite;
         [SerializeField] private Sprite recoveringSprite;
+        [SerializeField] private GroundedUnitPoseController walkPose;
 
         protected override void OnBound()
         {
-            targetRenderer = ResolveRenderer(targetRenderer);
+            if (walkPose == null)
+            {
+                targetRenderer = ResolveRenderer(targetRenderer);
+            }
             Owner.OnOtherStatus += ShowStatus;
             Owner.OnAttack += ShowAttack;
             ShowStatus("Idle");
@@ -32,23 +37,26 @@ namespace GameScene.ServedObjectComponent
 
         private void ShowStatus(string status)
         {
-            Sprite next = null;
-            switch (status)
+            Sprite next = status switch
             {
-                case "Deployed":
-                    next = deployedSprite;
-                    break;
-                case "Deploying": // Same held-weapon frame reads as lowering it into place.
-                case "Recovering":
-                    next = recoveringSprite;
-                    break;
-                case "Idle":
-                case "Move":
-                    next = carriedSprite;
-                    break;
+                "Deployed" => deployedSprite,
+                "Deploying" or "Recovering" => recoveringSprite,
+                "Idle" or "Move" => carriedSprite,
+                _ => null
+            };
+            if (next == null || Owner.IsDespawning)
+            {
+                return;
             }
-            if (targetRenderer != null && next != null)
+
+            if (walkPose != null)
+            {
+                walkPose.SetStationaryPose(status is "Idle" or "Move" ? null : next);
+            }
+            else if (targetRenderer != null)
+            {
                 targetRenderer.sprite = next;
+            }
         }
     }
 }

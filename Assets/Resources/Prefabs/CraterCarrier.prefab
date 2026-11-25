@@ -41,6 +41,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8000000000000000004}
+    - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6540000000000000001}
   m_SourcePrefab: {fileID: 100100000, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
 --- !u!212 &6729670833582672236 stripped
 SpriteRenderer:
@@ -69,3 +72,30 @@ MonoBehaviour:
   carriedSprite: {fileID: 21300000, guid: 15802a6b94034ceead1dddff4cff6514, type: 3}
   deployedSprite: {fileID: 21300000, guid: d4a12b857f8c4fc39581954c671451c7, type: 3}
   recoveringSprite: {fileID: 21300000, guid: 24e3317dae014ad08549b48b76a94714, type: 3}
+  walkPose: {fileID: 6540000000000000001}
+--- !u!114 &6540000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7425863993475081389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 6729670833582672236}
+  walkFrames:
+  - {fileID: 21300000, guid: 8bd0695e80345293b1c338477d4df187, type: 3}
+  - {fileID: 21300000, guid: 73fab1f8f2265be6b3d4528cc3b0d350, type: 3}
+  - {fileID: 21300000, guid: 1cad5a5bd72f56b7b2251062306ffd16, type: 3}
+  - {fileID: 21300000, guid: c577bcd9b971541f85cf4e562ba42efd, type: 3}
+  - {fileID: 21300000, guid: 2afd427e90fa53cdb416c4d79fbc40db, type: 3}
+  - {fileID: 21300000, guid: f0f8f62e41775dc988b84a6009b701b2, type: 3}
+  - {fileID: 21300000, guid: 3111e4aa22ad5333b998c644026774b2, type: 3}
+  - {fileID: 21300000, guid: bf59ee37ea0a54d59d64e1be7cca8efe, type: 3}
+  walkCycleDistance: 0.72
+  maximumGroundSpeed: 0.65
+  walkingHeightTolerance: 0.08

@@ -25,14 +25,30 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void CarrierOnlyUsesTheServerPhasePresenterAndShellDoesNotSpawnADuplicateImpact()
+        public void CarrierKeepsOneBodyRendererAndShellDoesNotSpawnADuplicateImpact()
         {
             GameObject carrier = Resources.Load<GameObject>("Prefabs/CraterCarrier");
             string[] components = carrier.GetComponentsInChildren<MonoBehaviour>(true)
                 .Where(component => component != null).Select(component => component.GetType().Name).ToArray();
             CollectionAssert.Contains(components, "CraterCarrierPresenter");
+            CollectionAssert.Contains(components, "GroundedUnitPoseController");
             CollectionAssert.DoesNotContain(components, "AttackSpriteSwapController");
             CollectionAssert.DoesNotContain(components, "HoppingMotionController");
+            MonoBehaviour presenter = carrier.GetComponents<MonoBehaviour>()
+                .Single(component => component.GetType().Name == "CraterCarrierPresenter");
+            var walkPose = (MonoBehaviour)Get(presenter, "walkPose");
+            Assert.AreEqual("GroundedUnitPoseController", walkPose.GetType().Name);
+            Assert.AreSame(Get(presenter, "targetRenderer"), Get(walkPose, "targetRenderer"));
+            var walk = (Sprite[])Get(walkPose, "walkFrames");
+            Assert.That(walk, Has.Length.EqualTo(8));
+            var idle = (Sprite)Get(presenter, "carriedSprite");
+            foreach (Sprite frame in walk)
+            {
+                Assert.NotNull(frame);
+                Assert.AreEqual(idle.rect.size, frame.rect.size);
+                Assert.AreEqual(idle.pixelsPerUnit, frame.pixelsPerUnit);
+                Assert.AreEqual(idle.pivot, frame.pivot);
+            }
             GameObject shell = Resources.Load<GameObject>("Prefabs/CraterShell");
             Assert.IsFalse(shell.GetComponents<MonoBehaviour>().Any(component =>
                 component != null && component.GetType().Name == "OnDestroySpawner"));
