@@ -81,6 +81,8 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: ${{ env.UNITY_VERSION }}
+          # 최신 릴리스 API 조회에서 403이 발생한 경우에도 지정 태그로 시작한다.
+          cliVersion: 'v0.1.77'
           testMode: editmode
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
