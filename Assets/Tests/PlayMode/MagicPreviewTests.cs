@@ -3840,6 +3840,99 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator EarthCallAwakensTheRecordedSmallRemnant() =>
+            CheckEarthCallAwakening("small", "RockRemnant", "MiniRock", "MiniRockPunch01");
+
+        [UnityTest]
+        public IEnumerator EarthCallAwakensTheRecordedMediumRemnant() =>
+            CheckEarthCallAwakening("medium", "MediumRockRemnant", "RockGolem", "RockGolem2");
+
+        private IEnumerator CheckEarthCallAwakening(string scenarioId, string remnantPrefab, string summonPrefab,
+            string attackSprite)
+        {
+            Create();
+            Assert.That(Configure("earth_call"), Is.True);
+            var scenarios = (JArray)Recording("earth_call")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == scenarioId)));
+
+            var world = (Component)Field("world");
+            Sprite card = Resources.Load<Sprite>("Game/sprites/EarthCall");
+            var effectPrefab = Resources.Load<GameObject>("Prefabs/EarthCall");
+            Assert.That(effectPrefab.GetComponent<SpriteRenderer>().sprite, Is.SameAs(card));
+            Vector3 Position(Component obj) => world.transform.InverseTransformPoint(obj.transform.position);
+
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/EarthCallCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.973f);
+                Component remnant = Target(2);
+                Assert.That(remnant.name, Does.StartWith(remnantPrefab));
+                Assert.That(Target(4), Is.Null);
+                Assert.That(Target(5), Is.Null);
+                if (capture) SaveViewport(directory, scenarioId + "-remnant", true);
+
+                yield return PlayUntil(1.022f);
+                Component effect = Target(4);
+                Component summon = Target(5);
+                Assert.That(effect.name, Does.StartWith("EarthCall"));
+                Assert.That(summon.name, Does.StartWith(summonPrefab));
+                var despawning = effect.GetType().GetProperty("IsDespawning", Private);
+                Assert.That(despawning.GetValue(remnant), Is.True);
+                Vector3 fixedOrigin = new Vector3(6f, 0f, 5f);
+                Assert.That(Vector3.Distance(Position(summon), fixedOrigin), Is.LessThan(.05f));
+                Assert.That(Vector3.Distance(Position(effect), fixedOrigin), Is.LessThan(.03f));
+
+                SpriteRenderer body = ServedObjectRenderer(effect);
+                Assert.That(body.sprite.name, Is.EqualTo("EarthCallAwaken01"));
+                Assert.That(body.sprite.rect, Is.EqualTo(card.rect));
+                Assert.That(body.sprite.pivot, Is.EqualTo(card.pivot));
+                Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(card.pixelsPerUnit));
+                Assert.That(body.sortingOrder, Is.EqualTo(12));
+                Assert.That(ServedObjectRenderer(summon).sortingOrder, Is.LessThan(body.sortingOrder));
+                yield return PlayUntil(1.075f);
+                Assert.That(Target(2), Is.Null);
+
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 1.975f)
+                {
+                    string pose = body.sprite.name;
+                    if (poses.LastOrDefault() != pose)
+                    {
+                        poses.Add(pose);
+                        if (capture) SaveViewport(directory, scenarioId + "-" + pose, true);
+                    }
+                    Assert.That(Vector3.Distance(Position(effect), fixedOrigin), Is.LessThan(.03f));
+                    yield return null;
+                }
+                CollectionAssert.AreEqual(Enumerable.Range(1, 8).Select(i => $"EarthCallAwaken{i:00}"), poses);
+                Assert.That(body.sprite.name, Is.EqualTo("EarthCallAwaken08"));
+                Assert.That(Position(summon).x, Is.EqualTo(6.6f).Within(.07f));
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(1000));
+
+                yield return PlayUntil(2.022f);
+                Assert.That(despawning.GetValue(effect), Is.True);
+                yield return PlayUntil(2.1f);
+                Assert.That(Target(4), Is.Null);
+                Assert.That(Target(5), Is.SameAs(summon));
+                yield return PlayUntil(2.173f);
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(1000));
+                yield return PlayUntil(2.224f);
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(900));
+                Assert.That(ServedObjectRenderer(summon).sprite.name, Is.EqualTo(attackSprite));
+                if (capture) SaveViewport(directory, scenarioId + "-first-hit", true);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator TornadoStrikeSpinsWithoutWobbleAndKeepsItsRecordedLiftAndHits()
         {
             Create();

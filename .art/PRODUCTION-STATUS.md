@@ -523,3 +523,8 @@ commit 그대로였다.
 
 - 청록색 띠의 밝은 면이 둘레를 돌아가는 여덟 자세를 적용했다. 아래쪽 뾰족한 끝의 위치와 위쪽의 트인 고리를 맞췄다.
 - `TornadoStrikeSpin01.png` · `TornadoStrikeSpin02.png` · `TornadoStrikeSpin03.png` · `TornadoStrikeSpin04.png` · `TornadoStrikeSpin05.png` · `TornadoStrikeSpin06.png` · `TornadoStrikeSpin07.png` · `TornadoStrikeSpin08.png`
+
+## 대지의 부름 발동 자세
+
+- 파도 그림을 표시하던 전투 프리팹에 황토색 진동 고리와 돌 조각 발동 자세를 적용했다. 카드 그림의 재질을 살리고 유닛이 나타날 중앙에 여백을 뒀다.
+- `EarthCallAwaken01.png` · `EarthCallAwaken02.png` · `EarthCallAwaken03.png` · `EarthCallAwaken04.png` · `EarthCallAwaken05.png` · `EarthCallAwaken06.png` · `EarthCallAwaken07.png` · `EarthCallAwaken08.png`
