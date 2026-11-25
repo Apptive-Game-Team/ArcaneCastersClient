@@ -2907,9 +2907,9 @@ namespace WordOnline.Tests
                 Assert.That((bool)first.GetType().GetProperty("IsDespawning", Private).GetValue(first), Is.True);
                 Component newest = Target(14);
                 Assert.That(newest, Is.Not.Null);
-                Assert.That(FireTadpoleTtl(first), Is.EqualTo(0f).Within(.001f));
-                Assert.That(FireTadpoleTtl(second), Is.EqualTo(1.6f).Within(.001f));
-                Assert.That(FireTadpoleTtl(newest), Is.EqualTo(8f).Within(.001f));
+                Assert.That(TadpoleTtl(first), Is.EqualTo(0f).Within(.001f));
+                Assert.That(TadpoleTtl(second), Is.EqualTo(1.6f).Within(.001f));
+                Assert.That(TadpoleTtl(newest), Is.EqualTo(8f).Within(.001f));
                 if (capture) SaveViewport(directory, "old-and-new", true);
 
                 yield return PlayUntil(8.762f);
@@ -2960,7 +2960,123 @@ namespace WordOnline.Tests
             }
         }
 
-        private static float FireTadpoleTtl(Component tadpole)
+        [UnityTest]
+        public IEnumerator LightningTadpoleLandsWalksAndFinishesItsOwnHits()
+        {
+            Create();
+            Assert.That(Configure("dimension_toad"), Is.True);
+            var scenarios = (JArray)Recording("dimension_toad")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "ground")));
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/LightningTadpoleCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(1.465f);
+                Component first = Target(5);
+                var firstBody = ServedObjectRenderer(first);
+                Assert.That(TadpoleTtl(first), Is.EqualTo(8f).Within(.001f));
+                Assert.That(firstBody.sprite.name, Is.EqualTo("LightningTadpoleIdle"));
+                Assert.That(first.GetComponent("CrawlMotionController"), Is.Null);
+                Assert.That(first.GetComponentsInChildren<Transform>(true).Any(child => child.name == "TTLBar"), Is.True);
+
+                var seen = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 2.68f)
+                {
+                    string name = firstBody.sprite.name;
+                    if (name.StartsWith("LightningTadpoleWalk", StringComparison.Ordinal) && seen.Add(name) && capture)
+                        SaveViewport(directory, name, true);
+                    yield return null;
+                }
+                CollectionAssert.AreEquivalent(Enumerable.Range(1, 8).Select(i => $"LightningTadpoleWalk{i:00}"), seen);
+
+                yield return PlayUntil(3.127f);
+                Component second = Target(7);
+                var secondBody = ServedObjectRenderer(second);
+                var world = (Component)Field("world");
+                Vector3 before = world.transform.InverseTransformPoint(second.transform.position);
+                yield return PlayUntil(3.315f);
+                Vector3 airborne = world.transform.InverseTransformPoint(second.transform.position);
+                Assert.That(airborne.y, Is.GreaterThan(.03f));
+                Assert.That(airborne.x, Is.GreaterThan(before.x));
+                Assert.That(secondBody.sprite.name, Is.EqualTo("LightningTadpoleIdle"));
+                if (capture) SaveViewport(directory, "before-landing", true);
+                yield return PlayUntil(3.370f);
+                Assert.That(secondBody.sprite.name, Is.EqualTo("LightningTadpoleIdle"));
+                yield return PlayUntil(3.462f);
+                Assert.That(secondBody.sprite.name, Does.StartWith("LightningTadpoleWalk"));
+                Assert.That(CurrentHp(Target(2)), Is.EqualTo(9900));
+                for (int i = 0; i < 4; i++)
+                {
+                    yield return PlayUntil(3.525f + .08f * i);
+                    string pose = $"LightningTadpoleZap{i + 1:00}";
+                    Assert.That(firstBody.sprite.name, Is.EqualTo(pose));
+                    Assert.That(firstBody.flipX, Is.False);
+                    Assert.That(secondBody.sprite.name, Does.Not.StartWith("LightningTadpoleZap"));
+                    // 세 번째 자세를 확인하기 전에 화산편의 3.65초 피해가 따로 들어온다.
+                    Assert.That(CurrentHp(Target(2)), Is.EqualTo(i < 2 ? 9800 : 9700));
+                    if (capture) SaveViewport(directory, pose, true);
+                }
+
+                yield return PlayUntil(4.322f);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("LightningTadpoleZap01"));
+                Assert.That(secondBody.sprite.name, Does.Not.StartWith("LightningTadpoleZap"));
+                Assert.That(CurrentHp(Target(2)), Is.EqualTo(9500));
+                yield return PlayUntil(5.124f);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("LightningTadpoleZap01"));
+                Assert.That(secondBody.sprite.name, Does.Not.StartWith("LightningTadpoleZap"));
+                Assert.That(CurrentHp(Target(2)), Is.EqualTo(9200));
+                yield return PlayUntil(5.324f);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("LightningTadpoleZap03"));
+                Assert.That(secondBody.sprite.name, Is.EqualTo("LightningTadpoleZap01"));
+                Assert.That(CurrentHp(Target(2)), Is.EqualTo(9000));
+                if (capture) SaveViewport(directory, "independent-attacks", true);
+
+                yield return PlayUntil(8.972f);
+                Assert.That(Target(5), Is.SameAs(first));
+                Assert.That(Target(7), Is.SameAs(second));
+                Assert.That(TadpoleTtl(first), Is.EqualTo(.5f).Within(.001f));
+                Assert.That(TadpoleTtl(second), Is.EqualTo(2.1f).Within(.001f));
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator LightningTadpoleRepeatsItsStrikeAfterTheToadRetreats()
+        {
+            Create();
+            Assert.That(Configure("dimension_toad"), Is.True);
+            var scenarios = (JArray)Recording("dimension_toad")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "panic")));
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(4.126f);
+                var attacker = ServedObjectRenderer(Target(5));
+                var target = Target(2);
+                Assert.That(CurrentHp(target), Is.EqualTo(700));
+                float[] hitTimes = { 4.15f, 4.95f, 5.75f };
+                float[] hp = { 600f, 300f, 0f };
+                for (int i = 0; i < hitTimes.Length; i++)
+                {
+                    yield return PlayUntil(hitTimes[i] + .023f);
+                    Assert.That(attacker.sprite.name, Is.EqualTo("LightningTadpoleZap01"));
+                    Assert.That(CurrentHp(target), Is.EqualTo(hp[i]));
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        private static float TadpoleTtl(Component tadpole)
         {
             var gauges = (IList)tadpole.GetType().GetField("gauges").GetValue(tadpole);
             object ttl = gauges.Cast<object>()
