@@ -89,6 +89,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(128, 111), idleSprite: "ElectricSlimeIdle");
 
         [UnityTest]
+        public IEnumerator FireSlimeMovesOnTheGroundAndRecoilsAtBothTickRates() =>
+            CheckBothTickRates("FireSlime", 8, "FireSlimeBump01", 4, .8f, .08f,
+                walkSize: new Vector2(128, 108), idleSprite: "FireSlimeIdle");
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
@@ -215,7 +220,7 @@ namespace WordOnline.Tests
                 FieldInfo status = updatedType.GetField("status");
                 MethodInfo update = unit.GetType().GetMethod("UpdateObject");
                 var target = Vector3.zero;
-                var seenWalk = new HashSet<Sprite>();
+                var seenWalk = new List<Sprite>();
                 yield return null;
                 // 기존 방향 전환 대기 0.5초 뒤에도 보행 주기가 온전히 지나야 한다.
                 for (int tick = 0; tick < tickRate * walkSeconds; tick++)
@@ -226,12 +231,20 @@ namespace WordOnline.Tests
                     for (int render = 0; render < RenderRate / tickRate; render++)
                     {
                         yield return null;
-                        seenWalk.Add(renderer.sprite);
+                        if (renderer.sprite != seenWalk.LastOrDefault())
+                            seenWalk.Add(renderer.sprite);
                     }
                 }
 
                 CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
                     $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
+                if (prefabName == "FireSlime")
+                {
+                    var cycle = walk.Append(walk[0]).ToArray();
+                    bool completedCycle = Enumerable.Range(0, Mathf.Max(0, seenWalk.Count - walk.Length))
+                        .Any(start => seenWalk.Skip(start).Take(cycle.Length).SequenceEqual(cycle));
+                    Assert.That(completedCycle, Is.True, $"{tickRate}Hz의 이동 순서와 반복");
+                }
                 Assert.That(renderer.flipX, Is.EqualTo(direction < 0));
                 status.SetValue(frame, "Attack");
                 bool hitOnly = (bool)presenter.GetType().GetField("attackOnHit", Private).GetValue(presenter);

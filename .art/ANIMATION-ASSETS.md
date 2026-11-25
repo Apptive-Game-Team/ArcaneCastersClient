@@ -539,3 +539,9 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 `ElectricSlimeIdle`은 금빛 젤 몸체와 번개 돌기가 안정된 대기 자세다. `ElectricSlimeCrawl01–08`은 바닥에 붙은 채 앞부분이 늘었다가 뒷부분이 따라오고 다시 모이는 과정이다. 지면 이동 0.88칸마다 반복한다. `ElectricSlimeBump01–04`는 피해 이벤트에서 접촉 자세로 시작해 0.08초씩 반동과 회수를 보여준다.
 
 13장은 원본 `Game/spawn/lightning_slime`과 같은 128×111 RGBA, 100 PPU, 하단 중앙 피벗이다. `ElectricSlime.prefab`은 높이 0에 가까운 이동만 자세에 반영한다. 과충전 표시는 기존 효과에서 재생된다.
+
+## 화염 슬라임의 지면 이동과 타격
+
+`FireSlimeIdle`은 재 몸체와 주황색 균열을 담은 대기 자세다. `FireSlimeCrawl01–08`은 앞부분이 눌려 늘고, 뒷면이 따라와 모이는 과정으로 지면 이동 0.88칸마다 반복한다. `FireSlimeBump01–04`는 피해 틱의 접촉 자세부터 0.08초씩 반동과 회수를 보여준다.
+
+13장은 원본 `Game/spawn/fire_slime`과 같은 128×108 RGBA, 100 PPU, 하단 중앙 피벗이다. 몸의 높이와 함께 균열이 좁아지고 주황색 꼭지는 한 자세 늦게 기운다. 불 장판은 서버가 생성한 별도 개체의 위치에서 재생된다.
