@@ -533,3 +533,9 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 `LightningTadpoleIdle`은 대기와 소환 통로의 자세다. `LightningTadpoleWalk01–08`은 앞발과 반대쪽 뒷발이 번갈아 지지하는 보행이며 지면 이동 1.12칸마다 반복한다. `LightningTadpoleZap01–04`는 개체별 피해 틱부터 0.08초씩 앞발 내밀기와 회수를 표시한다.
 
 13장은 224×280 RGBA, 200 PPU, 하단 중앙 피벗이다. 전격 무늬는 청색 코어 안에서 커졌다가 잦아든다. 플레이어 프리팹의 `GroundedUnitPoseController`는 소환 통로를 벗어나 착지한 뒤 보행을 재생한다. 모험의 `PveLightningTadpole`은 정적 `LightningTadpole.png`를 사용한다.
+
+## 전기 슬라임의 지면 이동과 타격
+
+`ElectricSlimeIdle`은 금빛 젤 몸체와 번개 돌기가 안정된 대기 자세다. `ElectricSlimeCrawl01–08`은 바닥에 붙은 채 앞부분이 늘었다가 뒷부분이 따라오고 다시 모이는 과정이다. 지면 이동 0.88칸마다 반복한다. `ElectricSlimeBump01–04`는 피해 이벤트에서 접촉 자세로 시작해 0.08초씩 반동과 회수를 보여준다.
+
+13장은 원본 `Game/spawn/lightning_slime`과 같은 128×111 RGBA, 100 PPU, 하단 중앙 피벗이다. `ElectricSlime.prefab`은 높이 0에 가까운 이동만 자세에 반영한다. 과충전 표시는 기존 효과에서 재생된다.

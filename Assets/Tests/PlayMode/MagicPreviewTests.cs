@@ -2522,6 +2522,9 @@ namespace WordOnline.Tests
                 SpriteRenderer survivorBody = ZapMouseBody(3);
                 Assert.That(dyingBody.sprite.name, Is.EqualTo("ZapMouse"));
                 Assert.That(survivorBody.sprite.name, Is.EqualTo("ZapMouse"));
+                Component receiver = Target(targetId);
+                SpriteRenderer receiverBody = ServedObjectRenderer(receiver);
+                Assert.That(receiverBody.sprite.name, Is.EqualTo("ElectricSlimeIdle"));
                 Vector3 origin = dying.transform.position;
                 Assert.That(FindProjectile("ElectricShot"), Is.Null);
 
@@ -2533,8 +2536,8 @@ namespace WordOnline.Tests
                 Transform bolt = FindProjectile("ElectricShot");
                 Assert.That(bolt, Is.Not.Null);
                 Assert.That(Vector3.Distance(bolt.position, origin), Is.LessThan(.16f));
-                Component receiver = Target(targetId);
                 var effects = receiver.GetType().GetProperty("ActiveEffects");
+                Assert.That(receiverBody.sprite.name, Is.EqualTo("ElectricSlimeIdle"));
                 Assert.That((IEnumerable)effects.GetValue(receiver), Does.Contain("Overcharge"));
                 Assert.That((IEnumerable)effects.GetValue(survivor), Does.Not.Contain("Overcharge"));
                 float initialDistance = Vector3.Distance(bolt.position, receiver.transform.position);
@@ -2544,9 +2547,17 @@ namespace WordOnline.Tests
                 Assert.That(Target(3), Is.SameAs(survivor));
                 Assert.That(survivorBody.sprite.name, Is.EqualTo("ZapMouse"));
                 Assert.That(Vector3.Distance(bolt.position, receiver.transform.position), Is.LessThan(initialDistance));
+                Assert.That(receiverBody.sprite.name, Is.EqualTo("ElectricSlimeIdle"));
+                if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                {
+                    string path = System.IO.Path.Combine(Application.dataPath, "../Library/ElectricSlimeCaptures");
+                    System.IO.Directory.CreateDirectory(path);
+                    SaveViewport(path, "energy-recipient", true);
+                }
                 yield return PlayUntil(start + duration + .07f);
                 Assert.That(FindProjectile("ElectricShot"), Is.Null);
                 Assert.That(Target(3), Is.SameAs(survivor));
+                Assert.That(receiverBody.sprite.name, Is.EqualTo("ElectricSlimeIdle"));
             }
             finally
             {
@@ -3073,6 +3084,93 @@ namespace WordOnline.Tests
             finally
             {
                 Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ElectricSlimeMovesAndEachSummonKeepsItsOwnContactPose()
+        {
+            Create();
+            const string magic = "lightning_slime_nest";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var ground = scenarios.Single(s => (string)s["id"] == "ground");
+            Scenario(scenarios.IndexOf(ground));
+            CollectionAssert.AreEqual(new[] { 2 }, ground["fixtureTargetIds"].Select(id => (int)id));
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/ElectricSlimeCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            SpriteRenderer SlimeBody(int id)
+            {
+                var slime = Target(id);
+                Assert.That(slime, Is.Not.Null);
+                Assert.That(slime.name, Does.StartWith("ElectricSlime"));
+                Assert.That(slime.GetType().GetMethod("GetMaster").Invoke(slime, null), Is.EqualTo("LeftPlayer"));
+                Assert.That(slime.GetComponent("CrawlMotionController"), Is.Null);
+                return ServedObjectRenderer(slime);
+            }
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(2.724f);
+                var first = SlimeBody(4);
+                var source = Resources.Load<Sprite>("Game/spawn/lightning_slime");
+                Assert.That(first.sprite.name, Is.EqualTo("ElectricSlimeIdle"));
+                Assert.That(first.sprite.rect.size, Is.EqualTo(source.rect.size));
+                Assert.That(first.sprite.pivot, Is.EqualTo(source.pivot));
+                Assert.That(first.sprite.pixelsPerUnit, Is.EqualTo(source.pixelsPerUnit));
+
+                var seen = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 3.93f)
+                {
+                    string pose = first.sprite.name;
+                    if (pose.StartsWith("ElectricSlimeCrawl", StringComparison.Ordinal) && seen.Add(pose) && capture)
+                        SaveViewport(directory, pose, true);
+                    yield return null;
+                }
+                CollectionAssert.AreEquivalent(Enumerable.Range(1, 8).Select(i => $"ElectricSlimeCrawl{i:00}"), seen);
+
+                yield return PlayUntil(4.723f);
+                var target = Target(2);
+                Assert.That(target.GetType().GetMethod("GetMaster").Invoke(target, null), Is.EqualTo("RightPlayer"));
+                Assert.That(CurrentHp(target), Is.EqualTo(10000));
+                for (int i = 0; i < 4; i++)
+                {
+                    yield return PlayUntil(4.775f + .08f * i);
+                    string pose = $"ElectricSlimeBump{i + 1:00}";
+                    Assert.That(first.sprite.name, Is.EqualTo(pose));
+                    Assert.That(first.flipX, Is.False);
+                    Assert.That(CurrentHp(target), Is.EqualTo(9900));
+                    if (capture) SaveViewport(directory, pose, true);
+                }
+
+                var second = SlimeBody(5);
+                yield return PlayUntil(6.821f);
+                Assert.That(CurrentHp(target), Is.EqualTo(9700));
+                yield return PlayUntil(6.875f);
+                Assert.That(second.sprite.name, Is.EqualTo("ElectricSlimeBump01"));
+                Assert.That(first.sprite.name, Does.Not.StartWith("ElectricSlimeBump"));
+                Assert.That(CurrentHp(target), Is.EqualTo(9600));
+
+                yield return PlayUntil(11.076f);
+                var later = SlimeBody(7);
+                Assert.That(CurrentHp(target), Is.EqualTo(8300));
+                yield return PlayUntil(11.123f);
+                Assert.That(later.sprite.name, Is.EqualTo("ElectricSlimeBump01"));
+                Assert.That(first.sprite.name, Does.Not.StartWith("ElectricSlimeBump"));
+                Assert.That(CurrentHp(target), Is.EqualTo(8200));
+                yield return PlayUntil(11.207f);
+                Assert.That(later.sprite.name, Is.EqualTo("ElectricSlimeBump02"));
+                Assert.That(first.sprite.name, Is.EqualTo("ElectricSlimeBump01"));
+                Assert.That(CurrentHp(target), Is.EqualTo(8100));
+                if (capture) SaveViewport(directory, "independent-hits", true);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
             }
         }
 
