@@ -128,6 +128,121 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(256, 190), walkSeconds: 4);
 
         [UnityTest]
+        public IEnumerator RockMageWalksAndFinishesCastingAtBothTickRates() =>
+            CheckBothTickRates("RockMage", 8, "RockMageCast01", walkSpeed: 1f, secondsPerAttackPose: .125f,
+                walkSize: new Vector2(234, 256), walkSeconds: 4);
+
+        [UnityTest]
+        public IEnumerator RockMageTwinsShareOneMuzzlePerMageAndPerPacket()
+        {
+            var root = new GameObject("RockMage packet test");
+            int oldRate = Time.captureFramerate;
+            Time.captureFramerate = RenderRate;
+            try
+            {
+                var world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                var find = world.GetType().GetMethod("FindById");
+                ApplyObjects(world, @"{""create"":[
+                    {""id"":41,""type"":""RockMage"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":5}},
+                    {""id"":42,""type"":""RockMage"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":6}},
+                    {""id"":43,""type"":""ElectricSlime"",""master"":""RightPlayer"",""position"":{""x"":7,""z"":5}},
+                    {""id"":44,""type"":""ElectricSlime"",""master"":""RightPlayer"",""position"":{""x"":1,""z"":5}}]}");
+                var first = (Component)find.Invoke(world, new object[] { 41 });
+                var second = (Component)find.Invoke(world, new object[] { 42 });
+                Assert.That(first.GetComponent("HoppingMotionController"), Is.Null);
+                Assert.That(first.GetComponent("AttackSpriteSwapController"), Is.Null);
+                Transform[] Shots() => world.GetComponentsInChildren<Transform>()
+                    .Where(child => child.name == "RockShot(Clone)").ToArray();
+
+                ApplyObjects(world, "{\"projectile\":[" + string.Join(",", RockShot(41, 43), RockShot(41, 44),
+                    RockShot(42, 44), RockShot(42, 44)) + "]}");
+                var rocks = Shots();
+                Assert.That(rocks, Has.Length.EqualTo(4));
+                Vector3 rightStart = AssertMageMuzzle(first, rocks.Take(2).ToArray(), false);
+                Vector3 otherStart = AssertMageMuzzle(second, rocks.Skip(2).ToArray(), true);
+
+                ApplyObjects(world, "{\"projectile\":[" + RockShot(41, 999) + "," + RockShot(41, 44) + "]}");
+                var secondPacket = Shots().Skip(4).ToArray();
+                Assert.That(secondPacket, Has.Length.EqualTo(2));
+                Vector3 leftStart = AssertMageMuzzle(first, secondPacket, true);
+                Assert.That(leftStart.x, Is.LessThan(rightStart.x));
+                Assert.That(Body(second).flipX, Is.True);
+
+                yield return new WaitForSeconds(.17f);
+                Assert.That(rocks[0].position.x, Is.GreaterThan(rightStart.x));
+                Assert.That(rocks[1].position.x, Is.LessThan(rightStart.x));
+                Assert.That(rocks[2].position.x, Is.LessThan(otherStart.x));
+                Assert.That(rocks[3].position, Is.EqualTo(rocks[2].position));
+                Assert.That(secondPacket[1].position.x, Is.LessThan(leftStart.x));
+            }
+            finally
+            {
+                Time.captureFramerate = oldRate;
+                Object.Destroy(root);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator RockMageSnapshotRegistersTheCasterAndPrefersTheSurvivingTarget()
+        {
+            var root = new GameObject("RockMage snapshot test");
+            var container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            Transform[] rocks = Array.Empty<Transform>();
+            try
+            {
+                root.AddComponent(Runtime("GameScene.Object.ObjectSpawner"));
+                root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+                var syncer = root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+                Type snapshots = Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType();
+                var sync = syncer.GetType().GetMethod("Sync");
+                object first = Decode(snapshots, @"[
+                    {""id"":61,""prefab"":""ElectricSlime"",""master"":""RightPlayer"",""x"":1,""z"":5}]");
+                sync.Invoke(syncer, new[] { first, null });
+                object current = Decode(snapshots, @"[
+                    {""id"":62,""prefab"":""RockMage"",""master"":""LeftPlayer"",""x"":4,""z"":5,""status"":""Attack""},
+                    {""id"":63,""prefab"":""ElectricSlime"",""master"":""RightPlayer"",""x"":7,""z"":5}]");
+                Type objects = Runtime("GameScene.Dto.ObjectsInfo");
+                object envelope = Decode(objects, "{\"projectile\":[" + RockShot(62, 61) + "," + RockShot(62, 63) + "]}");
+                object pending = Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnBeforeSnapshotUpdates")
+                    .Invoke(null, new[] { objects.GetField("projectile").GetValue(envelope), current });
+                Assert.That(((IList)pending).Count, Is.EqualTo(2));
+                sync.Invoke(syncer, new[] { current, pending });
+
+                rocks = Object.FindObjectsByType<Transform>(FindObjectsSortMode.None)
+                    .Where(child => child.name == "RockShot(Clone)").ToArray();
+                Assert.That(rocks, Has.Length.EqualTo(2));
+                var find = container.GetType().GetMethod("FindById");
+                var mage = (Component)find.Invoke(container, new object[] { 62 });
+                Assert.That(find.Invoke(container, new object[] { 61 }), Is.Null);
+                AssertMageMuzzle(mage, rocks, false);
+            }
+            finally
+            {
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                foreach (Transform shot in rocks) Object.Destroy(shot.gameObject);
+                Object.Destroy(root);
+            }
+            yield return null;
+        }
+
+        private static Vector3 AssertMageMuzzle(Component mage, Transform[] rocks, bool flipped)
+        {
+            SpriteRenderer body = Body(mage);
+            Assert.That(body.sprite.name, Is.EqualTo("RockMageCast01"));
+            Assert.That(body.flipX, Is.EqualTo(flipped));
+            var pose = mage.GetComponent("GroundedUnitPoseController");
+            var local = (Vector2)pose.GetType().GetField("projectileMuzzle", Private).GetValue(pose);
+            Vector3 expected = body.transform.TransformPoint(new Vector3(flipped ? -local.x : local.x, local.y, 0f));
+            foreach (Transform rock in rocks)
+                Assert.That(Vector3.Distance(expected, rock.position), Is.LessThan(.002f));
+            return expected;
+        }
+
+        private static string RockShot(int source, int target) =>
+            $"{{\"type\":\"RockShot\",\"duration\":0.5,\"start\":{{\"targetType\":\"reference\",\"id\":{source}}}," +
+            $"\"end\":{{\"targetType\":\"reference\",\"id\":{target}}}}}";
+
+        [UnityTest]
         public IEnumerator FireSpiritFollowsItsOwnSprayEvenWhenTargetsDisagree()
         {
             var root = new GameObject("FireSpirit spray test");
@@ -471,7 +586,16 @@ namespace WordOnline.Tests
 
                 var walk = (Sprite[])presenter.GetType().GetField("walkFrames", Private).GetValue(presenter);
                 bool isSprayer = prefabName == "FireSpirit";
-                var attack = (Sprite[])presenter.GetType().GetField(isSprayer ? "projectileAttackFrames" : "attackFrames", Private).GetValue(presenter);
+                bool isRockMage = prefabName == "RockMage";
+                bool usesProjectilePose = isSprayer || isRockMage;
+                var attack = (Sprite[])presenter.GetType().GetField(usesProjectilePose ? "projectileAttackFrames" : "attackFrames", Private).GetValue(presenter);
+                void ApplyProjectilePose()
+                {
+                    string projection = isSprayer ? SprayedFlame(42, direction * 5, direction * 6)
+                        : $"{{\"type\":\"RockShot\",\"duration\":0.5,\"start\":{{\"targetType\":\"reference\",\"id\":42}}," +
+                          $"\"end\":{{\"targetType\":\"position\",\"x\":{direction * 6},\"y\":0,\"z\":0}}}}";
+                    ApplyObjects(world, "{\"projectile\":[" + projection + "]}");
+                }
                 Sprite idle = renderer.sprite;
                 Sprite hit = Resources.Load<Sprite>($"Game/sprites/{attackSprite}");
                 Assert.That(idle.name, Is.EqualTo(idleSprite));
@@ -507,7 +631,7 @@ namespace WordOnline.Tests
 
                 CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
                     $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
-                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit" or "FireSpirit")
+                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit" or "FireSpirit" or "RockMage")
                 {
                     var cycle = walk.Append(walk[0]).ToArray();
                     bool completedCycle = Enumerable.Range(0, Mathf.Max(0, seenWalk.Count - walk.Length))
@@ -532,9 +656,9 @@ namespace WordOnline.Tests
                 }
 
                 playHit?.Invoke();
-                if (isSprayer)
+                if (usesProjectilePose)
                 {
-                    ApplyObjects(world, "{\"projectile\":[" + SprayedFlame(42, direction * 5, direction * 6) + "]}");
+                    ApplyProjectilePose();
                 }
                 else if (shotPrefab == null)
                 {
@@ -563,8 +687,8 @@ namespace WordOnline.Tests
                 Assert.That(renderer.sprite, Is.SameAs(attack[1]));
                 playHit?.Invoke();
                 update.Invoke(unit, new[] { frame });
-                if (isSprayer)
-                    ApplyObjects(world, "{\"projectile\":[" + SprayedFlame(42, direction * 5, direction * 6) + "]}");
+                if (usesProjectilePose)
+                    ApplyProjectilePose();
                 Assert.That(renderer.sprite, Is.SameAs(attack[0]));
 
                 var seenAttack = new List<Sprite>();

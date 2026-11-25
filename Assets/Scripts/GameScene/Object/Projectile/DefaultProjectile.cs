@@ -11,11 +11,15 @@ namespace GameScene.Object.Projectile
         [SerializeField] private Transform actualObject;
         [SerializeField] private SpriteFrameAnimator flightFrames;
         
-        public void Init(ProjectileDto projectileDto)
+        public void Init(ProjectileDto projectileDto) => InitCore(projectileDto, null);
+
+        internal void InitFromMuzzle(ProjectileDto projectileDto, Vector3 muzzle) => InitCore(projectileDto, muzzle);
+
+        private void InitCore(ProjectileDto projectileDto, Vector3? authoredStart)
         {
             var world = PresentationWorld.For(this);
             Vector3 destination = ProjectileUtil.GetPosition(projectileDto.end, world);
-            Vector3 start = VisualStart(projectileDto, destination, world);
+            Vector3 start = authoredStart ?? VisualStart(projectileDto, destination, world);
             actualObject.rotation = ProjectileUtil.GetRotation(start, destination, world);
             transform.position = start;
             flightFrames?.PlayOnce(projectileDto.duration);

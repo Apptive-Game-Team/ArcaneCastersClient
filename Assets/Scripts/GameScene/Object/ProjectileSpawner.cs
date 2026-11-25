@@ -17,6 +17,7 @@ namespace GameScene.Object
         private const float ShockOverloadSecondaryScale = 0.6f;
         private const string SeaSerpentBeamType = "SeaSerpentHydroPump";
         private const string FireSpiritSprayType = "SprayedFlame";
+        private const string RockShotType = "RockShot";
         private const float BeamSourcePositionTolerance = 0.001f;
 
         public void Spawn(ProjectileDto dto)
@@ -26,10 +27,16 @@ namespace GameScene.Object
 
         public static void SpawnShared(ProjectileDto dto, PresentationWorld world = null)
         {
+            if (FindRockMageSource(dto, world) != null)
+            {
+                SpawnDeferred(new List<ProjectileDto> { dto }, world);
+                return;
+            }
+
             SpawnPresented(dto, world, null);
         }
 
-        private static void SpawnPresented(ProjectileDto dto, PresentationWorld world, Vector3? beamMouth)
+        private static void SpawnPresented(ProjectileDto dto, PresentationWorld world, Vector3? authoredStart)
         {
             WDebug.Log("ProjectileSpawner Spawn called for type: " + dto.type);
 
@@ -67,9 +74,13 @@ namespace GameScene.Object
             
             Destroy(projectileObject, dto.duration);
             
-            if (beamMouth.HasValue && projectile is BeamProjectile beam)
+            if (authoredStart.HasValue && projectile is BeamProjectile beam)
             {
-                beam.InitFromMouth(dto, beamMouth.Value);
+                beam.InitFromMouth(dto, authoredStart.Value);
+            }
+            else if (authoredStart.HasValue && projectile is DefaultProjectile shot)
+            {
+                shot.InitFromMuzzle(dto, authoredStart.Value);
             }
             else
             {
@@ -92,11 +103,22 @@ namespace GameScene.Object
             dto.type == FireSpiritSprayType && dto.sourceId is > 0 &&
             dto.start is PositionProjectileTarget && dto.end is PositionProjectileTarget;
 
+        private static ServedObject FindRockMageSource(ProjectileDto dto, PresentationWorld world)
+        {
+            if (dto?.type != RockShotType || dto.start is not ReferenceProjectileTarget sourceRef)
+            {
+                return null;
+            }
+
+            ServedObject source = PresentationWorld.Find(sourceRef.id, world);
+            return source != null && source.PrefabType == "RockMage" ? source : null;
+        }
+
         internal static GroundedUnitPoseController FindReferencedLauncher(ProjectileDto dto, PresentationWorld world)
         {
             string prefab = dto?.type switch
             {
-                "RockShot" => "Towerback",
+                RockShotType => "Towerback",
                 "WaterShot" => "WaterSlime",
                 _ => null
             };
@@ -132,7 +154,8 @@ namespace GameScene.Object
                 if (projectile.type == SeaSerpentBeamType && projectile.start is PositionProjectileTarget ||
                     HasFireSpiritSpraySource(projectile) ||
                     FindReferencedLauncher(projectile, world) != null ||
-                    IsSnapshotWaterSlimeShot(projectile, snapshotObjects))
+                    FindRockMageSource(projectile, world) != null ||
+                    IsSnapshotAuthoredShot(projectile, snapshotObjects))
                 {
                     deferred ??= new List<ProjectileDto>();
                     deferred.Add(projectile);
@@ -146,23 +169,44 @@ namespace GameScene.Object
             return deferred;
         }
 
-        private static bool IsSnapshotWaterSlimeShot(ProjectileDto projectile, SnapshotObjectDto[] snapshotObjects)
+        private static bool IsSnapshotAuthoredShot(ProjectileDto projectile, SnapshotObjectDto[] snapshotObjects)
         {
-            return snapshotObjects != null && projectile.type == "WaterShot" &&
+            string prefab = projectile.type switch
+            {
+                "WaterShot" => "WaterSlime",
+                RockShotType => "RockMage",
+                _ => null
+            };
+            return snapshotObjects != null && prefab != null &&
                 projectile.start is ReferenceProjectileTarget reference &&
-                System.Array.Exists(snapshotObjects, source => source.id == reference.id && source.prefab == "WaterSlime");
+                System.Array.Exists(snapshotObjects, source => source.id == reference.id && source.prefab == prefab);
         }
 
         internal static void SpawnDeferred(List<ProjectileDto> projectiles, PresentationWorld world = null,
-            IEnumerable<UpdatedObjectDto> updates = null)
+            IEnumerable<UpdatedObjectDto> updates = null, SnapshotObjectDto[] snapshotObjects = null)
         {
             if (projectiles == null)
             {
                 return;
             }
 
-            foreach (ProjectileDto projectile in projectiles)
+            Dictionary<int, Vector3?> mageStarts = null;
+            for (int index = 0; index < projectiles.Count; index++)
             {
+                ProjectileDto projectile = projectiles[index];
+                ServedObject mage = FindRockMageSource(projectile, world);
+                if (mage != null)
+                {
+                    mageStarts ??= new Dictionary<int, Vector3?>();
+                    if (!mageStarts.TryGetValue(mage.id, out Vector3? muzzle))
+                    {
+                        muzzle = GetRockMageMuzzle(projectiles, index, mage, world, snapshotObjects);
+                        mageStarts.Add(mage.id, muzzle);
+                    }
+                    SpawnPresented(projectile, world, muzzle);
+                    continue;
+                }
+
                 var launcher = FindSeaSerpentLauncher(projectile, updates, world);
                 Vector3? mouth = launcher != null &&
                     launcher.TryLaunchProjectile(ProjectileUtil.GetPosition(projectile.end, world), out Vector3 start)
@@ -171,6 +215,56 @@ namespace GameScene.Object
                 SpawnPresented(projectile, world, mouth);
             }
         }
+
+        private static Vector3? GetRockMageMuzzle(List<ProjectileDto> projectiles, int first, ServedObject mage,
+            PresentationWorld world, SnapshotObjectDto[] snapshotObjects)
+        {
+            var launcher = mage.GetComponent<GroundedUnitPoseController>();
+            if (launcher == null || !IsInSnapshot(mage.id, snapshotObjects))
+            {
+                return null;
+            }
+
+            // 첫 탄이 가는 표적이 사라졌으면 나머지 탄을 살핀 뒤 두 탄의 출발점을 함께 정한다.
+            Vector3? knownTarget = null;
+            Vector3? destination = null;
+            for (int i = first; i < projectiles.Count; i++)
+            {
+                ProjectileDto shot = projectiles[i];
+                if (shot.type != RockShotType || shot.start is not ReferenceProjectileTarget source || source.id != mage.id)
+                {
+                    continue;
+                }
+
+                if (shot.end is PositionProjectileTarget)
+                {
+                    destination = ProjectileUtil.GetPosition(shot.end, world);
+                    break;
+                }
+
+                if (shot.end is ReferenceProjectileTarget targetRef)
+                {
+                    ServedObject target = PresentationWorld.Find(targetRef.id, world);
+                    if (target == null)
+                    {
+                        continue;
+                    }
+
+                    knownTarget ??= target.transform.position;
+                    if (!target.IsDespawning && IsInSnapshot(targetRef.id, snapshotObjects))
+                    {
+                        destination = target.transform.position;
+                        break;
+                    }
+                }
+            }
+
+            return launcher.TryLaunchProjectile(destination ?? knownTarget ?? mage.transform.position, out Vector3 muzzle)
+                ? muzzle : (Vector3?)null;
+        }
+
+        private static bool IsInSnapshot(int id, SnapshotObjectDto[] snapshotObjects) =>
+            snapshotObjects == null || System.Array.Exists(snapshotObjects, entry => entry.id == id);
 
         private static GroundedUnitPoseController FindSeaSerpentLauncher(ProjectileDto projectile,
             IEnumerable<UpdatedObjectDto> updates, PresentationWorld world)

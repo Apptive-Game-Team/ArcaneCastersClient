@@ -45,7 +45,7 @@ namespace GameScene.Object
                 var serpentAttacks = snapshotObjects
                     .Where(obj => obj.prefab == "SeaSerpent" && obj.status == "Attack")
                     .Select(obj => new UpdatedObjectDto(obj));
-                ProjectileSpawner.SpawnDeferred(deferredProjectiles, updates: serpentAttacks);
+                ProjectileSpawner.SpawnDeferred(deferredProjectiles, updates: serpentAttacks, snapshotObjects: snapshotObjects);
             }
             RemoveObjects(snapshotObjects);
             hasCompletedInitialSync = true;

@@ -26,6 +26,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `MagmaSpiritCast01–04.png` | 용암 갑각 악마 · 주먹으로 지면을 누르고 몸을 펴는 발동 4장 | `summonAttack`을 받은 소환자에서 0.20초 동안 재생 |
 | `FireSpiritWalk01–08.png` | 불의 정령 · 앞발과 뒷발을 교대로 딛는 걷기 8장 | `GroundedUnitPoseController.walkFrames`에서 지면 이동 0.68칸마다 반복 |
 | `FireSpiritSpray01–04.png` | 불의 정령 · 턱을 열어 분사하고 돌아오는 자세 4장 | `SprayedFlame.sourceId`의 시전자에서 분사 방향을 고정하고 0.50초 동안 재생 |
+| `RockMageWalk01–08.png` | 돌 마법사 · 두 발을 번갈아 디디는 걷기 8장 | `GroundedUnitPoseController.walkFrames`에서 지면 이동 0.96칸마다 반복 |
+| `RockMageCast01–04.png` | 돌 마법사 · 지팡이 발사와 복귀 4장 | 같은 전투 패킷의 `RockShot` 2발이 첫 자세의 청록 결정에서 나오며 본체 자세는 0.50초 동안 한 번 재생 |
 | `MagmaExplosion.png` | 마그마 폭발 · 기본/초기 갑각 자세 | `MagmaExplosion.prefab` 기본 SpriteRenderer |
 | `MagmaExplosionStrike1.png`–`MagmaExplosionStrike4.png` | 마그마 폭발 · 균열 시작 → 개방 → 피크 → 냉각 | `SpriteFrameAnimator`, 0.1초 간격, 비반복 |
 | `RockGolem.png` | 이끼바위 골렘 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |

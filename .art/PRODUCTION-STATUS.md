@@ -179,6 +179,7 @@
 | `GrassGenerator.png` | `game-assets/grass-generator.webp` | 위와 같음 |
 | `RepairTotem.png` | `game-assets/repair-totem.webp` | 위와 같음 |
 | `RockMage.png` | `game-assets/rock-mage.webp` | 위와 같음 |
+| `RockMageWalk01–08.png`, `RockMageCast01–04.png` | 클라이언트 이슈 #642 | 234×256 RGBA, PPU 200, 하단 중앙 피벗. 두 발 보행 8장과 지팡이 발사·복귀 4장. |
 | `ShockTrap.png` | `game-assets/shock-trap.webp` | 위와 같음 |
 | `StormStag.png` | `game-assets/storm-stag.webp` | 위와 같음 |
 | `ThunderBirdSwarm.png` | `game-assets/thunder-bird-swarm.webp` | 위와 같음 |
