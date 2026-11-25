@@ -144,6 +144,7 @@
 | `SeedSpiritSwarm.png` | 클라이언트 PR (이슈 #694) | 256x224 RGBA. 세계수 풀 정령, 씨앗 몸통에 잎과 꽃 |
 | `ThunderSpirit.png` | 클라이언트 PR (이슈 #694) | 256x226 RGBA. 세계수 전기 정령, 금색 팔레트, 눈 오른쪽 +25% |
 | `VineSpirit.png` | 클라이언트 PR (이슈 #694) | 180x256 RGBA. 세계수 풀 정령, 덩굴 꼬투리 |
+| `VineSpiritWalk01–08.png`, `VineSpiritRelease01–04.png` | 클라이언트 PR (이슈 #628) | 180×256 RGBA, PPU 200, 하단 중앙 피벗. 이동 거리로 밑동 여덟 자세를 반복하고, 개별 공격 이벤트로 씨앗 발사와 복귀 네 자세를 재생한다. |
 | `WindSpirit.png` | 클라이언트 PR (이슈 #694) | 206x256 RGBA. 세계수 바람 정령, 회청록 팔레트, 눈 오른쪽 +22% |
 | `ZapMouse.png` | 클라이언트 PR (이슈 #694) | 256x162 RGBA. 세계수 전기 정령, 금색 가시 등, 눈 오른쪽 +19% |
 | `StormRider.png` | 클라이언트 PR (이슈 #694) | 256x221 RGBA. 구름 소환수와 탑승 기사를 같은 기법으로 그렸다 |
