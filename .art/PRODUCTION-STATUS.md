@@ -144,6 +144,7 @@
 | `BubbleSpiritHover01–06.png`, `BubbleSpiritRelease01–04.png` | 클라이언트 PR (이슈 #630) | 250×256 RGBA, PPU 200, 하단 중앙 피벗. 물결과 뒤 물방울의 대기 6장과 거품 발사·복귀 4장. |
 | `SeedSpiritSwarm.png` | 클라이언트 PR (이슈 #694) | 256x224 RGBA. 세계수 풀 정령, 씨앗 몸통에 잎과 꽃 |
 | `ThunderSpirit.png` | 클라이언트 PR (이슈 #694) | 256x226 RGBA. 세계수 전기 정령, 금색 팔레트, 눈 오른쪽 +25% |
+| `ThunderSpiritHover01–06.png`, `ThunderSpiritRelease01–04.png` | 클라이언트 PR (이슈 #632) | 256×226 RGBA, PPU 200, 하단 중앙 피벗. 금빛 윗부분과 꼬리 대기 6장 및 지상 발사·복귀 4장. |
 | `VineSpirit.png` | 클라이언트 PR (이슈 #694) | 180x256 RGBA. 세계수 풀 정령, 덩굴 꼬투리 |
 | `VineSpiritWalk01–08.png`, `VineSpiritRelease01–04.png` | 클라이언트 PR (이슈 #628) | 180×256 RGBA, PPU 200, 하단 중앙 피벗. 이동 거리로 밑동 여덟 자세를 반복하고, 개별 공격 이벤트로 씨앗 발사와 복귀 네 자세를 재생한다. |
 | `WindSpirit.png` | 클라이언트 PR (이슈 #694) | 206x256 RGBA. 세계수 바람 정령, 회청록 팔레트, 눈 오른쪽 +22% |
