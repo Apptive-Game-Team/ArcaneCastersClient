@@ -12,10 +12,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: WaterShot
       objectReference: {fileID: 0}
-    - target: {fileID: 2555408739639926963, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 30bfbc0134cc544d7820b1699953b844, type: 3}
     - target: {fileID: 4511551496717632115, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -59,9 +55,42 @@ PrefabInstance:
     - target: {fileID: 7077577480859934061, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 30bfbc0134cc544d7820b1699953b844, type: 3}
+      objectReference: {fileID: 21300000, guid: 185a6c1336214ee1bd5991aead203bff, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 468314681180972983, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8320597000000000602}
   m_SourcePrefab: {fileID: 100100000, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+--- !u!1 &8320597000000000601 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 468314681180972983, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+  m_PrefabInstance: {fileID: 3310432348342748720}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8320597000000000600 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7077577480859934061, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+  m_PrefabInstance: {fileID: 3310432348342748720}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8320597000000000602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8320597000000000601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 8320597000000000600}
+  frames:
+  - {fileID: 21300000, guid: 185a6c1336214ee1bd5991aead203bff, type: 3}
+  - {fileID: 21300000, guid: e8ae34dfbdc4426eb1cd5bf028faaeff, type: 3}
+  - {fileID: 21300000, guid: 8f473ddb26e64c32adad762b3c805dad, type: 3}
+  - {fileID: 21300000, guid: 694449f80cdc41328ec941c3d3cdcc6b, type: 3}
+  frameInterval: 0.1
+  loop: 1

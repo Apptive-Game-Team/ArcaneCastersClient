@@ -3721,6 +3721,127 @@ namespace WordOnline.Tests
             }
         }
 
+        [UnityTest]
+        public IEnumerator WaterShotShowsEveryPoseDuringBubbleGeneratorFlight() =>
+            CheckWaterShotFlight("bubble_generator", "support", 1.40f, .125f);
+
+        [UnityTest]
+        public IEnumerator WaterShotShowsEveryPoseDuringWaterSlimeFlight() =>
+            CheckWaterShotFlight("water_slime_swarm", "ground", 2.25f, .5f);
+
+        private IEnumerator CheckWaterShotFlight(string magic, string scenarioId, float launch, float duration)
+        {
+            Create();
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == scenarioId)));
+            var world = (Component)Field("world");
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WaterShotCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            Transform FirstWaterShot() => world.transform.Find("PresentationContent").Cast<Transform>()
+                .FirstOrDefault(child => child.name == "WaterShot(Clone)");
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(launch - .023f);
+                Assert.That(FirstWaterShot(), Is.Null);
+                yield return PlayUntil(launch + .012f);
+                Transform shot = FirstWaterShot();
+                Assert.That(shot, Is.Not.Null);
+                var source = Resources.Load<Sprite>("Game/shoot/water_shoot");
+                var renderer = shot.GetComponentInChildren<SpriteRenderer>();
+                Assert.That(renderer.sprite.name, Is.EqualTo("WaterShotFlight01"));
+                Assert.That(renderer.sprite.rect.size, Is.EqualTo(source.rect.size));
+                Assert.That(renderer.sprite.pivot, Is.EqualTo(source.pivot));
+                Assert.That(renderer.sprite.pixelsPerUnit, Is.EqualTo(source.pixelsPerUnit));
+                Vector3 initialPosition = shot.position;
+                Vector3 lastPosition = initialPosition;
+                var poses = new System.Collections.Generic.List<string>();
+                while (shot != null && (float)Field("elapsed") < launch + duration + .08f)
+                {
+                    string pose = renderer.sprite.name;
+                    if (poses.LastOrDefault() != pose)
+                    {
+                        poses.Add(pose);
+                        if (capture) SaveViewport(directory, $"{magic}-{pose}", true);
+                    }
+                    lastPosition = shot.position;
+                    yield return null;
+                }
+                CollectionAssert.AreEqual(Enumerable.Range(1, 4).Select(i => $"WaterShotFlight{i:00}"), poses);
+                Assert.That(Vector3.Distance(initialPosition, lastPosition), Is.GreaterThan(.04f));
+                Assert.That(shot == null, Is.True);
+                Assert.That((float)Field("elapsed"), Is.InRange(launch + duration - .02f, launch + duration + .05f));
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CastWaterShotRepeatsFlightPosesAndKeepsItsRecordedImpact()
+        {
+            Create();
+            const string magic = "water_shot";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "impact")));
+            var world = (Component)Field("world");
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WaterShotCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.622f);
+                var shot = Target(4);
+                Assert.That(shot, Is.Not.Null);
+                var renderer = ServedObjectRenderer(shot);
+                var phaseOrder = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 1.122f)
+                {
+                    string pose = renderer.sprite.name;
+                    if (phaseOrder.LastOrDefault() != pose)
+                    {
+                        phaseOrder.Add(pose);
+                        if (capture && phaseOrder.Count <= 4) SaveViewport(directory, $"cast-{pose}", true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 4).Select(i => $"WaterShotFlight{i:00}").Append("WaterShotFlight01");
+                CollectionAssert.AreEqual(expected, phaseOrder.Take(5));
+
+                var first = Target(2);
+                var second = Target(3);
+                Assert.That(CurrentHp(first), Is.EqualTo(1000));
+                Assert.That(CurrentHp(second), Is.EqualTo(1000));
+                Assert.That(world.transform.InverseTransformPoint(shot.transform.position).x, Is.InRange(5.6f, 6.1f));
+                if (capture) SaveViewport(directory, "cast-before-hit", true);
+
+                yield return PlayUntil(1.174f);
+                Assert.That(CurrentHp(first), Is.EqualTo(900));
+                Assert.That(CurrentHp(second), Is.EqualTo(900));
+                Assert.That(first.GetType().GetMethod("HasEffect").Invoke(first, new object[] { "Wet" }), Is.True);
+                Assert.That(Target(4), Is.SameAs(shot));
+                Assert.That(shot.GetType().GetProperty("IsDespawning", Private).GetValue(shot), Is.True);
+                if (capture) SaveViewport(directory, "cast-hit", true);
+
+                yield return PlayUntil(1.244f);
+                Assert.That(Target(4), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
         private static float TimeToLive(Component subject)
         {
             var gauges = (IList)subject.GetType().GetField("gauges").GetValue(subject);
