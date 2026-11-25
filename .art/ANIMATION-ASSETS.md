@@ -9,9 +9,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 |---|---|---|
 | `ElectricSpearman.png`, `ElectricSpearmanWalk01.png`–`ElectricSpearmanWalk08.png` | 전기 창병 · 대기와 양발 보행 | 지면 이동 1.12칸마다 여덟 장을 재생한다. 기준 속도 1.82칸/초에서 한 주기는 약 0.62초 |
 | `ElectricSpearmanAttacking.png`, `ElectricSpearmanRecover01.png`–`ElectricSpearmanRecover03.png` | 전기 창병 · 찌르기와 창 회수 | 같은 서버 틱의 `HitEvent`에서 표적을 보고 `Attack`에서 첫 장을 표시한다. 네 장을 0.06초씩 재생한다 |
-| `ArcaneInfantry.png` | 비전 보병 · 기본 준비 자세 | `InfantryPoseController` 정지 상태 |
-| `ArcaneInfantryAttacking.png` | 비전 보병 · 마력 칼날 타격 | 공격 이벤트에서 0.16초 우선 표시 |
-| `ArcaneInfantryWalkLeft.png`, `ArcaneInfantryWalkRight.png` | 비전 보병 · 두 발걸음 | 이동 이벤트가 이어질 때 0.16초마다 교대, 지지하는 발 기준 |
+| `ArcaneInfantry.png`, `ArcaneInfantryWalkLeft.png`, `ArcaneInfantryWalkRight.png`, `ArcaneInfantryWalk02–04.png`, `ArcaneInfantryWalk06–08.png` | 비전 보병 · 대기와 양발 보행 | `GroundedUnitPoseController`에서 지면 이동 1.12칸마다 여덟 자세를 재생한다. 기존 양발 자세를 각각 01·05로 사용한다 |
+| `ArcaneInfantryAttacking.png`, `ArcaneInfantryRecover01–03.png` | 비전 보병 · 마력 칼날 타격과 회수 | 서버의 공격과 같은 틱에 첫 자세를 표시하고 0.24초간 표적을 바라본다 |
 | `PveCorruptedWindSpiritHover01.png`–`PveCorruptedWindSpiritHover04.png`, `PveCorruptedWindSpiritGlide01.png`–`PveCorruptedWindSpiritGlide04.png` | 타락한 바람 정령 · 떠 있기와 활공 | 서버 위치로 수평 이동을 판정한다. 정지 1.20초와 활공 1.04초 주기 |
 | `PveCorruptedWindSpiritDescent01.png`–`PveCorruptedWindSpiritDescent04.png` | 타락한 바람 정령 · 몸을 숙이며 하강 | 연속 위치 갱신에서 고도가 내려갈 때 각 하강 높이에 맞는 자세를 고른다. 제거가 시작되면 마지막 자세를 유지한다 |
 | `VineSpiritWalk01.png`–`VineSpiritWalk08.png` | 덩굴 정령 · 밑동을 번갈아 딛는 이동 | 이동 0.6칸마다 여덟 자세를 반복한다. 0.5칸/초에서 1.2초 |

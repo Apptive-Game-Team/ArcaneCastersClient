@@ -14,80 +14,110 @@ namespace WordOnline.Tests
         [UnityTest]
         public IEnumerator InfantryWalkAndAttackHaveOneSpriteOwnerAndRestoreTheCurrentPose()
         {
-            GameObject prefab = Resources.Load<GameObject>("Prefabs/ArcaneInfantry");
-            MonoBehaviour[] components = prefab.GetComponentsInChildren<MonoBehaviour>(true);
-            Assert.IsFalse(components.Any(c => c != null &&
-                (c.GetType().Name == "HoppingMotionController" || c.GetType().Name == "AttackSpriteSwapController")));
-            MonoBehaviour authored = components.Single(c => c != null && c.GetType().Name == "InfantryPoseController");
-            Type ownerType = AppDomain.CurrentDomain.GetAssemblies()
-                .Select(a => a.GetType("GameScene.ServedObjectComponent.ServedObject")).First(t => t != null);
-            GameObject instance = new GameObject("infantry-pose-test");
+            var root = new GameObject("Infantry pose lifecycle test");
+            Type config = Runtime("GameScene.GameConfig");
+            MethodInfo setTickRate = config.GetMethod("SetTickRate");
+            int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            setTickRate.Invoke(null, new object[] { 20 });
             try
             {
-                Component owner = instance.AddComponent(ownerType);
-                SpriteRenderer renderer = instance.AddComponent<SpriteRenderer>();
-                Component presenter = instance.AddComponent(authored.GetType());
-                Set(presenter, "targetRenderer", renderer);
-                foreach (string name in new[] { "idleSprite", "walkLeftSprite", "walkRightSprite", "attackSprite" })
+                Component world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                Component troop = Spawn(world, 37, "ArcaneInfantry", "LeftPlayer", 4f);
+                Spawn(world, 38, "ElectricSlime", "RightPlayer", 2f);
+                MonoBehaviour[] components = troop.GetComponentsInChildren<MonoBehaviour>(true);
+                Assert.IsFalse(components.Any(c => c != null &&
+                    (c.GetType().Name is "InfantryPoseController" or "HoppingMotionController" or "AttackSpriteSwapController")));
+                MonoBehaviour presenter = components.Single(c => c.GetType().Name == "GroundedUnitPoseController");
+                var renderer = (SpriteRenderer)Get(presenter, "targetRenderer");
+                var attack = (Sprite[])Get(presenter, "attackFrames");
+                Sprite idle = renderer.sprite;
+                Assert.AreEqual("ArcaneInfantry", idle.name);
+                MethodInfo update = troop.GetType().GetMethod("UpdateObject");
+                var updateType = Runtime("GameScene.Dto.UpdatedObjectDto");
+                object updateDto = Activator.CreateInstance(updateType);
+                FieldInfo position = updateType.GetField("position");
+                FieldInfo status = updateType.GetField("status");
+                for (int i = 0; i < 16; i++)
                 {
-                    Assert.NotNull(Get(authored, name), name);
-                    Set(presenter, name, Get(authored, name));
+                    position.SetValue(updateDto, new Vector3(4f + i * .055f, 0f, 5f));
+                    update.Invoke(troop, new[] { updateDto });
+                    for (int render = 0; render < 6; render++) yield return null;
                 }
-                presenter.GetType().GetMethod("Bind").Invoke(presenter, new object[] { owner });
-                Action<string> raise = name => ((Action)ownerType.GetField(name,
-                    BindingFlags.Instance | BindingFlags.NonPublic).GetValue(owner))?.Invoke();
-                Action refresh = () => presenter.GetType().GetMethod("ApplyPose",
-                    BindingFlags.Instance | BindingFlags.NonPublic).Invoke(presenter, new object[] { Time.time });
+                Assert.IsFalse(renderer.flipX);
+                Assert.AreEqual(1, Get(presenter, "confirmedServerDirection"));
 
-                yield return null;
-                Assert.AreSame(Get(authored, "idleSprite"), renderer.sprite);
-                renderer.flipX = true;
-                raise("OnMoved");
-                Assert.AreSame(Get(authored, "walkLeftSprite"), renderer.sprite);
-                bool sawSecondStep = false;
-                for (int i = 0; i < 5; i++)
+                Type hitType = Runtime("GameScene.Dto.Event.HitEvent");
+                object hit = Activator.CreateInstance(hitType);
+                hitType.GetField("actorId").SetValue(hit, 37);
+                hitType.GetField("targetId").SetValue(hit, 38);
+                Type eventType = typeof(System.Collections.Generic.List<>)
+                    .MakeGenericType(Runtime("GameScene.Dto.Event.GameEvent"));
+                var events = (IList)Activator.CreateInstance(eventType);
+                events.Add(hit);
+                MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+                apply.Invoke(null, new object[] { null, events, world });
+                Assert.IsFalse(attack.Contains(renderer.sprite));
+
+                int notices = 0;
+                troop.GetType().GetEvent("OnAttack").AddEventHandler(troop, new Action(() => notices++));
+                Type objects = Runtime("GameScene.Dto.ObjectsInfo");
+                object envelope = Activator.CreateInstance(objects);
+                Array updates = Array.CreateInstance(updateType, 1);
+                updateType.GetField("id").SetValue(updateDto, 37);
+                status.SetValue(updateDto, "Attack");
+                updates.SetValue(updateDto, 0);
+                objects.GetField("update").SetValue(envelope, updates);
+                apply.Invoke(null, new[] { envelope, events, world });
+                Assert.AreEqual(1, notices);
+                Assert.AreSame(attack[0], renderer.sprite);
+                var seen = new System.Collections.Generic.List<Sprite>();
+                for (int frame = 0; frame < 42; frame++)
                 {
-                    yield return new WaitForSeconds(0.05f);
-                    raise("OnMoved");
-                    sawSecondStep |= renderer.sprite == (Sprite)Get(authored, "walkRightSprite");
+                    Assert.IsTrue(renderer.flipX);
+                    if (attack.Contains(renderer.sprite) && renderer.sprite != seen.LastOrDefault())
+                        seen.Add(renderer.sprite);
+                    yield return null;
                 }
-                Assert.IsTrue(sawSecondStep, "연속 이동 중 두 번째 발걸음이 표시되어야 한다.");
-                // 연속 이동 이벤트가 이전 보행 위상을 덮어쓰지 않는지 확인한다.
-                float started = Time.time - 0.17f;
-                Set(presenter, "movementStarted", started);
-                for (int i = 0; i < 5; i++) raise("OnMoved");
-                Assert.AreEqual(started, Get(presenter, "movementStarted"));
-                Assert.AreSame(Get(authored, "walkRightSprite"), renderer.sprite);
-                raise("OnAttack");
-                raise("OnMoved");
-                Assert.AreSame(Get(authored, "attackSprite"), renderer.sprite);
-                Set(presenter, "attackUntil", float.NegativeInfinity);
-                refresh();
-                Assert.AreSame(Get(authored, "walkRightSprite"), renderer.sprite);
-                raise("OnAttack");
-                Set(presenter, "movementUntil", float.NegativeInfinity);
-                Set(presenter, "attackUntil", float.NegativeInfinity);
-                refresh();
+                CollectionAssert.AreEqual(attack, seen);
+                Assert.AreSame(idle, renderer.sprite);
+
+                apply.Invoke(null, new[] { envelope, events, world });
+                Assert.AreSame(attack[0], renderer.sprite);
+                troop.gameObject.SetActive(false);
+                Assert.AreSame(idle, renderer.sprite);
+                update.Invoke(troop, new[] { updateDto });
+                troop.gameObject.SetActive(true);
                 yield return null;
-                Assert.AreSame(Get(authored, "idleSprite"), renderer.sprite);
-                raise("OnAttack");
-                instance.SetActive(false);
-                yield return null;
-                Assert.AreSame(Get(authored, "idleSprite"), renderer.sprite);
-                raise("OnMoved");
-                raise("OnAttack");
-                instance.SetActive(true);
-                refresh();
-                yield return null;
-                Assert.AreSame(Get(authored, "idleSprite"), renderer.sprite);
+                Assert.AreSame(idle, renderer.sprite);
                 Assert.IsTrue(renderer.flipX);
             }
-            finally { Object.DestroyImmediate(instance); }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+                setTickRate.Invoke(null, new object[] { previousTickRate });
+                Object.Destroy(root);
+            }
+            yield return null;
         }
+
+        private static Component Spawn(Component world, int id, string name, string master, float x)
+        {
+            Type data = Runtime("GameScene.Dto.CreatedObjectDto");
+            object dto = Activator.CreateInstance(data);
+            data.GetField("id").SetValue(dto, id);
+            data.GetField("type").SetValue(dto, name);
+            data.GetField("master").SetValue(dto, master);
+            data.GetField("position").SetValue(dto, new Vector3(x, 0f, 5f));
+            return (Component)Runtime("GameScene.Object.ObjectSpawner").GetMethod("SpawnShared")
+                .Invoke(null, new[] { dto, world, false });
+        }
+
+        private static Type Runtime(string name) => AppDomain.CurrentDomain.GetAssemblies()
+            .Select(assembly => assembly.GetType(name)).First(type => type != null);
 
         private static object Get(object target, string field) => target.GetType()
             .GetField(field, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(target);
-        private static void Set(object target, string field, object value) => target.GetType()
-            .GetField(field, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(target, value);
     }
 }
