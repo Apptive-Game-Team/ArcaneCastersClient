@@ -91,5 +91,6 @@ MonoBehaviour:
   walkCycleDistance: 1.12
   attackDuration: 0.24
   attackOnHit: 0
+  lockFacingOnStatusAttack: 1
   maximumGroundSpeed: 1.82
   walkingHeightTolerance: 0.08

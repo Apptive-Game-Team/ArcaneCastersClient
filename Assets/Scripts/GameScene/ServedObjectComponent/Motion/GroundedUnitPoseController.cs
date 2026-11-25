@@ -15,6 +15,7 @@ namespace GameScene.ServedObjectComponent.Motion
         [SerializeField] private float attackDuration = 0.2f;
         [SerializeField, Min(0f)] private float spawnDuration = 0.28f;
         [SerializeField] private bool attackOnHit;
+        [SerializeField] private bool lockFacingOnStatusAttack;
         [SerializeField] private float maximumGroundSpeed;
         [SerializeField, Min(0f)] private float walkingHeightTolerance;
 
@@ -95,7 +96,12 @@ namespace GameScene.ServedObjectComponent.Motion
         {
             if (CanPlayAttack(attackFrames))
             {
-                StartAttack(attackFrames, attackOnHit);
+                if (lockFacingOnStatusAttack)
+                {
+                    // 보행이 기억한 방향은 명중 후 받은 새 이동으로 다시 확인한다.
+                    precedingServerDirection = confirmedServerDirection = 0;
+                }
+                StartAttack(attackFrames, attackOnHit || lockFacingOnStatusAttack);
             }
         }
 

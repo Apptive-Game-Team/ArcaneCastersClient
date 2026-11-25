@@ -138,6 +138,65 @@ namespace WordOnline.Tests
                 secondsPerAttackPose: .06f, walkSize: new Vector2(128, 102));
 
         [UnityTest]
+        public IEnumerator ElectricSpearmanKeepsOppositeHitFacingThroughRecovery()
+        {
+            var root = new GameObject("ElectricSpearman opposite hit test");
+            Type config = Runtime("GameScene.GameConfig");
+            MethodInfo setTickRate = config.GetMethod("SetTickRate");
+            int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
+            int previousRenderRate = Time.captureFramerate;
+            setTickRate.Invoke(null, new object[] { 20 });
+            Time.captureFramerate = RenderRate;
+            try
+            {
+                var world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                var find = world.GetType().GetMethod("FindById");
+                ApplyObjects(world, @"{""create"":[
+                    {""id"":91,""type"":""ElectricSpearman"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":5}},
+                    {""id"":92,""type"":""ElectricSlime"",""master"":""RightPlayer"",""position"":{""x"":2,""z"":5}}]}");
+                var actor = (Component)find.Invoke(world, new object[] { 91 });
+                SpriteRenderer body = Body(actor);
+                object pose = actor.GetComponent("GroundedUnitPoseController");
+                var attack = (Sprite[])pose.GetType().GetField("attackFrames", Private).GetValue(pose);
+                IEnumerator MoveRight(float first, int ticks)
+                {
+                    for (int i = 0; i < ticks; i++)
+                    {
+                        float x = first + i * .07f;
+                        ApplyObjects(world, FormattableString.Invariant($"{{\"update\":[{{\"id\":91,\"position\":{{\"x\":{x},\"z\":5}}}}]}}"));
+                        for (int step = 0; step < RenderRate / 20; step++) yield return null;
+                    }
+                }
+
+                yield return MoveRight(4f, 16);
+                Assert.That(body.flipX, Is.False);
+                Assert.That((int)pose.GetType().GetField("confirmedServerDirection", Private).GetValue(pose), Is.EqualTo(1));
+                ApplyObjects(world, @"{""update"":[{""id"":91,""position"":{""x"":5.05,""z"":5},""status"":""Attack""}]}",
+                    @"[{""type"":""hit"",""actorId"":91,""targetId"":92}]");
+                Assert.That(body.sprite, Is.SameAs(attack[0]));
+                var seen = new List<Sprite>();
+                for (int i = 0; i < 40; i++)
+                {
+                    Assert.That(body.flipX, Is.True);
+                    if (attack.Contains(body.sprite) && body.sprite != seen.LastOrDefault())
+                        seen.Add(body.sprite);
+                    yield return null;
+                }
+                CollectionAssert.AreEqual(attack, seen);
+                Assert.That(body.sprite.name, Is.EqualTo("ElectricSpearman"));
+                yield return MoveRight(5.12f, 4);
+                Assert.That(body.flipX, Is.False);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+                setTickRate.Invoke(null, new object[] { previousTickRate });
+                Object.Destroy(root);
+            }
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator RockMageTwinsShareOneMuzzlePerMageAndPerPacket()
         {
             var root = new GameObject("RockMage packet test");
