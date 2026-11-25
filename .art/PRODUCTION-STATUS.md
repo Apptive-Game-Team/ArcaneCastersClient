@@ -35,6 +35,7 @@
 | `EvilEnt.png` | 웹사이트 PR #29 `game-assets/evil-ent-idle.webp` | 사악한 나무 골렘 기본 자세 |
 | `EvilEnt2.png` | 웹사이트 PR #29 `game-assets/evil-ent-attack.webp` | 팔을 뻗은 공격 자세 |
 | `FireChildSpirit.png` | `concept-art/fire-child-spirit.webp` | 하급 악마 방향 적용 |
+| `FireChildSpiritHover01–06.png`, `FireChildSpiritRelease01–04.png` | 클라이언트 PR (이슈 #634) | 228×256 RGBA, PPU 200, 하단 중앙 피벗. 날개 판과 꼬리의 대기 6장 및 불꽃 발사·복귀 4장. |
 | `FireLordSpirit.png` | `concept-art/fire-lord-spirit.webp` | 지옥불 군단 지휘관으로 교체 완료 |
 | `FireSpirit.png` | `concept-art/fire-spirit.webp` | 하급 뿔 악마 방향 적용 |
 | `FireTadpole.png` | `concept-art/fire-tadpole.webp` | 차원 유랑종 화산편 방향 적용 |

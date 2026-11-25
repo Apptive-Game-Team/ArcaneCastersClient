@@ -392,6 +392,15 @@ PPU·pivot·앵커 좌표를 같이 출력한다.
 
 `TidalWarheadFlight01–06`과 `GroundTidalWarheadFlight01–06`은 동일한 여섯 자세다. 앞끝을 맞추고 꼬리와 가까운·먼 지느러미가 차례로 휘게 그렸다. 둘 다 개체가 표시될 때 0.11초 간격으로 반복한다. 대응 자세는 눈 안쪽의 RGB 값만 다르다.
 
+## 군단장의 불꽃 정령 프레임
+
+| 파일 | 표시 동작 | 연결 |
+| --- | --- | --- |
+| `FireChildSpiritHover01–06.png` | 날개 판과 꼬리를 접었다 펴는 공중 대기 | `AerialUnitPoseController.hoverFrames` |
+| `FireChildSpiritRelease01–04.png` | 앞쪽 건틀릿의 불꽃 발사와 복귀 | `AerialUnitPoseController.releaseFrames` |
+
+228×256 RGBA, PPU 200, 하단 중앙 피벗이다. 대기는 장당 0.17초씩 1.02초 주기로 반복한다. 발사는 소환된 정령의 개별 공격 이벤트에 맞춰 장당 0.08초씩 재생한다. 불꽃 투사체는 기존 `FireShot`을 사용한다.
+
 ## 번개 정령 프레임
 
 | 파일 | 표시 동작 | 연결 |
