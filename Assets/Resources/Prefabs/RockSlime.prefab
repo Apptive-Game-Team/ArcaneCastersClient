@@ -23,7 +23,7 @@ PrefabInstance:
     - target: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: eb6d15dd1370140ec9c21546e2dda468, type: 3}
+      objectReference: {fileID: 21300000, guid: 11869dba864d4cd39fdc3a0cfa80aab8, type: 3}
     - target: {fileID: 6928872084569727094, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -39,6 +39,10 @@ PrefabInstance:
     - target: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_Name
       value: RockSlime
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8841690536847902715, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_LocalPosition.x
@@ -80,17 +84,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+    - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1149612685012007023}
+      addedObject: {fileID: 8320591000000000592}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
---- !u!4 &1665176156411629687 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6456819394278174577, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+--- !u!212 &8320591000000000591 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
   m_PrefabInstance: {fileID: 5656767301476695814}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2764239544520746562 stripped
@@ -98,7 +104,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
   m_PrefabInstance: {fileID: 5656767301476695814}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1149612685012007023
+--- !u!114 &8320591000000000592
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,7 +113,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 2764239544520746562}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42101c1db2194fc0a1a4f2ad54b57413, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 1665176156411629687}
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8320591000000000591}
+  walkFrames:
+  - {fileID: 21300000, guid: 684d64ea55f04cb0b45334ef5ed51523, type: 3}
+  - {fileID: 21300000, guid: b1269b39db7f4042a8338264e8a9c94c, type: 3}
+  - {fileID: 21300000, guid: b8112333f2c843a2a67110d373e1a8b4, type: 3}
+  - {fileID: 21300000, guid: e569d62992ef4503ae11f7db8ec37772, type: 3}
+  - {fileID: 21300000, guid: ef74a8bac42f4a3988ac8db51c5bb7a2, type: 3}
+  - {fileID: 21300000, guid: 87948ff4f26f4df196d9e4c22e020b38, type: 3}
+  - {fileID: 21300000, guid: 44ddacd7d6834b37b0dbe30ba0c9a659, type: 3}
+  - {fileID: 21300000, guid: 8f77333bc0ed47419bb73d48c7fddb6b, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 8d21ee6c4bf147bfab9196e62dd2b182, type: 3}
+  - {fileID: 21300000, guid: 1607d723a885410ca017695b5916baf0, type: 3}
+  - {fileID: 21300000, guid: c4e8795aea41403f90765cc238405ba2, type: 3}
+  - {fileID: 21300000, guid: 631e127d54ce4d35b28b1fee56b4244a, type: 3}
+  projectileAttackFrames: []
+  projectileMuzzle: {x: 0, y: 0}
+  walkCycleDistance: 0.96
+  attackDuration: 0.32
+  attackOnHit: 1
+  maximumGroundSpeed: 2.8
+  walkingHeightTolerance: 0.03
