@@ -3840,6 +3840,147 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator ChainLightningCyclesItsTrailAndKeepsBothRecordedHits()
+        {
+            Create();
+            Assert.That(Configure("chain_lightning"), Is.True);
+            var scenarios = (JArray)Recording("chain_lightning")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "multiple")));
+            var world = (Component)Field("world");
+            Sprite original = Resources.Load<Sprite>("Game/sprites/ChainLightning");
+            Vector3 Position(Component obj) => world.transform.InverseTransformPoint(obj.transform.position);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.575f);
+                Assert.That(Target(4), Is.Null);
+                yield return PlayUntil(.622f);
+                Component shot = Target(4);
+                Assert.That(shot, Is.Not.Null);
+                Assert.That(Vector3.Distance(Position(shot), new Vector3(2f, 0f, 5f)), Is.LessThan(.08f));
+                SpriteRenderer body = ServedObjectRenderer(shot);
+                Assert.That(body.sprite.rect, Is.EqualTo(original.rect));
+                Assert.That(body.sprite.pivot, Is.EqualTo(original.pivot));
+                Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+
+                var spawner = shot.GetComponent(Runtime("GameScene.ServedObjectComponent.OnAttack.AfterImageSpawner"));
+                Assert.That(spawner, Is.Not.Null);
+                var poolField = spawner.GetType().GetField("poolRoot", Private);
+                var poses = new System.Collections.Generic.List<string>();
+                SpriteRenderer firstTrail = null;
+                Sprite trailSprite = null;
+                IEnumerator ObserveThrough(float moment)
+                {
+                    while ((float)Field("elapsed") < moment)
+                    {
+                        string pose = body.sprite.name;
+                        if (poses.LastOrDefault() != pose) poses.Add(pose);
+                        if (firstTrail == null && poolField.GetValue(spawner) is Transform pool)
+                        {
+                            firstTrail = pool.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault();
+                            if (firstTrail != null) trailSprite = firstTrail.sprite;
+                        }
+                        yield return null;
+                    }
+                }
+
+                Component first = Target(2);
+                Component second = Target(3);
+                yield return ObserveThrough(1.122f);
+                Assert.That(CurrentHp(first), Is.EqualTo(10000));
+                Assert.That(CurrentHp(second), Is.EqualTo(10000));
+                Assert.That(firstTrail, Is.Not.Null);
+                Assert.That(firstTrail.sprite, Is.SameAs(trailSprite));
+                Assert.That(firstTrail.sprite, Is.Not.SameAs(body.sprite));
+                var trailPool = (Transform)poolField.GetValue(spawner);
+                var trailPoses = trailPool.GetComponentsInChildren<SpriteRenderer>()
+                    .Select(r => r.sprite.name).Distinct().ToArray();
+                Assert.That(trailPoses.Length, Is.GreaterThanOrEqualTo(2));
+                Assert.That(trailPoses.All(name => name.StartsWith("ChainLightningFlight", StringComparison.Ordinal)), Is.True);
+                Assert.That(firstTrail.sortingOrder, Is.EqualTo(body.sortingOrder - 1));
+
+                yield return ObserveThrough(1.174f);
+                Assert.That(Target(4), Is.SameAs(shot));
+                Assert.That(CurrentHp(first), Is.EqualTo(9900));
+                Assert.That(CurrentHp(second), Is.EqualTo(10000));
+                yield return ObserveThrough(1.302f);
+                CollectionAssert.AreEqual(Enumerable.Range(1, 6).Select(i => $"ChainLightningFlight{i:00}")
+                    .Append("ChainLightningFlight01"), poses);
+                Assert.That(Position(shot).x, Is.GreaterThan(5f));
+
+                yield return PlayUntil(1.425f);
+                Assert.That(CurrentHp(second), Is.EqualTo(10000));
+                yield return PlayUntil(1.474f);
+                Assert.That(CurrentHp(second), Is.EqualTo(9950));
+                Assert.That(shot.GetType().GetProperty("IsDespawning", Private).GetValue(shot), Is.True);
+                yield return PlayUntil(1.56f);
+                Assert.That(Target(4), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CloudDragonChainLightningStartsEachAirShotIndependently()
+        {
+            Create();
+            Assert.That(Configure("cloud_dragon"), Is.True);
+            var scenarios = (JArray)Recording("cloud_dragon")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "air")));
+            var world = (Component)Field("world");
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(1.575f);
+                Assert.That(Target(6), Is.Null);
+                yield return PlayUntil(1.622f);
+                Component first = Target(6);
+                Assert.That(first, Is.Not.Null);
+                Vector3 launch = world.transform.InverseTransformPoint(first.transform.position);
+                Assert.That(Vector3.Distance(launch, new Vector3(4f, 3f, 5f)), Is.LessThan(.1f));
+                Assert.That(ServedObjectRenderer(first).sprite.name, Is.EqualTo("ChainLightningFlight01"));
+
+                yield return PlayUntil(2.024f);
+                Assert.That(CurrentHp(Target(4)), Is.EqualTo(9800));
+                Assert.That(CurrentHp(Target(2)), Is.EqualTo(10000));
+                yield return PlayUntil(2.374f);
+                Assert.That(CurrentHp(Target(2)), Is.EqualTo(9950));
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(10000));
+
+                yield return PlayUntil(2.65f);
+                Component second = Target(7);
+                Assert.That(Target(6), Is.SameAs(first));
+                Assert.That(second, Is.Not.Null);
+                Assert.That(ServedObjectRenderer(first).sprite.name, Is.EqualTo("ChainLightningFlight04"));
+                Assert.That(ServedObjectRenderer(second).sprite.name, Is.EqualTo("ChainLightningFlight01"));
+                yield return PlayUntil(2.724f);
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(9975));
+                Assert.That(first.GetType().GetProperty("IsDespawning", Private).GetValue(first), Is.True);
+                yield return PlayUntil(2.842f);
+                Assert.That(Target(6), Is.Null);
+                Assert.That(Target(7), Is.SameAs(second));
+                Assert.That(ServedObjectRenderer(second).sprite.name, Is.EqualTo("ChainLightningFlight03"));
+
+                yield return PlayUntil(3.724f);
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(9950));
+                Assert.That(second.GetType().GetProperty("IsDespawning", Private).GetValue(second), Is.True);
+                yield return PlayUntil(3.82f);
+                Assert.That(Target(7), Is.Null);
+                Assert.That(Target(8), Is.Not.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator EarthCallAwakensTheRecordedSmallRemnant() =>
             CheckEarthCallAwakening("small", "RockRemnant", "MiniRock", "MiniRockPunch01");
 
