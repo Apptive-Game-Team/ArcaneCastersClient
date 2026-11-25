@@ -16,6 +16,7 @@ namespace GameScene.Object
         private const string ShockOverloadPrefabPath = "Prefabs/ShockOverload";
         private const float ShockOverloadSecondaryScale = 0.6f;
         private const string SeaSerpentBeamType = "SeaSerpentHydroPump";
+        private const string FireSpiritSprayType = "SprayedFlame";
         private const float BeamSourcePositionTolerance = 0.001f;
 
         public void Spawn(ProjectileDto dto)
@@ -74,7 +75,22 @@ namespace GameScene.Object
             {
                 projectile.Init(dto);
             }
+
+            if (HasFireSpiritSpraySource(dto))
+            {
+                ServedObject source = PresentationWorld.Find(dto.sourceId.Value, world);
+                if (source != null && source.PrefabType == "FireSpirit")
+                {
+                    Vector3 direction = ProjectileUtil.GetPosition(dto.end, world) -
+                                        ProjectileUtil.GetPosition(dto.start, world);
+                    source.GetComponent<GroundedUnitPoseController>()?.PlayProjectilePose(source.transform.position + direction);
+                }
+            }
         }
+
+        private static bool HasFireSpiritSpraySource(ProjectileDto dto) =>
+            dto.type == FireSpiritSprayType && dto.sourceId is > 0 &&
+            dto.start is PositionProjectileTarget && dto.end is PositionProjectileTarget;
 
         internal static GroundedUnitPoseController FindReferencedLauncher(ProjectileDto dto, PresentationWorld world)
         {
@@ -114,6 +130,7 @@ namespace GameScene.Object
             {
                 // 이번 틱의 공격과 위치를 반영한 뒤 포구와 입에서 발사한다.
                 if (projectile.type == SeaSerpentBeamType && projectile.start is PositionProjectileTarget ||
+                    HasFireSpiritSpraySource(projectile) ||
                     FindReferencedLauncher(projectile, world) != null ||
                     IsSnapshotWaterSlimeShot(projectile, snapshotObjects))
                 {

@@ -102,6 +102,18 @@ namespace GameScene.ServedObjectComponent.Motion
         internal bool TryLaunchProjectile(Vector3 destination, out Vector3 start)
         {
             start = default;
+            if (!PlayProjectilePose(destination))
+            {
+                return false;
+            }
+
+            float x = impactFlip ? -projectileMuzzle.x : projectileMuzzle.x;
+            start = resolvedRenderer.transform.TransformPoint(new Vector3(x, projectileMuzzle.y, 0f));
+            return true;
+        }
+
+        internal bool PlayProjectilePose(Vector3 destination)
+        {
             Sprite[] frames = projectileAttackFrames is { Length: > 0 } ? projectileAttackFrames : attackFrames;
             if (!CanPlayAttack(frames))
             {
@@ -111,8 +123,6 @@ namespace GameScene.ServedObjectComponent.Motion
             Owner.FaceTowards(destination);
             precedingServerDirection = confirmedServerDirection = 0;
             StartAttack(frames, true);
-            float x = impactFlip ? -projectileMuzzle.x : projectileMuzzle.x;
-            start = resolvedRenderer.transform.TransformPoint(new Vector3(x, projectileMuzzle.y, 0f));
             return true;
         }
 
