@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3632793050788502734}
   - component: {fileID: 6294209296427915767}
-  - component: {fileID: 8429849414117516277}
   - component: {fileID: 5512554885556831495}
   - component: {fileID: 4227765710803359785}
+  - component: {fileID: 8320619000000000603}
   m_Layer: 0
   m_Name: TornadoStrike
   m_TagString: Untagged
@@ -87,19 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8429849414117516277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4491772784460150989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9bc8796b9d56d4780b036a2d1528bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 3632793050788502734}
 --- !u!114 &5512554885556831495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,3 +125,27 @@ MonoBehaviour:
   startScaleMultiplier: 0.15
   duration: 0.28
   ease: 27
+--- !u!114 &8320619000000000603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4491772784460150989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 6294209296427915767}
+  frames:
+  - {fileID: 21300000, guid: b0935c2cba5956db9e50776854779b50, type: 3}
+  - {fileID: 21300000, guid: 6a513c8c824d52eeae4d2a5c48ac6a0f, type: 3}
+  - {fileID: 21300000, guid: 5fd9b6771236536ca1e614863428f454, type: 3}
+  - {fileID: 21300000, guid: 6a928c50cdb3512d9617c7a237f5ada2, type: 3}
+  - {fileID: 21300000, guid: 579d845590ed561bb4099bbe3abf3976, type: 3}
+  - {fileID: 21300000, guid: 20a3b240d598585690c651f710ecd67c, type: 3}
+  - {fileID: 21300000, guid: 4cc3d272f4d55c75b07fd7fbb4dfc1e9, type: 3}
+  - {fileID: 21300000, guid: 8f38dae1c9115a8bba47a1debe180c52, type: 3}
+  frameInterval: 0.12
+  loop: 1
