@@ -37,6 +37,7 @@
 | `FireChildSpirit.png` | `concept-art/fire-child-spirit.webp` | 하급 악마 방향 적용 |
 | `FireChildSpiritHover01–06.png`, `FireChildSpiritRelease01–04.png` | 클라이언트 PR (이슈 #634) | 228×256 RGBA, PPU 200, 하단 중앙 피벗. 날개 판과 꼬리의 대기 6장 및 불꽃 발사·복귀 4장. |
 | `FireLordSpirit.png` | `concept-art/fire-lord-spirit.webp` | 지옥불 군단 지휘관으로 교체 완료 |
+| `FireLordSpiritHover01–06.png`, `FireLordSpiritApproach01–06.png` | 클라이언트 PR (이슈 #636) | 256×162 RGBA, PPU 100, 하단 중앙 피벗. 외투와 갑각의 대기 6장, 수평 위치 갱신에 맞춘 접근 6장. |
 | `FireSpirit.png` | `concept-art/fire-spirit.webp` | 하급 뿔 악마 방향 적용 |
 | `FireTadpole.png` | `concept-art/fire-tadpole.webp` | 차원 유랑종 화산편 방향 적용 |
 | `RockGolem.png` | `concept-art/rock-golem.webp` | 이끼바위 골렘 기본 자세 |

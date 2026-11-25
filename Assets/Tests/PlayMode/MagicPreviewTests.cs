@@ -4067,13 +4067,182 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator FireLordSpiritHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
+            CheckAerialHoverLoop("FireLordSpirit", new Vector2(256f, 162f), 100f);
+
+        [UnityTest]
+        public IEnumerator FireLordSpiritApproachesOnlyOnContinuedHorizontalPackets()
+        {
+            Create();
+            var config = Runtime("GameScene.GameConfig");
+            MethodInfo setTickRate = config.GetMethod("SetTickRate");
+            int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
+            const int renderRate = 120;
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = renderRate;
+            try
+            {
+                foreach (int rate in new[] { 20, 60 })
+                {
+                    setTickRate.Invoke(null, new object[] { rate });
+                    yield return CheckFireLordApproachAtTickRate(rate, renderRate);
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+                setTickRate.Invoke(null, new object[] { previousTickRate });
+            }
+        }
+
+        private IEnumerator CheckFireLordApproachAtTickRate(int tickRate, int renderRate)
+        {
+            Component world = CreateWorld();
+            world.transform.localScale = Vector3.one * .4f;
+            int direction = tickRate == 20 ? 1 : -1;
+            string master = tickRate == 20 ? "RightPlayer" : "LeftPlayer";
+            var createdType = Runtime("GameScene.Dto.CreatedObjectDto");
+            object spawn = Activator.CreateInstance(createdType);
+            createdType.GetField("id").SetValue(spawn, 42);
+            createdType.GetField("type").SetValue(spawn, "FireLordSpirit");
+            createdType.GetField("master").SetValue(spawn, master);
+            Vector3 serverPosition = new Vector3(4f, 3f, 5f);
+            createdType.GetField("position").SetValue(spawn, serverPosition);
+            var actor = (Component)Runtime("GameScene.Object.ObjectSpawner").GetMethod("SpawnShared")
+                .Invoke(null, new[] { spawn, world, false });
+            SpriteRenderer body = AerialPoseRenderer(actor);
+            var presenter = (Behaviour)actor.GetComponent("AerialUnitPoseController");
+            Assert.That(body.flipX, Is.EqualTo(direction > 0), $"{tickRate}Hz");
+
+            Type updatedType = Runtime("GameScene.Dto.UpdatedObjectDto");
+            object update = Activator.CreateInstance(updatedType);
+            updatedType.GetField("status").SetValue(update, "Idle");
+            FieldInfo positionField = updatedType.GetField("position");
+            MethodInfo updateObject = actor.GetType().GetMethod("UpdateObject");
+            int rendersPerTick = renderRate / tickRate;
+            float step = direction * .45f / tickRate;
+            Vector3 localPosition = body.transform.localPosition;
+            Quaternion localRotation = body.transform.localRotation;
+            Vector3 localScale = body.transform.localScale;
+
+            IEnumerator SendPacket(float dx = 0f, float dy = 0f)
+            {
+                serverPosition.x += dx;
+                serverPosition.y += dy;
+                positionField.SetValue(update, serverPosition);
+                updateObject.Invoke(actor, new[] { update });
+                for (int frame = 0; frame < rendersPerTick; frame++)
+                {
+                    yield return null;
+                }
+            }
+
+            yield return SendPacket();
+            yield return SendPacket(.004709f * direction);
+            Assert.That(body.sprite.name, Does.StartWith("FireLordSpiritHover"));
+            yield return SendPacket(dy: .05f);
+            yield return SendPacket(dy: .05f);
+            Assert.That(body.sprite.name, Does.StartWith("FireLordSpiritHover"));
+
+            var poses = new System.Collections.Generic.List<string>();
+            for (int tick = 0; tick < Mathf.CeilToInt(tickRate * 1.23f); tick++)
+            {
+                yield return SendPacket(step);
+                string pose = body.sprite.name;
+                if (pose.StartsWith("FireLordSpiritApproach", StringComparison.Ordinal) &&
+                    (poses.Count == 0 || poses[poses.Count - 1] != pose))
+                {
+                    poses.Add(pose);
+                }
+            }
+
+            CollectionAssert.AreEqual(Enumerable.Range(1, 6).Select(i => $"FireLordSpiritApproach{i:00}")
+                .Append("FireLordSpiritApproach01"), poses.Take(7), $"{tickRate}Hz");
+            Assert.That(body.flipX, Is.EqualTo(direction < 0), $"{tickRate}Hz");
+            Assert.That(body.transform.localPosition, Is.EqualTo(localPosition));
+            Assert.That(Quaternion.Angle(body.transform.localRotation, localRotation), Is.LessThan(.1f));
+            Assert.That(body.transform.localScale, Is.EqualTo(localScale));
+
+            yield return SendPacket();
+            yield return new WaitForSeconds(.112f);
+            Assert.That(body.sprite.name, Is.EqualTo("FireLordSpiritHover01"));
+            yield return SendPacket(step);
+            yield return SendPacket(step);
+            Assert.That(body.sprite.name, Is.EqualTo("FireLordSpiritApproach01"));
+
+            yield return SendPacket(1.3f * direction);
+            Assert.That(body.sprite.name, Is.EqualTo("FireLordSpiritHover01"));
+            yield return SendPacket(step);
+            Assert.That(body.sprite.name, Is.EqualTo("FireLordSpiritHover01"));
+            yield return SendPacket(step);
+            Assert.That(body.sprite.name, Is.EqualTo("FireLordSpiritApproach01"));
+
+            presenter.enabled = false;
+            yield return SendPacket(step);
+            yield return SendPacket(step);
+            yield return SendPacket();
+            Assert.That(body.sprite.name, Is.EqualTo("FireLordSpirit"));
+            presenter.enabled = true;
+            yield return SendPacket();
+            Assert.That(body.sprite.name, Is.EqualTo("FireLordSpiritHover01"));
+            yield return SendPacket(step);
+            Assert.That(body.sprite.name, Is.EqualTo("FireLordSpiritHover01"));
+            UnityEngine.Object.Destroy(world.gameObject);
+        }
+
+        [UnityTest]
+        public IEnumerator FireLordSpiritKeepsItsHoverDuringRecordedSummons()
+        {
+            Create();
+            const string magic = "fire_lord_spirit";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                foreach (string name in new[] { "ground", "air" })
+                {
+                    Scenario(scenarios.IndexOf(scenarios.Single(item => (string)item["id"] == name)));
+                    yield return PlayUntil(5.575f);
+                    SpriteRenderer lord = AerialPoseRenderer(Target(3));
+                    Assert.That(Target(4), Is.Null, name);
+                    Assert.That(lord.sprite.name, Does.StartWith("FireLordSpiritHover"), name);
+                    yield return PlayUntil(5.623f);
+                    Component child = Target(4);
+                    Assert.That(child.name, Does.StartWith("FireChildSpirit"), name);
+
+                    while ((float)Field("elapsed") < 5.85f)
+                    {
+                        Assert.That(lord.sprite.name, Does.StartWith("FireLordSpiritHover"), name);
+                        yield return null;
+                    }
+
+                    yield return PlayUntil(6.573f);
+                    Assert.That(AerialPoseRenderer(child).sprite.name, Is.EqualTo("FireChildSpiritRelease01"), name);
+                    Assert.That(lord.sprite.name, Does.StartWith("FireLordSpiritHover"), name);
+                    Assert.That(FindProjectile("FireShot"), Is.Not.Null, name);
+                    yield return PlayUntil(10.575f);
+                    Assert.That(Target(5), Is.Null, name);
+                    yield return PlayUntil(10.623f);
+                    Assert.That(Target(5).name, Does.StartWith("FireChildSpirit"), name);
+                    Assert.That(lord.sprite.name, Does.StartWith("FireLordSpiritHover"), name);
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+
+        [UnityTest]
         public IEnumerator FireChildSpiritRisesAndReleasesOnBothRecordedTargets()
         {
             Create();
             const string magic = "fire_lord_spirit";
             Assert.That(Configure(magic), Is.True);
             var scenarios = (JArray)Recording(magic)["scenarios"];
-            Sprite lordSprite = Resources.Load<Sprite>("Game/sprites/FireLordSpirit");
             int previousRate = Time.captureFramerate;
             Time.captureFramerate = 120;
             try
@@ -4088,9 +4257,8 @@ namespace WordOnline.Tests
                     Assert.That(firstShot.targetId, Is.EqualTo(2), id);
 
                     yield return PlayUntil(5.574f);
-                    Component lord = Target(3);
-                    var lordBody = (SpriteRenderer)lord.GetType().GetField("_spriteRenderer", Private).GetValue(lord);
-                    Assert.That(lordBody.sprite, Is.SameAs(lordSprite), id);
+                    SpriteRenderer lordBody = AerialPoseRenderer(Target(3));
+                    Assert.That(lordBody.sprite.name, Does.StartWith("FireLordSpiritHover"), id);
                     Assert.That(Target(4), Is.Null, id);
                     yield return PlayUntil(5.618f);
                     Component world = (Component)Field("world");
@@ -4144,7 +4312,7 @@ namespace WordOnline.Tests
                         Assert.That(FindProjectile("FireShot"), Is.SameAs(shot), id);
                         yield return PlayUntil(start + firstShot.duration + .055f);
                         Assert.That(FindProjectile("FireShot"), Is.Null, id);
-                        Assert.That(lordBody.sprite, Is.SameAs(lordSprite), id);
+                        Assert.That(lordBody.sprite.name, Does.StartWith("FireLordSpiritHover"), id);
                     }
                 }
             }
