@@ -27,7 +27,7 @@ namespace GameScene.Object
 
         public static void SpawnShared(ProjectileDto dto, PresentationWorld world = null)
         {
-            if (FindRockMageSource(dto, world) != null)
+            if (FindAuthoredRockShotSource(dto, world) != null)
             {
                 SpawnDeferred(new List<ProjectileDto> { dto }, world);
                 return;
@@ -103,7 +103,7 @@ namespace GameScene.Object
             dto.type == FireSpiritSprayType && dto.sourceId is > 0 &&
             dto.start is PositionProjectileTarget && dto.end is PositionProjectileTarget;
 
-        private static ServedObject FindRockMageSource(ProjectileDto dto, PresentationWorld world)
+        private static ServedObject FindAuthoredRockShotSource(ProjectileDto dto, PresentationWorld world)
         {
             if (dto?.type != RockShotType || dto.start is not ReferenceProjectileTarget sourceRef)
             {
@@ -111,8 +111,10 @@ namespace GameScene.Object
             }
 
             ServedObject source = PresentationWorld.Find(sourceRef.id, world);
-            return source != null && source.PrefabType == "RockMage" ? source : null;
+            return source != null && HasAuthoredRockShot(source.PrefabType) ? source : null;
         }
+
+        private static bool HasAuthoredRockShot(string prefab) => prefab is "RockMage" or "RockTurret";
 
         internal static GroundedUnitPoseController FindReferencedLauncher(ProjectileDto dto, PresentationWorld world)
         {
@@ -154,7 +156,7 @@ namespace GameScene.Object
                 if (projectile.type == SeaSerpentBeamType && projectile.start is PositionProjectileTarget ||
                     HasFireSpiritSpraySource(projectile) ||
                     FindReferencedLauncher(projectile, world) != null ||
-                    FindRockMageSource(projectile, world) != null ||
+                    FindAuthoredRockShotSource(projectile, world) != null ||
                     IsSnapshotAuthoredShot(projectile, snapshotObjects))
                 {
                     deferred ??= new List<ProjectileDto>();
@@ -171,15 +173,11 @@ namespace GameScene.Object
 
         private static bool IsSnapshotAuthoredShot(ProjectileDto projectile, SnapshotObjectDto[] snapshotObjects)
         {
-            string prefab = projectile.type switch
-            {
-                "WaterShot" => "WaterSlime",
-                RockShotType => "RockMage",
-                _ => null
-            };
-            return snapshotObjects != null && prefab != null &&
+            return snapshotObjects != null &&
                 projectile.start is ReferenceProjectileTarget reference &&
-                System.Array.Exists(snapshotObjects, source => source.id == reference.id && source.prefab == prefab);
+                (projectile.type is "WaterShot" or RockShotType) &&
+                System.Array.Exists(snapshotObjects, source => source.id == reference.id &&
+                    (projectile.type == RockShotType ? HasAuthoredRockShot(source.prefab) : source.prefab == "WaterSlime"));
         }
 
         internal static void SpawnDeferred(List<ProjectileDto> projectiles, PresentationWorld world = null,
@@ -194,16 +192,22 @@ namespace GameScene.Object
             for (int index = 0; index < projectiles.Count; index++)
             {
                 ProjectileDto projectile = projectiles[index];
-                ServedObject mage = FindRockMageSource(projectile, world);
-                if (mage != null)
+                ServedObject source = FindAuthoredRockShotSource(projectile, world);
+                if (source != null && source.PrefabType == "RockMage")
                 {
                     mageStarts ??= new Dictionary<int, Vector3?>();
-                    if (!mageStarts.TryGetValue(mage.id, out Vector3? muzzle))
+                    if (!mageStarts.TryGetValue(source.id, out Vector3? muzzle))
                     {
-                        muzzle = GetRockMageMuzzle(projectiles, index, mage, world, snapshotObjects);
-                        mageStarts.Add(mage.id, muzzle);
+                        muzzle = GetRockMageMuzzle(projectiles, index, source, world, snapshotObjects);
+                        mageStarts.Add(source.id, muzzle);
                     }
                     SpawnPresented(projectile, world, muzzle);
+                    continue;
+                }
+
+                if (source != null)
+                {
+                    SpawnPresented(projectile, world, GetRockTurretMuzzle(projectile, source, world, snapshotObjects));
                     continue;
                 }
 
@@ -214,6 +218,41 @@ namespace GameScene.Object
                     : (Vector3?)null;
                 SpawnPresented(projectile, world, mouth);
             }
+        }
+
+        private static Vector3? GetRockTurretMuzzle(ProjectileDto projectile, ServedObject source,
+            PresentationWorld world, SnapshotObjectDto[] snapshotObjects)
+        {
+            if (source.IsDespawning || !IsInSnapshot(source.id, snapshotObjects))
+            {
+                return null;
+            }
+
+            var launcher = source.GetComponent<GroundedUnitPoseController>();
+            if (launcher == null)
+            {
+                return null;
+            }
+
+            Vector3 destination;
+            switch (projectile.end)
+            {
+                case PositionProjectileTarget position:
+                    destination = ProjectileUtil.GetPosition(position, world);
+                    break;
+                case ReferenceProjectileTarget reference:
+                    ServedObject target = PresentationWorld.Find(reference.id, world);
+                    if (target == null || target.IsDespawning || !IsInSnapshot(reference.id, snapshotObjects))
+                    {
+                        return null;
+                    }
+                    destination = target.transform.position;
+                    break;
+                default:
+                    return null;
+            }
+
+            return launcher.TryLaunchProjectile(destination, out Vector3 muzzle) ? muzzle : (Vector3?)null;
         }
 
         private static Vector3? GetRockMageMuzzle(List<ProjectileDto> projectiles, int first, ServedObject mage,
