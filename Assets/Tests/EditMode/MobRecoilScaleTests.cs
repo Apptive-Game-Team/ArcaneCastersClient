@@ -44,20 +44,28 @@ namespace WordOnline.Tests
         }
 
         [Test]
-        public void RockGolemKeepsItsAuthoredBodyScaleAndAttackFrameHeight()
+        public void RockGolemKeepsItsAuthoredBodyScaleAcrossPunchAndRecovery()
         {
             GameObject prefab = Resources.Load<GameObject>("Prefabs/RockGolem");
             Assert.IsNotNull(prefab);
             Sprite idle = Resources.Load<Sprite>("Game/sprites/RockGolem");
-            Sprite attack = Resources.Load<Sprite>("Game/sprites/RockGolem2");
             SpriteRenderer body = prefab.GetComponentsInChildren<SpriteRenderer>(true)
                 .Single(renderer => renderer.sprite == idle);
             AssertScale(new Vector3(0.6f, 0.6f, 1f), body.transform.localScale);
-            Component swap = prefab.GetComponentsInChildren<Component>(true)
-                .Single(component => component != null && component.GetType().Name == "AttackSpriteSwapController");
-            Assert.AreEqual(attack, new SerializedObject(swap).FindProperty("swapSprite").objectReferenceValue);
-            Assert.AreEqual(idle.rect.height / idle.pixelsPerUnit,
-                attack.rect.height / attack.pixelsPerUnit, 0.05f);
+            Component poses = prefab.GetComponentsInChildren<Component>(true)
+                .Single(component => component != null && component.GetType().Name == "GroundedUnitPoseController");
+            SerializedProperty attack = new SerializedObject(poses).FindProperty("attackFrames");
+            string[] names = { "RockGolem2", "RockGolemRecover01", "RockGolemRecover02", "RockGolemRecover03" };
+            Assert.That(attack.arraySize, Is.EqualTo(names.Length));
+            for (int i = 0; i < names.Length; i++)
+            {
+                var frame = attack.GetArrayElementAtIndex(i).objectReferenceValue as Sprite;
+                Assert.IsNotNull(frame);
+                Assert.That(frame.name, Is.EqualTo(names[i]));
+                Assert.That(frame.pivot, Is.EqualTo(idle.pivot));
+                Assert.AreEqual(idle.rect.height / idle.pixelsPerUnit,
+                    frame.rect.height / frame.pixelsPerUnit, 0.05f);
+            }
         }
 
         private static void Seek(object sequence, float seconds)
