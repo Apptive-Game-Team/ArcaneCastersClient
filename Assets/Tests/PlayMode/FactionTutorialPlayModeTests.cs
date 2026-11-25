@@ -296,27 +296,58 @@ namespace WordOnline.Tests
         {
             yield return SetUpBattle();
             const int id = 98765441;
-            object Snapshot(float x) => new { id, prefab = "MiniRock", x, y = 0, z = 5, master = "LeftPlayer", status = "Idle",
+            const int targetId = 98765442;
+            Set(driver, "ready", Json("Data.TutorialReadyDto", JsonConvert.SerializeObject(new {
+                battleId = "tutorial-fixture", ownerId = Owner, faction = "NATURE", server = "http://localhost:7001"
+            })));
+            object Snapshot(float x) => new { id, prefab = "ElectricSpearman", x, y = 0, z = 5, master = "LeftPlayer", status = "Idle",
                 effects = new string[0], gauges = new object[0], gizmos = new object[0] };
-            object Frame(int number, int tick, float x, string status) => new { frame = number, tick,
-                objects = new { create = new object[0], projectile = new object[0], update = new[] {
-                    new { id, position = new { x, y = 0, z = 5 }, master = "LeftPlayer", status, effects = new string[0], gauges = new object[0] } } },
-                events = new object[0] };
+            object Hp(int value) => new { value, maxValue = 100, category = "HP" };
+            object TargetSnapshot(int hp) => new { id = targetId, prefab = "ElectricSlime", x = 1.5f, y = 0, z = 5,
+                master = "RightPlayer", status = "Idle", effects = new string[0], gauges = new[] { Hp(hp) }, gizmos = new object[0] };
+            object Frame(int number, int tick, float x, string status, bool hit, bool damage)
+            {
+                var updates = new List<object> {
+                    new { id, position = new { x, y = 0, z = 5 }, master = "LeftPlayer", status,
+                        effects = new string[0], gauges = new object[0] }
+                };
+                if (damage)
+                    updates.Add(new { id = targetId, master = "RightPlayer", status = "Damaged", gauges = new[] { Hp(23) } });
+                object[] events = hit ? new object[] { new { type = "hit", actorId = id, targetId } } : Array.Empty<object>();
+                return new { frame = number, tick, objects = new { create = Array.Empty<object>(), projectile = Array.Empty<object>(), update = updates }, events };
+            }
             void Receive(int last, int tick, string status, object[] frames, object[] snapshot) => ApplyJson(JsonConvert.SerializeObject(new {
-                battleId = "tutorial-fixture", ownerId = Owner, faction = "HELL", revision = 0, stage = "shot", status,
-                mana = 120, cards = new long[] { 1 }, remainingSeconds = 120, lastFrame = last, tick, tickRate = 20, frames, snapshot
+                battleId = "tutorial-fixture", ownerId = Owner, faction = "NATURE", revision = 0, stage = "formation", status,
+                mana = 120, cards = new long[] { 8 }, remainingSeconds = 120, lastFrame = last, tick, tickRate = 20, frames, snapshot
             }));
-            Receive(1, 0, "RUNNING", new object[0], new[] { Snapshot(2) });
+            Receive(1, 0, "RUNNING", Array.Empty<object>(), new[] { Snapshot(2), TargetSnapshot(100) });
             yield return null;
             var container = GetStatic("GameScene.Object.ObjectContainer", "Instance");
-            var served = (Component)container.GetType().GetMethod("FindById").Invoke(container, new object[] { id });
+            MethodInfo find = container.GetType().GetMethod("FindById");
+            var served = (Component)find.Invoke(container, new object[] { id });
+            var target = (Component)find.Invoke(container, new object[] { targetId });
             Assert.That(served, Is.Not.Null);
+            Assert.That(target, Is.Not.Null);
+            var spriteField = served.GetType().GetField("_spriteRenderer", BindingFlags.Instance | BindingFlags.NonPublic);
+            var renderer = (SpriteRenderer)spriteField.GetValue(served);
+            Sprite thrust = Resources.Load<Sprite>("Game/sprites/ElectricSpearmanAttacking");
             int attacks = 0;
-            served.GetType().GetEvent("OnAttack").AddEventHandler(served, new Action(() => attacks++));
-            var batch = new[] { Frame(2, 1, 2.2f, "Idle"), Frame(3, 2, 2.4f, "Attack"), Frame(4, 3, 2.6f, "Idle") };
-            Receive(4, 3, "RUNNING", batch, new[] { Snapshot(2.6f) });
+            int damageCount = 0;
+            bool thrustFacesTarget = false;
+            served.GetType().GetEvent("OnAttack").AddEventHandler(served, new Action(() => {
+                attacks++;
+                thrustFacesTarget = renderer.sprite == thrust && renderer.flipX;
+            }));
+            target.GetType().GetEvent("OnHpDecreased").AddEventHandler(target, new Action(() => damageCount++));
+            var batch = new[] {
+                Frame(2, 1, 2.2f, "Idle", hit: true, damage: false),
+                Frame(3, 2, 2.4f, "Attack", hit: true, damage: true),
+                Frame(4, 3, 2.6f, "Idle", hit: false, damage: false)
+            };
+            var finalSnapshot = new[] { Snapshot(2.6f), TargetSnapshot(23) };
+            Receive(4, 3, "RUNNING", batch, finalSnapshot);
             Assert.That(served.transform.position.x, Is.EqualTo(2).Within(.001), "수신만으로 최신 snapshot 위치로 튀면 안 된다.");
-            Receive(4, 3, "CLEARED", batch, new[] { Snapshot(2.6f) });
+            Receive(4, 3, "CLEARED", batch, finalSnapshot);
             object presented = driver.GetType().GetField("presentedState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(driver);
             Assert.That(presented.GetType().GetField("status").GetValue(presented), Is.EqualTo("RUNNING"));
             bool passedIntermediatePosition = false;
@@ -325,6 +356,7 @@ namespace WordOnline.Tests
             while (Time.realtimeSinceStartup < deadline)
             {
                 driver.GetType().GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(driver, null);
+                if (attacks == 0) Assert.That(renderer.sprite, Is.Not.SameAs(thrust));
                 if (served.transform.position.x > 2.01f && served.transform.position.x < 2.19f) passedIntermediatePosition = true;
                 presented = driver.GetType().GetField("presentedState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(driver);
                 cleared = (string)presented.GetType().GetField("status").GetValue(presented) == "CLEARED";
@@ -335,6 +367,8 @@ namespace WordOnline.Tests
             Assert.That(passedIntermediatePosition, Is.True, "실제 ServedObject가 첫 이동 구간의 중간 위치를 통과해야 한다.");
             Assert.That(served.transform.position.x, Is.EqualTo(2.6).Within(.01));
             Assert.That(attacks, Is.EqualTo(1), "batch 중복이나 full snapshot이 공격 표현을 다시 실행하면 안 된다.");
+            Assert.That(damageCount, Is.EqualTo(1));
+            Assert.That(thrustFacesTarget, Is.True);
             Apply(1, "meteor", "RUNNING", 2);
             driver.GetType().GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(driver, null);
             Assert.That(container.GetType().GetMethod("FindById").Invoke(container, new object[] { id }), Is.Null);

@@ -40,14 +40,21 @@ namespace WordOnline.Tests
             Assert.IsTrue(components.All(component => component != null));
             Assert.IsTrue(components.Any(component => component.GetType().Name == "ServedObject"));
             Assert.IsTrue(components.Any(component => component.GetType().Name == "ServedObjectGaugeBar"));
-            Component swap = components.Single(component => component.GetType().Name == "AttackSpriteSwapController");
+            Assert.IsFalse(components.Any(component => component.GetType().Name == "AttackSpriteSwapController"));
+            Assert.IsFalse(components.Any(component => component.GetType().Name == "HoppingMotionController"));
+            Component pose = components.Single(component => component.GetType().Name == "GroundedUnitPoseController");
             Sprite idle = Resources.Load<Sprite>("Game/sprites/ElectricSpearman");
             Sprite attack = Resources.Load<Sprite>("Game/sprites/ElectricSpearmanAttacking");
             Assert.IsNotNull(idle);
             Assert.IsNotNull(attack);
-            Assert.IsTrue(prefab.GetComponentsInChildren<SpriteRenderer>(true)
-                .Any(renderer => renderer.sprite == idle));
-            Assert.AreEqual(attack, new SerializedObject(swap).FindProperty("swapSprite").objectReferenceValue);
+            SpriteRenderer body = prefab.GetComponentsInChildren<SpriteRenderer>(true)
+                .Single(renderer => renderer.sprite == idle);
+            var serializedPose = new SerializedObject(pose);
+            Assert.AreEqual(body, serializedPose.FindProperty("targetRenderer").objectReferenceValue);
+            SerializedProperty attackFrames = serializedPose.FindProperty("attackFrames");
+            Assert.AreEqual(4, attackFrames.arraySize);
+            Assert.AreEqual(attack, attackFrames.GetArrayElementAtIndex(0).objectReferenceValue);
+            Assert.IsFalse(serializedPose.FindProperty("attackOnHit").boolValue);
             Assert.AreEqual(idle.rect.size, attack.rect.size);
             Assert.AreEqual(idle.pixelsPerUnit, attack.pixelsPerUnit);
             Assert.AreEqual(idle.pivot, attack.pivot);
