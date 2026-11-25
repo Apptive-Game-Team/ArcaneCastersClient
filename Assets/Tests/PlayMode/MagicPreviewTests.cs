@@ -2732,7 +2732,15 @@ namespace WordOnline.Tests
             Time.captureFramerate = 120;
             try
             {
+                yield return CheckCastElectricShotPoses(5, "overcharge");
+                yield return PlayUntil(1.17f);
+                foreach (int id in new[] { 2, 3 })
+                {
+                    Component bird = Target(id);
+                    Assert.That(bird.GetType().GetMethod("HasEffect").Invoke(bird, new object[] { "Overcharge" }), Is.True);
+                }
                 yield return PlayUntil(3.82f);
+                Assert.That(Target(5), Is.Null);
                 SpriteRenderer[] birds = Enumerable.Range(2, 3).Select(id => ThunderBirdBody(Target(id))).ToArray();
                 Assert.That(birds[0].sprite.name, Does.StartWith("ThunderBirdFlap"));
                 yield return PlayUntil(3.93f);
@@ -3733,8 +3741,31 @@ namespace WordOnline.Tests
         public IEnumerator FireShotShowsEveryPoseDuringFireLordFlight() =>
             CheckRecordedProjectileFlight("FireShot", "Game/sprites/FireShot", "fire_lord_spirit", "ground", 6.55f, .4f);
 
+        [UnityTest]
+        public IEnumerator ElectricTowerGroundChainShowsEveryPose() => CheckElectricTowerChain("ground");
+
+        [UnityTest]
+        public IEnumerator ElectricTowerAirChainShowsEveryPose() => CheckElectricTowerChain("air");
+
+        [UnityTest]
+        public IEnumerator ThunderSpiritElectricShotShowsEveryPose() =>
+            CheckRecordedProjectileFlight("ElectricShot", "Game/shoot/lightning_shoot", "thunder_spirit", "ground", 1.50f, .5f);
+
+        [UnityTest]
+        public IEnumerator ElectricAbsorbUsesTheElectricShotFlightPoses() =>
+            CheckRecordedProjectileFlight("ElectricShot", "Game/shoot/lightning_shoot", "thunder_bird_swarm", "death_energy", 2.25f, .35f);
+
+        private IEnumerator CheckElectricTowerChain(string scenario)
+        {
+            yield return CheckRecordedProjectileFlight("ElectricShot", "Game/shoot/lightning_shoot",
+                "electric_tower", scenario, 1.40f, .2f, expectedCount: 3);
+            CollectionAssert.AreEqual(new[] { 10000f, 10000f, 10000f }, Enumerable.Range(2, 3).Select(id => CurrentHp(Target(id))));
+            yield return PlayUntil(1.674f);
+            CollectionAssert.AreEqual(new[] { 9920f, 9920f, 9900f }, Enumerable.Range(2, 3).Select(id => CurrentHp(Target(id))));
+        }
+
         private IEnumerator CheckRecordedProjectileFlight(string projectileName, string sourceSprite, string magic,
-            string scenarioId, float launch, float duration)
+            string scenarioId, float launch, float duration, int expectedCount = 1)
         {
             Create();
             Assert.That(Configure(magic), Is.True);
@@ -3744,48 +3775,120 @@ namespace WordOnline.Tests
             string directory = System.IO.Path.Combine(Application.dataPath, "../Library", $"{projectileName}Captures");
             bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
             if (capture) System.IO.Directory.CreateDirectory(directory);
+            string capturePrefix = expectedCount > 1 ? $"{magic}-{scenarioId}" : magic;
 
-            Transform FirstProjectile() => world.transform.Find("PresentationContent").Cast<Transform>()
-                .FirstOrDefault(child => child.name == $"{projectileName}(Clone)");
+            System.Collections.Generic.IEnumerable<Transform> Projectiles() =>
+                world.transform.Find("PresentationContent").Cast<Transform>()
+                    .Where(child => child.name == $"{projectileName}(Clone)");
 
             int prior = Time.captureFramerate;
             Time.captureFramerate = 120;
             try
             {
                 yield return PlayUntil(launch - .023f);
-                Assert.That(FirstProjectile(), Is.Null);
+                Assert.That(Projectiles(), Is.Empty);
                 yield return PlayUntil(launch + .012f);
-                Transform shot = FirstProjectile();
-                Assert.That(shot, Is.Not.Null);
-                var source = Resources.Load<Sprite>(sourceSprite);
-                var renderer = shot.GetComponentInChildren<SpriteRenderer>();
-                Assert.That(renderer.sprite.name, Is.EqualTo($"{projectileName}Flight01"));
-                Assert.That(renderer.sprite.rect.size, Is.EqualTo(source.rect.size));
-                Assert.That(renderer.sprite.pivot, Is.EqualTo(source.pivot));
-                Assert.That(renderer.sprite.pixelsPerUnit, Is.EqualTo(source.pixelsPerUnit));
-                Vector3 initialPosition = shot.position;
-                Vector3 lastPosition = initialPosition;
-                var poses = new System.Collections.Generic.List<string>();
-                while (shot != null && (float)Field("elapsed") < launch + duration + .08f)
+                Transform[] shots = Projectiles().ToArray();
+                Assert.That(shots, Has.Length.EqualTo(expectedCount));
+                var sprite = Resources.Load<Sprite>(sourceSprite);
+                var renderers = shots.Select(shot => shot.GetComponentInChildren<SpriteRenderer>()).ToArray();
+                foreach (var renderer in renderers)
                 {
-                    string pose = renderer.sprite.name;
-                    if (poses.LastOrDefault() != pose)
+                    Assert.That(renderer.sprite.name, Is.EqualTo($"{projectileName}Flight01"));
+                    Assert.That(renderer.sprite.rect.size, Is.EqualTo(sprite.rect.size));
+                    Assert.That(renderer.sprite.pivot, Is.EqualTo(sprite.pivot));
+                    Assert.That(renderer.sprite.pixelsPerUnit, Is.EqualTo(sprite.pixelsPerUnit));
+                }
+                Vector3[] initialPositions = shots.Select(shot => shot.position).ToArray();
+                Vector3[] lastPositions = initialPositions.ToArray();
+                var poses = shots.Select(_ => new System.Collections.Generic.List<string>()).ToArray();
+                while (shots.Any(shot => shot != null) && (float)Field("elapsed") < launch + duration + .08f)
+                {
+                    for (int i = 0; i < shots.Length; i++)
                     {
-                        poses.Add(pose);
-                        if (capture) SaveViewport(directory, $"{magic}-{pose}", true);
+                        if (shots[i] == null) continue;
+                        string pose = renderers[i].sprite.name;
+                        if (poses[i].LastOrDefault() != pose)
+                        {
+                            poses[i].Add(pose);
+                            if (capture && i == 0) SaveViewport(directory, $"{capturePrefix}-{pose}", true);
+                        }
+                        lastPositions[i] = shots[i].position;
                     }
-                    lastPosition = shot.position;
                     yield return null;
                 }
-                CollectionAssert.AreEqual(Enumerable.Range(1, 4).Select(i => $"{projectileName}Flight{i:00}"), poses);
-                Assert.That(Vector3.Distance(initialPosition, lastPosition), Is.GreaterThan(.04f));
-                Assert.That(shot == null, Is.True);
+                var expected = Enumerable.Range(1, 4).Select(i => $"{projectileName}Flight{i:00}");
+                for (int i = 0; i < shots.Length; i++)
+                {
+                    CollectionAssert.AreEqual(expected, poses[i]);
+                    Assert.That(Vector3.Distance(initialPositions[i], lastPositions[i]), Is.GreaterThan(.04f));
+                }
+                Assert.That(shots.All(shot => shot == null), Is.True);
                 Assert.That((float)Field("elapsed"), Is.InRange(launch + duration - .02f, launch + duration + .05f));
             }
             finally
             {
                 Time.captureFramerate = prior;
             }
+        }
+
+        [UnityTest]
+        public IEnumerator CastElectricShotCyclesAndKeepsItsShockImpact()
+        {
+            Create();
+            Assert.That(Configure("lightning_shot"), Is.True);
+            SelectThunderBirdScenario("lightning_shot", "impact");
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return CheckCastElectricShotPoses(4, "impact");
+                Component shot = Target(4);
+                Component first = Target(2);
+                Component second = Target(3);
+                yield return PlayUntil(1.122f);
+                Assert.That(CurrentHp(first), Is.EqualTo(1000));
+                Assert.That(CurrentHp(second), Is.EqualTo(1000));
+                yield return PlayUntil(1.174f);
+                Assert.That(CurrentHp(first), Is.EqualTo(900));
+                Assert.That(CurrentHp(second), Is.EqualTo(900));
+                Assert.That(first.GetType().GetMethod("HasEffect").Invoke(first, new object[] { "Shock" }), Is.True);
+                Assert.That(shot.GetType().GetProperty("IsDespawning", Private).GetValue(shot), Is.True);
+                yield return PlayUntil(1.4f);
+                Assert.That(Target(4), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        private IEnumerator CheckCastElectricShotPoses(int id, string scenario)
+        {
+            yield return PlayUntil(.622f);
+            var shot = Target(id);
+            Assert.That(shot, Is.Not.Null);
+            var renderer = ServedObjectRenderer(shot);
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/ElectricShotCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            var poses = new System.Collections.Generic.List<string>();
+            Vector3 start = shot.transform.position;
+            while ((float)Field("elapsed") < 1.045f)
+            {
+                string pose = renderer.sprite.name;
+                if (poses.LastOrDefault() != pose)
+                {
+                    poses.Add(pose);
+                    if (capture && poses.Count <= 4) SaveViewport(directory, $"{scenario}-cast-{pose}", true);
+                }
+                yield return null;
+            }
+
+            var expected = Enumerable.Range(1, 4).Select(i => $"ElectricShotFlight{i:00}").Append("ElectricShotFlight01");
+            CollectionAssert.AreEqual(expected, poses);
+            Assert.That(Vector3.Distance(start, shot.transform.position), Is.GreaterThan(1f));
         }
 
         [UnityTest]

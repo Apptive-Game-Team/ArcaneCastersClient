@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 468314681180972983, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
       propertyPath: m_Name
-      value: ElectricShot
+      value: AbstractShot Variant 1
       objectReference: {fileID: 0}
     - target: {fileID: 4511551496717632115, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -54,10 +54,43 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7077577480859934061, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
       propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 990285f96735644a6badc25ce7aa0e4d, type: 3}
+      value:
+      objectReference: {fileID: 21300000, guid: 53a7f7ff3a335699afe61ca5ba0ef552, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 468314681180972983, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8320603000000000603}
   m_SourcePrefab: {fileID: 100100000, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+--- !u!1 &8320603000000000601 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 468314681180972983, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+  m_PrefabInstance: {fileID: 3310432348342748720}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8320603000000000602 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 7077577480859934061, guid: 7055b544b979e8d44ab238329e70ae5f, type: 3}
+  m_PrefabInstance: {fileID: 3310432348342748720}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8320603000000000603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8320603000000000601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 8320603000000000602}
+  frames:
+  - {fileID: 21300000, guid: 53a7f7ff3a335699afe61ca5ba0ef552, type: 3}
+  - {fileID: 21300000, guid: 02301b4a28af5131a6fc049760024618, type: 3}
+  - {fileID: 21300000, guid: 0215348f331d58a1bc4d39419944eefa, type: 3}
+  - {fileID: 21300000, guid: 8d3c00207c7951548ac134c4b0a353c8, type: 3}
+  frameInterval: 0.1
+  loop: 1
