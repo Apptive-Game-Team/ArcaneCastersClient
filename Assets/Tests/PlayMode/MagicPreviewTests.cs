@@ -4067,14 +4067,109 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
-        public IEnumerator CloudDragonHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot()
+        public IEnumerator BubbleSpiritReleasesBeforeTheThreeAirTargetsTakeSplashDamage()
+        {
+            Create();
+            const string magic = "bubble_spirit";
+            Assert.That(Configure(magic), Is.True);
+            var scenario = ((JArray)Recording(magic)["scenarios"]).Single(item => (string)item["id"] == "air");
+            var firstShot = FirstProjectile(scenario, "BubbleShot");
+            Assert.That(firstShot.start, Is.EqualTo(1.5f).Within(.001f));
+            Assert.That(firstShot.duration, Is.EqualTo(.3953f).Within(.001f));
+            Assert.That(firstShot.targetId, Is.EqualTo(2));
+
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(1.47f);
+                Component actor = Target(5);
+                SpriteRenderer body = ServedObjectRenderer(actor);
+                Vector3 position = body.transform.localPosition;
+                Quaternion rotation = body.transform.localRotation;
+                Vector3 scale = body.transform.localScale;
+                void AssertSteadyBody()
+                {
+                    Assert.That(body.transform.localPosition, Is.EqualTo(position));
+                    Assert.That(Quaternion.Angle(body.transform.localRotation, rotation), Is.LessThan(.1f));
+                    Assert.That(body.transform.localScale, Is.EqualTo(scale));
+                    Assert.That(body.flipX, Is.False);
+                }
+
+                void AssertTargetHealth(int hp)
+                {
+                    foreach (int id in new[] { 2, 3, 4 })
+                    {
+                        Assert.That(CurrentHp(Target(id)), Is.EqualTo(hp), $"공중 표적 {id}");
+                    }
+                }
+
+                Assert.That(body.sprite.name, Is.EqualTo("BubbleSpiritHover06"));
+                Assert.That(FindProjectile("BubbleShot"), Is.Null);
+                AssertTargetHealth(10000);
+
+                Transform bubble;
+                do
+                {
+                    yield return null;
+                    bubble = FindProjectile("BubbleShot");
+                } while (bubble == null && (float)Field("elapsed") < 1.545f);
+                Assert.That(bubble, Is.Not.Null);
+                Vector3 origin = actor.transform.position;
+                float flightDistance = Vector3.Distance(origin, Target(firstShot.targetId).transform.position);
+                float oneFrameOfFlight = flightDistance / (firstShot.duration * 120);
+                Assert.That(Vector3.Distance(bubble.position, origin), Is.LessThan(oneFrameOfFlight + .002f));
+                Assert.That(body.sprite.name, Is.EqualTo("BubbleSpiritRelease01"));
+                AssertSteadyBody();
+
+                for (int pose = 2; pose <= 4; pose++)
+                {
+                    yield return PlayUntil(firstShot.start + .025f + .08f * (pose - 1));
+                    Assert.That(body.sprite.name, Is.EqualTo($"BubbleSpiritRelease{pose:00}"));
+                    AssertSteadyBody();
+                }
+
+                yield return PlayUntil(1.872f);
+                Assert.That(body.sprite.name, Is.EqualTo("BubbleSpiritHover01"));
+                Assert.That(FindProjectile("BubbleShot"), Is.Not.Null);
+                AssertTargetHealth(10000);
+
+                yield return PlayUntil(1.923f);
+                Assert.That(FindProjectile("BubbleShot"), Is.Null);
+                AssertTargetHealth(9900);
+
+                yield return PlayUntil(2.323f);
+                Assert.That(FindProjectile("BubbleShot"), Is.Not.Null);
+                Assert.That(body.sprite.name, Is.EqualTo("BubbleSpiritRelease01"));
+                AssertSteadyBody();
+                yield return PlayUntil(2.674f);
+                AssertTargetHealth(9900);
+                yield return PlayUntil(2.723f);
+                AssertTargetHealth(9800);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+
+        [UnityTest]
+        public IEnumerator CloudDragonHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
+            CheckAerialHoverLoop("CloudDragon", new Vector2(256f, 182f), 116.363636f);
+
+        [UnityTest]
+        public IEnumerator BubbleSpiritHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
+            CheckAerialHoverLoop("BubbleSpirit", new Vector2(250f, 256f), 200f);
+
+        private IEnumerator CheckAerialHoverLoop(string prefabName, Vector2 spriteSize, float pixelsPerUnit)
         {
             Create();
             Component world = CreateWorld();
             MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize")
                 .MakeGenericMethod(Runtime("GameScene.Dto.ObjectsInfo"));
             MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
-            const string create = "{\"create\":[{\"id\":42,\"type\":\"CloudDragon\",\"master\":\"RightPlayer\"," +
+            string create = "{\"create\":[{\"id\":42,\"type\":\"" + prefabName + "\",\"master\":\"RightPlayer\"," +
                 "\"position\":{\"x\":4,\"y\":3,\"z\":5}}]}";
             int previousRate = Time.captureFramerate;
             Time.captureFramerate = 120;
@@ -4090,9 +4185,9 @@ namespace WordOnline.Tests
                 while (Time.time < until)
                 {
                     Assert.That(body.flipX, Is.True);
-                    Assert.That(body.sprite.rect.size, Is.EqualTo(new Vector2(256f, 182f)));
-                    Assert.That(body.sprite.pivot, Is.EqualTo(new Vector2(128f, 0f)));
-                    Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(116.363636f).Within(.001f));
+                    Assert.That(body.sprite.rect.size, Is.EqualTo(spriteSize));
+                    Assert.That(body.sprite.pivot, Is.EqualTo(new Vector2(spriteSize.x / 2, 0f)));
+                    Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(pixelsPerUnit).Within(.001f));
                     if (poses.Count == 0 || poses[poses.Count - 1] != body.sprite.name)
                     {
                         poses.Add(body.sprite.name);
@@ -4100,8 +4195,8 @@ namespace WordOnline.Tests
                     yield return null;
                 }
 
-                CollectionAssert.AreEqual(Enumerable.Range(1, 6).Select(i => $"CloudDragonHover{i:00}")
-                    .Append("CloudDragonHover01"), poses);
+                CollectionAssert.AreEqual(Enumerable.Range(1, 6).Select(i => $"{prefabName}Hover{i:00}")
+                    .Append(prefabName + "Hover01"), poses);
             }
             finally
             {

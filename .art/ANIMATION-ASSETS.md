@@ -392,13 +392,22 @@ PPU·pivot·앵커 좌표를 같이 출력한다.
 
 `TidalWarheadFlight01–06`과 `GroundTidalWarheadFlight01–06`은 동일한 여섯 자세다. 앞끝을 맞추고 꼬리와 가까운·먼 지느러미가 차례로 휘게 그렸다. 둘 다 개체가 표시될 때 0.11초 간격으로 반복한다. 대응 자세는 눈 안쪽의 RGB 값만 다르다.
 
+## 거품 정령 프레임
+
+| 파일 | 표시 동작 | 연결 |
+| --- | --- | --- |
+| `BubbleSpiritHover01–06.png` | 윗물결과 뒤 물방울이 접혔다 펴지는 공중 대기 | `AerialUnitPoseController.hoverFrames` |
+| `BubbleSpiritRelease01–04.png` | 앞부분으로 거품을 밀어내는 발사와 복귀 | `AerialUnitPoseController.releaseFrames` |
+
+250×256 RGBA, PPU 200, 하단 중앙 피벗이다. 대기는 0.17초 간격으로 1.02초 반복한다. 발사는 공격 이벤트에서 첫 자세를 표시하고 0.08초 간격으로 복귀한다. 공중 위치는 서버 위치를 따르고 거품은 기존 `BubbleShot`으로 표시한다.
+
 ## Cloud Dragon 프레임
 
 | 실제 파일 | 의미 | 프리팹 연결 |
 |---|---|---|
 | `CloudDragon.png` | 기본 그림 | `CloudDragon.prefab` 기본 SpriteRenderer |
-| `CloudDragonHover01–06.png` | 날개를 펴고 접는 공중 대기 | `CloudDragonPoseController.hoverFrames` |
-| `CloudDragonRelease01–04.png` | 턱 방출과 반동·회수 | `CloudDragonPoseController.releaseFrames` |
+| `CloudDragonHover01–06.png` | 날개를 펴고 접는 공중 대기 | `AerialUnitPoseController.hoverFrames` |
+| `CloudDragonRelease01–04.png` | 턱 방출과 반동·회수 | `AerialUnitPoseController.releaseFrames` |
 
 열 자세는 256×182 RGBA, PPU 116.363636, Bottom Center 피벗을 공유한다. 대기는 0.17초씩 반복하고 발사·회수는 0.08초씩 재생한다. 1.50초 물 발사 뒤 1.60초 연쇄 번개처럼 재생 도중 다음 Attack이 오면 해당 틱에 01을 표시한다. 발사 그림에서는 입과 날개가 움직이고, 몸 바깥의 물과 번개는 각각 `WaterShot`과 `ChainLightning`이 그린다. 기존 540×182 `CloudDragonAttacking.png`는 이전 물 분사 그림이다.
 
