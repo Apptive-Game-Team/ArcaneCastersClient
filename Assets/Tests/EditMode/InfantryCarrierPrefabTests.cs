@@ -55,6 +55,34 @@ namespace WordOnline.Tests
         }
 
         [Test]
+        public void CraterShellLoopsOnItsExistingRenderer()
+        {
+            GameObject shell = Resources.Load<GameObject>("Prefabs/CraterShell");
+            MonoBehaviour animation = shell.GetComponents<MonoBehaviour>()
+                .Single(component => component.GetType().Name == "SpriteFrameAnimator");
+            var renderer = (SpriteRenderer)Get(animation, "spriteRenderer");
+            Assert.AreSame(shell.GetComponentInChildren<SpriteRenderer>(true), renderer);
+            Assert.That((float)Get(animation, "frameInterval"), Is.EqualTo(.12f).Within(.001f));
+            Assert.IsTrue((bool)Get(animation, "loop"));
+
+            var frames = (Sprite[])Get(animation, "frames");
+            Assert.That(frames, Has.Length.EqualTo(6));
+            Assert.AreSame(renderer.sprite, frames[0]);
+            var original = Resources.Load<Sprite>("Game/sprites/FireworkShell");
+            for (int index = 0; index < frames.Length; index++)
+            {
+                Sprite frame = frames[index];
+                Assert.AreEqual($"CraterShellFlight{index + 1:00}", frame.name);
+                Assert.AreEqual(original.rect.size, frame.rect.size);
+                Assert.AreEqual(original.pixelsPerUnit, frame.pixelsPerUnit);
+                Assert.AreEqual(original.pivot, frame.pivot);
+            }
+
+            var firework = Resources.Load<GameObject>("Projectiles/FireworkShell");
+            Assert.That(firework.GetComponentsInChildren<SpriteRenderer>(true).Any(body => body.sprite == original));
+        }
+
+        [Test]
         public void NetworkStatusesDriveBoundCarrierIncludingReconnectAndDamageRecovery()
         {
             GameObject source = Resources.Load<GameObject>("Prefabs/CraterCarrier");
