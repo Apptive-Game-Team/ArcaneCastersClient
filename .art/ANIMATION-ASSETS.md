@@ -63,7 +63,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `RockTurret.png` | 인간제 투석 포탑 · 장전 자세 | `RockTurret.prefab` 기본 SpriteRenderer |
 | `RockTurretAttacking.png` | 인간제 투석 포탑 · 발사 직후 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
 | `WaterSlime.png` | 물 슬라임 · 한 개체 기본 자세 | `WaterSlime.prefab` 기본 SpriteRenderer |
-| `WaterSlimeAttackSpit.png` | 물 슬라임 · 물 뱉기 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.15초 표시 |
+| `WaterSlimeCrawl01.png`–`WaterSlimeCrawl08.png` | 물 슬라임 · 지면 이동 | 실제 이동 0.96칸마다 여덟 자세를 재생한다 |
+| `WaterSlimeSpit01.png`–`WaterSlimeSpit04.png` | 물 슬라임 · 물 뱉기와 복귀 | 네 자세를 0.08초씩 재생한다. 참조형 `WaterShot`이 시작되면 첫 자세와 방향을 맞춘다 |
 | `PveBrickGolem.png` | 벽돌 골렘 · 두 주먹을 땅에 댄 기본 자세 | `PveBrickGolem.prefab` 기본 SpriteRenderer |
 | `PveBrickGolem2.png` | 벽돌 골렘 · 한 팔을 높이 든 내려찍기 자세 | `BrickGolemPoseController`, 일반 공격 상태에서 0.1초 표시 |
 | `PveBrickGolemSweep01.png`–`PveBrickGolemSweep04.png` | 벽돌 골렘 · 휩쓸기와 복귀 | `BrickGolemSweepPose`가 가리키는 보스의 몸 자세. 서버의 0.4초 신호에서 0.1초씩 표시 |
@@ -129,9 +130,10 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 내보냈기 때문에, 지면 접점 픽셀이 사후 대조가 아니라 제작 방식으로 이미 동일하다.
 `TreeGolem2`는 기존 펀치 캔버스와 주먹의 최대 가로 위치를 유지했다. 기본 자세의 양발을 기준으로 펀치 그림을 정렬했다.
 
-`WaterSlime`과 `WaterSlimeAttackSpit`은 320x224, PPU 200, Bottom Center로
-일치한다. 두 프레임은 하나의 공유 소스 픽셀 배율과 하단 기준선을 사용하며,
-공격 프레임 오른쪽의 추가 폭은 물 투사체를 위한 투명 캔버스다.
+`WaterSlime` 대기와 새 이동·발사 프레임은 320×224, 200 PPU, 하단 중앙 피벗을
+공유한다. 기존 대기의 폭을 기준으로 몸통을 캔버스 왼쪽에 등록한다. 발사 그림의 입은
+좌상단에서 (169.5, 164.5)px이며 피벗 기준 월드 오프셋은 (0.0475, 0.2975)다.
+`WaterShot`은 렌더러에서 이 입 좌표를 좌우로 반전해 시작한다.
 
 ## 오라 의미
 

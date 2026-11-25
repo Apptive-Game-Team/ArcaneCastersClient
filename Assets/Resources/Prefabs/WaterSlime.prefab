@@ -40,6 +40,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WaterSlime
       objectReference: {fileID: 0}
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8841690536847902715, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -80,29 +84,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-      propertyPath: swapSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: e2d8f656d3a44bb19ff1fda64809f5f6, type: 3}
-    - target: {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-      propertyPath: duration
-      value: 0.15
-      objectReference: {fileID: 0}
     m_RemovedComponents:
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6674908770243404452}
+      addedObject: {fileID: 8320595000000000596}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+--- !u!212 &8320595000000000595 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+  m_PrefabInstance: {fileID: 7882458176579592918}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &412166404545543058 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
   m_PrefabInstance: {fileID: 7882458176579592918}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6674908770243404452
+--- !u!114 &8320595000000000596
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,12 +113,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 412166404545543058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42101c1db2194fc0a1a4f2ad54b57413, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 3818813844171247015}
---- !u!4 &3818813844171247015 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6456819394278174577, guid: 6028185801a9445fa9435ec49e794354, type: 3}
-  m_PrefabInstance: {fileID: 7882458176579592918}
-  m_PrefabAsset: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8320595000000000595}
+  walkFrames:
+  - {fileID: 21300000, guid: d384cb01b2b74b83854749edbf52afb4, type: 3}
+  - {fileID: 21300000, guid: 8422ea22fad54ef59e97392f6e5e40b6, type: 3}
+  - {fileID: 21300000, guid: cb9f3dfee94043d49c0b33ecd0d55f75, type: 3}
+  - {fileID: 21300000, guid: ad7541050c3745e0af548e9ba974efa3, type: 3}
+  - {fileID: 21300000, guid: 15832c16647d4b489c92044e741c337b, type: 3}
+  - {fileID: 21300000, guid: b71e1d92f9b44dd0bafa72c45a60946a, type: 3}
+  - {fileID: 21300000, guid: 72e6a5d349da4947ae534ce318863174, type: 3}
+  - {fileID: 21300000, guid: c9254b4e77094b45b324c93c9bcba1a2, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: fe2595e73196461c9a6dc015aa6099ae, type: 3}
+  - {fileID: 21300000, guid: 51353dedd48846629201656749ac7e6c, type: 3}
+  - {fileID: 21300000, guid: 5965689c60d74a4dbd38eee71f48bd78, type: 3}
+  - {fileID: 21300000, guid: bf0619b573b04869aeebc02c671b5f16, type: 3}
+  projectileAttackFrames: []
+  projectileMuzzle: {x: 0.0475, y: 0.2975}
+  walkCycleDistance: 0.96
+  attackDuration: 0.32
+  attackOnHit: 0
+  maximumGroundSpeed: 2.8
+  walkingHeightTolerance: 0.03

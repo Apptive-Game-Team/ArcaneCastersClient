@@ -109,6 +109,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(128, 65), idleSprite: "WindSlimeIdle");
 
         [UnityTest]
+        public IEnumerator WaterSlimeMovesAndRecoversFromSpittingAtBothTickRates() =>
+            CheckBothTickRates("WaterSlime", 8, "WaterSlimeSpit01", 4, .8f, .08f,
+                walkSize: new Vector2(320, 224));
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
