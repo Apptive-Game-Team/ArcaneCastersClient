@@ -65,8 +65,12 @@ namespace WordOnline.Tests
             Assert.That(body.transform.localScale.y, Is.EqualTo(0.6f).Within(0.001f));
             Assert.That(body.GetComponent<BoxCollider2D>().size.x * body.transform.localScale.x,
                 Is.EqualTo(0.8f).Within(0.001f));
-            Assert.IsTrue(prefab.GetComponentsInChildren<Component>(true)
-                .Any(component => component != null && component.GetType().Name == "AttackSpriteSwapController"));
+            Component[] components = prefab.GetComponentsInChildren<Component>(true);
+            Component poses = components.Single(component => component != null &&
+                component.GetType().Name == "GroundedUnitPoseController");
+            Assert.AreEqual(body, new SerializedObject(poses).FindProperty("targetRenderer").objectReferenceValue);
+            Assert.IsFalse(components.Any(component => component != null &&
+                component.GetType().Name == "AttackSpriteSwapController"));
         }
     }
 }
