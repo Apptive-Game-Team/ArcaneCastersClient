@@ -15,6 +15,8 @@ namespace GameScene.Object
         private const string ShockOverloadSecondaryType = "ShockOverloadSecondary";
         private const string ShockOverloadPrefabPath = "Prefabs/ShockOverload";
         private const float ShockOverloadSecondaryScale = 0.6f;
+        private const string SeaSerpentBeamType = "SeaSerpentHydroPump";
+        private const float BeamSourcePositionTolerance = 0.001f;
 
         public void Spawn(ProjectileDto dto)
         {
@@ -22,6 +24,11 @@ namespace GameScene.Object
         }
 
         public static void SpawnShared(ProjectileDto dto, PresentationWorld world = null)
+        {
+            SpawnPresented(dto, world, null);
+        }
+
+        private static void SpawnPresented(ProjectileDto dto, PresentationWorld world, Vector3? beamMouth)
         {
             WDebug.Log("ProjectileSpawner Spawn called for type: " + dto.type);
 
@@ -59,7 +66,14 @@ namespace GameScene.Object
             
             Destroy(projectileObject, dto.duration);
             
-            projectile.Init(dto);
+            if (beamMouth.HasValue && projectile is BeamProjectile beam)
+            {
+                beam.InitFromMouth(dto, beamMouth.Value);
+            }
+            else
+            {
+                projectile.Init(dto);
+            }
         }
 
         internal static GroundedUnitPoseController FindTowerbackLauncher(ProjectileDto dto, PresentationWorld world)
@@ -85,8 +99,9 @@ namespace GameScene.Object
             List<ProjectileDto> deferred = null;
             foreach (ProjectileDto projectile in projectiles)
             {
-                // 포탑등이는 이번 틱의 위치와 공격 상태를 적용한 뒤 포구와 발사 자세를 맞춘다.
-                if (FindTowerbackLauncher(projectile, world) != null)
+                // 이번 틱의 공격과 위치를 반영한 뒤 포구와 입에서 발사한다.
+                if (projectile.type == SeaSerpentBeamType && projectile.start is PositionProjectileTarget ||
+                    FindTowerbackLauncher(projectile, world) != null)
                 {
                     deferred ??= new List<ProjectileDto>();
                     deferred.Add(projectile);
@@ -100,7 +115,8 @@ namespace GameScene.Object
             return deferred;
         }
 
-        internal static void SpawnDeferred(List<ProjectileDto> projectiles, PresentationWorld world = null)
+        internal static void SpawnDeferred(List<ProjectileDto> projectiles, PresentationWorld world = null,
+            IEnumerable<UpdatedObjectDto> updates = null)
         {
             if (projectiles == null)
             {
@@ -109,8 +125,50 @@ namespace GameScene.Object
 
             foreach (ProjectileDto projectile in projectiles)
             {
-                SpawnShared(projectile, world);
+                var launcher = FindSeaSerpentLauncher(projectile, updates, world);
+                Vector3? mouth = launcher != null &&
+                    launcher.TryLaunchProjectile(ProjectileUtil.GetPosition(projectile.end, world), out Vector3 start)
+                    ? start
+                    : (Vector3?)null;
+                SpawnPresented(projectile, world, mouth);
             }
+        }
+
+        private static GroundedUnitPoseController FindSeaSerpentLauncher(ProjectileDto projectile,
+            IEnumerable<UpdatedObjectDto> updates, PresentationWorld world)
+        {
+            if (projectile.type != SeaSerpentBeamType || updates == null ||
+                !(projectile.start is PositionProjectileTarget origin))
+            {
+                return null;
+            }
+
+            ServedObject matched = null;
+            Vector3 groundOrigin = origin.ToVector3();
+            foreach (UpdatedObjectDto update in updates)
+            {
+                if (update.status != "Attack" ||
+                    Mathf.Abs(update.position.x - groundOrigin.x) > BeamSourcePositionTolerance ||
+                    Mathf.Abs(update.position.z - groundOrigin.z) > BeamSourcePositionTolerance)
+                {
+                    continue;
+                }
+
+                ServedObject source = PresentationWorld.Find(update.id, world);
+                if (source == null || source.PrefabType != "SeaSerpent")
+                {
+                    continue;
+                }
+
+                // 좌표만 담긴 투사체의 발사원을 하나로 식별할 수 있을 때만 입에서 그린다.
+                if (matched != null && matched != source)
+                {
+                    return null;
+                }
+                matched = source;
+            }
+
+            return matched != null ? matched.GetComponent<GroundedUnitPoseController>() : null;
         }
 
         private static void SpawnBoulderStrikeImpact(ProjectileDto dto, PresentationWorld world)

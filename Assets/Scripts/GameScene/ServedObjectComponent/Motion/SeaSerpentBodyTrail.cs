@@ -9,9 +9,7 @@ namespace GameScene.ServedObjectComponent.Motion
     /// Draws the sea serpent's body as a chain of segment sprites that follow the ground path the
     /// head walked, with a sine wave laid across them so the body slithers while standing still.
     /// <para>
-    /// The segments are not children of the head sprite. The head carries the idle hop, the attack
-    /// swing and <see cref="SpriteRenderer.flipX"/>, and a body parented under it would swing and
-    /// mirror along with it instead of trailing where the serpent actually walked.
+    /// 몸통은 머리와 별도로 방향을 정한다. 머리의 자세와 좌우 반전에 관계없이 지나간 경로를 따른다.
     /// </para>
     /// </summary>
     public class SeaSerpentBodyTrail : ServedObjectBehaviour

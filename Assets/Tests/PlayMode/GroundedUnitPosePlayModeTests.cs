@@ -36,11 +36,17 @@ namespace WordOnline.Tests
 
         [UnityTest]
         public IEnumerator WallGolemWalksAtProductionSpeedAndPunchesAtBothTickRates() =>
-            CheckBothTickRates("WallGolem", 8, "WallGolemPunch01", 4, 0.3f, 0.08f, walkWidth: 256);
+            CheckBothTickRates("WallGolem", 8, "WallGolemPunch01", 4, 0.3f, 0.08f, walkSize: new Vector2(256, 254));
 
         [UnityTest]
         public IEnumerator TowerbackWalksAtProductionSpeedAndPunchesAtBothTickRates() =>
-            CheckBothTickRates("Towerback", 8, "TowerbackPunch01", 4, 0.325f, 0.08f, walkWidth: 256, walkSeconds: 4);
+            CheckBothTickRates("Towerback", 8, "TowerbackPunch01", 4, 0.325f, 0.08f,
+                walkSize: new Vector2(256, 256), walkSeconds: 4);
+
+        [UnityTest]
+        public IEnumerator SeaSerpentGlidesAtProductionSpeedAtBothTickRates() =>
+            CheckBothTickRates("SeaSerpent", 8, "SeaSerpentFire01", 4, .55f, .0875f, walkSeconds: 4,
+                idleSprite: "SeaSerpentHead", walkSize: new Vector2(220, 214));
 
         [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
@@ -97,7 +103,8 @@ namespace WordOnline.Tests
 
         private static IEnumerator CheckBothTickRates(string prefabName, int walkPoseCount,
             string attackSprite = null, int attackPoseCount = 4, float walkSpeed = WalkSpeed,
-            float secondsPerAttackPose = 0.05f, string shotPrefab = null, int? walkWidth = null, int walkSeconds = 3)
+            float secondsPerAttackPose = 0.05f, string shotPrefab = null, Vector2? walkSize = null,
+            int walkSeconds = 3, string idleSprite = null)
         {
             var gameConfig = Runtime("GameScene.GameConfig");
             var setTickRate = gameConfig.GetMethod("SetTickRate");
@@ -111,7 +118,7 @@ namespace WordOnline.Tests
                     setTickRate.Invoke(null, new object[] { tickRate });
                     yield return CheckAtTickRate(prefabName, walkPoseCount, tickRate,
                         attackSprite ?? prefabName + "2", attackPoseCount, walkSpeed, secondsPerAttackPose, shotPrefab,
-                        walkWidth, walkSeconds);
+                        walkSeconds, idleSprite ?? prefabName, walkSize);
                 }
             }
             finally
@@ -123,7 +130,7 @@ namespace WordOnline.Tests
 
         private static IEnumerator CheckAtTickRate(string prefabName, int walkPoseCount, int tickRate,
             string attackSprite, int attackPoseCount, float walkSpeed, float secondsPerAttackPose, string shotPrefab,
-            int? walkWidth, int walkSeconds)
+            int walkSeconds, string idleSprite, Vector2? walkSize)
         {
             int direction = tickRate == 60 ? -1 : 1;
             var root = new GameObject($"{prefabName}-{tickRate}Hz");
@@ -154,9 +161,9 @@ namespace WordOnline.Tests
                 var attack = (Sprite[])presenter.GetType().GetField("attackFrames", Private).GetValue(presenter);
                 Sprite idle = renderer.sprite;
                 Sprite hit = Resources.Load<Sprite>($"Game/sprites/{attackSprite}");
-                Assert.That(idle.name, Is.EqualTo(prefabName));
+                Assert.That(idle.name, Is.EqualTo(idleSprite));
                 Assert.That(attack[0], Is.SameAs(hit));
-                AssertFrames(walk, walkPoseCount, idle, walkWidth);
+                AssertFrames(walk, walkPoseCount, idle, walkSize);
                 AssertFrames(attack, attackPoseCount, hit);
                 float attackDuration = secondsPerAttackPose * attackPoseCount;
                 Assert.That((float)presenter.GetType().GetField("attackDuration", Private).GetValue(presenter),
@@ -281,15 +288,11 @@ namespace WordOnline.Tests
                 .Invoke(null, new[] { objects, null, world });
         }
 
-        private static void AssertFrames(Sprite[] frames, int count, Sprite reference, int? expectedWidth = null)
+        private static void AssertFrames(Sprite[] frames, int count, Sprite reference, Vector2? expectedSize = null)
         {
-            Vector2 size = reference.rect.size;
+            Vector2 size = expectedSize ?? reference.rect.size;
             Vector2 pivot = reference.pivot;
-            if (expectedWidth.HasValue)
-            {
-                pivot.x += (expectedWidth.Value - size.x) * 0.5f;
-                size.x = expectedWidth.Value;
-            }
+            pivot.x += (size.x - reference.rect.width) * 0.5f;
 
             Assert.That(frames.Distinct().Count(), Is.EqualTo(count));
             foreach (Sprite frame in frames)

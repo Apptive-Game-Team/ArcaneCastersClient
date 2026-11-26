@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Data;
 using GameScene.Dto;
 using GameScene.Dto.Projectile;
@@ -39,7 +40,13 @@ namespace GameScene.Object
             }
 
             // 같은 틱에 사라지는 발사원과 표적을 참조할 수 있도록 삭제 전에 발사한다.
-            ProjectileSpawner.SpawnDeferred(deferredProjectiles);
+            if (deferredProjectiles != null)
+            {
+                var serpentAttacks = snapshotObjects
+                    .Where(obj => obj.prefab == "SeaSerpent" && obj.status == "Attack")
+                    .Select(obj => new UpdatedObjectDto(obj));
+                ProjectileSpawner.SpawnDeferred(deferredProjectiles, updates: serpentAttacks);
+            }
             RemoveObjects(snapshotObjects);
             hasCompletedInitialSync = true;
         }

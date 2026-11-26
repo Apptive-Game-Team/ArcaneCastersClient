@@ -13,7 +13,7 @@
 
 ## 컨셉 설명
 
-심해 뱀은 귀속 미정의 소환 마법이다. 소스에서 지속 이동 AI를 확인하지 못했다. 전투에서는 전투 개체 역할을 맡으며, 지상·공중 대상을 직접 공격 없음 또는 별도 효과 방식으로 다룬다. 특수 행동으로 이동 경로에 원소 장판 생성을 수행한다. 시각적으로는 기존 세계관만으로 귀속을 확정할 수 없다. 시각 제작 전 설정 결정이 필요하다.
+심해 뱀은 소환된 뒤 표적을 따라가며 지나간 길에 물 장판을 남긴다. 입에서 물줄기를 쏘면 줄기에 닿는 지상·공중 적이 피해를 받는다.
 
 ## 설명
 
@@ -23,15 +23,16 @@
 
 ## 동작
 
-1. 이동 경로를 따라 원소 지대를 남긴다.
+1. 표적의 사거리까지 지면을 따라 이동하며 물 장판을 남긴다.
+2. 물줄기를 뿜고 물줄기에 닿는 적에게 0.35초 뒤 피해를 준다.
 
 ## 전투 프로필
 
 | 항목 | 분류 | 코드 근거 |
 |---|---|---|
-| 기동 방식 | 이동 없음 | 소스에서 지속 이동 AI를 확인하지 못했다. |
-| 전투 역할 | 전투 개체 | 부착 AI·마법 컴포넌트 기준 |
-| 공격 형태 | 직접 공격 없음 또는 별도 효과 | 공격 컴포넌트와 시전 계열 기준 |
+| 기동 방식 | 지상 이동 | `SeaSerpentMob`이 `SPEED`로 표적을 추적한다. |
+| 전투 역할 | 원거리 공격 | 물줄기로 지상과 공중을 공격한다. |
+| 공격 형태 | 직선 범위 피해 | `fire_hydro_pump`가 물줄기에 닿는 적을 찾는다. |
 | 표적 | 지상·공중 | `TargetMask` 기준 |
 | 특수 이동·행동 | 이동 경로에 원소 장판 생성 | 부착 컴포넌트 기준 |
 | 생명주기 | 소스에서 시간 제한을 직접 확인하지 못함 | 파괴·시간제한 컴포넌트 기준 |
@@ -66,3 +67,4 @@
 
 - Magic: `game/src/main/java/com/wordonline/server/game/domain/magic/implement/spawn/SeaSerpentMagic.java`
 - Prefab initializer: `game/src/main/java/com/wordonline/server/game/domain/object/prefab/implement/water/SeaSerpentPrefabInitializer.java`
+- 이동과 발사: `game-rust/crates/sim/src/game/domain/object/component/mob/statemachine/attacker/sea_serpent_mob.rs`
