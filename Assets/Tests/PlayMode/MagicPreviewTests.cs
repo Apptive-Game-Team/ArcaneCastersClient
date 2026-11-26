@@ -3395,6 +3395,100 @@ namespace WordOnline.Tests
             }
         }
 
+        [UnityTest]
+        public IEnumerator RockSlimeCrawlsAndShowsIndependentRecordedHits()
+        {
+            Create();
+            const string magic = "rock_slime_nest";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var ground = scenarios.Single(s => (string)s["id"] == "ground");
+            Scenario(scenarios.IndexOf(ground));
+            CollectionAssert.AreEqual(new[] { 2 }, ground["fixtureTargetIds"].Select(id => (int)id));
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/RockSlimeCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            SpriteRenderer SlimeBody(int id)
+            {
+                var slime = Target(id);
+                Assert.That(slime, Is.Not.Null);
+                Assert.That(slime.name, Does.StartWith("RockSlime"));
+                Assert.That(slime.GetType().GetMethod("GetMaster").Invoke(slime, null), Is.EqualTo("LeftPlayer"));
+                Assert.That(slime.GetComponent("CrawlMotionController"), Is.Null);
+                Assert.That(slime.GetComponent("HoppingMotionController"), Is.Null);
+                return ServedObjectRenderer(slime);
+            }
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(2.674f);
+                Assert.That(Target(4), Is.Null);
+                yield return PlayUntil(2.724f);
+                var body = SlimeBody(4);
+                var source = Resources.Load<Sprite>("Game/spawn/rock_slime");
+                Assert.That(body.sprite.name, Is.EqualTo("RockSlimeIdle"));
+                Assert.That(body.sprite.rect.size, Is.EqualTo(source.rect.size));
+                Assert.That(body.sprite.pivot, Is.EqualTo(source.pivot));
+                Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(source.pixelsPerUnit));
+
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 3.375f)
+                {
+                    string pose = body.sprite.name;
+                    if (pose.StartsWith("RockSlimeCrawl", StringComparison.Ordinal) && pose != poses.LastOrDefault())
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 8) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 8).Select(i => $"RockSlimeCrawl{i:00}").Append("RockSlimeCrawl01");
+                CollectionAssert.AreEqual(expected, poses.Take(9));
+
+                yield return PlayUntil(4.723f);
+                var enemy = Target(2);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(10000));
+                Assert.That(body.sprite.name, Is.EqualTo("RockSlimeIdle"));
+                for (int i = 0; i < 4; i++)
+                {
+                    yield return PlayUntil(4.775f + .08f * i);
+                    string pose = $"RockSlimeBump{i + 1:00}";
+                    Assert.That(body.sprite.name, Is.EqualTo(pose));
+                    Assert.That(body.flipX, Is.False);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(9900));
+                    if (capture) SaveViewport(directory, pose, true);
+                }
+
+                yield return PlayUntil(5.524f);
+                Assert.That(body.sprite.name, Is.EqualTo("RockSlimeIdle"));
+                yield return PlayUntil(5.575f);
+                Assert.That(body.sprite.name, Is.EqualTo("RockSlimeBump01"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9800));
+                if (capture) SaveViewport(directory, "repeat-hit", true);
+
+                yield return PlayUntil(11.076f);
+                var other = SlimeBody(7);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(8300));
+                yield return PlayUntil(11.124f);
+                Assert.That(other.sprite.name, Is.EqualTo("RockSlimeBump01"));
+                Assert.That(body.sprite.name, Does.Not.StartWith("RockSlimeBump"));
+                Assert.That(SlimeBody(8).sprite.name, Is.EqualTo("RockSlimeIdle"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(8200));
+                yield return PlayUntil(11.208f);
+                Assert.That(other.sprite.name, Is.EqualTo("RockSlimeBump02"));
+                Assert.That(body.sprite.name, Is.EqualTo("RockSlimeBump01"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(8100));
+                if (capture) SaveViewport(directory, "independent-hits", true);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
         private static float TimeToLive(Component subject)
         {
             var gauges = (IList)subject.GetType().GetField("gauges").GetValue(subject);
