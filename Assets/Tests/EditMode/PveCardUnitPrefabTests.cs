@@ -62,13 +62,14 @@ namespace WordOnline.Tests
                 "The golem rises out of the ground and must not hop.");
             Assert.IsFalse(HasComponentNamed(golem, "WaddleMotionController"),
                 "The golem rises out of the ground and must not rock in place.");
-            Assert.IsTrue(HasComponentNamed(golem, "AttackSpriteSwapController"),
-                "The golem shows its raised-arm frame on attack.");
+            Assert.IsTrue(HasComponentNamed(golem, "BrickGolemPoseController"));
+            Assert.IsFalse(HasComponentNamed(golem, "AttackSpriteSwapController"));
         }
 
         [TestCase("BrickGolemSlamWarning")]
         [TestCase("BrickGolemSlam")]
         [TestCase("BrickGolemSweep")]
+        [TestCase("BrickGolemSweepPose")]
         public void BrickGolemProjectionResolvesToAProjectile(string projectionType)
         {
             GameObject prefab = Resources.Load<GameObject>("Projectiles/" + projectionType);
