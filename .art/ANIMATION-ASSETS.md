@@ -392,6 +392,15 @@ PPU·pivot·앵커 좌표를 같이 출력한다.
 
 `TidalWarheadFlight01–06`과 `GroundTidalWarheadFlight01–06`은 동일한 여섯 자세다. 앞끝을 맞추고 꼬리와 가까운·먼 지느러미가 차례로 휘게 그렸다. 둘 다 개체가 표시될 때 0.11초 간격으로 반복한다. 대응 자세는 눈 안쪽의 RGB 값만 다르다.
 
+## 지옥불 군단장 프레임
+
+| 파일 | 표시 동작 | 연결 |
+| --- | --- | --- |
+| `FireLordSpiritHover01–06.png` | 외투 끝과 뒷갑각의 공중 대기 | `AerialUnitPoseController.hoverFrames` |
+| `FireLordSpiritApproach01–06.png` | 외투가 뒤로 흐르는 접근 | `AerialUnitPoseController.approachFrames` |
+
+256×162 RGBA, PPU 100, 하단 중앙 피벗이다. 각각 장당 0.17초씩 1.02초 주기로 반복한다. 접근은 같은 방향의 수평 위치 갱신 두 건에서 시작한다. 자식 소환으로 한 차례 밀리거나 수직으로만 이동할 때는 대기 자세를 유지한다.
+
 ## 군단장의 불꽃 정령 프레임
 
 | 파일 | 표시 동작 | 연결 |
