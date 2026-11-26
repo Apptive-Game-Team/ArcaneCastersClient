@@ -10,7 +10,7 @@ namespace GameScene.ServedObjectComponent.OnAttack
 {
     /// <summary>
     /// 플레이어의 조준과 시전 자세를 관리한다. 시전 중 카드 선택 변화는 시전 뒤 복귀할 자세에 반영한다.
-    /// 기본 외형의 자세마다 원소 효과의 위치를 지팡이 끝에 맞춘다.
+    /// 프레임이 있는 외형은 자세마다 원소 효과의 위치를 지팡이 끝에 맞춘다.
     /// </summary>
     public sealed class PlayerStaffPoseController : ServedObjectBehaviour
     {
@@ -19,6 +19,15 @@ namespace GameScene.ServedObjectComponent.OnAttack
         {
             public Sprite sprite;
             public Vector2 tip;
+        }
+
+        [Serializable]
+        private sealed class StaffMotion
+        {
+            public string appearanceId;
+            public StaffFrame[] aimFrames;
+            public StaffFrame[] castFrames;
+            public float[] castCueFractions;
         }
 
         private const float AimFrameDuration = 0.08f;
@@ -30,18 +39,17 @@ namespace GameScene.ServedObjectComponent.OnAttack
         [SerializeField] private float thrustDuration = 0.3f;
         [SerializeField] private string[] raisingEffects;
         [SerializeField] private PlayerStaffAuraController staffAura;
-        [SerializeField] private StaffFrame[] aimFrames;
-        [SerializeField] private StaffFrame[] castFrames;
+        [SerializeField] private StaffMotion[] appearanceMotions;
 
         private SpriteRenderer resolvedRenderer;
         private Sequence motion;
-        private bool hasAuthoredFrames;
+        private StaffMotion appearanceMotion;
         private int aimFrame;
         private bool isThrusting;
         // 효과가 바뀌면 선택 상태를 갱신해 시전 뒤에도 현재 카드에 맞는 자세로 복귀한다.
         private bool isRaised;
 
-        internal bool DrivesStaffAura => hasAuthoredFrames && enabled;
+        internal bool DrivesStaffAura => appearanceMotion != null && enabled;
 
         protected override void OnBound()
         {
@@ -108,14 +116,37 @@ namespace GameScene.ServedObjectComponent.OnAttack
             staffLoweredSprite = idle;
             staffRaisedSprite = raised;
             staffThrustSprite = attacking;
-            hasAuthoredFrames = loadedId == PlayerAppearanceResolver.DefaultId && staffAura != null && staffAura.IsConfigured
-                && HasAllFrames(aimFrames, 4) && HasAllFrames(castFrames, 3)
-                && aimFrames[0].sprite == idle && aimFrames[3].sprite == raised && castFrames[0].sprite == attacking;
+            appearanceMotion = FindMotion(loadedId, idle, raised, attacking);
         }
 
-        private static bool HasAllFrames(StaffFrame[] frames, int count)
+        private StaffMotion FindMotion(string appearanceId, Sprite idle, Sprite raised, Sprite attacking)
         {
-            if (frames == null || frames.Length != count)
+            if (staffAura == null || !staffAura.IsConfigured || appearanceMotions == null)
+            {
+                return null;
+            }
+
+            foreach (StaffMotion entry in appearanceMotions)
+            {
+                if (entry == null || entry.appearanceId != appearanceId
+                    || !HasAllFrames(entry.aimFrames) || !HasAllFrames(entry.castFrames)
+                    || entry.aimFrames[0].sprite != idle
+                    || entry.aimFrames[entry.aimFrames.Length - 1].sprite != raised
+                    || entry.castFrames[0].sprite != attacking
+                    || !HasValidCastCues(entry.castCueFractions, entry.castFrames.Length - 1))
+                {
+                    continue;
+                }
+
+                return entry;
+            }
+
+            return null;
+        }
+
+        private static bool HasAllFrames(StaffFrame[] frames)
+        {
+            if (frames == null || frames.Length < 2)
             {
                 return false;
             }
@@ -126,6 +157,27 @@ namespace GameScene.ServedObjectComponent.OnAttack
                 {
                     return false;
                 }
+            }
+
+            return true;
+        }
+
+        private static bool HasValidCastCues(float[] cues, int count)
+        {
+            if (cues == null || cues.Length != count)
+            {
+                return false;
+            }
+
+            float previous = 0f;
+            foreach (float fraction in cues)
+            {
+                if (!(fraction > previous && fraction < 1f))
+                {
+                    return false;
+                }
+
+                previous = fraction;
             }
 
             return true;
@@ -146,7 +198,7 @@ namespace GameScene.ServedObjectComponent.OnAttack
                 return;
             }
 
-            if (hasAuthoredFrames)
+            if (appearanceMotion != null)
             {
                 AnimateAim();
                 return;
@@ -158,7 +210,7 @@ namespace GameScene.ServedObjectComponent.OnAttack
         private void AnimateAim()
         {
             StopMotion();
-            int targetFrame = isRaised ? aimFrames.Length - 1 : 0;
+            int targetFrame = isRaised ? appearanceMotion.aimFrames.Length - 1 : 0;
             if (aimFrame == targetFrame)
             {
                 return;
@@ -184,11 +236,16 @@ namespace GameScene.ServedObjectComponent.OnAttack
             StopMotion();
             isThrusting = true;
             Sequence sequence = StartMotion().AppendInterval(thrustDuration);
-            if (hasAuthoredFrames)
+            if (appearanceMotion != null)
             {
+                StaffFrame[] castFrames = appearanceMotion.castFrames;
                 ApplyFrame(castFrames[0]);
-                sequence.InsertCallback(thrustDuration * 0.4f, () => ApplyFrame(castFrames[1]));
-                sequence.InsertCallback(thrustDuration * (2f / 3f), () => ApplyFrame(castFrames[2]));
+                for (int frame = 1; frame < castFrames.Length; frame++)
+                {
+                    StaffFrame nextFrame = castFrames[frame];
+                    sequence.InsertCallback(thrustDuration * appearanceMotion.castCueFractions[frame - 1],
+                        () => ApplyFrame(nextFrame));
+                }
                 return;
             }
 
@@ -220,9 +277,9 @@ namespace GameScene.ServedObjectComponent.OnAttack
                 return;
             }
 
-            if (hasAuthoredFrames)
+            if (appearanceMotion != null)
             {
-                ApplyAimFrame(isRaised ? aimFrames.Length - 1 : 0);
+                ApplyAimFrame(isRaised ? appearanceMotion.aimFrames.Length - 1 : 0);
                 return;
             }
 
@@ -232,7 +289,7 @@ namespace GameScene.ServedObjectComponent.OnAttack
         private void ApplyAimFrame(int index)
         {
             aimFrame = index;
-            ApplyFrame(aimFrames[index]);
+            ApplyFrame(appearanceMotion.aimFrames[index]);
         }
 
         private void ApplyFrame(StaffFrame frame)
