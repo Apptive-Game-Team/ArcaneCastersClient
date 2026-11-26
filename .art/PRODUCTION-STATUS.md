@@ -39,6 +39,7 @@
 | `FireLordSpirit.png` | `concept-art/fire-lord-spirit.webp` | 지옥불 군단 지휘관으로 교체 완료 |
 | `FireLordSpiritHover01–06.png`, `FireLordSpiritApproach01–06.png` | 클라이언트 PR (이슈 #636) | 256×162 RGBA, PPU 100, 하단 중앙 피벗. 외투와 갑각의 대기 6장, 수평 위치 갱신에 맞춘 접근 6장. |
 | `FireSpirit.png` | `concept-art/fire-spirit.webp` | 하급 뿔 악마 방향 적용 |
+| `FireSpiritWalk01–08.png`, `FireSpiritSpray01–04.png` | 클라이언트 이슈 #640 | 256×190 RGBA, PPU 200, 하단 중앙 피벗. 앞뒤 발 교대 보행 8장과 분사·복귀 4장. |
 | `FireTadpole.png` | `concept-art/fire-tadpole.webp` | 차원 유랑종 화산편 방향 적용 |
 | `RockGolem.png` | `concept-art/rock-golem.webp` | 이끼바위 골렘 기본 자세 |
 | `RockGolem2.png` | `game-assets/rock-golem-attack.webp` | 이끼바위 골렘 공격 자세. 이슈 #514에서도 공격 이벤트의 첫 자세로 사용 |

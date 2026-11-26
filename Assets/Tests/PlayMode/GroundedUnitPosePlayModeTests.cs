@@ -123,6 +123,102 @@ namespace WordOnline.Tests
             CheckBothTickRates("MagmaSpirit", 8, "MagmaSpiritCast01", walkSize: new Vector2(256, 253));
 
         [UnityTest]
+        public IEnumerator FireSpiritWalksAndFinishesSprayingAtBothTickRates() =>
+            CheckBothTickRates("FireSpirit", 8, "FireSpiritSpray01", walkSpeed: .6f, secondsPerAttackPose: .125f,
+                walkSize: new Vector2(256, 190), walkSeconds: 4);
+
+        [UnityTest]
+        public IEnumerator FireSpiritFollowsItsOwnSprayEvenWhenTargetsDisagree()
+        {
+            var root = new GameObject("FireSpirit spray test");
+            try
+            {
+                var world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                var find = world.GetType().GetMethod("FindById");
+                ApplyObjects(world, @"{""create"":[
+                    {""id"":41,""type"":""FireSpirit"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":5}},
+                    {""id"":42,""type"":""FireSpirit"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":6}},
+                    {""id"":43,""type"":""ElectricSlime"",""master"":""RightPlayer"",""position"":{""x"":7,""z"":5}}]}");
+                var first = (Component)find.Invoke(world, new object[] { 41 });
+                var second = (Component)find.Invoke(world, new object[] { 42 });
+                var left = Body(first);
+                var right = Body(second);
+                Assert.That(first.GetComponent("HoppingMotionController"), Is.Null);
+                Assert.That(first.GetComponent("AttackSpriteSwapController"), Is.Null);
+                Assert.That(first.GetComponentsInChildren<SpriteRenderer>().Any(sprite => sprite.name == "FireIdleAura"), Is.True);
+
+                ApplyObjects(world, "{\"projectile\":[" + SprayedFlame(null, 5, 6) + "]}");
+                Assert.That(left.sprite.name, Is.EqualTo("FireSpirit"));
+                Assert.That(right.sprite.name, Is.EqualTo("FireSpirit"));
+                Assert.That(world.GetComponentsInChildren<Transform>().Count(t => t.name.StartsWith("SprayedFlame")), Is.EqualTo(1));
+                ApplyObjects(world, "{\"projectile\":[" + SprayedFlame(41, 3, 2) + "," + SprayedFlame(42, 5, 6) +
+                    "],\"update\":[{\"id\":43,\"status\":\"Destroyed\",\"master\":\"RightPlayer\",\"position\":{\"x\":7,\"z\":5}}]}",
+                    @"[{""type"":""hit"",""actorId"":41,""targetId"":43},{""type"":""hit"",""actorId"":41,""targetId"":41}]");
+                Assert.That(left.sprite.name, Is.EqualTo("FireSpiritSpray01"));
+                Assert.That(right.sprite.name, Is.EqualTo("FireSpiritSpray01"));
+                yield return null;
+                Assert.That(left.flipX, Is.True);
+                Assert.That(right.flipX, Is.False);
+            }
+            finally
+            {
+                Object.Destroy(root);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator FireSpiritCanFirstAppearWithItsOwnSprayInASnapshot()
+        {
+            var root = new GameObject("FireSpirit snapshot test");
+            var container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            GameObject spawnedSpray = null;
+            try
+            {
+                root.AddComponent(Runtime("GameScene.Object.ObjectSpawner"));
+                root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+                var syncer = root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+                object snapshot = Decode(Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType(), @"[
+                    {""id"":51,""prefab"":""FireSpirit"",""master"":""LeftPlayer"",""x"":4,""z"":5},
+                    {""id"":52,""prefab"":""FireSpirit"",""master"":""LeftPlayer"",""x"":4,""z"":6}]");
+                Type objectsType = Runtime("GameScene.Dto.ObjectsInfo");
+                object objects = Decode(objectsType, "{\"projectile\":[" + SprayedFlame(52, 3, 2) + "]}");
+                object pending = Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnBeforeSnapshotUpdates")
+                    .Invoke(null, new[] { objectsType.GetField("projectile").GetValue(objects), snapshot });
+                Assert.That(((IList)pending).Count, Is.EqualTo(1));
+                syncer.GetType().GetMethod("Sync").Invoke(syncer, new[] { snapshot, pending });
+                spawnedSpray = GameObject.Find("SprayedFlame(Clone)");
+                Assert.That(spawnedSpray, Is.Not.Null);
+                var find = container.GetType().GetMethod("FindById");
+                var first = Body((Component)find.Invoke(container, new object[] { 51 }));
+                var second = Body((Component)find.Invoke(container, new object[] { 52 }));
+                Assert.That(first.sprite.name, Is.EqualTo("FireSpirit"));
+                Assert.That(second.sprite.name, Is.EqualTo("FireSpiritSpray01"));
+                Assert.That(second.flipX, Is.True);
+            }
+            finally
+            {
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                if (spawnedSpray != null) Object.Destroy(spawnedSpray);
+                Object.Destroy(root);
+            }
+            yield return null;
+        }
+
+        private static void ApplyObjects(Component world, string objects, string events = "[]")
+        {
+            Type eventsType = typeof(List<>).MakeGenericType(Runtime("GameScene.Dto.Event.GameEvent"));
+            Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply").Invoke(null, new[]
+            {
+                Decode(Runtime("GameScene.Dto.ObjectsInfo"), objects), Decode(eventsType, events), world
+            });
+        }
+
+        private static string SprayedFlame(int? source, int startX, int endX) =>
+            "{\"type\":\"SprayedFlame\",\"duration\":0.5," + (source.HasValue ? $"\"sourceId\":{source.Value}," : "") +
+            $"\"start\":{{\"targetType\":\"position\",\"x\":{startX},\"y\":0,\"z\":5}}," +
+            $"\"end\":{{\"targetType\":\"position\",\"x\":{endX},\"y\":0,\"z\":5}}}}";
+
+        [UnityTest]
         public IEnumerator MagmaSpiritEmergesAndOnlyTheSummonerChangesPoseInAReplay()
         {
             var root = new GameObject("MagmaSpirit replay test");
@@ -374,7 +470,8 @@ namespace WordOnline.Tests
                 }
 
                 var walk = (Sprite[])presenter.GetType().GetField("walkFrames", Private).GetValue(presenter);
-                var attack = (Sprite[])presenter.GetType().GetField("attackFrames", Private).GetValue(presenter);
+                bool isSprayer = prefabName == "FireSpirit";
+                var attack = (Sprite[])presenter.GetType().GetField(isSprayer ? "projectileAttackFrames" : "attackFrames", Private).GetValue(presenter);
                 Sprite idle = renderer.sprite;
                 Sprite hit = Resources.Load<Sprite>($"Game/sprites/{attackSprite}");
                 Assert.That(idle.name, Is.EqualTo(idleSprite));
@@ -410,7 +507,7 @@ namespace WordOnline.Tests
 
                 CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
                     $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
-                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit")
+                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit" or "FireSpirit")
                 {
                     var cycle = walk.Append(walk[0]).ToArray();
                     bool completedCycle = Enumerable.Range(0, Mathf.Max(0, seenWalk.Count - walk.Length))
@@ -435,7 +532,11 @@ namespace WordOnline.Tests
                 }
 
                 playHit?.Invoke();
-                if (shotPrefab == null)
+                if (isSprayer)
+                {
+                    ApplyObjects(world, "{\"projectile\":[" + SprayedFlame(42, direction * 5, direction * 6) + "]}");
+                }
+                else if (shotPrefab == null)
                 {
                     update.Invoke(unit, new[] { frame });
                 }
@@ -462,6 +563,8 @@ namespace WordOnline.Tests
                 Assert.That(renderer.sprite, Is.SameAs(attack[1]));
                 playHit?.Invoke();
                 update.Invoke(unit, new[] { frame });
+                if (isSprayer)
+                    ApplyObjects(world, "{\"projectile\":[" + SprayedFlame(42, direction * 5, direction * 6) + "]}");
                 Assert.That(renderer.sprite, Is.SameAs(attack[0]));
 
                 var seenAttack = new List<Sprite>();
