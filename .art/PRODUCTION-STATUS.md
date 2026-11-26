@@ -229,11 +229,11 @@
 2026-09-18 에 `origin/dev`(`94f6628a`)의 PNG 를 아트 pipeline 직전 commit
 `8deaad14^`(2026-07-28)과 blob 단위로 대조해 찾았다. 여섯 장이 그때까지 이 문서
 어느 표에도 행이 없었고, 이슈 #76 에서 다섯 장을 교체해 `완료` 로 옮겼다.
-아래 한 장이 남았다.
+아래 한 장은 이슈 #475에서 애니메이션으로 교체하고 플레이 검수를 기다린다.
 
 | 리소스 | 사용처 | 필요한 작업 |
 |---|---|---|
-| `Resources/Projectiles/wind.png` | `WindTotem.prefab` 의 `Wind` object, alpha 0.396 | 파란 painterly 줄기다. 본체 `WindTotem.png` 는 민트색 다면체로 교체됐다. **이슈 #76 에서 세 번 생성하고 전부 반려해 옛 그림을 그대로 뒀다** — 아래 참조 |
+| `Resources/Projectiles/wind.png`, `wind_totem_flow_02.png`–`wind_totem_flow_08.png` | `WindTotem.prefab`의 `Wind` SpriteRenderer | 클라이언트 이슈 #475. 승인한 민트색 다면체 바람 8프레임 연결. 512×91 RGBA, PPU 140, 중앙 피벗. `SpriteFrameAnimator`가 0.175초 간격으로 1.4초간 반복한다. Unity 플레이 검수 대기 |
 
 #### `wind.png` 을 세 번 만에 미룬 이유
 
