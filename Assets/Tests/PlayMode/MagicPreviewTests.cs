@@ -1733,6 +1733,154 @@ namespace WordOnline.Tests
         }
 
 
+        [UnityTest]
+        public IEnumerator DimensionToadRetreatsAndKeepsItsAlternatingSummons()
+        {
+            Create();
+            const string magic = "dimension_toad";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int oldRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/DimensionToadCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                for (int index = 0; index < scenarios.Count; index++)
+                {
+                    string name = (string)scenarios[index]["id"];
+                    var frames = scenarios[index]["frames"];
+                    int toadId = (int)frames.SelectMany(f => f["objects"]["create"])
+                        .First(obj => (string)obj["type"] == "DimensionToad")["id"];
+                    var arrivals = frames.SelectMany(f => f["objects"]["create"]
+                        .Where(obj => (string)obj["type"] == "FireTadpole" || (string)obj["type"] == "LightningTadpole")
+                        .Select(obj => (time: (float)f["time"], id: (int)obj["id"], type: (string)obj["type"])))
+                        .Take(4).ToArray();
+                    Assert.That(arrivals.Select(a => a.type), Is.EqualTo(new[] {
+                        "FireTadpole", "LightningTadpole", "FireTadpole", "LightningTadpole" }));
+                    Scenario(index);
+                    yield return PlayUntil(.668f);
+                    Component toad = Target(toadId);
+                    var body = (SpriteRenderer)toad.GetType().GetField("_spriteRenderer", Private).GetValue(toad);
+                    Assert.That(body.sprite.name, Is.EqualTo("DimensionToad"));
+                    Assert.That(toad.GetComponent("WaddleMotionController"), Is.Null);
+
+                    for (int i = 0; i < arrivals.Length; i++)
+                    {
+                        if (i == 1 && name == "panic")
+                        {
+                            var seen = new System.Collections.Generic.HashSet<string>();
+                            var phases = new System.Collections.Generic.List<int>();
+                            yield return PlayUntil(.77f);
+                            Assert.That(body.flipX, Is.True);
+                            while ((float)Field("elapsed") < 1.46f)
+                            {
+                                string pose = body.sprite.name;
+                                if (pose.StartsWith("DimensionToadRetreat", StringComparison.Ordinal))
+                                {
+                                    int phase = int.Parse(pose.Substring("DimensionToadRetreat".Length));
+                                    if (phases.Count == 0 || phases[phases.Count - 1] != phase) phases.Add(phase);
+                                    if (seen.Add(pose) && capture) SaveViewport(directory, pose, true);
+                                }
+                                yield return null;
+                            }
+                            Assert.That(seen.Count, Is.EqualTo(8));
+                            var transitions = phases.Zip(phases.Skip(1), (from, to) => (from, to)).ToArray();
+                            CollectionAssert.Contains(transitions, (4, 5));
+                            CollectionAssert.Contains(transitions, (8, 1));
+                        }
+
+                        var arrival = arrivals[i];
+                        Assert.That(arrival.time, Is.EqualTo(.65f + i * .8f).Within(.002f));
+                        yield return PlayUntil(arrival.time + .018f);
+                        Assert.That(Target(arrival.id), Is.Not.Null, $"{name} {arrival.type}");
+                        if (i == 1)
+                        {
+                            if (capture) SaveViewport(directory, name + "-summon", true);
+                            yield return PlayUntil(1.62f);
+                            Assert.That(body.sprite.name, Is.EqualTo("DimensionToad"));
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = oldRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator DimensionToadRunsInBothDirectionsAndIgnoresCorrectionsAtBothTickRates()
+        {
+            Create();
+            Type config = Runtime("GameScene.GameConfig");
+            MethodInfo setRate = config.GetMethod("SetTickRate");
+            int oldTick = (int)config.GetProperty("TickRate").GetValue(null);
+            int oldRender = Time.captureFramerate;
+            const int renderRate = 120;
+            Time.captureFramerate = renderRate;
+            try
+            {
+                foreach (int tick in new[] { 20, 60 })
+                {
+                    setRate.Invoke(null, new object[] { tick });
+                    Component world = CreateWorld();
+                    Type dto = Runtime("GameScene.Dto.ObjectsInfo");
+                    MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize").MakeGenericMethod(dto);
+                    MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+                    void Apply(string json) =>
+                        apply.Invoke(null, new[] { decode.Invoke(null, new object[] { json }), null, world });
+                    void MoveTo(float position) => Apply(FormattableString.Invariant(
+                        $"{{\"update\":[{{\"id\":61,\"position\":{{\"x\":{position},\"y\":0,\"z\":5}},\"status\":\"Idle\"}}]}}"));
+
+                    Apply("{\"create\":[{\"id\":61,\"type\":\"DimensionToad\",\"master\":\"LeftPlayer\"," +
+                        "\"position\":{\"x\":9,\"y\":0,\"z\":5}}]}");
+                    var actor = (Component)world.GetType().GetMethod("FindById").Invoke(world, new object[] { 61 });
+                    var sprite = (SpriteRenderer)actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor);
+                    float x = 9f;
+                    yield return null;
+                    foreach (float speed in new[] { -.65f, 1.3f })
+                    {
+                        var seen = new System.Collections.Generic.HashSet<Sprite>();
+                        int packets = Mathf.CeilToInt(2.6f / Mathf.Abs(speed) * tick);
+                        for (int n = 0; n < packets; n++)
+                        {
+                            x += speed / tick;
+                            MoveTo(x);
+                            for (int render = 0; render < renderRate / tick; render++)
+                            {
+                                yield return null;
+                                if (sprite.flipX == (speed < 0) &&
+                                    sprite.sprite.name.StartsWith("DimensionToadRetreat", StringComparison.Ordinal))
+                                    seen.Add(sprite.sprite);
+                            }
+                            if (n == 2) Assert.That(sprite.flipX, Is.EqualTo(speed < 0), $"{tick} Hz 방향");
+                        }
+                        Assert.That(seen.Count, Is.EqualTo(8), $"{tick} Hz, {speed}칸/초");
+                        yield return new WaitForSeconds(.13f);
+                        Assert.That(sprite.sprite.name, Is.EqualTo("DimensionToad"));
+
+                        x += 4f;
+                        MoveTo(x);
+                        for (int render = 0; render < renderRate / tick + 2; render++)
+                        {
+                            yield return null;
+                            Assert.That(sprite.sprite.name, Is.EqualTo("DimensionToad"));
+                        }
+                    }
+                    UnityEngine.Object.Destroy(world.gameObject);
+                    yield return null;
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = oldRender;
+                setRate.Invoke(null, new object[] { oldTick });
+            }
+        }
+
+
         private Transform FindProjectile(string type)
         {
             var world = (Component)Field("world");
