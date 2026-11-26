@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using Data;
 using Global.Serialization;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 
 namespace WordOnline.Tests
@@ -12,6 +14,37 @@ namespace WordOnline.Tests
     /// </summary>
     public class PlayerAppearanceResolverTests
     {
+        [Test]
+        public void DefaultStaffMotionUsesRegisteredSpritesAndAnchors()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Prefabs/Player.prefab");
+            var controller = prefab.GetComponents<MonoBehaviour>()
+                .Single(component => component != null && component.GetType().Name == "PlayerStaffPoseController");
+            var serialized = new SerializedObject(controller);
+            Assert.That(serialized.FindProperty("staffAura").objectReferenceValue, Is.Not.Null);
+
+            var idle = Resources.Load<Sprite>("PlayerAppearances/default/idle");
+            CheckFrameList(serialized.FindProperty("aimFrames"), idle, "idle", "aim-lift-start", "aim-lift-end", "raised");
+            CheckFrameList(serialized.FindProperty("castFrames"), idle, "attacking", "cast-recoil", "cast-recover");
+        }
+
+        private static void CheckFrameList(SerializedProperty frames, Sprite idle, params string[] names)
+        {
+            Assert.That(frames.arraySize, Is.EqualTo(names.Length));
+            for (int index = 0; index < names.Length; index++)
+            {
+                var frame = frames.GetArrayElementAtIndex(index);
+                var sprite = frame.FindPropertyRelative("sprite").objectReferenceValue as Sprite;
+                Assert.That(sprite, Is.Not.Null);
+                Assert.That(sprite, Is.SameAs(Resources.Load<Sprite>("PlayerAppearances/default/" + names[index])));
+                Assert.That(sprite.pixelsPerUnit, Is.EqualTo(idle.pixelsPerUnit));
+                Assert.That(sprite.pivot.y, Is.EqualTo(idle.pivot.y).Within(0.01f));
+                float centeredPivotDifference = sprite.pivot.x - idle.pivot.x - (sprite.rect.width - idle.rect.width) / 2f;
+                Assert.That(centeredPivotDifference, Is.EqualTo(0f).Within(0.05f));
+                Assert.That(frame.FindPropertyRelative("tip").vector2Value, Is.Not.EqualTo(Vector2.zero));
+            }
+        }
+
         [Test]
         public void CorruptedFinnLoadsAllThreePosesWithOnePivot()
         {
