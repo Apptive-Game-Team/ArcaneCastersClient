@@ -90,6 +90,7 @@
 | `Burn.png`, `Burn2.png` | 클라이언트 PR (이슈 #682) | 238x256 RGBA 두 장. 화상 상태 표시, 불꽃 여섯 덩이. 두 프레임 alpha content bbox 완전 일치(겹쳐서 확인). magenta 키 제거, 네 모서리 alpha 0 |
 | `Overcharge.png`, `Overcharge2.png` | 클라이언트 PR (이슈 #682) | 512x512 RGBA 두 장. 전기 과충전 표시, 번개 조각 여섯 개. 두 프레임 겹침 확인, 끝부분 미세한 흔들림만 차이. magenta 키 제거, 네 모서리 alpha 0 |
 | `Bubble.png` | 클라이언트 PR (이슈 #682) | 119x119 RGBA. 물방울 표시, 저폴리 보석형 단일 도형. magenta 키 제거, 네 모서리 alpha 0 |
+| `shoot/BubbleShotFlight01–04.png` | 클라이언트 이슈 #720 | 119×119 RGBA, PPU 100, 중앙 피벗. 눌렸다 부푸는 거품 네 자세를 서버가 계산한 비행 시간에 맞춰 재생한다. |
 | `Snared.png` | 클라이언트 PR (이슈 #682) | 256x191 RGBA. 속박 표시, X자로 교차한 다면체 덩굴, 끝에 가시 악센트. magenta 키 제거, 네 모서리 alpha 0 |
 | `frenzy.png` | 클라이언트 PR (이슈 #682) | 256x256 RGBA. 광폭화 표시, 진홍 발톱/번개 표식 3개, 발광 없이 면 대비로만 표현. magenta 키 제거, 네 모서리 alpha 0 |
 | `panic.png` | 클라이언트 PR (이슈 #682) | 250x256 RGBA. 공포 표시, 다면체 느낌표. magenta 키 제거, 네 모서리 alpha 0 |
