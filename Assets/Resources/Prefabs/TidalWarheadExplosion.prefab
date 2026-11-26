@@ -16,14 +16,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: TidalWarheadExplosion
       objectReference: {fileID: 0}
-    - target: {fileID: 3447803929152680402, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
-      propertyPath: m_Sprite
-      value:
-      objectReference: {fileID: 21300000, guid: 0f5afd3ea7dc54dd896ebe11cf2c635f, type: 3}
+    - target: {fileID: 1273632256142691370, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+      propertyPath: _keepUprightOnSpawn
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6532723950483228932, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
       propertyPath: m_Sprite
       value:
-      objectReference: {fileID: 21300000, guid: 2b09394691f4244f4bee6a612ea2ca0e, type: 3}
+      objectReference: {fileID: 21300000, guid: 83c51c48a2e75657ab8b992bda0c8ffb, type: 3}
+    - target: {fileID: 6532723950483228932, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+      propertyPath: m_Color.a
+      value: 0.78
+      objectReference: {fileID: 0}
     - target: {fileID: 8804314480276434358, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.4631863
@@ -64,8 +68,44 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7657981712482016494, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2898933720311739919, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6800000000000000003}
   m_SourcePrefab: {fileID: 100100000, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+--- !u!1 &6800000000000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2898933720311739919, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+  m_PrefabInstance: {fileID: 2059408473657615847}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &6800000000000000002 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6532723950483228932, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+  m_PrefabInstance: {fileID: 2059408473657615847}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6800000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6800000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 6800000000000000002}
+  frames:
+  - {fileID: 21300000, guid: 83c51c48a2e75657ab8b992bda0c8ffb, type: 3}
+  - {fileID: 21300000, guid: 5b26bf1350825194ac8742073b42690c, type: 3}
+  - {fileID: 21300000, guid: 94168012165d55d8ba13b6a720f7ff2b, type: 3}
+  - {fileID: 21300000, guid: 8c4cdf08b5745be0a11379fa178eb308, type: 3}
+  - {fileID: 21300000, guid: 58fe168572c5596294a78e96b84038b2, type: 3}
+  - {fileID: 21300000, guid: ae40a6899cd15b9cb65cdb94069c471d, type: 3}
+  frameInterval: 0.09
+  loop: 0
