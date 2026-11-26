@@ -120,6 +120,7 @@
 | `spawn/rock_slime.png` | 클라이언트 PR (이슈 #683) | 128x105 RGBA, 원본 크기 유지. 이끼바위 골렘의 따뜻한 황갈+이끼 팔레트 몸통. 눈·입을 추가한 재생성 요청이 output moderation 에 두 번 걸려(요청 ID 는 로그 참고) 레퍼런스를 `MasterStyleKey.png` + `ArcaneImpact.png` 조합으로 바꾼 세 번째 시도로 통과시켰다. leaf_slime 과 같은 방향 회귀(-14%)를 좌우 반전으로 교정, `facing.py` 재확인 +14%(오른쪽). magenta 키 제거, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
 | `spawn/wind_slime.png` | 클라이언트 PR (이슈 #683) | 128x65 RGBA, 원본 크기 유지. Wind 팔레트 몸통, 원본대로 다른 넷보다 낮고 평평한 실루엣 유지. leaf_slime 과 같은 방향 회귀(-16%)를 좌우 반전으로 교정, `facing.py` 재확인 +16%(오른쪽). magenta 키 제거, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
 | `shoot/leaf_shoot.png` | 클라이언트 PR (이슈 #683) | 192x74 RGBA, 원본 크기 유지. 오른쪽으로 날아가는 나뭇잎 투사체, 넓고 밝은 잎날이 오른쪽, 가늘어지는 잎맥 꼬리가 왼쪽. magenta 키 제거, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
+| `shoot/NatureShotLeaf01–04.png` | 클라이언트 이슈 #718 | 192×74 RGBA, PPU 100, 하단 중앙 피벗. 잎 끝을 정렬한 네 자세를 덩굴 정령 투사체의 0.50초 비행 중 재생한다. |
 | `shoot/lightning_shoot.png` | 클라이언트 PR (이슈 #683) | 192x51 RGBA, 원본 크기 유지. 금색 지그재그 번개 투사체, 오른쪽 뭉툭한 화살촉에서 왼쪽으로 갈수록 가늘어짐. 기존 청록/흰색 조합에서 STYLE.md 의 금색 Lightning 팔레트로 이동. magenta 키 제거, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
 | `shoot/sprayed_flame.png` | 기존 분사 화염 원본 | 192×95 RGBA, PPU 100, 하단 중앙 피벗. 어두운 재 덩어리와 주황 균열을 분사 화염의 등록 기준으로 사용한다. |
 | `shoot/SprayedFlameFlow01–04.png` | 클라이언트 이슈 #714 | 192×95 RGBA, PPU 100, 하단 중앙 피벗. 좁은 불길이 두 갈래로 퍼진 뒤 잔불로 잦아드는 네 자세를 서버 투영의 0.50초 동안 한 번 재생한다. |
