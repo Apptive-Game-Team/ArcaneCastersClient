@@ -98,6 +98,7 @@
 | `leaf_field.png`, `leaf_field_frame_02.png`–`leaf_field_frame_04.png` | 클라이언트 이슈 #490 | 192×79 RGBA, PPU 100, Bottom Center. 중앙의 기존 잎과 공통 바닥선을 유지하고 가장자리 잎을 0.24초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
 | `water_field.png`, `water_field_frame_02.png`–`water_field_frame_04.png` | 클라이언트 이슈 #486 | 192×69 RGBA, PPU 100, Bottom Center. 기존 타원 알파와 중앙 물빛을 유지하고 가장자리 물결을 0.24초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
 | `crater_ember.png` | 클라이언트 이슈 #681 재작업 검수 | 64x58 RGBA. 분화구에서 튄 불씨 하나, 둥근 물방울 실루엣에 면 3~4개, 가장 밝은 면이 중앙 |
+| `crater_ember_frame_01.png`–`crater_ember_frame_04.png` | 클라이언트 이슈 #494 | 64×58 RGBA, PPU 200, Bottom Center. 비행 중 주황색 면이 밝아졌다 잦아드는 4프레임을 0.08초 간격으로 반복한다. 서버 비행 경로와 착지 후 불 장판은 기존 동작을 따른다 |
 | `Shock.png`, `Shock2.png` | 클라이언트 PR (이슈 #682) | 247x256 / 244x256 RGBA. 감전 표시, 다면체 번개 조각 다섯 개, 크기를 다르게 흩뿌리고 가운데를 비웠다. 이전 세 차례 시도는 개별 생성이라 프레임 2의 구도·크기가 10% 어긋나 실패했다. 이번은 한 이미지에 좌우 두 패널로 같은 배율·같은 기준선으로 나란히 생성한 뒤 반으로 잘라 각각 마무리했다 — 원본 패널(887x887) 기준 두 프레임의 alpha content bbox 크기 차이 2.0%/2.4%, 위치 차이 16~17px(패널 대비 약 2%). magenta 키 제거, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0 |
 | `Wet.png`, `Wet2.png` | 클라이언트 PR (이슈 #682) | 245x256 / 225x256 RGBA. 젖음 표시, 다면체 물 튀김 덩어리 세 개와 물방울 두 개. Shock 과 같은 좌우 쌍둥이 패널 생성으로 처음부터 시도해 한 번에 통과했다 — 원본 패널(887x887) 기준 두 프레임의 alpha content bbox 크기 차이 1.6%/1.3%, 위치 차이 0~3px. magenta 키 제거, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0 |
 | `rune/fire_rune.png` | 클라이언트 PR (이슈 #683) | 192x109 RGBA, 원본 크기 유지. 어두운 숯색 돌 원반 + Hellfire 팔레트 불꽃 문양. magenta 키 제거, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
