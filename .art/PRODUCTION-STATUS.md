@@ -148,6 +148,7 @@
 | `TideCall.png` | 클라이언트 PR (이슈 #694) | 256x193 RGBA, 원본 크기 유지. 밀려드는 해일 투사체, Water 팔레트 겹친 반투명 종이층. 원본의 커브 방향을 그대로 유지(투사체 4종 방향 고정 지시 대상은 아니었음). magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
 | `WaterExplosion.png` | 클라이언트 PR (이슈 #694) | 198x256 RGBA, 원본 크기 유지. 간헐천 폭발, 물기둥 받침의 돌 테두리를 찬 회색에서 따뜻한 황갈+이끼로 이동 — STYLE.md의 바위 진영 규칙을 물 마법의 부속 오브젝트에도 적용. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
 | `RockDrop.png` | 클라이언트 PR (이슈 #694) | 125x256 RGBA, 원본 크기 유지. 거석 낙하 투사체, 찬 회색-청색에서 따뜻한 황갈+이끼로 이동. 원본과 같은 방향(넓은 상단, 뾰족한 끝 하단)으로 고정. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
+| `RockDropTurn01–04.png` | 클라이언트 이슈 #730 | 뾰족한 끝을 아래 중앙에 두고 낙하 높이에 따라 황갈색 돌 표면을 네 자세로 바꾼다. 125×256 RGBA, PPU 133.333333, 하단 중앙 피벗. |
 | `Leafair.png` | 클라이언트 PR (이슈 #694) | 178x256 RGBA, 원본 크기 유지. 잎바람 요정, 개별 잎 다면체 수십 장이 겹쳐 쌓인 테두리가 톱니처럼 보이는 눈물방울형 더미, 위쪽에 흩날리는 낱장 잎 유지. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
 | `LeafairDescent01–04.png` | 클라이언트 이슈 #728 | 높이별로 방향을 바꾸는 위쪽 잎과 옆으로 넓어지는 잎 더미 네 자세를 낙하 개체에 적용했다. 178×256 RGBA, PPU 100, 하단 중앙 피벗. |
 | `Overgrowth.png` | 클라이언트 PR (이슈 #694) | 256x245 RGBA, 원본 크기 유지. 세계수의 과생장, 잎 다면체와 짧은 덩굴 마디가 뒤섞여 둥근 덩어리를 이루고 가장자리로 잎·덩굴손이 삐져나온다. 부드러운 뭉게구름형 원본에서 다면체로 교체. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
