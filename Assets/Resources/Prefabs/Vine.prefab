@@ -95,7 +95,7 @@ PrefabInstance:
     - target: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 79d3aa29092b4446eadb02ab6de1e87e, type: 3}
+      objectReference: {fileID: 21300000, guid: be25f579298152619af59f37043f5934, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2233061409166612173, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
@@ -105,14 +105,14 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4363250258731440198}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
---- !u!4 &1667181112348000304 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4482838688472848121, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
-  m_PrefabInstance: {fileID: 2960336558121752265}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2588469296268189417 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 790713194785081376, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 2960336558121752265}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &6640000000000000001 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
   m_PrefabInstance: {fileID: 2960336558121752265}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &4363250258731440198
@@ -124,10 +124,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2588469296268189417}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd90c7abb3534869ae221a3a28779995, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetTransform: {fileID: 1667181112348000304}
-  startScaleMultiplier: 0.15
-  duration: 0.28
-  ease: 27
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 6640000000000000001}
+  frames:
+  - {fileID: 21300000, guid: be25f579298152619af59f37043f5934, type: 3}
+  - {fileID: 21300000, guid: d7b232fab71050f3a04d9a37964e5393, type: 3}
+  - {fileID: 21300000, guid: 9d6f91d256a957039ea8ea3d07bdfef0, type: 3}
+  - {fileID: 21300000, guid: 1f7c4918ea5051e6aa96f55b8ba8c0e8, type: 3}
+  - {fileID: 21300000, guid: 1411f66b836f58beb84e81df508bf402, type: 3}
+  - {fileID: 21300000, guid: 4b62cc467dac5c1ab2bc531966490809, type: 3}
+  frameInterval: 0.05
+  loop: 0
