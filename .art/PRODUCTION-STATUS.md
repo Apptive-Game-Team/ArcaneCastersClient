@@ -212,6 +212,7 @@
 | `SeaSerpentSegment.png` | 이슈 #65 대조 | 위와 같음 |
 | `SeaSerpentTail.png` | 이슈 #65 대조 | 위와 같음 |
 | `SeaSerpentHydroPump.png` | 이슈 #65 대조 | 위와 같음 |
+| `SeaSerpentHydroFlow01–04.png` | 클라이언트 이슈 #722 | 원본 입과 끝을 고정하고 물줄기의 가운데에서 도톰한 물결을 네 자세로 재생한다. |
 | `explode/razor_gale_frame_0.png` | 클라이언트 PR (이슈 #76) | 192x155 RGBA, 원본 캔버스 유지. v1 한 번에 통과 — 민트 다면체 리본 넷이 열린 중심을 돌고 바깥 끝은 떨어진 날끝이다. 내용 192x141 로 캔버스 세로의 91.0%: 생성물 비가 1.36 이고 원본이 1.24 라 비율을 지켜 넣으면 세로가 9% 짧다. 늘이지 않고 그대로 뒀다. 바닥 여백 0px(옛 0px) |
 | `explode/razor_gale_frame_1.png` | 클라이언트 PR (이슈 #76) | 192x155 RGBA. v1 한 번에 통과. 확정한 frame 0 을 `-i` 로 붙여 뽑았고 두 장의 bbox 가 x 31~1229 대 53~1224, y 203~1081 대 200~1080 으로 겹쳐 등록이 맞았다. 공유 crop box `(31, 200, 1229, 1081)` 와 배율 0.16027 하나로 두 장을 함께 내보냈다. `check-frame-pair.py` 세로 +0.000, 가로 +0.001 unit |
 | `explode/electric_explode_frame_0.png` | 클라이언트 PR (이슈 #76) | 192x116 RGBA, 원본 캔버스 유지. v1 한 번에 통과 — 금색 다면체 번개 돔. 이 한 장만 `image_gen` 이 magenta 대신 실제 alpha 를 돌려줘서 key 제거 없이 그대로 썼다. 내용 192x108 로 세로 93.1%. 바닥 여백 0px(옛 0px) |

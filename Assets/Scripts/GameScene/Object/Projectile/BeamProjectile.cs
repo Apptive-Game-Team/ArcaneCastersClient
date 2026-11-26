@@ -9,10 +9,9 @@ namespace GameScene.Object.Projectile
     /// A beam spanning start to end, rather than a shot travelling from one to the other.
     /// The sprite is authored with a left-centre pivot and a nozzle/middle/tip 9-slice (a
     /// left/right spriteBorder in its .meta, spriteMeshType FullRect — the art side's job), so
-    /// growing SpriteRenderer.size.x under Tiled draw mode repeats the straight middle zone while
-    /// the nozzle and tip keep their authored proportions at every beam length. Tiled mode repeats
-    /// along Y as well, so size.y stays at the sprite's own height and the transform carries the
-    /// vertical scale that sets the drawn thickness.
+    /// growing SpriteRenderer.size.x either stretches the middle once in Sliced mode or repeats
+    /// it in Tiled mode. The authored ends fit at their full width once the beam is long enough
+    /// for both borders. Size.y stays at the sprite's own height and the transform sets thickness.
     /// </summary>
     public class BeamProjectile : MonoBehaviour, IProjectile
     {
@@ -22,12 +21,11 @@ namespace GameScene.Object.Projectile
         private const float FadeOutFraction = 0.3f;
 
         [SerializeField] private SpriteRenderer beamRenderer;
+        [SerializeField] private SpriteFrameAnimator beamFrames;
 
         /// <summary>
-        /// Height of the sprite rect in world units. It is not the width of the jet: the beam
-        /// sprite is mostly empty above and below its water band, which fills 39% of the image, so
-        /// 1.6 here draws a jet about 0.62 units thick. The server's SeaSerpentHydroPump hit test
-        /// covers 1.0 either side of the line, and the drawn jet is meant to sit inside that.
+        /// Height of the sprite rect in world units, including the clear area above and below the
+        /// water band. The server's SeaSerpentHydroPump hit test covers 1.0 either side of the line.
         /// </summary>
         [SerializeField] private float thickness = 2f;
 
@@ -63,9 +61,7 @@ namespace GameScene.Object.Projectile
                 return;
             }
 
-            // Tiled draw mode needs the sprite's mesh type to be FullRect; a Tight mesh clips the
-            // tile to the sprite's opaque silhouette instead of repeating the middle zone.
-            if (beamRenderer.drawMode != SpriteDrawMode.Tiled)
+            if (beamRenderer.drawMode == SpriteDrawMode.Simple)
             {
                 beamRenderer.drawMode = SpriteDrawMode.Tiled;
             }
@@ -89,7 +85,13 @@ namespace GameScene.Object.Projectile
             // so reach would appear to change with facing. GetCameraPlaneLength matches the length
             // GetRotation already aimed along.
             float length = Mathf.Max(ProjectileUtil.GetCameraPlaneLength(start, end, world), MinimumLength);
-            AnimateBeam(length, Mathf.Max(projectileDto.duration, MinimumDuration));
+            float duration = Mathf.Max(projectileDto.duration, MinimumDuration);
+            if (beamFrames != null)
+            {
+                beamFrames.PlayOnce(duration);
+            }
+
+            AnimateBeam(length, duration);
         }
 
         private void AnimateBeam(float length, float duration)
