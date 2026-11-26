@@ -573,3 +573,7 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 ## 화염탄 비행
 
 `FireShotFlight01–04`는 고정된 코끝과 낮은 꼬리 안에서 주황색 열이 갑각의 뒤에서 앞으로 옮겨가는 자세다. 256×88 RGBA, 133.333333 PPU, 하단 중앙 피벗을 쓴다. 공용 `Projectiles/FireShot`은 비행 수명에 맞춰 한 번 재생한다. 직접 시전과 튜토리얼은 실제로 보이는 렌더러에서 0.10초씩 반복한다.
+
+## 공용 전기 투사체 비행
+
+`ElectricShotFlight01–04`는 금색 화살촉의 위치를 유지하고, 넓고 밝은 면이 꼬리에서 굴절부와 화살촉으로 옮겨가는 자세다. 192×51 RGBA, 100 PPU, 하단 중앙 피벗이다. 직접 시전의 `Prefabs/ElectricShot`은 0.10초씩 반복한다. 공용 `Projectiles/ElectricShot`은 비행 수명 동안 한 번 재생한다. `ElectricAbsorb`도 같은 공용 프리팹을 사용한다.
