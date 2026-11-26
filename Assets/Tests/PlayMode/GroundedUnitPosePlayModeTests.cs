@@ -390,6 +390,138 @@ namespace WordOnline.Tests
             yield return null;
         }
 
+        [UnityTest]
+        public IEnumerator CraterCarrierWalkUsesGroundDistanceAndStopsForSiege()
+        {
+            Type config = Runtime("GameScene.GameConfig");
+            MethodInfo setTickRate = config.GetMethod("SetTickRate");
+            int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = RenderRate;
+            try
+            {
+                foreach (int tickRate in new[] { 20, 60 })
+                {
+                    setTickRate.Invoke(null, new object[] { tickRate });
+                    int direction = tickRate == 20 ? 1 : -1;
+                    yield return CheckCarrierWalk(tickRate, direction);
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+                setTickRate.Invoke(null, new object[] { previousTickRate });
+            }
+        }
+
+        private static IEnumerator CheckCarrierWalk(int tickRate, int direction)
+        {
+            var root = new GameObject("CraterCarrier movement test");
+            try
+            {
+                root.transform.localScale = Vector3.one * 0.4f;
+                var world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                ApplyObjects(world, @"{""create"":[{""id"":131,""type"":""CraterCarrier"",
+                    ""master"":""LeftPlayer"",""position"":{""x"":4,""z"":5}}]}");
+                var carrier = (Component)world.GetType().GetMethod("FindById").Invoke(world, new object[] { 131 });
+                SpriteRenderer body = Body(carrier);
+                var control = carrier.GetComponent("GroundedUnitPoseController");
+                var walk = (Sprite[])control.GetType().GetField("walkFrames", Private).GetValue(control);
+                Sprite idle = body.sprite;
+                Sprite deployed = Resources.Load<Sprite>("Game/sprites/CraterCarrierDeployed");
+                Sprite recovering = Resources.Load<Sprite>("Game/sprites/CraterCarrierRecovering");
+                AssertFrames(walk, 8, idle, new Vector2(192, 162));
+                Assert.That(idle.name, Is.EqualTo("CraterCarrier"));
+                float x = 4f;
+                float step = direction * .65f / tickRate;
+                void Update(string status, float position)
+                {
+                    ApplyObjects(world, FormattableString.Invariant(
+                        $"{{\"update\":[{{\"id\":131,\"status\":\"{status}\",\"position\":{{\"x\":{position},\"z\":5}}}}]}}"));
+                }
+
+                var seen = new List<Sprite>();
+                for (int i = 0; i < tickRate * 3; i++)
+                {
+                    x += step;
+                    Update("Idle", x);
+                    for (int render = 0; render < RenderRate / tickRate; render++)
+                    {
+                        yield return null;
+                        if (body.sprite != seen.LastOrDefault()) seen.Add(body.sprite);
+                    }
+                }
+
+                var cycle = walk.Append(walk[0]).ToArray();
+                Assert.That(Enumerable.Range(0, Mathf.Max(0, seen.Count - walk.Length))
+                    .Any(start => seen.Skip(start).Take(cycle.Length).SequenceEqual(cycle)), Is.True);
+                Assert.That(body.flipX, Is.EqualTo(direction < 0));
+
+                Update("Deploying", x);
+                Assert.That(body.sprite, Is.SameAs(recovering));
+                Update("Damaged", x);
+                Assert.That(body.sprite, Is.SameAs(recovering));
+                Update("Attack", x);
+                Assert.That(body.sprite, Is.SameAs(deployed));
+                Update("Deployed", x);
+                carrier.gameObject.SetActive(false);
+                Assert.That(body.sprite, Is.SameAs(deployed));
+                carrier.gameObject.SetActive(true);
+                yield return null;
+                Assert.That(body.sprite, Is.SameAs(deployed));
+
+                Update("Recovering", x + direction);
+                Assert.That(body.sprite, Is.SameAs(recovering));
+                x += direction * 1.4f;
+                Update("Idle", x);
+                for (int render = 0; render < RenderRate / tickRate; render++)
+                {
+                    yield return null;
+                    Assert.That(body.sprite, Is.SameAs(idle));
+                }
+
+                x += step;
+                Update("Idle", x);
+                yield return null;
+                for (int render = 0; render < RenderRate / tickRate && body.sprite == idle; render++) yield return null;
+                Assert.That(body.sprite, Is.SameAs(walk[0]));
+                yield return new WaitForSeconds(.2f);
+                Assert.That(body.sprite, Is.SameAs(idle));
+            }
+            finally { Object.Destroy(root); }
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator CraterCarrierSyncStartsInItsStationaryPose()
+        {
+            var root = new GameObject("CraterCarrier snapshot test");
+            var container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            try
+            {
+                root.AddComponent(Runtime("GameScene.Object.ObjectSpawner"));
+                root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+                var syncer = root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+                Type snapshots = Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType();
+                object snapshot = Decode(snapshots, @"[
+                    {""id"":141,""prefab"":""CraterCarrier"",""master"":""LeftPlayer"",""x"":4,""z"":5,""status"":""Deployed""},
+                    {""id"":142,""prefab"":""CraterCarrier"",""master"":""RightPlayer"",""x"":10,""z"":5,""status"":""Recovering""}]");
+                syncer.GetType().GetMethod("Sync").Invoke(syncer, new[] { snapshot, null });
+                var find = container.GetType().GetMethod("FindById");
+                var deployed = (Component)find.Invoke(container, new object[] { 141 });
+                var recovering = (Component)find.Invoke(container, new object[] { 142 });
+                yield return null;
+                Assert.That(Body(deployed).sprite.name, Is.EqualTo("CraterCarrierDeployed"));
+                Assert.That(Body(recovering).sprite.name, Is.EqualTo("CraterCarrierRecovering"));
+            }
+            finally
+            {
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                Object.Destroy(root);
+            }
+            yield return null;
+        }
+
         private static Vector3 AssertRockMuzzle(Component caster, Transform[] rocks, bool flipped, string firstFrame = "RockMageCast01")
         {
             SpriteRenderer body = Body(caster);

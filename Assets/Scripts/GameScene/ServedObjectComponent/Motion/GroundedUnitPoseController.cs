@@ -28,6 +28,8 @@ namespace GameScene.ServedObjectComponent.Motion
 
         private SpriteRenderer resolvedRenderer;
         private Sprite idleSprite;
+        private Sprite stationaryPose;
+        private bool discardResumeSample;
         private Vector2 lastGroundPosition;
         private bool hasGroundSample;
         private bool lastFlip;
@@ -79,10 +81,25 @@ namespace GameScene.ServedObjectComponent.Motion
                 Owner.OnServerPositionUpdated -= HandleServerGround;
             }
 
+            stationaryPose = null;
+            discardResumeSample = false;
             ResetPose();
         }
 
         private void OnDisable() => ResetPose();
+
+        internal void SetStationaryPose(Sprite pose)
+        {
+            if (stationaryPose == pose || (Owner != null && Owner.IsDespawning))
+            {
+                return;
+            }
+
+            stationaryPose = pose;
+            // 상태 해제와 같은 패킷의 위치는 다음 보행의 기준점으로만 쓴다.
+            discardResumeSample = pose == null;
+            ResetPose();
+        }
 
         internal void PlayHitPose()
         {
@@ -165,6 +182,15 @@ namespace GameScene.ServedObjectComponent.Motion
             }
 
             var ground = new Vector2(position.x, position.z);
+            if (stationaryPose != null || discardResumeSample)
+            {
+                lastServerGround = ground;
+                hasServerGround = true;
+                correctingServerGround = true;
+                discardResumeSample = false;
+                return;
+            }
+
             Vector2 step = ground - (hasServerGround ? lastServerGround : GroundPosition());
             if (correctingServerGround)
             {
@@ -203,6 +229,15 @@ namespace GameScene.ServedObjectComponent.Motion
         {
             if (resolvedRenderer == null || Owner == null || Owner.IsDespawning)
             {
+                return;
+            }
+
+            if (stationaryPose != null)
+            {
+                if (resolvedRenderer.sprite != stationaryPose)
+                {
+                    resolvedRenderer.sprite = stationaryPose;
+                }
                 return;
             }
 
@@ -257,7 +292,7 @@ namespace GameScene.ServedObjectComponent.Motion
 
             // 빠른 이동은 서버 좌표에서 보정을 판별하고 해당 보간 구간을 모두 건너뛴다.
             bool correcting = maximumGroundSpeed > 0f
-                ? correctingServerGround
+                ? correctingServerGround || discardResumeSample
                 : distance > Mathf.Max(MinimumCorrectionDistance, CorrectionSpeed * Time.deltaTime);
             if (correcting)
             {
@@ -302,9 +337,10 @@ namespace GameScene.ServedObjectComponent.Motion
             precedingServerDirection = confirmedServerDirection = 0;
             walkDistance = 0f;
             movingUntil = attackStarted = spawnStarted = float.NegativeInfinity;
-            if (resolvedRenderer != null && idleSprite != null)
+            Sprite restPose = stationaryPose != null ? stationaryPose : idleSprite;
+            if (resolvedRenderer != null && restPose != null)
             {
-                resolvedRenderer.sprite = idleSprite;
+                resolvedRenderer.sprite = restPose;
             }
         }
     }
