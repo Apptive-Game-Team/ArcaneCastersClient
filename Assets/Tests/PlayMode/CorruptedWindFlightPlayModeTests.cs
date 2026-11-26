@@ -12,22 +12,32 @@ namespace WordOnline.Tests
 {
     public class CorruptedWindFlightPlayModeTests
     {
-        private const string Name = "PveCorruptedWindSpirit";
+        private const string CorruptedWind = "PveCorruptedWindSpirit";
+        private const string WindSpirit = "WindSpirit";
         private const int RenderRate = 120;
 
         [UnityTest]
-        public IEnumerator ServerFramesSelectAllFlightPosesAt20Hz() => CheckFlight(20, 1);
+        public IEnumerator ServerFramesSelectAllFlightPosesAt20Hz() => CheckFlight(CorruptedWind, 20, 1);
 
         [UnityTest]
-        public IEnumerator ServerFramesSelectAllFlightPosesAt60Hz() => CheckFlight(60, -1);
+        public IEnumerator ServerFramesSelectAllFlightPosesAt60Hz() => CheckFlight(CorruptedWind, 60, -1);
 
-        private static IEnumerator CheckFlight(int tickRate, int direction)
+        [UnityTest]
+        public IEnumerator WindSpiritUsesShallowDescentAndKeepsItsLastPoseAt20Hz() => CheckFlight(WindSpirit, 20, 1);
+
+        [UnityTest]
+        public IEnumerator WindSpiritKeepsItsLastPoseWhenTheFinalPacketsShareARenderFrame() => CheckFlight(WindSpirit, 60, -1);
+
+        [UnityTest]
+        public IEnumerator WindSpiritKeepsItsGlideDuringASameHeightRemoval() => CheckFlight(WindSpirit, 60, 1, true);
+
+        private static IEnumerator CheckFlight(string prefabName, int tickRate, int direction, bool levelRemoval = false)
         {
             Type config = Runtime("GameScene.GameConfig");
             MethodInfo setRate = config.GetMethod("SetTickRate");
             int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
             int previousRenderRate = Time.captureFramerate;
-            var root = new GameObject("Corrupted Wind flight test");
+            var root = new GameObject(prefabName + " flight test");
             root.transform.position = new Vector3(100f, 100f, 100f);
             root.transform.rotation = Quaternion.Euler(0f, 15f, 0f);
             root.transform.localScale = Vector3.one * 0.4f;
@@ -43,17 +53,20 @@ namespace WordOnline.Tests
                 string master = direction > 0 ? "LeftPlayer" : "RightPlayer";
                 object creation = decode.Invoke(null, new object[]
                 {
-                    "{\"create\":[{\"id\":42,\"type\":\"" + Name + "\",\"master\":\"" + master +
+                    "{\"create\":[{\"id\":42,\"type\":\"" + prefabName + "\",\"master\":\"" + master +
                     "\",\"position\":{\"x\":4,\"y\":3,\"z\":5}}]}"
                 });
                 apply.Invoke(null, new[] { creation, null, world });
                 MethodInfo find = world.GetType().GetMethod("FindById");
                 var unit = (Component)find.Invoke(world, new object[] { 42 });
-                Type presenterType = Runtime("GameScene.ServedObjectComponent.Motion.CorruptedWindFlightPresenter");
+                Type presenterType = Runtime("GameScene.ServedObjectComponent.Motion.WindSpiritFlightPresenter");
                 var presenter = unit.GetComponent(presenterType);
                 var renderer = (SpriteRenderer)presenterType.GetField("targetRenderer",
                     BindingFlags.Instance | BindingFlags.NonPublic).GetValue(presenter);
-                Sprite reference = Resources.Load<Sprite>("Game/sprites/" + Name);
+                Sprite reference = Resources.Load<Sprite>("Game/sprites/" + prefabName);
+                bool playerSpirit = prefabName == WindSpirit;
+                if (playerSpirit)
+                    Assert.That(unit.GetComponent("HoverMotionController"), Is.Null);
                 Assert.That(renderer.flipX, Is.EqualTo(direction < 0));
 
                 object frame = decode.Invoke(null, new object[] { "{\"update\":[{\"id\":42,\"master\":\"" + master + "\"}]}" });
@@ -77,8 +90,8 @@ namespace WordOnline.Tests
                     yield return null;
                     observed.Add(renderer.sprite);
                 }
-                AssertPoses(observed, "Hover", reference);
-                Assert.That(observed.All(sprite => sprite.name.StartsWith(Name + "Hover", StringComparison.Ordinal)), Is.True);
+                AssertPoses(observed, prefabName + "Hover", reference);
+                Assert.That(observed.All(sprite => sprite.name.StartsWith(prefabName + "Hover", StringComparison.Ordinal)), Is.True);
 
                 observed.Clear();
                 for (int tick = 0; tick < Mathf.CeilToInt(tickRate * 1.18f); tick++)
@@ -91,42 +104,60 @@ namespace WordOnline.Tests
                         observed.Add(renderer.sprite);
                     }
                 }
-                AssertPoses(observed, "Glide", reference);
+                AssertPoses(observed, prefabName + "Glide", reference);
                 Assert.That(renderer.flipX, Is.EqualTo(direction < 0));
+
+                if (levelRemoval)
+                {
+                    Sprite glide = renderer.sprite;
+                    Send(3f, "Destroyed");
+                    yield return null;
+                    Assert.That(renderer.sprite, Is.SameAs(glide));
+                    yield return new WaitForSeconds(0.12f);
+                    Assert.That((Component)find.Invoke(world, new object[] { 42 }) == null, Is.True);
+                    yield break;
+                }
 
                 x += direction * 4f;
                 Send(3f);
                 yield return null;
-                Assert.That(renderer.sprite.name, Does.StartWith(Name + "Hover"));
+                Assert.That(renderer.sprite.name, Does.StartWith(prefabName + "Hover"));
 
                 // 한 렌더 프레임에 위치가 두 번 갱신되는 녹화도 하강을 인식한다.
-                Send(2.95f);
-                Send(2.90f);
+                Send(2.97f);
+                Send(2.94f);
                 yield return null;
-                Assert.That(renderer.sprite.name, Is.EqualTo(Name + "Descent01"));
+                Assert.That(renderer.sprite.name, Is.EqualTo(prefabName + "Descent01"));
                 Send(3f);
                 yield return null;
-                Assert.That(renderer.sprite.name, Does.StartWith(Name + "Hover"));
+                Assert.That(renderer.sprite.name, Does.StartWith(prefabName + "Hover"));
 
                 observed.Clear();
                 for (int tick = 1; tick < tickRate; tick++)
                 {
                     float t = (float)tick / tickRate;
                     x += direction * 1.2f / tickRate;
-                    Send(3f - 2f * t * t);
+                    Send(3f - (playerSpirit ? 0.235f * t : 2f * t * t));
                     for (int i = 0; i < rendersPerTick; i++)
                     {
                         yield return null;
                         observed.Add(renderer.sprite);
                     }
                 }
-                AssertPoses(observed, "Descent", reference);
-                Sprite finalDescent = renderer.sprite;
-                Assert.That(finalDescent.name, Is.EqualTo(Name + "Descent04"));
+                AssertPoses(observed, prefabName + "Descent", reference, playerSpirit ? 3 : 4);
+                if (playerSpirit)
+                {
+                    Assert.That(renderer.sprite.name, Is.EqualTo(prefabName + "Descent03"));
+                    Send(2.745f);
+                }
+                else
+                {
+                    Assert.That(renderer.sprite.name, Is.EqualTo(prefabName + "Descent04"));
+                }
 
                 Send(1f, "Destroyed");
                 yield return null;
-                Assert.That(renderer.sprite, Is.SameAs(finalDescent));
+                Assert.That(renderer.sprite.name, Is.EqualTo(prefabName + "Descent04"));
                 yield return new WaitForSeconds(0.12f);
                 Assert.That((Component)find.Invoke(world, new object[] { 42 }) == null, Is.True);
             }
@@ -138,11 +169,11 @@ namespace WordOnline.Tests
             }
         }
 
-        private static void AssertPoses(List<Sprite> sprites, string phase, Sprite reference)
+        private static void AssertPoses(List<Sprite> sprites, string prefix, Sprite reference, int count = 4)
         {
-            Sprite[] frames = sprites.Where(sprite => sprite.name.StartsWith(Name + phase, StringComparison.Ordinal))
+            Sprite[] frames = sprites.Where(sprite => sprite.name.StartsWith(prefix, StringComparison.Ordinal))
                 .Distinct().ToArray();
-            CollectionAssert.AreEqual(Enumerable.Range(1, 4).Select(index => $"{Name}{phase}{index:00}"),
+            CollectionAssert.AreEqual(Enumerable.Range(1, count).Select(index => $"{prefix}{index:00}"),
                 frames.Select(sprite => sprite.name));
             foreach (Sprite frame in frames)
             {
