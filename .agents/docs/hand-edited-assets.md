@@ -57,6 +57,10 @@ Find them by grepping the script's `.meta` guid across `Assets/`, then grepping
 the local `fileID` each hit declares. Stop after step 1 and the prefab opens in
 the Editor with a "missing script" component.
 
+## 같은 착탄에서 폭발이 두 번 그려지는지 확인한다
+
+서버가 착탄 틱에 별도 폭발 개체를 보내는 투사체를 수정할 때, 상속한 `OnDestroySpawner`의 프리팹과 서버의 생성 기록을 함께 확인한다. `BombSpriteBomb`은 `AbstractShot`의 공통 폭발을 제거 때 띄웠고, 같은 좌표에 서버 `BombSpriteExplosion`도 생겨 바람 자세를 가렸다. 서버 착탄 개체와 음향 카탈로그를 확인한 뒤 이 투사체 변형에서만 상속 컴포넌트를 제거하고, 실제 리플레이에서 착탄 하나에 효과 하나가 남는지 본다.
+
 ## Writing a new `.meta` by hand
 
 When deriving a new prefab from an existing variant, validate modification targets
