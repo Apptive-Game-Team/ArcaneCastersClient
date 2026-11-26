@@ -2246,6 +2246,183 @@ namespace WordOnline.Tests
         }
 
 
+
+        [UnityTest]
+        public IEnumerator SeedSpiritSwarmShowsSimultaneousLeafHitsAndIndependentRecovery()
+        {
+            Create();
+            Assert.That(Configure("seed_spirit_swarm"), Is.True);
+            Scenario(0);
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/SeedSpiritCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                yield return PlayUntil(.65f);
+                int[] ids = { 3, 4, 5, 6 };
+                var bodies = ids.ToDictionary(id => id, SeedSpiritBody);
+                var seen = ids.ToDictionary(id => id, _ => new System.Collections.Generic.HashSet<string>());
+                Assert.That(bodies.Values.Select(body => body.sprite.name), Is.All.EqualTo("SeedSpiritSwarm"));
+                while ((float)Field("elapsed") < 2.26f)
+                {
+                    foreach (int id in ids)
+                    {
+                        string pose = bodies[id].sprite.name;
+                        if (!pose.StartsWith("SeedSpiritStep", StringComparison.Ordinal)) continue;
+                        if (seen[id].Add(pose) && capture && id == 6) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+
+                Assert.That(seen.Values.Select(gait => gait.Count), Is.All.EqualTo(8));
+                var target = Target(2);
+                var clips = new[]
+                {
+                    (time: 2.70f, attackers: new[] { 4 }, before: 10000, after: 9900),
+                    (time: 2.80f, attackers: new[] { 3 }, before: 9900, after: 9800),
+                    (time: 3.00f, attackers: new[] { 5, 6 }, before: 9800, after: 9600),
+                    (time: 3.50f, attackers: new[] { 4 }, before: 9600, after: 9500),
+                    (time: 3.60f, attackers: new[] { 3 }, before: 9500, after: 9400),
+                    (time: 3.80f, attackers: new[] { 5, 6 }, before: 9400, after: 9200)
+                };
+                foreach (var clip in clips)
+                {
+                    yield return PlayUntil(clip.time - .027f);
+                    Assert.That(CurrentHp(target), Is.EqualTo(clip.before));
+                    Assert.That(clip.attackers.Select(id => bodies[id].sprite.name), Is.All.EqualTo("SeedSpiritSwarm"));
+                    yield return PlayUntil(clip.time + .016f);
+                    Assert.That(CurrentHp(target), Is.EqualTo(clip.after));
+                    CollectionAssert.AreEquivalent(clip.attackers, ids.Where(id => bodies[id].sprite.name == "SeedSpiritLeafHit01"));
+                    Assert.That(clip.attackers.Select(id => bodies[id].flipX), Is.All.False);
+                    if (clip.attackers.Length == 2)
+                    {
+                        Assert.That(bodies[3].sprite.name, Is.EqualTo("SeedSpiritLeafHit03"));
+                        if (capture && clip.after == 9600) SaveViewport(directory, "swarm-simultaneous-hit", true);
+                    }
+                }
+
+                yield return PlayUntil(4.16f);
+                Assert.That(bodies.Values.Select(body => body.sprite.name), Is.All.EqualTo("SeedSpiritSwarm"));
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator SeedNestSpawnsNineSeedSpiritsAndKeepsTheirLeafHitsIndependent()
+        {
+            Create();
+            Assert.That(Configure("seed_nest"), Is.True);
+            Scenario(0);
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/SeedSpiritCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                yield return PlayUntil(1.48f);
+                SpriteRenderer first = SeedSpiritBody(4);
+                Assert.That(Target(6), Is.Null);
+                yield return PlayUntil(2.33f);
+                SpriteRenderer second = SeedSpiritBody(6);
+                Assert.That(first, Is.Not.SameAs(second));
+                yield return PlayUntil(2.64f);
+                Assert.That(first.sprite.name, Does.StartWith("SeedSpiritStep"));
+                Assert.That(second.sprite.name, Does.StartWith("SeedSpiritStep"));
+                if (capture) SaveViewport(directory, "nest-two-approaches", true);
+
+                var target = Target(2);
+                yield return PlayUntil(3.48f);
+                Assert.That(CurrentHp(target), Is.EqualTo(10000));
+                yield return PlayUntil(3.52f);
+                Assert.That(first.sprite.name, Is.EqualTo("SeedSpiritLeafHit01"));
+                Assert.That(second.sprite.name, Is.Not.EqualTo("SeedSpiritLeafHit01"));
+                Assert.That(CurrentHp(target), Is.EqualTo(9900));
+
+                yield return PlayUntil(4.322f);
+                Assert.That(first.sprite.name, Is.EqualTo("SeedSpiritLeafHit01"));
+                Assert.That(second.sprite.name, Is.Not.EqualTo("SeedSpiritLeafHit01"));
+                Assert.That(CurrentHp(target), Is.EqualTo(9800));
+                yield return PlayUntil(4.40f);
+                Assert.That(first.sprite.name, Is.EqualTo("SeedSpiritLeafHit02"));
+                Assert.That(second.sprite.name, Is.EqualTo("SeedSpiritLeafHit01"));
+                Assert.That(CurrentHp(target), Is.EqualTo(9700));
+                if (capture) SaveViewport(directory, "nest-two-hit-phases", true);
+
+                yield return PlayUntil(8.28f);
+                foreach (int id in new[] { 4, 6, 9, 12, 15, 18, 21, 24, 27 }) SeedSpiritBody(id);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator SeedSpiritEvolutionReplacesTheRecoveringSeedWithAGolem()
+        {
+            Create();
+            Assert.That(Configure("overgrowth"), Is.True);
+            var scenarios = (JArray)Recording("overgrowth")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(scenario => (string)scenario["id"] == "evolution")));
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/SeedSpiritCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                yield return PlayUntil(.876f);
+                var seed = Target(2);
+                var body = SeedSpiritBody(2);
+                Assert.That(body.sprite.name, Is.EqualTo("SeedSpiritLeafHit01"));
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(9900));
+                Assert.That(Target(5), Is.Null);
+                Vector3 seedPosition = seed.transform.position;
+                var master = seed.GetType().GetMethod("GetMaster");
+                object seedTeam = master.Invoke(seed, null);
+                if (capture) SaveViewport(directory, "evolution-seed-hit", true);
+
+                yield return PlayUntil(1.13f);
+                Assert.That(body.sprite.name, Is.EqualTo("SeedSpiritLeafHit04"));
+                yield return PlayUntil(1.151f);
+                var golem = Target(5);
+                Assert.That(golem, Is.Not.Null);
+                Assert.That(golem.name, Does.StartWith("TreeGolem"));
+                Assert.That(master.Invoke(golem, null), Is.EqualTo(seedTeam));
+                Assert.That(Vector3.Distance(golem.transform.position, seedPosition), Is.LessThan(.025f));
+                var despawning = seed.GetType().GetProperty("IsDespawning", Private);
+                Assert.That((bool)despawning.GetValue(seed), Is.True);
+                Assert.That(CurrentHp(Target(3)), Is.EqualTo(9800));
+
+                yield return PlayUntil(1.25f);
+                Assert.That(Target(2), Is.Null);
+                Assert.That(Target(4), Is.Null);
+                Assert.That(Target(5), Is.SameAs(golem));
+                var golemBody = (SpriteRenderer)golem.GetType().GetField("_spriteRenderer", Private).GetValue(golem);
+                Assert.That(golemBody.sprite.name, Is.EqualTo("TreeGolem"));
+                if (capture) SaveViewport(directory, "evolution-golem", true);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        private SpriteRenderer SeedSpiritBody(int id)
+        {
+            Component unit = Target(id);
+            Assert.That(unit, Is.Not.Null, $"씨앗 정령 ID {id}");
+            Assert.That(unit.name, Does.StartWith("SeedSpirit"));
+            Assert.That(unit.GetComponent("CrawlMotionController"), Is.Null);
+            return (SpriteRenderer)unit.GetType().GetField("_spriteRenderer", Private).GetValue(unit);
+        }
+
         private Transform FindProjectile(string type)
         {
             var world = (Component)Field("world");
