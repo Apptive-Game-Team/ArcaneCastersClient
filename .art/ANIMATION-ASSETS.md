@@ -26,6 +26,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `RockGolem.png` | 이끼바위 골렘 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |
 | `RockGolemWalk01.png`–`RockGolemWalk08.png`, `RockGolemWalk04To05.png` | 이끼바위 골렘 · 양발 보행과 내딛는 중간 자세 | 실제 XZ 이동 0.66칸마다 한 바퀴. 기준 속도 0.5칸/초에서 1.32초 |
 | `RockGolem2.png`, `RockGolemRecover01.png`–`RockGolemRecover03.png` | 이끼바위 골렘 · 펀치 타격과 복귀 | 기존 타격을 공격 이벤트에서 즉시 표시한다. 0.05초 간격 네 자세 |
+| `WallGolem.png`, `WallGolemWalk01.png`–`WallGolemWalk08.png` | 방벽 골렘 · 양발 보행과 체중 이동 | 실제 지면 이동 0.66칸마다 여덟 자세를 재생한다. 기본 속도 0.3칸/초에서 2.2초 |
+| `WallGolemPunch01.png`–`WallGolemPunch04.png` | 방벽 골렘 · 주먹 타격과 회수 | `Attack` 상태를 받는 순간 주먹이 닿는 자세를 표시한다. 네 자세가 0.08초씩 이어진다 |
 | `TreeGolem.png` | 고목 수호자 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |
 | `TreeGolemWalk01.png`–`TreeGolemWalk08.png` | 고목 수호자 · 양발의 접촉, 체중 이동, 지나가기, 다음 착지 | 실제 XZ 이동 0.9칸마다 한 바퀴. 기준 속도 0.5칸/초에서 1.8초 |
 | `TreeGolem2.png`, `TreeGolemRecover01.png`–`TreeGolemRecover03.png` | 고목 수호자 · 펀치 타격과 복귀 | 공격 이벤트에서 타격 프레임을 즉시 표시하고 0.05초 간격으로 복귀. 총 0.2초 |

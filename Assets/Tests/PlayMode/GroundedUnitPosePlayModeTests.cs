@@ -35,6 +35,10 @@ namespace WordOnline.Tests
             CheckBothTickRates("AquaArcher", 8, "AquaArcherAttack", 3, 1f, 0.08f);
 
         [UnityTest]
+        public IEnumerator WallGolemWalksAtProductionSpeedAndPunchesAtBothTickRates() =>
+            CheckBothTickRates("WallGolem", 8, "WallGolemPunch01", 4, 0.3f, 0.08f, walkWidth: 256);
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
@@ -89,7 +93,7 @@ namespace WordOnline.Tests
 
         private static IEnumerator CheckBothTickRates(string prefabName, int walkPoseCount,
             string attackSprite = null, int attackPoseCount = 4, float walkSpeed = WalkSpeed,
-            float secondsPerAttackPose = 0.05f, string shotPrefab = null)
+            float secondsPerAttackPose = 0.05f, string shotPrefab = null, int? walkWidth = null)
         {
             var gameConfig = Runtime("GameScene.GameConfig");
             var setTickRate = gameConfig.GetMethod("SetTickRate");
@@ -102,7 +106,7 @@ namespace WordOnline.Tests
                 {
                     setTickRate.Invoke(null, new object[] { tickRate });
                     yield return CheckAtTickRate(prefabName, walkPoseCount, tickRate,
-                        attackSprite ?? prefabName + "2", attackPoseCount, walkSpeed, secondsPerAttackPose, shotPrefab);
+                        attackSprite ?? prefabName + "2", attackPoseCount, walkSpeed, secondsPerAttackPose, shotPrefab, walkWidth);
                 }
             }
             finally
@@ -113,7 +117,8 @@ namespace WordOnline.Tests
         }
 
         private static IEnumerator CheckAtTickRate(string prefabName, int walkPoseCount, int tickRate,
-            string attackSprite, int attackPoseCount, float walkSpeed, float secondsPerAttackPose, string shotPrefab)
+            string attackSprite, int attackPoseCount, float walkSpeed, float secondsPerAttackPose, string shotPrefab,
+            int? walkWidth)
         {
             int direction = tickRate == 60 ? -1 : 1;
             var root = new GameObject($"{prefabName}-{tickRate}Hz");
@@ -146,7 +151,7 @@ namespace WordOnline.Tests
                 Sprite hit = Resources.Load<Sprite>($"Game/sprites/{attackSprite}");
                 Assert.That(idle.name, Is.EqualTo(prefabName));
                 Assert.That(attack[0], Is.SameAs(hit));
-                AssertFrames(walk, walkPoseCount, idle);
+                AssertFrames(walk, walkPoseCount, idle, walkWidth);
                 AssertFrames(attack, attackPoseCount, hit);
                 float attackDuration = secondsPerAttackPose * attackPoseCount;
                 Assert.That((float)presenter.GetType().GetField("attackDuration", Private).GetValue(presenter),
@@ -258,14 +263,22 @@ namespace WordOnline.Tests
                 .Invoke(null, new[] { objects, null, world });
         }
 
-        private static void AssertFrames(Sprite[] frames, int count, Sprite reference)
+        private static void AssertFrames(Sprite[] frames, int count, Sprite reference, int? expectedWidth = null)
         {
+            Vector2 size = reference.rect.size;
+            Vector2 pivot = reference.pivot;
+            if (expectedWidth.HasValue)
+            {
+                pivot.x += (expectedWidth.Value - size.x) * 0.5f;
+                size.x = expectedWidth.Value;
+            }
+
             Assert.That(frames.Distinct().Count(), Is.EqualTo(count));
             foreach (Sprite frame in frames)
             {
                 Assert.That(frame, Is.Not.Null);
-                Assert.That(frame.rect.size, Is.EqualTo(reference.rect.size));
-                Assert.That(frame.pivot, Is.EqualTo(reference.pivot));
+                Assert.That(frame.rect.size, Is.EqualTo(size));
+                Assert.That(frame.pivot, Is.EqualTo(pivot));
                 Assert.That(frame.pixelsPerUnit, Is.EqualTo(reference.pixelsPerUnit));
             }
         }
