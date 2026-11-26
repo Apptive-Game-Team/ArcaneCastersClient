@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8429849414117516277}
   - component: {fileID: 431456336032844845}
   - component: {fileID: 5148704957114622165}
+  - component: {fileID: 8382957879998100431}
   m_Layer: 0
   m_Name: SandStorm
   m_TagString: Untagged
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 12
-  m_Sprite: {fileID: 21300000, guid: 897e8ccba3679b74192c41bddec5db05, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2203b849be2c49779384804f987c4c99, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.2}
   m_FlipX: 0
   m_FlipY: 0
@@ -138,3 +139,23 @@ MonoBehaviour:
   startScaleMultiplier: 0.15
   duration: 0.28
   ease: 27
+--- !u!114 &8382957879998100431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4491772784460150989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 6294209296427915767}
+  frames:
+  - {fileID: 21300000, guid: 2203b849be2c49779384804f987c4c99, type: 3}
+  - {fileID: 21300000, guid: 189e125308b04e818984f0da36c255cd, type: 3}
+  - {fileID: 21300000, guid: 58ecc9b7b4ed4c35b0e723de54c9151d, type: 3}
+  - {fileID: 21300000, guid: 7682563dca1547c4afce45a5b5c8d384, type: 3}
+  frameInterval: 0.22
+  loop: 1
