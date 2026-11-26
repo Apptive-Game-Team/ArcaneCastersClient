@@ -95,7 +95,7 @@
 | `explode/lava_fist.png` | 클라이언트 PR (이슈 #683) | 130x192 RGBA, 원본 크기 유지. 용암 주먹, HellfireDemon.png 재질(어두운 갑각+주황 갈라진 빛)로 교체. magenta 키 제거, enclosed_pixels=0, 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
 | `electric_field.png`, `electric_field_frame_02.png`–`electric_field_frame_04.png` | 클라이언트 이슈 #488 | 192×84 RGBA, PPU 100, Bottom Center. 기존 타원 알파와 중앙 그을음을 유지하고 가장자리 전기를 0.18초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
 | `fire_field.png`, `fire_field_frame_02.png`–`fire_field_frame_04.png` | 클라이언트 이슈 #484 | 192×68 RGBA, PPU 100, Bottom Center. 기존 중앙 그을음 위로 테두리 불꽃이 0.18초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
-| `leaf_field.png` | 클라이언트 이슈 #681 재작업 검수 | 192x79 RGBA. 자연 정령 팔레트, 땅에서 자란 풀잎이 타원 전체를 덮는다. 테두리가 가장 높고 중앙으로 갈수록 낮아져 소환수 자리가 남는다 |
+| `leaf_field.png`, `leaf_field_frame_02.png`–`leaf_field_frame_04.png` | 클라이언트 이슈 #490 | 192×79 RGBA, PPU 100, Bottom Center. 중앙의 기존 잎과 공통 바닥선을 유지하고 가장자리 잎을 0.24초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
 | `water_field.png`, `water_field_frame_02.png`–`water_field_frame_04.png` | 클라이언트 이슈 #486 | 192×69 RGBA, PPU 100, Bottom Center. 기존 타원 알파와 중앙 물빛을 유지하고 가장자리 물결을 0.24초 간격으로 4프레임 반복한다. Unity 플레이 검수 대기 |
 | `crater_ember.png` | 클라이언트 이슈 #681 재작업 검수 | 64x58 RGBA. 분화구에서 튄 불씨 하나, 둥근 물방울 실루엣에 면 3~4개, 가장 밝은 면이 중앙 |
 | `Shock.png`, `Shock2.png` | 클라이언트 PR (이슈 #682) | 247x256 / 244x256 RGBA. 감전 표시, 다면체 번개 조각 다섯 개, 크기를 다르게 흩뿌리고 가운데를 비웠다. 이전 세 차례 시도는 개별 생성이라 프레임 2의 구도·크기가 10% 어긋나 실패했다. 이번은 한 이미지에 좌우 두 패널로 같은 배율·같은 기준선으로 나란히 생성한 뒤 반으로 잘라 각각 마무리했다 — 원본 패널(887x887) 기준 두 프레임의 alpha content bbox 크기 차이 2.0%/2.4%, 위치 차이 16~17px(패널 대비 약 2%). magenta 키 제거, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0 |
