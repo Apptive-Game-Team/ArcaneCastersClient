@@ -70,7 +70,7 @@
 | `Assets/Resources/PlayerAppearances/<storm,blaze,summoner,golem,grass,tide>/{idle,raised,attacking}.png`, `default/` | 클라이언트 PR (bot 외형) | 상대 bot 용 외형 여섯 벌과 default 복사본. 981x1245 RGBA, 눈 중심과 발 아래 끝을 default 자세에 맞춤. 기존 `PlayerCharacter*.png` 는 그대로다. 비교 시트 `.art/concept/bot-appearances/contact-sheet-128.png`. Unity Editor 검수는 남아 있다 |
 | `Assets/Resources/PlayerAppearances/corrupted_finn/{idle,raised,attacking}.png` | 클라이언트 이슈 #450 | 불차원 시작 외형. 세 자세에서 맨손으로 지팡이를 쥐고, 공격할 때 그 팔이 가슴 앞을 가로지른다. 눈 중심과 발의 높이를 맞췄다. |
 | `SeaSerpent.png` | 클라이언트 PR (이슈 #672) | 201x256 RGBA. magic book 이 빈 칸이던 신규 아이콘. 물 소환수 문법, 곧추선 몸통에 두 겹 똬리. Unity Editor 검수는 남아 있다 |
-| `BoulderStrike.png` | 클라이언트 PR (이슈 #672) | 256x146 RGBA. 밀려 나가는 바위와 뒤따르는 초승달. 전투 화면 투사체는 여전히 `RockRolling.png` 를 빌려 쓴다 |
+| `BoulderStrike.png` | 클라이언트 PR (이슈 #672) | 256x146 RGBA. 밀려 나가는 바위와 뒤따르는 초승달 카드 아트. 전투 프리팹은 `Game/sprites/BoulderStrike.png` 를 사용한다 |
 | `SpiritBomb.png` | 클라이언트 PR (이슈 #672) | 256x183 RGBA. 필드 오브젝트가 없는 마법이라 책 아이콘 전용. LIGHTNING 과 NATURE 두 원소를 금색과 풀색으로 같이 쓴다 |
 | `ligtning_aura.png` | 클라이언트 PR (이슈 #680) | 512x469 RGBA. `fire_aura.png` 기법으로 재작업한 전기 공용 오라. 64px 실루엣 검수 완료 |
 | `nature_aura.png` | 클라이언트 PR (이슈 #680) | 512x484 RGBA. `fire_aura.png` 기법으로 재작업한 자연 공용 오라. 64px 실루엣 검수 완료 |
@@ -367,3 +367,7 @@ commit 그대로였다.
 ## 타락한 덩굴 정령 지면 모션
 
 `PveCorruptedVineSpirit.png`, `PveCorruptedVineSpiritCrawl01–08.png`, `PveCorruptedVineSpiritLash01–04.png`에 해당한다. 이슈 #540. 180×256 RGBA, PPU 200, 하단 중앙 피벗. 뿌리 이동 여덟 장과 덩굴 타격 및 복귀 네 장을 `PveCorruptedVineSpirit.prefab`에 연결했다. 실제 모험 전투 화면 검수는 남아 있다.
+
+## 구르는 바위 아트와 회전
+
+`RockRolling.png`와 `RockRollingRoll02–08.png`. 이슈 #542. 무광 돌 표면을 여덟 방향에서 그렸다. 256×244 RGBA, PPU 133.333333, 하단 중앙 피벗. `RockRolling.prefab`에서 이동 거리와 진행 방향에 따라 자세를 바꾼다. `RockShot.prefab`의 돌탄도 기본 그림을 공유한다.

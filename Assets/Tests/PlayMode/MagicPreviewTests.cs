@@ -280,6 +280,157 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator RollingRockReversesOnRecordedImpactAndKeepsItsSpriteRegistration()
+        {
+            Create();
+            const string magic = "rock_rolling";
+            Assert.That(Configure(magic), Is.True);
+            var frames = (JArray)Recording(magic)["scenarios"][0]["frames"];
+            int rockId = (int)frames.SelectMany(frame => frame["objects"]["create"])
+                .First(created => (string)created["type"] == "RockRolling")["id"];
+            Sprite reference = Resources.Load<Sprite>("Game/sprites/RockRolling");
+
+            yield return PlayUntil(0.61f);
+            SpriteRenderer renderer = RollingRockRenderer(Target(rockId));
+            Assert.That(renderer.sprite, Is.SameAs(reference));
+            Quaternion localRotation = renderer.transform.localRotation;
+            yield return PlayUntil(0.97f);
+            Sprite towardEnemy = renderer.sprite;
+            Assert.That(RockRollIndex(towardEnemy), Is.InRange(2, 4));
+            yield return PlayUntil(1.16f);
+            int atBounce = RockRollIndex(renderer.sprite);
+            yield return PlayUntil(1.38f);
+            Assert.That(RockRollIndex(renderer.sprite), Is.LessThan(atBounce));
+            Assert.That(Quaternion.Angle(renderer.transform.localRotation, localRotation), Is.LessThan(0.01f));
+            Assert.That(renderer.flipX, Is.False);
+            Assert.That(renderer.sprite.rect, Is.EqualTo(reference.rect));
+            Assert.That(renderer.sprite.pivot, Is.EqualTo(reference.pivot));
+            Assert.That(renderer.sprite.pixelsPerUnit, Is.EqualTo(reference.pixelsPerUnit));
+
+            if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+            {
+                string directory = System.IO.Path.Combine(Application.dataPath, "../Temp/RollingRockCaptures");
+                System.IO.Directory.CreateDirectory(directory);
+                SaveViewport(directory, magic, true);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator RollingRockTravelDrivesPosesAt20Hz() => CheckRollingRockTravel(20, 1);
+
+        [UnityTest]
+        public IEnumerator RollingRockTravelDrivesPosesAt60Hz() => CheckRollingRockTravel(60, -1);
+
+        private IEnumerator CheckRollingRockTravel(int tickRate, int direction)
+        {
+            Create();
+            Component world = CreateWorld();
+            world.transform.position = new Vector3(100f, 100f, 100f);
+            world.transform.rotation = Quaternion.Euler(0f, 17f, 0f);
+            world.transform.localScale = Vector3.one * 0.4f;
+
+            Type config = Runtime("GameScene.GameConfig");
+            MethodInfo setRate = config.GetMethod("SetTickRate");
+            int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
+            int previousRenderRate = Time.captureFramerate;
+            const int renderRate = 120;
+            string master = direction > 0 ? "LeftPlayer" : "RightPlayer";
+            float x = direction > 0 ? 4f : 14f, z = 4f;
+            Type infoType = Runtime("GameScene.Dto.ObjectsInfo");
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize").MakeGenericMethod(infoType);
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            void Apply(string json) => apply.Invoke(null, new[] { decode.Invoke(null, new object[] { json }), null, world });
+            void Send(string status = "Idle") => Apply(FormattableString.Invariant(
+                $"{{\"update\":[{{\"id\":42,\"master\":\"{master}\",\"status\":\"{status}\",\"position\":{{\"x\":{x},\"y\":0,\"z\":{z}}}}}]}}"));
+
+            try
+            {
+                Time.captureFramerate = renderRate;
+                setRate.Invoke(null, new object[] { tickRate });
+                Apply(FormattableString.Invariant(
+                    $"{{\"create\":[{{\"id\":42,\"type\":\"RockRolling\",\"master\":\"{master}\",\"position\":{{\"x\":{x},\"y\":0,\"z\":{z}}}}}]}}"));
+                MethodInfo find = world.GetType().GetMethod("FindById");
+                var rock = (Component)find.Invoke(world, new object[] { 42 });
+                SpriteRenderer renderer = RollingRockRenderer(rock);
+                Assert.That(renderer.flipX, Is.False);
+                Assert.That(RockRollIndex(renderer.sprite), Is.Zero);
+
+                int rendersPerTick = renderRate / tickRate;
+                var seen = new System.Collections.Generic.HashSet<int> { 0 };
+                int lastPose = 0;
+                for (int tick = 0; tick < tickRate; tick++)
+                {
+                    // 기록된 발사 속도와 서버의 충돌 이격량을 재현한다.
+                    x += direction * (8f / tickRate + (tick == 3 ? 0.05f : 0f));
+                    Send();
+                    for (int i = 0; i < rendersPerTick; i++)
+                    {
+                        yield return null;
+                        Assert.That(renderer.flipX, Is.False);
+                        int pose = RockRollIndex(renderer.sprite);
+                        if (pose == lastPose) continue;
+                        Assert.That(pose, Is.EqualTo((lastPose + direction + 8) % 8));
+                        lastPose = pose;
+                        seen.Add(pose);
+                    }
+                }
+                Assert.That(seen.Count, Is.EqualTo(8));
+
+                x -= 3f * direction;
+                Send();
+                for (int i = 0; i < rendersPerTick + 2; i++) yield return null;
+                Assert.That(RockRollIndex(renderer.sprite), Is.EqualTo(lastPose));
+                int beforeDepthTravel = lastPose;
+                for (int tick = 0; tick < Mathf.CeilToInt(0.35f * tickRate); tick++)
+                {
+                    z += 8f / tickRate;
+                    Send();
+                    for (int i = 0; i < rendersPerTick; i++)
+                    {
+                        yield return null;
+                        int pose = RockRollIndex(renderer.sprite);
+                        if (pose == lastPose) continue;
+                        Assert.That(pose, Is.EqualTo((lastPose + 1) % 8));
+                        lastPose = pose;
+                    }
+                }
+                Assert.That(lastPose, Is.Not.EqualTo(beforeDepthTravel));
+                Sprite held = renderer.sprite;
+                for (int i = 0; i < rendersPerTick + 2; i++) yield return null;
+                Assert.That(renderer.sprite, Is.SameAs(held));
+                Send("Destroyed");
+                yield return new WaitForSeconds(0.12f);
+                Assert.That((Component)find.Invoke(world, new object[] { 42 }) == null, Is.True);
+
+                Apply("{\"projectile\":[{\"type\":\"RockShot\",\"duration\":0.5," +
+                      "\"start\":{\"targetType\":\"position\",\"x\":2,\"y\":1,\"z\":4}," +
+                      "\"end\":{\"targetType\":\"position\",\"x\":4,\"y\":1,\"z\":4}}]}");
+                var shot = world.transform.Find("PresentationContent/RockShot(Clone)");
+                Assert.That(shot, Is.Not.Null);
+                var shotRenderer = shot.Find("actualObject").GetComponent<SpriteRenderer>();
+                Vector3 start = shot.position;
+                yield return new WaitForSeconds(0.2f);
+                Assert.That(shot.position, Is.Not.EqualTo(start));
+                Assert.That(shotRenderer.sprite, Is.SameAs(Resources.Load<Sprite>("Game/sprites/RockRolling")));
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+                setRate.Invoke(null, new object[] { previousTickRate });
+            }
+        }
+
+        private static int RockRollIndex(Sprite sprite) => sprite.name == "RockRolling" ? 0 :
+            int.Parse(sprite.name.Substring("RockRollingRoll".Length)) - 1;
+
+        private static SpriteRenderer RollingRockRenderer(Component rock)
+        {
+            Assert.That(rock, Is.Not.Null);
+            var actual = (Transform)rock.GetType().GetMethod("GetActualTransform").Invoke(rock, null);
+            return actual.GetComponent<SpriteRenderer>();
+        }
+
+        [UnityTest]
         public IEnumerator NativeProjectilesAnimateAndCaptureBothViewports()
         {
             Create();
