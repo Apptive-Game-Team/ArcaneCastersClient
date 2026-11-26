@@ -3826,6 +3826,76 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator WillOWispCyclesAndKeepsItsRecordedControl()
+        {
+            Create();
+            Assert.That(Configure("will_o_wisp"), Is.True);
+            var world = (Component)Field("world");
+            Sprite original = Resources.Load<Sprite>("Game/sprites/WillOWisp");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WispCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.575f);
+                Assert.That(Target(4), Is.Null);
+                yield return PlayUntil(.622f);
+                Component wisp = Target(4);
+                Assert.That(wisp, Is.Not.Null);
+                SpriteRenderer body = ServedObjectRenderer(wisp);
+                Assert.That(body.sprite.rect, Is.EqualTo(original.rect));
+                Assert.That(body.sprite.pivot, Is.EqualTo(original.pivot));
+                Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+                Vector3 start = world.transform.InverseTransformPoint(wisp.transform.position);
+                Assert.That(Vector3.Distance(start, new Vector3(2f, 0f, 5f)), Is.LessThan(.08f));
+
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 1.122f)
+                {
+                    string pose = body.sprite.name;
+                    if (poses.LastOrDefault() != pose)
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 4) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 4).Select(index => $"WillOWispFlight{index:00}").Append("WillOWispFlight01");
+                CollectionAssert.AreEqual(expected, poses);
+                Assert.That(world.transform.InverseTransformPoint(wisp.transform.position).x - start.x, Is.GreaterThan(2.5f));
+
+                Component controlled = Target(2);
+                Component outside = Target(3);
+                var getMaster = controlled.GetType().GetMethod("GetMaster");
+                Assert.That(getMaster.Invoke(controlled, null), Is.EqualTo("RightPlayer"));
+                Assert.That(getMaster.Invoke(outside, null), Is.EqualTo("RightPlayer"));
+                Assert.That(CurrentHp(controlled), Is.EqualTo(1000));
+                Assert.That(CurrentHp(outside), Is.EqualTo(10000));
+                if (capture) SaveViewport(directory, "before-control", true);
+
+                yield return PlayUntil(1.174f);
+                Assert.That(Target(2), Is.SameAs(controlled));
+                Assert.That(getMaster.Invoke(controlled, null), Is.EqualTo("LeftPlayer"));
+                Assert.That(getMaster.Invoke(outside, null), Is.EqualTo("RightPlayer"));
+                Assert.That(CurrentHp(controlled), Is.EqualTo(1000));
+                Assert.That(CurrentHp(outside), Is.EqualTo(10000));
+                Assert.That(wisp.GetType().GetProperty("IsDespawning", Private).GetValue(wisp), Is.True);
+                if (capture) SaveViewport(directory, "control", true);
+
+                yield return PlayUntil(1.62f);
+                Assert.That(Target(4), Is.Null);
+                Assert.That(Target(2), Is.SameAs(controlled));
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator GroundTidalWarheadCyclesAndKeepsItsRecordedImpact()
         {
             Create();

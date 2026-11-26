@@ -508,3 +508,8 @@ commit 그대로였다.
 ## 드래곤 타워 불길 비행 자세
 
 - 기존 화염탄을 상속하던 드래곤 타워 불길에 전용 투사체 여섯 장을 적용했다. 둥근 주황 불길에서 밝은 열이 뒤에서 앞으로 번진다.
+
+## 도깨비불 이동 자세
+
+- 얼굴 없는 연두색 불꽃에 이동 자세 네 장을 적용했다. 네 장의 둥근 바닥 위치를 맞추고 불꽃 끝과 안쪽 밝은 면을 바꿨다.
+- `WillOWispFlight01.png` · `WillOWispFlight02.png` · `WillOWispFlight03.png` · `WillOWispFlight04.png`
