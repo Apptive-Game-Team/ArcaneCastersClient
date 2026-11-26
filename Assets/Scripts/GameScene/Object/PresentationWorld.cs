@@ -15,6 +15,7 @@ namespace GameScene.Object
         public bool IsClearing { get; private set; }
         public IReadOnlyDictionary<int, ServedObject> Objects => objects;
         public float DamageFlashInterval { get; set; }
+        public float RecordedFrameDuration { get; set; }
 
         public static PresentationWorld For(Component component) => component != null ? component.GetComponentInParent<PresentationWorld>(true) : null;
         public static Camera CameraFor(Component component) => For(component)?.Camera ?? UnityEngine.Camera.main;

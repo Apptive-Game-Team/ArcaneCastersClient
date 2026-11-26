@@ -144,6 +144,7 @@ namespace Global
             // Separate origins isolate concurrent previews, without global layers/cameras.
             stage.transform.position = new Vector3(10000f + 100f * stageSlot, 10000f, 10000f);
             world = stage.AddComponent<PresentationWorld>();
+            world.RecordedFrameDuration = recording.frameDuration;
             var ground = GameObject.CreatePrimitive(PrimitiveType.Quad);
             ground.name = "ForestGround";
             ground.transform.SetParent(stage.transform, false);

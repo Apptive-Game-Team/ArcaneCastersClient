@@ -31,6 +31,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `TreeGolem2.png`, `TreeGolemRecover01.png`–`TreeGolemRecover03.png` | 고목 수호자 · 펀치 타격과 복귀 | 공격 이벤트에서 타격 프레임을 즉시 표시하고 0.05초 간격으로 복귀. 총 0.2초 |
 | `BeanShooter.png`, `BeanShooterWalk01.png`–`BeanShooterWalk08.png` | BeanShooter · 대기와 네 뿌리발 보행 | 먼 뒷발, 먼 앞발, 가까운 뒷발, 가까운 앞발의 들기와 디디기 순으로 여덟 자세를 재생한다. 실제 XZ 이동 0.6칸마다 한 바퀴이며 기준 속도 0.6칸/초에서 1초 |
 | `BeanShooterAttack.png`, `BeanShooterRecover01.png`–`BeanShooterRecover02.png` | BeanShooter · 발사와 줄기 복귀 | 공격 이벤트에서 발사 자세를 즉시 표시한다. 세 자세가 각각 0.08초씩 이어진다 |
+| `StormStag.png`, `StormStagGallop01.png`–`StormStagGallop08.png` | 충격 사슴 · 대기와 네 발 질주 | 보간된 지면 이동 2.4칸마다 여덟 자세를 재생한다. 큰 좌표 보정 구간을 제외한다 |
+| `StormStagImpact01.png`–`StormStagImpact03.png` | 충격 사슴 · 뿔 충돌과 체중 회수 | `HitEvent`가 시작점이다. 대상 방향으로 세 자세를 0.18초간 표시하고 유효한 이동 방향으로 질주를 이어 간다 |
 | `EvilEnt.png` | 사악한 고목 · 기본 자세 | `EvilEnt.prefab` 기본 SpriteRenderer |
 | `EvilEnt.png`, `EvilEntWalk01.png`–`EvilEntWalk08.png` | 사악한 고목 · 대기와 양쪽 뿌리발 보행 | 일반 고목은 이동 1.8칸마다 여덟 장을 재생한다. 차원문 보스는 기본 자세를 공유한다 |
 | `EvilEnt2.png`, `EvilEntBrace02.png`, `EvilEntBrace03.png` | 사악한 고목 · 팔을 내보낼 때 상체를 지탱하는 자세 | 일반 고목과 차원문 보스가 공격 이벤트에서 세 장을 0.24초간 재생한다. 평상시와 공격 그림의 팔 시작점 높이가 같다 |
