@@ -7,6 +7,14 @@ namespace WordOnline.Tests
 {
     public class WindBurstPrefabTests
     {
+        [Test]
+        public void BombImpactIsPresentedByTheServerExplosion()
+        {
+            var bomb = Resources.Load<GameObject>("Prefabs/BombSpriteBomb");
+            Assert.IsFalse(bomb.GetComponentsInChildren<MonoBehaviour>(true)
+                .Any(component => component.GetType().Name == "OnDestroySpawner"));
+        }
+
         [TestCase("WindExplode", .037f, 2, 4, 5, 3)]
         [TestCase("BombSpriteExplosion", .09f, 1, 1, 1, 1)]
         public void WindBurstUsesTheExistingRendererWithItsOwnTiming(
@@ -30,6 +38,7 @@ namespace WordOnline.Tests
             CollectionAssert.AreEqual(expected, frames.Select(frame => frame.name));
             Assert.AreSame(frames[0], renderer.sprite);
             Assert.AreEqual(Vector3.one, renderer.transform.localScale);
+            Assert.That(renderer.color.a, Is.EqualTo(.70f).Within(.001f));
 
             var master = Resources.Load<Sprite>("Game/explode/wind_explode");
             foreach (Sprite frame in frames.Distinct())

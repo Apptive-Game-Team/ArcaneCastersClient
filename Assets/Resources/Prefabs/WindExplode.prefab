@@ -17,6 +17,10 @@ PrefabInstance:
       value: WindExplode
       objectReference: {fileID: 0}
     - target: {fileID: 6532723950483228932, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
+      propertyPath: m_Color.a
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532723950483228932, guid: 3ea489f78caac478f8581f3aca2553ff, type: 3}
       propertyPath: m_Size.x
       value: 1.92
       objectReference: {fileID: 0}
