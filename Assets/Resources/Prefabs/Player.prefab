@@ -327,6 +327,32 @@ MonoBehaviour:
     - 0.4
     - 0.6
     - 0.8
+  - appearanceId: golem
+    aimFrames:
+    - sprite: {fileID: 21300000, guid: 0abd1dda52f446749c6c1dfca37a4cf3, type: 3}
+      tip: {x: -0.468, y: 1.357}
+    - sprite: {fileID: 21300000, guid: 9dc2580dfab14ee38a3b115283252ed4, type: 3}
+      tip: {x: -0.491, y: 1.414}
+    - sprite: {fileID: 21300000, guid: 2e2d39c1ee7b4274881d8550af921134, type: 3}
+      tip: {x: -0.512, y: 1.577}
+    - sprite: {fileID: 21300000, guid: 8e5f95ce6cb244a8a54a4f7cea8504f3, type: 3}
+      tip: {x: -0.551, y: 1.689}
+    castFrames:
+    - sprite: {fileID: 21300000, guid: f0e4411d10044f3c9f8a70513b104be3, type: 3}
+      tip: {x: 0.654, y: 0.868}
+    - sprite: {fileID: 21300000, guid: 3125796512844e6487946b098b5348eb, type: 3}
+      tip: {x: 0.547, y: 0.778}
+    - sprite: {fileID: 21300000, guid: 562af2d69b544874a2e5d4cca9e005c6, type: 3}
+      tip: {x: 0.493, y: 1.356}
+    - sprite: {fileID: 21300000, guid: 9fcabc0773dc4314b6431a5ae6d86d38, type: 3}
+      tip: {x: 0.041, y: 1.73}
+    - sprite: {fileID: 21300000, guid: b2b78a4a4a0d4109bdc8a204e597c00c, type: 3}
+      tip: {x: -0.355, y: 1.422}
+    castCueFractions:
+    - 0.4
+    - 0.56666666
+    - 0.73333335
+    - 0.8666667
 --- !u!114 &5546332115853614978
 MonoBehaviour:
   m_ObjectHideFlags: 0
