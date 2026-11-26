@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4517892053350728874}
   - component: {fileID: 854653629286545623}
   - component: {fileID: 1459952280100348886}
+  - component: {fileID: 7140000000000000001}
   m_Layer: 0
   m_Name: SprayedFlame
   m_TagString: Untagged
@@ -96,4 +97,25 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 390ef429c33049258ee9616ba160e47a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
+  projectileFrames: {fileID: 7140000000000000001}
+--- !u!114 &7140000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9054883425436495010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 854653629286545623}
+  frames:
+  - {fileID: 21300000, guid: 26b739178c684a7cb5acef5f2069c732, type: 3}
+  - {fileID: 21300000, guid: a12a1ae748fb4256845934228ba16fd5, type: 3}
+  - {fileID: 21300000, guid: 503633efadc74698b6ee0538ed885665, type: 3}
+  - {fileID: 21300000, guid: e60ad44eabda456f98daff1e74694777, type: 3}
+  frameInterval: 0
+  loop: 0
