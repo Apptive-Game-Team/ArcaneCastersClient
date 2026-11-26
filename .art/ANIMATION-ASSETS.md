@@ -562,7 +562,7 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 
 `LightningTadpoleIdle`은 대기와 소환 통로의 자세다. `LightningTadpoleWalk01–08`은 앞발과 반대쪽 뒷발이 번갈아 지지하는 보행이며 지면 이동 1.12칸마다 반복한다. `LightningTadpoleZap01–04`는 개체별 피해 틱부터 0.08초씩 앞발 내밀기와 회수를 표시한다.
 
-13장은 224×280 RGBA, 200 PPU, 하단 중앙 피벗이다. 전격 무늬는 청색 코어 안에서 커졌다가 잦아든다. 플레이어 프리팹의 `GroundedUnitPoseController`는 소환 통로를 벗어나 착지한 뒤 보행을 재생한다. 모험의 `PveLightningTadpole`은 정적 `LightningTadpole.png`를 사용한다.
+13장은 224×280 RGBA, 200 PPU, 하단 중앙 피벗이다. 전격 무늬는 청색 코어 안에서 커졌다가 잦아든다. 플레이어 프리팹의 `GroundedUnitPoseController`는 소환 통로를 벗어나 착지한 뒤 보행을 재생한다. 차원문 모험의 `PveLightningTadpole`도 같은 자세를 쓴다. 이동 거리 1.12칸마다 보행을 한 바퀴 재생하고, 명중에서 네 전격 자세를 재생한다.
 
 ## 전기 슬라임의 지면 이동과 타격
 

@@ -49,12 +49,13 @@ namespace WordOnline.Tests
             }
         }
 
-        [Test]
-        public void AdventureFireTadpoleUsesTheCardFramesOnItsOwnBody()
+        [TestCase("PveFireTadpole", "FireTadpole")]
+        [TestCase("PveLightningTadpole", "LightningTadpole")]
+        public void AdventureTadpoleUsesTheCardFramesOnItsOwnBody(string adventureName, string cardName)
         {
             const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
-            GameObject adventure = Resources.Load<GameObject>("Prefabs/PveFireTadpole");
-            GameObject card = Resources.Load<GameObject>("Prefabs/FireTadpole");
+            GameObject adventure = Resources.Load<GameObject>("Prefabs/" + adventureName);
+            GameObject card = Resources.Load<GameObject>("Prefabs/" + cardName);
 
             Assert.IsFalse(HasComponentNamed(adventure, "CrawlMotionController"));
             Assert.IsFalse(HasComponentNamed(adventure, "HoppingMotionController"));
@@ -70,7 +71,7 @@ namespace WordOnline.Tests
             var renderer = (SpriteRenderer)unit.GetType().GetField("_spriteRenderer", fields).GetValue(unit);
             var type = pose.GetType();
             Assert.AreSame(renderer, type.GetField("targetRenderer", fields).GetValue(pose));
-            Assert.AreSame(Resources.Load<Sprite>("Game/sprites/FireTadpoleIdle"), renderer.sprite);
+            Assert.AreSame(Resources.Load<Sprite>($"Game/sprites/{cardName}Idle"), renderer.sprite);
             Assert.IsFalse((bool)unit.GetType().GetField("_swingOnAttack", fields).GetValue(unit));
             Assert.IsTrue((bool)type.GetField("attackOnHit", fields).GetValue(pose));
             var walk = (Sprite[])type.GetField("walkFrames", fields).GetValue(pose);

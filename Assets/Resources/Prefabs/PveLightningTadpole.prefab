@@ -31,7 +31,7 @@ PrefabInstance:
     - target: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 90448a96149ae42bbaf8d75fd4a850a7, type: 3}
+      objectReference: {fileID: 21300000, guid: af194cfb0d394d749b4b36f6f98bf548, type: 3}
     - target: {fileID: 6928872084569727094, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -47,6 +47,10 @@ PrefabInstance:
     - target: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_Name
       value: PveLightningTadpole
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8841690536847902715, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_LocalPosition.x
@@ -89,6 +93,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -98,7 +103,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 457876394002996822}
+      addedObject: {fileID: 8320582000000000583}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
 --- !u!4 &5620660338324739072 stripped
 Transform:
@@ -121,7 +126,12 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
   m_PrefabInstance: {fileID: 1701133380062854001}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &457876394002996822
+--- !u!212 &8320582000000000582 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+  m_PrefabInstance: {fileID: 1701133380062854001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8320582000000000583
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,10 +140,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 9171564218302571061}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42101c1db2194fc0a1a4f2ad54b57413, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 5620660338324739072}
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 9046051333812563489}
+  targetRenderer: {fileID: 8320582000000000582}
+  walkFrames:
+  - {fileID: 21300000, guid: 5b179bbf565d45359d1dc83504076443, type: 3}
+  - {fileID: 21300000, guid: 336f182c9676422cbe8a94c18dfcbbf5, type: 3}
+  - {fileID: 21300000, guid: 67b165b4d32c4e0f9ff9c8430a2e3e1d, type: 3}
+  - {fileID: 21300000, guid: 4115d22145184480b50d57acfc13f4a2, type: 3}
+  - {fileID: 21300000, guid: d483ecb846c04fc1abf1863761d23380, type: 3}
+  - {fileID: 21300000, guid: f3e6830d91ca4d66948e2a633f6781d8, type: 3}
+  - {fileID: 21300000, guid: 709482fcf8d749c0bc7fb1ace4b831d6, type: 3}
+  - {fileID: 21300000, guid: 48afebfb4e1b44c3ac8191a4ce40496e, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 25a22b9ec5b64866965ba84f3f6cb284, type: 3}
+  - {fileID: 21300000, guid: efdd737cf35541fcba25e5c84fa46387, type: 3}
+  - {fileID: 21300000, guid: 9dafce25c0d14779bc77e829f6158c93, type: 3}
+  - {fileID: 21300000, guid: 7f52b81e1f0b46a4a5987a2c44999a4e, type: 3}
+  projectileAttackFrames: []
+  projectileMuzzle: {x: 0, y: 0}
+  walkCycleDistance: 1.12
+  attackDuration: 0.32
+  attackOnHit: 1
+  maximumGroundSpeed: 2.8
+  walkingHeightTolerance: 0.03
 --- !u!1001 &5505736942200471742
 PrefabInstance:
   m_ObjectHideFlags: 0
