@@ -14,6 +14,7 @@ namespace GameScene.ServedObjectComponent.Motion
         [SerializeField] private float attackDuration = 0.2f;
         [SerializeField] private bool attackOnHit;
         [SerializeField] private float maximumGroundSpeed;
+        [SerializeField, Min(0f)] private float walkingHeightTolerance;
 
         private const float MinimumGroundStep = 0.00025f;
         private const float MinimumMovementGrace = 0.08f;
@@ -34,6 +35,7 @@ namespace GameScene.ServedObjectComponent.Motion
         private Vector2 lastServerGround;
         private bool hasServerGround;
         private bool correctingServerGround;
+        private bool waitingForGround;
         private int precedingServerDirection;
         private int confirmedServerDirection;
         private bool impactFlip;
@@ -138,7 +140,10 @@ namespace GameScene.ServedObjectComponent.Motion
             float recordedTick = Owner.PresentationWorld != null ? Owner.PresentationWorld.RecordedFrameDuration : 0f;
             float tick = recordedTick > 0f ? recordedTick : GameConfig.FrameDuration;
             float limit = Mathf.Max(MinimumServerCorrectionDistance, maximumGroundSpeed * tick);
-            correctingServerGround = step.sqrMagnitude > limit * limit;
+            bool wasWaitingForGround = waitingForGround;
+            waitingForGround = walkingHeightTolerance > 0f && Mathf.Abs(position.y) > walkingHeightTolerance;
+            // 소환 통로에서 나온 뒤 착지하기까지 움직인 거리는 보행에 합치지 않는다.
+            correctingServerGround = waitingForGround || wasWaitingForGround || step.sqrMagnitude > limit * limit;
             if (correctingServerGround)
             {
                 precedingServerDirection = confirmedServerDirection = 0;
@@ -248,7 +253,7 @@ namespace GameScene.ServedObjectComponent.Motion
         {
             hasGroundSample = false;
             activeAttackFrames = null;
-            hasServerGround = correctingServerGround = false;
+            hasServerGround = correctingServerGround = waitingForGround = false;
             precedingServerDirection = confirmedServerDirection = 0;
             walkDistance = 0f;
             movingUntil = attackStarted = float.NegativeInfinity;

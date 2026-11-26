@@ -521,3 +521,9 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 `WindSpiritHover01–04`는 0.28초, `WindSpiritGlide01–04`는 0.19초 간격으로 순환한다. `WindSpiritDescent01–04`는 하강을 시작한 고도에서 0.08 월드 단위씩 내려갈 때 바뀐다. 곡선 띠의 두꺼운 부분이 몸통 뒤에서 흐르고 하강 중에는 꼬리 쪽 띠가 몸통에 붙는다.
 
 12장은 206×256 RGBA, 200 PPU, 하단 중앙 피벗이다. 두 바람 정령 변형은 `WindSpiritFlightPresenter`에서 각자의 프레임과 간격을 사용한다. 제거가 시작되면 마지막 자세를 보여주고 기존 `Explode`가 이어진다.
+
+## 화산편 걷기와 앞발 타격
+
+`FireTadpoleIdle`은 지상 대기와 소환 통로의 자세다. `FireTadpoleWalk01–08`은 대각선의 두 발이 짚고 반대쪽 두 발이 앞으로 오가는 보행이다. 지면 이동 1.12칸마다 한 바퀴를 돈다. `FireTadpoleStomp01–04`는 피해 틱의 접촉 자세부터 0.08초씩 표시한다.
+
+13장은 288×152 RGBA, 200 PPU, 하단 중앙 피벗이다. `FireTadpole.prefab`의 `GroundedUnitPoseController`는 소환 통로에서 지면에 닿은 뒤의 이동 거리로 보행을 재생한다. 모험의 `PveFireTadpole`은 정적 `FireTadpole.png`를 사용한다.
