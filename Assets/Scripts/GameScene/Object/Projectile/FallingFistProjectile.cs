@@ -21,6 +21,7 @@ namespace GameScene.Object.Projectile
         [SerializeField] private SpriteRenderer fistRenderer;
         [SerializeField] private SpriteRenderer burstRenderer;
         [SerializeField] private SpriteRenderer crackRenderer;
+        [SerializeField] private Sprite[] fistFrames;
 
         /// <summary>How far above its landing spot the fist starts, along screen-up, in world units.</summary>
         [SerializeField] private float dropHeight = 2.5f;
@@ -84,6 +85,12 @@ namespace GameScene.Object.Projectile
             SetAlpha(fistRenderer, 1f - aftermath);
 
             bool landed = progress > impactFraction;
+            if (fistFrames is { Length: 4 })
+            {
+                int frame = landed ? (aftermath < 0.5f ? 2 : 3) : (fall < 0.5f ? 0 : 1);
+                fistRenderer.sprite = fistFrames[frame];
+            }
+
             burstRenderer.enabled = landed;
             crackRenderer.enabled = landed;
             if (!landed)
