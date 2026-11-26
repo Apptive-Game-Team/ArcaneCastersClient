@@ -152,6 +152,7 @@
 | `Leafair.png` | 클라이언트 PR (이슈 #694) | 178x256 RGBA, 원본 크기 유지. 잎바람 요정, 개별 잎 다면체 수십 장이 겹쳐 쌓인 테두리가 톱니처럼 보이는 눈물방울형 더미, 위쪽에 흩날리는 낱장 잎 유지. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
 | `LeafairDescent01–04.png` | 클라이언트 이슈 #728 | 높이별로 방향을 바꾸는 위쪽 잎과 옆으로 넓어지는 잎 더미 네 자세를 낙하 개체에 적용했다. 178×256 RGBA, PPU 100, 하단 중앙 피벗. |
 | `Overgrowth.png` | 클라이언트 PR (이슈 #694) | 256x245 RGBA, 원본 크기 유지. 세계수의 과생장, 잎 다면체와 짧은 덩굴 마디가 뒤섞여 둥근 덩어리를 이루고 가장자리로 잎·덩굴손이 삐져나온다. 부드러운 뭉게구름형 원본에서 다면체로 교체. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
+| `OvergrowthRise01–04.png` | 클라이언트 이슈 #732 | 바닥에서 줄기가 솟고 잎과 덩굴손이 펼쳐지는 자세 네 장. 피해 직전에 기존 Overgrowth.png를 표시한다. 256×245 RGBA, PPU 100, 하단 중앙 피벗. |
 | `RainCloud.png` | 클라이언트 PR (이슈 #694) | 127x256 RGBA, 원본 크기 유지. 비 구름 설치물, 상단의 작은 뭉게구름 + 빗줄기 리본 + 하단의 옅은 지면 타원으로 원본 구도 유지, 페인트 질감 구름에서 다면체로 교체. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
 | `BubbleSpirit.png` | 클라이언트 PR (이슈 #694) | 250x256 RGBA. 물 슬라임 계열, 눈 오른쪽 +35% |
 | `BubbleSpiritHover01–06.png`, `BubbleSpiritRelease01–04.png` | 클라이언트 PR (이슈 #630) | 250×256 RGBA, PPU 200, 하단 중앙 피벗. 물결과 뒤 물방울의 대기 6장과 거품 발사·복귀 4장. |
