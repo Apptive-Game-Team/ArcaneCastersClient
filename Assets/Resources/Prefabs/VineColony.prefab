@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1060800969627125256, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      propertyPath: _keepUprightOnSpawn
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1799249546358094163, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -111,9 +115,44 @@ PrefabInstance:
     - target: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 75ff52369ace14dbe8c9391d9ab6b60e, type: 3}
+      objectReference: {fileID: 21300000, guid: 31b11273266f510aa032d15cf9a6bc04, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 790713194785081376, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6680000000000000002}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+--- !u!1 &6680000000000000003 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 790713194785081376, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 1535532434005402646}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &6680000000000000001 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 1535532434005402646}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6680000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6680000000000000003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 6680000000000000001}
+  frames:
+  - {fileID: 21300000, guid: 31b11273266f510aa032d15cf9a6bc04, type: 3}
+  - {fileID: 21300000, guid: 645a1e5eaecc52b297f1ebb9df9313e8, type: 3}
+  - {fileID: 21300000, guid: 03e6b65bb63853529b03a04ca7b30805, type: 3}
+  - {fileID: 21300000, guid: 927b10824fa658fdada13bbe47888dd4, type: 3}
+  - {fileID: 21300000, guid: 5fabed95643b5b0eb2dde306ef36a212, type: 3}
+  - {fileID: 21300000, guid: 9fd5bc1f30f95e49bd5a981b2f2a047a, type: 3}
+  frameInterval: 0.09
+  loop: 0
