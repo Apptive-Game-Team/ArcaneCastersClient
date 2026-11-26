@@ -158,13 +158,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 7263432784383631877}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68590c1bc6df4d4fb641d857f0484967, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 6430161092855485975}
-  onAttackSprite: {fileID: 21300000, guid: 6f7df480ecf02483395f3e2b53c1c7b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
   servedObject: {fileID: 7350177440789949969}
-  animationDuration: 0.2
+  targetRenderer: {fileID: 6430161092855485975}
+  walkFrames:
+  - {fileID: 21300000, guid: a47af7c125ef4b7eba2f2fd21bba30c3, type: 3}
+  - {fileID: 21300000, guid: 28cbada29d334c31897fe716d1231292, type: 3}
+  - {fileID: 21300000, guid: 85441e2b07334cfb99a531e36edddb10, type: 3}
+  - {fileID: 21300000, guid: a2b708806b8c45a0b83b2890a866c956, type: 3}
+  - {fileID: 21300000, guid: 27c30f61b7d648da886580ae9f7c7298, type: 3}
+  - {fileID: 21300000, guid: 9c47e5cab3294558893e5229464c00df, type: 3}
+  - {fileID: 21300000, guid: 5d1995c3c9c84b96b7b3df1f8e9c4812, type: 3}
+  - {fileID: 21300000, guid: 90e2504e1bd44ce5b42c8ee96a5bd25a, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 6f7df480ecf02483395f3e2b53c1c7b0, type: 3}
+  - {fileID: 21300000, guid: 9f3ee9093d554a9bb38163d4d562b714, type: 3}
+  - {fileID: 21300000, guid: 6d02414ff1d443a5a0621d46ddfbdc0c, type: 3}
+  - {fileID: 21300000, guid: e78d9d373768476583c460d1ba352d78, type: 3}
+  walkCycleDistance: 0.9
+  attackDuration: 0.2
 --- !u!114 &7350177440789949969 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}

@@ -164,7 +164,7 @@
 | `shoot/spirit_bomb_beam_cap.png` | 클라이언트 PR (이슈 #714) | 227x226 RGBA. spirit bomb 빔의 밑동과 끝이 배수만 달리해 함께 쓰는 여덟 갈래 별. 새 자산이라 대조할 원본이 없다. `master-v2/ArcaneImpact.png` 의 결정 배치를 그대로 따르고 색만 금색·풀색으로 바꿨다. 방향이 없어 회전해도 같게 읽힌다. magenta 키 제거, enclosed_pixels=0, 네 모서리 alpha 0, 불투명 픽셀에 magenta 잔색 0, 투명 71.3% |
 | `RockTurret.png` | 클라이언트 PR (이슈 #694) | 169x256 RGBA, 원본 크기 유지. 인간 마법 문명, `Cannon.png`·`Tower.png`와 같은 재질 앵커(찬 회색 석재, 스틸블루 금속, 청동 이음쇠, 금색 마름모). 장전 자세, 팔은 넓은 M 자로 벌려 캔버스 폭을 채운다. 이전 시도들은 twin-panel 로 두 자세를 한 캔버스에 같이 뽑다가 공격 프레임의 날아가는 돌이 공유 crop 을 넓혀 본체가 계속 줄었다 — 이번엔 장전 자세를 먼저 단독으로 확정하고, 확정한 이미지를 레퍼런스로 넣어 공격 자세를 별도로 생성했다 |
 | `RockTurretAttacking.png` | 클라이언트 PR (이슈 #694) | 169x256 RGBA, 원본 크기 유지. 발사 직후 자세, 탑 자체는 `RockTurret.png`와 픽셀 단위로 동일한 위치·크기다 — 두 프레임을 하나의 공유 crop box(두 alpha bounding box의 합집합)와 하나의 공유 배율로 함께 내보내 지면 접점이 사후 대조가 아니라 제작 방식으로 이미 동일하다. 팔 각도만 낮추고 슬링을 비운 채 돌 하나를 캔버스 안에서 날아가는 중으로 추가했다. `check-frame-pair.py` 통과: 세로 차이 0.000 unit, 가로 차이 -0.001 unit |
-| `TreeGolem.png`, `TreeGolem2.png` | 클라이언트 이슈 #482 | 240×256 / 312×256 RGBA, PPU 85, Bottom Center. 발의 중앙값 간격을 기본 자세 77px에 맞춰 기존 펀치 130px에서 새 펀치 75px로 조정했다. 공격 프레임 재생은 기존 0.2초. Unity 플레이 검수 대기 |
+| `TreeGolem.png`, `TreeGolem2.png`, `TreeGolemWalk01–08.png`, `TreeGolemRecover01–03.png` | 클라이언트 이슈 #482·#512 | 240×256 보행 8장과 312×256 펀치 복귀 3장을 추가했다. PPU 85, Bottom Center. 기존 펀치를 공격 이벤트에서 즉시 표시하고 0.2초 안에 복귀한다. XZ 이동 0.9칸마다 보행 한 바퀴를 재생한다. |
 | `DragonTower.png` | `game-assets/dragon-tower.webp` | 웹사이트 동기화 PR #41/#44 로 올라간 뒤 등재를 뒤늦게 기록했다 |
 | `FireworkTower.png` | `game-assets/firework-tower.webp` | 위와 같음 |
 | `FireworkShell.png` | `game-assets/firework-shell.webp` | 위와 같음 |
@@ -266,7 +266,7 @@ v1 은 alpha 덩어리가 정확히 날 넷으로 갈라지므로(281x31, 450x68
 
 | 리소스 | 필요한 작업 |
 |---|---|
-| `TreeGolem.png`, `TreeGolem2.png` | 이슈 #482에서 펀치 자세의 발 간격과 지면 접점을 맞췄다. Unity 플레이 검수를 기다린다 |
+| `TreeGolem.png`, `TreeGolem2.png` | 이슈 #482에서 펀치의 발 간격과 지면 접점을 맞췄다. 이슈 #512에서 보행 8장과 펀치 복귀 3장을 프리팹에 연결했다. 실제 경기 검수 대기 |
 
 ### 기법이 갈린 항목
 
