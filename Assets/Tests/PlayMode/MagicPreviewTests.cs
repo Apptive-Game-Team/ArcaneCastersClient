@@ -3294,6 +3294,107 @@ namespace WordOnline.Tests
             }
         }
 
+        [UnityTest]
+        public IEnumerator LeafSlimeCrawlsAndStrikesBesideItsIndependentLeafFields()
+        {
+            Create();
+            const string magic = "nature_slime_nest";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var ground = scenarios.Single(s => (string)s["id"] == "ground");
+            Scenario(scenarios.IndexOf(ground));
+            CollectionAssert.AreEqual(new[] { 2 }, ground["fixtureTargetIds"].Select(id => (int)id));
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/LeafSlimeCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            var world = (Component)Field("world");
+
+            Vector3 LocalPosition(Component subject) => world.transform.InverseTransformPoint(subject.transform.position);
+
+            Component FieldAt(int id, float x, float ttl)
+            {
+                var field = Target(id);
+                Assert.That(field, Is.Not.Null);
+                Assert.That(field.name, Does.StartWith("LeafField"));
+                Assert.That(Vector3.Distance(LocalPosition(field), new Vector3(x, 0f, 5f)), Is.LessThan(.008f));
+                Assert.That(TimeToLive(field), Is.EqualTo(ttl).Within(.001f));
+                return field;
+            }
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(10.674f);
+                var slime = Target(4);
+                Assert.That(slime, Is.Not.Null);
+                Assert.That(slime.name, Does.StartWith("LeafSlime"));
+                Assert.That(slime.GetType().GetMethod("GetMaster").Invoke(slime, null), Is.EqualTo("LeftPlayer"));
+                Assert.That(slime.GetComponent("CrawlMotionController"), Is.Null);
+                var body = ServedObjectRenderer(slime);
+                var source = Resources.Load<Sprite>("Game/spawn/leaf_slime");
+                Assert.That(body.sprite.name, Is.EqualTo("LeafSlimeIdle"));
+                Assert.That(body.sprite.rect.size, Is.EqualTo(source.rect.size));
+                Assert.That(body.sprite.pivot, Is.EqualTo(source.pivot));
+                Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(source.pixelsPerUnit));
+
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 11.28f)
+                {
+                    string pose = body.sprite.name;
+                    if (pose.StartsWith("LeafSlimeCrawl", StringComparison.Ordinal) && pose != poses.LastOrDefault())
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 8) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 8).Select(i => $"LeafSlimeCrawl{i:00}").Append("LeafSlimeCrawl01");
+                CollectionAssert.AreEqual(expected, poses.Take(9));
+
+                Assert.That(Target(5), Is.Null);
+                yield return PlayUntil(11.324f);
+                var first = FieldAt(5, 5.10f, 8f);
+                if (capture) SaveViewport(directory, "first-leaf-field", true);
+                yield return PlayUntil(11.824f);
+                Assert.That(Target(6), Is.Null);
+                yield return PlayUntil(11.874f);
+                var second = FieldAt(6, 6.20f, 8f);
+                Assert.That(FieldAt(5, 5.10f, 7.45f), Is.SameAs(first));
+                if (capture) SaveViewport(directory, "two-ground-fields", true);
+
+                yield return PlayUntil(12.674f);
+                var enemy = Target(2);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(10000));
+                Assert.That(body.sprite.name, Is.EqualTo("LeafSlimeIdle"));
+                for (int i = 0; i < 4; i++)
+                {
+                    yield return PlayUntil(12.725f + .08f * i);
+                    string pose = $"LeafSlimeBump{i + 1:00}";
+                    Assert.That(body.sprite.name, Is.EqualTo(pose));
+                    Assert.That(body.flipX, Is.False);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(9900));
+                    if (i == 0)
+                    {
+                        Assert.That(FieldAt(5, 5.10f, 6.60f), Is.SameAs(first));
+                        Assert.That(FieldAt(6, 6.20f, 7.15f), Is.SameAs(second));
+                    }
+                    if (capture) SaveViewport(directory, pose, true);
+                }
+
+                yield return PlayUntil(13.124f);
+                Assert.That(body.sprite.name, Is.EqualTo("LeafSlimeIdle"));
+                yield return PlayUntil(13.524f);
+                Assert.That(body.sprite.name, Is.EqualTo("LeafSlimeBump01"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9800));
+                if (capture) SaveViewport(directory, "second-hit", true);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
         private static float TimeToLive(Component subject)
         {
             var gauges = (IList)subject.GetType().GetField("gauges").GetValue(subject);
