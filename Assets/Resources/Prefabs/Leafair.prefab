@@ -95,10 +95,54 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6999531506464986974, guid: c62d09aaacf8e46888b6b4cc71f39a6a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 728000000000000001}
   m_SourcePrefab: {fileID: 100100000, guid: c62d09aaacf8e46888b6b4cc71f39a6a, type: 3}
 --- !u!4 &6433480756599075513 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6714164333209190294, guid: c62d09aaacf8e46888b6b4cc71f39a6a, type: 3}
   m_PrefabInstance: {fileID: 316888365899304239}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3419487700863449916 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3419487700863449916, guid: c62d09aaacf8e46888b6b4cc71f39a6a, type: 3}
+  m_PrefabInstance: {fileID: 316888365899304239}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999531506464986974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de688a310124c238a96800ee8f30bf0, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!212 &6564404468497111571 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6564404468497111571, guid: c62d09aaacf8e46888b6b4cc71f39a6a, type: 3}
+  m_PrefabInstance: {fileID: 316888365899304239}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6999531506464986974 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6999531506464986974, guid: c62d09aaacf8e46888b6b4cc71f39a6a, type: 3}
+  m_PrefabInstance: {fileID: 316888365899304239}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &728000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999531506464986974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc9a2eeb9e665ef8b3f792219d7e9d35, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 3419487700863449916}
+  targetRenderer: {fileID: 6564404468497111571}
+  descentFrames:
+  - {fileID: 21300000, guid: cff8a5e696994d83b8d1a3a45a578c8b, type: 3}
+  - {fileID: 21300000, guid: 99d48b30cfb54167a96d8e422c37a2a8, type: 3}
+  - {fileID: 21300000, guid: bccbcbbbbf2e4020bb30892186af644a, type: 3}
+  - {fileID: 21300000, guid: 801c85958c774b6bbbee998e020ee1d8, type: 3}
+  initialHeight: 10
