@@ -527,3 +527,9 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 `FireTadpoleIdle`은 지상 대기와 소환 통로의 자세다. `FireTadpoleWalk01–08`은 대각선의 두 발이 짚고 반대쪽 두 발이 앞으로 오가는 보행이다. 지면 이동 1.12칸마다 한 바퀴를 돈다. `FireTadpoleStomp01–04`는 피해 틱의 접촉 자세부터 0.08초씩 표시한다.
 
 13장은 288×152 RGBA, 200 PPU, 하단 중앙 피벗이다. `FireTadpole.prefab`의 `GroundedUnitPoseController`는 소환 통로에서 지면에 닿은 뒤의 이동 거리로 보행을 재생한다. 모험의 `PveFireTadpole`은 정적 `FireTadpole.png`를 사용한다.
+
+## 폭풍편 걷기와 전격 타격
+
+`LightningTadpoleIdle`은 대기와 소환 통로의 자세다. `LightningTadpoleWalk01–08`은 앞발과 반대쪽 뒷발이 번갈아 지지하는 보행이며 지면 이동 1.12칸마다 반복한다. `LightningTadpoleZap01–04`는 개체별 피해 틱부터 0.08초씩 앞발 내밀기와 회수를 표시한다.
+
+13장은 224×280 RGBA, 200 PPU, 하단 중앙 피벗이다. 전격 무늬는 청색 코어 안에서 커졌다가 잦아든다. 플레이어 프리팹의 `GroundedUnitPoseController`는 소환 통로를 벗어나 착지한 뒤 보행을 재생한다. 모험의 `PveLightningTadpole`은 정적 `LightningTadpole.png`를 사용한다.
