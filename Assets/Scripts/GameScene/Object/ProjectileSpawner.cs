@@ -394,6 +394,12 @@ namespace GameScene.Object
                 renderer.transform.localScale *= ShockOverloadSecondaryScale;
             }
 
+            var animation = effect.GetComponent<SpriteFrameAnimator>();
+            if (animation != null)
+            {
+                animation.PlayOnce(dto.duration, reverse: true);
+            }
+
             Destroy(effect, dto.duration);
             return true;
         }

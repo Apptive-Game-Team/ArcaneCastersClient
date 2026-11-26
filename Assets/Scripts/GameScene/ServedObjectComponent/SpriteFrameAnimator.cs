@@ -13,17 +13,19 @@ namespace GameScene.ServedObjectComponent
         private float elapsed;
         private float playbackStarted;
         private float playbackDuration;
+        private bool reversePlayback;
 
         private void Awake()
         {
             ApplyFrame(0);
         }
 
-        internal void PlayOnce(float duration)
+        internal void PlayOnce(float duration, bool reverse = false)
         {
             playbackStarted = Time.time;
             playbackDuration = duration;
-            ApplyFrame(0);
+            reversePlayback = reverse;
+            ApplyFrame(reverse && frames != null ? frames.Length - 1 : 0);
         }
 
         private void Update()
@@ -37,6 +39,11 @@ namespace GameScene.ServedObjectComponent
             {
                 float progress = Mathf.Clamp01((Time.time - playbackStarted) / playbackDuration);
                 int nextIndex = Mathf.Min((int)(progress * frames.Length), frames.Length - 1);
+                if (reversePlayback)
+                {
+                    nextIndex = frames.Length - 1 - nextIndex;
+                }
+
                 if (frameIndex != nextIndex) ApplyFrame(nextIndex);
                 return;
             }
