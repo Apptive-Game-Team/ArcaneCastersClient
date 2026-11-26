@@ -6,7 +6,7 @@ using UnityEngine;
 namespace WordOnline.Tests
 {
     /// <summary>
-    /// 폭발 prefab 세 개는 Editor 없이 손으로 고친 YAML 이다. script guid 나 m_AddedComponents
+    /// 이 폭발 prefab들은 손으로 고친 YAML이다. script GUID나 m_AddedComponents
     /// 항목이 어긋나면 component 가 통째로 사라지는데 build 는 그대로 통과하므로, prefab 을
     /// 실제로 불러와서 확인한다. 이 test assembly 는 GameScene assembly 를 참조하지 않아서
     /// type 을 이름으로 찾는다.
@@ -20,6 +20,7 @@ namespace WordOnline.Tests
             "MagmaExplosion",
             "ElectricExplode",
             "ShockOverload",
+            "RockExplode",
         };
 
         [Test]
@@ -55,7 +56,42 @@ namespace WordOnline.Tests
                 "Resources/Prefabs/Abstract/AbstractExplode.prefab must be loadable.");
             Assert.IsNull(FindScaler(prefab),
                 "AbstractExplode has 14 variants including MagmaFist and FireworkShell, " +
-                $"so {ScalerTypeName} belongs on the three blast prefabs only.");
+                $"so {ScalerTypeName} belongs on individual blast variants.");
+        }
+
+        [Test]
+        public void RockExplodeUsesOneRegisteredSequenceOnTheServedRenderer()
+        {
+            const BindingFlags Fields = BindingFlags.Instance | BindingFlags.NonPublic;
+            var prefab = Resources.Load<GameObject>("Prefabs/RockExplode");
+            var components = prefab.GetComponentsInChildren<MonoBehaviour>(true);
+            Assert.IsFalse(components.Any(component => component.GetType().Name == "PopSelfController"));
+
+            var owner = components.Single(component => component.GetType().Name == "ServedObject");
+            var sequence = components.Single(component => component.GetType().Name == "SpriteFrameAnimator");
+            var scaler = FindScaler(prefab);
+            Assert.AreSame(owner, scaler.GetType().BaseType.GetField("servedObject", Fields).GetValue(scaler));
+            Assert.That(scaler.GetType().GetField("referenceRadius", Fields).GetValue(scaler), Is.EqualTo(.88f));
+            Assert.IsTrue((bool)owner.GetType().GetField("_keepUprightOnSpawn", Fields).GetValue(owner));
+
+            var renderer = (SpriteRenderer)sequence.GetType().GetField("spriteRenderer", Fields).GetValue(sequence);
+            Assert.AreSame(owner.GetType().GetField("_spriteRenderer", Fields).GetValue(owner), renderer);
+            Assert.IsFalse((bool)sequence.GetType().GetField("loop", Fields).GetValue(sequence));
+            Assert.That(sequence.GetType().GetField("frameInterval", Fields).GetValue(sequence), Is.EqualTo(.02f));
+
+            var frames = (Sprite[])sequence.GetType().GetField("frames", Fields).GetValue(sequence);
+            var slots = new[] { 10, 8, 6, 4, 1, 1 };
+            var expected = slots.SelectMany((count, index) => Enumerable.Repeat($"RockBurst{index + 1:00}", count));
+            CollectionAssert.AreEqual(expected, frames.Select(frame => frame.name));
+            Assert.AreSame(frames[0], renderer.sprite);
+
+            foreach (Sprite frame in frames.Distinct())
+            {
+                Assert.AreEqual(new Vector2(192, 124), frame.rect.size);
+                Assert.That(frame.pivot.x, Is.EqualTo(96).Within(.01f));
+                Assert.That(frame.pivot.y, Is.EqualTo(2).Within(.01f));
+                Assert.AreEqual(100, frame.pixelsPerUnit);
+            }
         }
 
         [Test]
