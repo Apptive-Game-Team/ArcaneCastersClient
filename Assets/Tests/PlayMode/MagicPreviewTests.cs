@@ -4562,6 +4562,10 @@ namespace WordOnline.Tests
         public IEnumerator FireChildSpiritHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
             CheckAerialHoverLoop("FireChildSpirit", new Vector2(228f, 256f), 200f);
 
+        [UnityTest]
+        public IEnumerator BombSpriteHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
+            CheckAerialHoverLoop("BombSprite", new Vector2(222f, 256f), 200f);
+
         private static SpriteRenderer AerialPoseRenderer(Component actor)
         {
             Assert.That(actor, Is.Not.Null);

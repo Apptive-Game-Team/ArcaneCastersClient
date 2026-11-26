@@ -606,6 +606,10 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 
 `ElectricShotFlight01–04`는 금색 화살촉의 위치를 유지하고, 넓고 밝은 면이 꼬리에서 굴절부와 화살촉으로 옮겨가는 자세다. 192×51 RGBA, 100 PPU, 하단 중앙 피벗이다. 직접 시전의 `Prefabs/ElectricShot`은 0.10초씩 반복한다. 공용 `Projectiles/ElectricShot`은 비행 수명 동안 한 번 재생한다. `ElectricAbsorb`도 같은 공용 프리팹을 사용한다.
 
+## 폭탄 정령 본체의 비행과 투하
+
+`BombSpriteHover01–06`은 얼굴과 몸통 위치를 맞추고 공중에서 바람 꼬리와 소용돌이 끝이 이어지는 자세다. `BombSpriteRelease01–04`는 손을 열어 놓고 안으로 당겼다가 다음 폭탄을 드는 자세다. 모두 222×256 RGBA, 200 PPU, 하단 중앙 피벗이다. `AerialUnitPoseController`가 공중 자세를 0.17초씩 반복한다. 서버의 `Attack`에서 네 투하 자세를 0.08초 간격으로 보여 준 뒤 공중 자세로 돌아온다.
+
 ## 폭탄 정령의 투하 폭탄
 
 `BombSpriteBombDescent01–06`은 같은 검은 껍질에서 도화선 불꽃이 눌렸다 펴지고 작아지는 하강 자세다. 231×256 RGBA, 400 PPU, 하단 중앙 피벗을 쓴다. `BombSpriteBomb`은 생성 후 0.11초씩 반복한다. 지상에 닿으면 서버가 별도 `BombSpriteExplosion`을 생성한다.
