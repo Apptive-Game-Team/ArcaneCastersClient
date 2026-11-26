@@ -19,6 +19,7 @@ namespace WordOnline.Tests
 
         [TestCase("default", new[] { "attacking", "cast-recoil", "cast-recover" }, new[] { 0.4f, 2f / 3f })]
         [TestCase("corrupted_finn", new[] { "attacking", "cast-recoil", "cast-recover", "cast-lower" }, new[] { 0.4f, 0.6f, 0.8f })]
+        [TestCase("blaze", new[] { "attacking", "cast-recoil", "cast-recover", "cast-lower" }, new[] { 0.4f, 0.6f, 0.8f })]
         public void StaffMotionUsesRegisteredSpritesAndAnchors(string appearance, string[] castNames, float[] castCues)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPrefab);

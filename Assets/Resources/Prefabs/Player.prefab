@@ -304,6 +304,29 @@ MonoBehaviour:
     - 0.4
     - 0.6
     - 0.8
+  - appearanceId: blaze
+    aimFrames:
+    - sprite: {fileID: 21300000, guid: 5893c166384b41fa80cb3edddac0f8c5, type: 3}
+      tip: {x: -0.456, y: 1.343}
+    - sprite: {fileID: 21300000, guid: b783cbc23f2b4a139b2fae916923df02, type: 3}
+      tip: {x: -0.447, y: 1.391}
+    - sprite: {fileID: 21300000, guid: b93d86ea42714606b1a00f89316bdfcc, type: 3}
+      tip: {x: -0.473, y: 1.457}
+    - sprite: {fileID: 21300000, guid: 2f9c6a6edbe040c48d9e48740e8d1e13, type: 3}
+      tip: {x: -0.5, y: 1.519}
+    castFrames:
+    - sprite: {fileID: 21300000, guid: bdd86c1b370e4b418bd5cef9df5651d9, type: 3}
+      tip: {x: 0.769, y: 0.924}
+    - sprite: {fileID: 21300000, guid: 9ff62ee016f042c58286a61268980905, type: 3}
+      tip: {x: 0.551, y: 1.031}
+    - sprite: {fileID: 21300000, guid: a9561d92ca56495d9ed9f8124d1e5370, type: 3}
+      tip: {x: 0.503, y: 1.322}
+    - sprite: {fileID: 21300000, guid: 14e693c8c897465d90060983392be333, type: 3}
+      tip: {x: -0.136, y: 1.235}
+    castCueFractions:
+    - 0.4
+    - 0.6
+    - 0.8
 --- !u!114 &5546332115853614978
 MonoBehaviour:
   m_ObjectHideFlags: 0
