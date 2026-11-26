@@ -10,6 +10,9 @@ namespace RewardChest
     /// </summary>
     public static class RewardSpriteResolver
     {
+        private const string AnimationClosed = "animation_closed";
+        private const int DefaultOpeningPoseCount = 5;
+
         /// <summary>Chest art lives under <c>Assets/Resources/RewardChest/Chests/&lt;chestKey&gt;/closed.png</c> and <c>open.png</c>; see <see cref="ChestSpritePaths"/>.</summary>
         public const string ChestIconRoot = ChestSpritePaths.Root;
 
@@ -74,11 +77,36 @@ namespace RewardChest
         /// <summary>목록 아이콘과 달리 개봉 프레임은 열린 뚜껑의 공간까지 포함해 몸체 위치를 맞춘다.</summary>
         public static bool TryResolveChestClosedForAnimation(string chestKey, out Sprite sprite)
         {
-            sprite = Resources.Load<Sprite>(ChestSpritePaths.Build(chestKey, "animation_closed"))
+            sprite = Resources.Load<Sprite>(ChestSpritePaths.Build(chestKey, AnimationClosed))
                 ?? Resources.Load<Sprite>(ChestSpritePaths.Build(chestKey, ChestSpritePaths.Closed))
-                ?? Resources.Load<Sprite>(ChestSpritePaths.Build(ChestSpritePaths.DefaultKey, "animation_closed"))
+                ?? Resources.Load<Sprite>(ChestSpritePaths.Build(ChestSpritePaths.DefaultKey, AnimationClosed))
                 ?? Resources.Load<Sprite>(ChestSpritePaths.Build(ChestSpritePaths.DefaultKey, ChestSpritePaths.Closed));
             return sprite != null;
+        }
+
+        internal static Sprite[] ResolveDefaultChestOpeningFrames(Sprite closed, Sprite open)
+        {
+            const string key = ChestSpritePaths.DefaultKey;
+            if (closed == null || open == null
+                || closed != Resources.Load<Sprite>(ChestSpritePaths.Build(key, AnimationClosed))
+                || open != Resources.Load<Sprite>(ChestSpritePaths.Build(key, ChestSpritePaths.Open)))
+            {
+                return null;
+            }
+
+            var frames = new Sprite[DefaultOpeningPoseCount + 2];
+            frames[0] = closed;
+            frames[frames.Length - 1] = open;
+            for (int pose = 1; pose <= DefaultOpeningPoseCount; pose++)
+            {
+                frames[pose] = Resources.Load<Sprite>(ChestSpritePaths.Build(key, $"opening_{pose:00}"));
+                if (frames[pose] == null)
+                {
+                    return null;
+                }
+            }
+
+            return frames;
         }
     }
 }

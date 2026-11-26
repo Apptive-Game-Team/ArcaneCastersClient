@@ -386,7 +386,9 @@ commit 그대로였다.
 
 ## 마법 상자 — 2026-11-05
 
-`Assets/Resources/RewardChest/Chests/default/closed.png`, `animation_closed.png`, `open.png`: 사용자 요청으로 금색 목재 상자를 master-v2의 청색 판넬·크림 석재·청록 결정 마법 상자로 교체했다. 목록과 로비에는 여백을 줄인 closed 아이콘을 사용하고, 개봉 연출에는 같은 공통 크롭·배율·바닥 기준의 animation_closed/open 256×256 RGBA 프레임을 사용한다. 원본과 프롬프트는 `.art/concept/chest-redesign-20261105/`에 보관한다. Unity Editor 프리뷰에서 목록·닫힘·열림 프레임을 검수했고 프레임 연결과 바닥 정렬 테스트를 통과했다. 연속 개봉 동작의 실제 플레이 검증은 남아 있다.
+`Assets/Resources/RewardChest/Chests/default/closed.png`, `animation_closed.png`, `open.png`: 사용자 요청으로 금색 목재 상자를 master-v2의 청색 판넬·크림 석재·청록 결정 마법 상자로 교체했다. 목록과 로비에는 여백을 줄인 closed 아이콘을 사용하고, 개봉 연출에는 같은 공통 크롭·배율·바닥 기준의 animation_closed/open 256×256 RGBA 프레임을 사용한다. 원본과 프롬프트는 `.art/concept/chest-redesign-20261105/`에 보관한다.
+
+이슈 #738에서는 뚜껑이 열리는 사이에 `opening_01.png`부터 `opening_05.png`까지 추가했다. 일곱 자세의 256×256 캔버스와 바닥선을 맞췄다. 같은 Unity 프리팹에서 개봉, 등장 중 건너뛰기, 뚜껑이 열리는 중 건너뛰기와 다시 개봉을 확인했다.
 
 ## 타락한 바람 정령 공중 모션
 

@@ -226,16 +226,25 @@ namespace RewardChest
 
         private IEnumerator OpenChest()
         {
+            Sprite[] openingFrames = chestBodyImage != null
+                ? RewardSpriteResolver.ResolveDefaultChestOpeningFrames(activeClosedSprite, activeOpenSprite)
+                : null;
             Sequence sequence = DOTween.Sequence().SetTarget(this);
             if (chestRoot != null)
             {
                 sequence.Append(chestRoot.DOShakeRotation(shakeSeconds, new Vector3(0f, 0f, 12f), 14, 90f));
             }
 
+            float openStart = sequence.Duration(includeLoops: false);
+            bool effectsStarted = false;
             sequence.AppendCallback(() =>
             {
-                SwapToOpenSprite();
+                if (openingFrames == null)
+                {
+                    SwapToOpenSprite();
+                }
                 StartOpenEffects();
+                effectsStarted = true;
             });
             if (chestLid != null && activeOpenSprite == null)
             {
@@ -250,14 +259,26 @@ namespace RewardChest
             if (rayImage != null)
             {
                 sequence.Join(rayImage.DOFade(rayAlpha, openSeconds));
-            }
-
-            if (rayImage != null)
-            {
                 sequence.Join(rayImage.rectTransform.DOScale(1f, openSeconds * 1.6f).SetEase(Ease.OutCubic));
             }
 
+            if (openingFrames != null)
+            {
+                sequence.Insert(openStart, DOVirtual.Float(0f, openingFrames.Length - 1, openSeconds,
+                    pose => chestBodyImage.sprite = openingFrames[(int)pose]).SetEase(Ease.Linear));
+            }
+
             yield return WaitOrSkip(sequence);
+
+            if (skipRequested)
+            {
+                // Complete()는 개봉 콜백을 생략할 수 있다.
+                SwapToOpenSprite();
+                if (!effectsStarted)
+                {
+                    StartOpenEffects();
+                }
+            }
         }
 
         /// <summary>Spins the rays and starts the sparkles. They loop on their own tweens, so a skip does not wait for them.</summary>

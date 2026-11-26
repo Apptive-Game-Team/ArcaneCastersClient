@@ -27,15 +27,36 @@ namespace WordOnline.Tests
                 Assert.That(opened, Is.SameAs(Resources.Load<Sprite>("RewardChest/Chests/default/open")));
                 Assert.That(closed, Is.Not.SameAs(Resources.Load<Sprite>("RewardChest/Chests/default/closed")));
                 Assert.That(closed.rect.size, Is.EqualTo(opened.rect.size));
+
+                var resolver = presenter.GetType().Assembly.GetType("RewardChest.RewardSpriteResolver");
+                var resolve = resolver.GetMethod("ResolveDefaultChestOpeningFrames", BindingFlags.NonPublic | BindingFlags.Static);
+                var frames = (Sprite[])resolve.Invoke(null, new object[] { closed, opened });
+                Assert.That(frames.Select(frame => frame.name), Is.EqualTo(new[]
+                {
+                    "animation_closed", "opening_01", "opening_02", "opening_03", "opening_04", "opening_05", "open"
+                }));
+                Assert.That(frames.All(frame => frame.rect.size == closed.rect.size && frame.pivot == closed.pivot), Is.True);
+
+                var forestClosed = Resources.Load<Sprite>("RewardChest/Chests/forest_chest/closed");
+                var forestOpen = Resources.Load<Sprite>("RewardChest/Chests/forest_chest/open");
+                Assert.That(forestClosed, Is.Not.Null);
+                Assert.That(forestOpen, Is.Not.Null);
+                Assert.That(resolve.Invoke(null, new object[] { forestClosed, opened }), Is.Null);
+                Assert.That(resolve.Invoke(null, new object[] { closed, forestOpen }), Is.Null);
             }
             finally { Object.DestroyImmediate(root); }
         }
 
-        [Test]
-        public void OpeningFramePairHasTransparentCornersAndTheSameGroundBaseline()
+        [TestCase("opening_01")]
+        [TestCase("opening_02")]
+        [TestCase("opening_03")]
+        [TestCase("opening_04")]
+        [TestCase("opening_05")]
+        [TestCase("open")]
+        public void OpeningFrameHasTransparentCornersAndTheSameGroundBaseline(string state)
         {
             var closed = Load("animation_closed");
-            var opened = Load("open");
+            var opened = Load(state);
             try
             {
                 Assert.That(closed.width, Is.EqualTo(opened.width));
