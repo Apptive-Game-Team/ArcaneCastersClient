@@ -3842,6 +3842,90 @@ namespace WordOnline.Tests
             }
         }
 
+        [UnityTest]
+        public IEnumerator WindBladeKeepsCyclingAcrossThreeRecordedPiercingHits()
+        {
+            Create();
+            const string magic = "wind_blade";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "pierce")));
+            var world = (Component)Field("world");
+            const int bladeId = 5;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WindBladeCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.575f);
+                Assert.That(Target(bladeId), Is.Null);
+                yield return PlayUntil(.624f);
+                var blade = Target(bladeId);
+                Assert.That(blade, Is.Not.Null);
+                var renderer = ServedObjectRenderer(blade);
+                var source = Resources.Load<Sprite>("Game/sprites/WindBlade");
+                Assert.That(renderer.sprite.name, Is.EqualTo("WindBladeFlight01"));
+                Assert.That(renderer.sprite.rect.size, Is.EqualTo(source.rect.size));
+                Assert.That(renderer.sprite.pivot, Is.EqualTo(source.pivot));
+                Assert.That(renderer.sprite.pixelsPerUnit, Is.EqualTo(source.pixelsPerUnit));
+                Vector3 start = world.transform.InverseTransformPoint(blade.transform.position);
+                Assert.That(Vector3.Distance(start, new Vector3(2f, 0f, 5f)), Is.LessThan(.008f));
+                var poses = new System.Collections.Generic.List<string>();
+
+                IEnumerator ObserveUntil(float moment)
+                {
+                    do
+                    {
+                        string pose = renderer.sprite.name;
+                        if (poses.LastOrDefault() != pose)
+                        {
+                            poses.Add(pose);
+                            if (capture && poses.Count <= 8) SaveViewport(directory, pose, true);
+                        }
+                        if ((float)Field("elapsed") >= moment) yield break;
+                        yield return null;
+                    } while (true);
+                }
+
+                foreach (var hit in new[]
+                {
+                    (time: .90f, target: 2, remainingHp: 900f, pose: 3),
+                    (time: 1.15f, target: 3, remainingHp: 934f, pose: 5),
+                    (time: 1.40f, target: 4, remainingHp: 956f, pose: 7)
+                })
+                {
+                    yield return ObserveUntil(hit.time - .024f);
+                    Assert.That(CurrentHp(Target(hit.target)), Is.EqualTo(1000));
+                    yield return ObserveUntil(hit.time + .024f);
+                    Assert.That(CurrentHp(Target(hit.target)), Is.EqualTo(hit.remainingHp));
+                    Assert.That(Target(bladeId), Is.SameAs(blade));
+                    Assert.That(renderer.sprite.name, Is.EqualTo($"WindBladeFlight{hit.pose:00}"));
+                    if (capture) SaveViewport(directory, $"pierce-{hit.target}", true);
+                }
+
+                yield return ObserveUntil(1.614f);
+                var expected = Enumerable.Range(1, 8).Select(i => $"WindBladeFlight{i:00}").Append("WindBladeFlight01");
+                CollectionAssert.AreEqual(expected, poses.Take(9));
+
+                var despawning = blade.GetType().GetProperty("IsDespawning", Private);
+                yield return PlayUntil(2.624f);
+                Assert.That(despawning.GetValue(blade), Is.False);
+                Assert.That(world.transform.InverseTransformPoint(blade.transform.position).x, Is.InRange(17.75f, 18.15f));
+                yield return PlayUntil(2.674f);
+                Assert.That(despawning.GetValue(blade), Is.True);
+                Assert.That(Target(bladeId), Is.SameAs(blade));
+                yield return PlayUntil(2.744f);
+                Assert.That(Target(bladeId), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
         private static float TimeToLive(Component subject)
         {
             var gauges = (IList)subject.GetType().GetField("gauges").GetValue(subject);
