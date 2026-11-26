@@ -93,6 +93,7 @@ namespace GameScene.ServedObjectComponent
         public event Action<string> OnOtherStatus;
         public event Action OnDestroyed;
         public event Action OnMoved;
+        internal event Action<Vector3> OnServerPositionUpdated;
         public event Action<Gauge> OnGaugeChanged;
 
         /// <summary>
@@ -193,6 +194,10 @@ namespace GameScene.ServedObjectComponent
             HandleGaugeUpdate(updatedObjectDto.gauges);
 
             HandleStatus(updatedObjectDto.status);
+            if (!IsDespawning)
+            {
+                OnServerPositionUpdated?.Invoke(updatedObjectDto.position);
+            }
             EnsureEffectRenderer();
             _effectRenderer.SetEffects(updatedObjectDto.effects);
         }

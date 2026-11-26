@@ -107,6 +107,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4133848519264727152, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6847283349778472194}
+    - targetCorrespondingSourceObject: {fileID: 4133848519264727152, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8040500000000005382}
   m_SourcePrefab: {fileID: 100100000, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
 --- !u!1 &1359078717741646473 stripped
 GameObject:
@@ -127,6 +130,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6630687504928479194, guid: 8d2ff5932544147bab8e9fb89bdb9269, type: 3}
   spawnSfxProfile: {fileID: 11400000, guid: 9ca96da8d80d4d1fa32e4ac7fedac70d, type: 2}
+--- !u!212 &8040500000000005381 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3475341198290787986, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
+  m_PrefabInstance: {fileID: 3135081171793523449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8040500000000005382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359078717741646473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 212c5591f5264a85b5629e87fa3541dd, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 4638979048926592165}
+  targetRenderer: {fileID: 8040500000000005381}
+  hoverFrames:
+  - {fileID: 21300000, guid: 96e58a3ff4664ee2818ec01c9674936e, type: 3}
+  - {fileID: 21300000, guid: 9bd86b39767545bb9be6cf911e8c0446, type: 3}
+  - {fileID: 21300000, guid: 28b89ee1187542e982d8acf45c85da69, type: 3}
+  - {fileID: 21300000, guid: 2fae154e611e4851869f2e7f8372bfee, type: 3}
+  glideFrames:
+  - {fileID: 21300000, guid: 137e87c585854ce49544e062578eeb34, type: 3}
+  - {fileID: 21300000, guid: 7d1c25c892b64960bfa36fdf247ea66c, type: 3}
+  - {fileID: 21300000, guid: ba836dffa7074051977b2135a0900a3b, type: 3}
+  - {fileID: 21300000, guid: e9425d614a8b4a37a076fbccdcffcd06, type: 3}
+  descentFrames:
+  - {fileID: 21300000, guid: 4949bf7681a441c3a77e7cb77e6b78ec, type: 3}
+  - {fileID: 21300000, guid: 00c05eadda234aee8dc967ad39104faf, type: 3}
+  - {fileID: 21300000, guid: 8348848b7f0d4dc68f879e5f47b00353, type: 3}
+  - {fileID: 21300000, guid: 3efc1ee1e073456e81e1d1c2bd3b8162, type: 3}
 --- !u!114 &4638979048926592165 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7774054542688849500, guid: 2a990eee1399a1c47b01ded454c8e12e, type: 3}
