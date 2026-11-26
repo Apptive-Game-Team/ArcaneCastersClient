@@ -464,7 +464,7 @@ namespace WordOnline.Tests
 
                 yield return PlayUntil(impact - .023f);
                 Assert.That(sprite.sprite.name, Is.EqualTo("WallGolem"));
-                float before = CurrentWallGolemOpponentHealth(opponent);
+                float before = CurrentHp(opponent);
                 Assert.That(before, Is.EqualTo(10000f));
 
                 for (int pose = 1; pose <= 4; pose++)
@@ -472,7 +472,7 @@ namespace WordOnline.Tests
                     yield return PlayUntil(impact + .023f + (pose - 1) * .08f);
                     Assert.That(sprite.sprite.name, Is.EqualTo($"WallGolemPunch{pose:00}"));
                     Assert.That(sprite.flipX, Is.False);
-                    Assert.That(CurrentWallGolemOpponentHealth(opponent), Is.EqualTo(9900f));
+                    Assert.That(CurrentHp(opponent), Is.EqualTo(9900f));
                     if (canCapture && pose == 1) SaveViewport(directory, "impact", true);
                 }
 
@@ -485,7 +485,7 @@ namespace WordOnline.Tests
             }
         }
 
-        private static float CurrentWallGolemOpponentHealth(Component opponent)
+        private static float CurrentHp(Component opponent)
         {
             var gauges = (IList)opponent.GetType().GetField("gauges").GetValue(opponent);
             return (float)gauges[0].GetType().GetField("value").GetValue(gauges[0]);
@@ -662,6 +662,204 @@ namespace WordOnline.Tests
         private static int AquaArcherId(JToken scenario) =>
             (int)scenario["frames"].SelectMany(frame => frame["objects"]["create"])
                 .First(unit => (string)unit["type"] == "AquaArcher")["id"];
+
+        [UnityTest]
+        public IEnumerator TowerbackRecordingShowsGroundHitAndAirFireOnTheirOwnTicks()
+        {
+            Create();
+            const string magic = "towerback";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int groundId = RecordedTowerbackId(scenarios[0]);
+            int groundTarget = (int)scenarios[0]["fixtureTargetIds"][0];
+            float impact = (float)scenarios[0]["frames"].First(frame => frame["events"]
+                .Any(hit => (string)hit["type"] == "hit" && (int)hit["actorId"] == groundId))["time"];
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                string directory = System.IO.Path.Combine(Application.dataPath, "../Library/TowerbackCaptures");
+                bool canCapture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+                if (canCapture) System.IO.Directory.CreateDirectory(directory);
+
+                yield return PlayUntil(.72f);
+                Component tower = Target(groundId);
+                var body = (SpriteRenderer)tower.GetType().GetField("_spriteRenderer", Private).GetValue(tower);
+                Assert.That(tower.GetComponent("HoppingMotionController"), Is.Null);
+                var seen = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 1.20f)
+                {
+                    if (seen.Add(body.sprite.name) && canCapture && body.sprite.name.StartsWith("TowerbackWalk"))
+                        SaveViewport(directory, body.sprite.name, true);
+                    yield return null;
+                }
+                Assert.That(seen.Count(name => name.StartsWith("TowerbackWalk")), Is.EqualTo(8));
+                yield return PlayUntil(impact - .025f);
+                Assert.That(body.sprite.name, Is.EqualTo("Towerback"));
+                Assert.That(CurrentHp(Target(groundTarget)), Is.EqualTo(1000f));
+                for (int pose = 1; pose <= 4; pose++)
+                {
+                    yield return PlayUntil(impact + .02f + (pose - 1) * .08f);
+                    Assert.That(body.sprite.name, Is.EqualTo($"TowerbackPunch{pose:00}"));
+                    Assert.That(CurrentHp(Target(groundTarget)), Is.EqualTo(920f));
+                    Assert.That(FindProjectile("RockShot"), Is.Null);
+                    if (canCapture && pose == 1) SaveViewport(directory, "ground-impact", true);
+                }
+                yield return PlayUntil(impact + .36f);
+                Assert.That(body.sprite.name, Is.EqualTo("Towerback"));
+
+                Scenario(1);
+                var shot = FirstProjectile(scenarios[1], "RockShot");
+                yield return PlayUntil(shot.start - .025f);
+                tower = Target(RecordedTowerbackId(scenarios[1]));
+                body = (SpriteRenderer)tower.GetType().GetField("_spriteRenderer", Private).GetValue(tower);
+                Component airborne = Target(shot.targetId);
+                Assert.That(body.sprite.name, Is.EqualTo("Towerback"));
+                Assert.That(FindProjectile("RockShot"), Is.Null);
+
+                yield return PlayUntil(shot.start + .012f);
+                Transform rock = FindProjectile("RockShot");
+                Assert.That(rock, Is.Not.Null);
+                Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire01"));
+                Vector3 muzzle = body.transform.TransformPoint(new Vector3(.2115f, 1.7805f, 0f));
+                float range = Vector3.Distance(muzzle, airborne.transform.position);
+                Assert.That(Vector3.Distance(muzzle, rock.position), Is.LessThan(range * .22f));
+                Assert.That(CurrentHp(airborne), Is.EqualTo(1000f));
+                if (canCapture) SaveViewport(directory, "air-launch", true);
+
+                yield return PlayUntil(shot.start + .11f);
+                Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire02"));
+                if (canCapture) SaveViewport(directory, "air-recoil", true);
+                yield return PlayUntil(shot.start + shot.duration - .025f);
+                Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire03"));
+                Assert.That(Vector3.Distance(rock.position, airborne.transform.position), Is.LessThan(range * .24f));
+                yield return PlayUntil(shot.start + .23f);
+                Assert.That(FindProjectile("RockShot"), Is.Null);
+                Assert.That(CurrentHp(airborne), Is.EqualTo(1000f));
+                yield return PlayUntil(shot.start + .275f);
+                Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire04"));
+                Assert.That(CurrentHp(airborne), Is.EqualTo(900f));
+                yield return PlayUntil(shot.start + .37f);
+                Assert.That(body.sprite.name, Is.EqualTo("Towerback"));
+                yield return PlayUntil(shot.start + .82f);
+                Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire01"));
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        private static int RecordedTowerbackId(JToken scenario) =>
+            (int)scenario["frames"].SelectMany(frame => frame["objects"]["create"])
+                .First(unit => (string)unit["type"] == "Towerback")["id"];
+
+        [UnityTest]
+        public IEnumerator TowerbackMirrorsItsMuzzleAndKeepsAttackSelectionInsideThePacket()
+        {
+            Create();
+            Component world = CreateWorld();
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize")
+                .MakeGenericMethod(Runtime("GameScene.Dto.ObjectsInfo"));
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            MethodInfo find = world.GetType().GetMethod("FindById");
+            void Apply(string json) =>
+                apply.Invoke(null, new[] { decode.Invoke(null, new object[] { json }), null, world });
+            Component Actor(int id) => (Component)find.Invoke(world, new object[] { id });
+            Transform LastRock() => world.transform.Find("PresentationContent").Cast<Transform>()
+                .Last(child => child.name == "RockShot(Clone)");
+            string Shot(int actor, int target) =>
+                $"\"projectile\":[{{\"type\":\"RockShot\",\"duration\":0.2,\"start\":{{\"targetType\":\"reference\",\"id\":{actor}}}," +
+                $"\"end\":{{\"targetType\":\"reference\",\"id\":{target}}}}}]";
+            string Update(string x, string state) =>
+                $"\"update\":[{{\"id\":21,\"position\":{{\"x\":{x},\"y\":0,\"z\":5}},\"status\":\"{state}\"}}]";
+
+            Apply("{\"create\":[" +
+                "{\"id\":21,\"type\":\"Towerback\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":5}}," +
+                "{\"id\":22,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":5,\"y\":2,\"z\":5}}," +
+                "{\"id\":23,\"type\":\"WallGolem\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":4}}," +
+                "{\"id\":24,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":13,\"y\":2,\"z\":5}}]}");
+            Component tower = Actor(21);
+            var body = (SpriteRenderer)tower.GetType().GetField("_spriteRenderer", Private).GetValue(tower);
+            string status = Update("9.08", "Attack");
+            Apply("{" + Update("9.04", "Move") + "}");
+            Apply("{" + Update("9.08", "Move") + "}");
+            yield return null;
+            Assert.That(body.flipX, Is.False);
+
+            Apply("{" + Shot(21, 22) + "," + status + "}");
+            Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire01"));
+            Assert.That(body.flipX, Is.True);
+            Vector3 leftMuzzle = body.transform.TransformPoint(new Vector3(-.2115f, 1.7805f, 0f));
+            Assert.That(Vector3.Distance(leftMuzzle, LastRock().position), Is.LessThan(.005f));
+            yield return null;
+            yield return null;
+            Assert.That(body.flipX, Is.True);
+
+            Apply("{" + Shot(21, 24) + "}");
+            Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire01"));
+            Assert.That(body.flipX, Is.False);
+            Vector3 rightMuzzle = body.transform.TransformPoint(new Vector3(.2115f, 1.7805f, 0f));
+            Assert.That(Vector3.Distance(rightMuzzle, LastRock().position), Is.LessThan(.005f));
+            Apply("{" + Shot(23, 24) + "," + status + "}");
+            Assert.That(body.sprite.name, Is.EqualTo("TowerbackPunch01"));
+            Assert.That(Vector3.Distance(Actor(23).transform.position, LastRock().position), Is.LessThan(.005f));
+        }
+
+        [UnityTest]
+        public IEnumerator TowerbackSnapshotLaunchesBeforeRemovingTheTarget()
+        {
+            root = new GameObject("Towerback snapshot fixture");
+            Component container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+            Component syncer = root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+            MethodInfo find = container.GetType().GetMethod("FindById");
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize");
+            Type objectsType = Runtime("GameScene.Dto.ObjectsInfo");
+            MethodInfo decodeObjects = decode.MakeGenericMethod(objectsType);
+            Transform shot = null;
+            try
+            {
+                object initial = decodeObjects.Invoke(null, new object[] {
+                    "{\"create\":[" +
+                    "{\"id\":31,\"type\":\"Towerback\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":5}}," +
+                    "{\"id\":32,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":13,\"y\":2,\"z\":5}}]}"
+                });
+                Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply")
+                    .Invoke(null, new[] { initial, null, null });
+                Assert.That(find.Invoke(container, new object[] { 32 }), Is.Not.Null);
+
+                object launch = decodeObjects.Invoke(null, new object[] {
+                    "{\"projectile\":[{\"type\":\"RockShot\",\"duration\":0.2," +
+                    "\"start\":{\"targetType\":\"reference\",\"id\":31},\"end\":{\"targetType\":\"reference\",\"id\":32}}]}"
+                });
+                object deferred = Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnBeforeObjectUpdates")
+                    .Invoke(null, new[] { objectsType.GetField("projectile").GetValue(launch), null });
+                Assert.That(deferred, Is.Not.Null);
+                Assert.That(GameObject.Find("RockShot(Clone)"), Is.Null);
+
+                Type snapshots = Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType();
+                object snapshot = decode.MakeGenericMethod(snapshots).Invoke(null, new object[] {
+                    "[{\"id\":31,\"prefab\":\"Towerback\",\"master\":\"LeftPlayer\"," +
+                    "\"x\":9,\"y\":0,\"z\":5,\"status\":\"Attack\"}]"
+                });
+                syncer.GetType().GetMethod("Sync").Invoke(syncer, new[] { snapshot, deferred });
+                Assert.That(find.Invoke(container, new object[] { 32 }), Is.Null);
+                var actor = (Component)find.Invoke(container, new object[] { 31 });
+                var body = (SpriteRenderer)actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor);
+                Assert.That(body.sprite.name, Is.EqualTo("TowerbackFire01"));
+                GameObject projectile = GameObject.Find("RockShot(Clone)");
+                Assert.That(projectile, Is.Not.Null);
+                shot = projectile.transform;
+                yield return null;
+                Assert.That(shot != null, Is.True, "스냅샷에서 빠진 표적의 마지막 위치까지 탄이 이동한다.");
+            }
+            finally
+            {
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                if (shot != null) UnityEngine.Object.Destroy(shot.gameObject);
+            }
+        }
 
         [UnityTest]
         public IEnumerator StormStagRecordingUsesFourLegGaitAndOnlyBracesOnContact()

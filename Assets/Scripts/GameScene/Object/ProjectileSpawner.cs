@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using GameScene.Dto;
 using GameScene.Dto.Projectile;
 using GameScene.Object.Projectile;
 using GameScene.ServedObjectComponent;
+using GameScene.ServedObjectComponent.Motion;
 using GameScene.ServedObjectComponent.Sound;
 using Global;
 using UnityEngine;
@@ -58,6 +60,57 @@ namespace GameScene.Object
             Destroy(projectileObject, dto.duration);
             
             projectile.Init(dto);
+        }
+
+        internal static GroundedUnitPoseController FindTowerbackLauncher(ProjectileDto dto, PresentationWorld world)
+        {
+            if (dto?.type != "RockShot" || !(dto.start is ReferenceProjectileTarget reference))
+            {
+                return null;
+            }
+
+            ServedObject source = PresentationWorld.Find(reference.id, world);
+            return source != null && source.PrefabType == "Towerback"
+                ? source.GetComponent<GroundedUnitPoseController>()
+                : null;
+        }
+
+        public static List<ProjectileDto> SpawnBeforeObjectUpdates(IEnumerable<ProjectileDto> projectiles, PresentationWorld world = null)
+        {
+            if (projectiles == null)
+            {
+                return null;
+            }
+
+            List<ProjectileDto> deferred = null;
+            foreach (ProjectileDto projectile in projectiles)
+            {
+                // 포탑등이는 이번 틱의 위치와 공격 상태를 적용한 뒤 포구와 발사 자세를 맞춘다.
+                if (FindTowerbackLauncher(projectile, world) != null)
+                {
+                    deferred ??= new List<ProjectileDto>();
+                    deferred.Add(projectile);
+                }
+                else
+                {
+                    SpawnShared(projectile, world);
+                }
+            }
+
+            return deferred;
+        }
+
+        internal static void SpawnDeferred(List<ProjectileDto> projectiles, PresentationWorld world = null)
+        {
+            if (projectiles == null)
+            {
+                return;
+            }
+
+            foreach (ProjectileDto projectile in projectiles)
+            {
+                SpawnShared(projectile, world);
+            }
         }
 
         private static void SpawnBoulderStrikeImpact(ProjectileDto dto, PresentationWorld world)

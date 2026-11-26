@@ -8,6 +8,8 @@ namespace GameScene.ServedObjectComponent.Motion
         [SerializeField] private SpriteRenderer targetRenderer;
         [SerializeField] private Sprite[] walkFrames;
         [SerializeField] private Sprite[] attackFrames;
+        [SerializeField] private Sprite[] projectileAttackFrames;
+        [SerializeField] private Vector2 projectileMuzzle;
         [SerializeField] private float walkCycleDistance = 0.54f;
         [SerializeField] private float attackDuration = 0.2f;
         [SerializeField] private bool attackOnHit;
@@ -28,6 +30,7 @@ namespace GameScene.ServedObjectComponent.Motion
         private float walkDistance;
         private float movingUntil = float.NegativeInfinity;
         private float attackStarted = float.NegativeInfinity;
+        private Sprite[] activeAttackFrames;
         private Vector2 lastServerGround;
         private bool hasServerGround;
         private bool correctingServerGround;
@@ -78,15 +81,37 @@ namespace GameScene.ServedObjectComponent.Motion
 
         private void HandleAttack()
         {
-            if (!isActiveAndEnabled || resolvedRenderer == null || attackFrames == null ||
-                attackFrames.Length == 0 || attackDuration <= 0f)
+            if (CanPlayAttack(attackFrames))
             {
-                return;
+                StartAttack(attackFrames);
+            }
+        }
+
+        internal bool TryLaunchProjectile(Vector3 destination, out Vector3 start)
+        {
+            start = default;
+            if (!CanPlayAttack(projectileAttackFrames))
+            {
+                return false;
             }
 
+            Owner.FaceTowards(destination);
+            precedingServerDirection = confirmedServerDirection = 0;
+            StartAttack(projectileAttackFrames);
+            float x = impactFlip ? -projectileMuzzle.x : projectileMuzzle.x;
+            start = resolvedRenderer.transform.TransformPoint(new Vector3(x, projectileMuzzle.y, 0f));
+            return true;
+        }
+
+        private bool CanPlayAttack(Sprite[] frames) =>
+            isActiveAndEnabled && resolvedRenderer != null && frames != null && frames.Length > 0 && attackDuration > 0f;
+
+        private void StartAttack(Sprite[] frames)
+        {
+            activeAttackFrames = frames;
             attackStarted = Time.time;
             impactFlip = resolvedRenderer.flipX;
-            resolvedRenderer.sprite = attackFrames[0];
+            resolvedRenderer.sprite = frames[0];
         }
 
         private void HandleServerGround(Vector3 position)
@@ -138,7 +163,7 @@ namespace GameScene.ServedObjectComponent.Motion
             float now = Time.time;
             float attackElapsed = now - attackStarted;
             bool attacking = attackElapsed < attackDuration;
-            if (attackOnHit && attacking)
+            if (attacking && (attackOnHit || activeAttackFrames == projectileAttackFrames))
             {
                 resolvedRenderer.flipX = impactFlip;
             }
@@ -152,8 +177,8 @@ namespace GameScene.ServedObjectComponent.Motion
             Sprite pose = idleSprite;
             if (attacking)
             {
-                int frame = Mathf.Min(attackFrames.Length - 1, (int)(attackElapsed * attackFrames.Length / attackDuration));
-                pose = attackFrames[frame];
+                int frame = Mathf.Min(activeAttackFrames.Length - 1, (int)(attackElapsed * activeAttackFrames.Length / attackDuration));
+                pose = activeAttackFrames[frame];
             }
             else if (now < movingUntil && walkFrames != null && walkFrames.Length > 0 && walkCycleDistance > 0f)
             {
@@ -219,6 +244,7 @@ namespace GameScene.ServedObjectComponent.Motion
         private void ResetPose()
         {
             hasGroundSample = false;
+            activeAttackFrames = null;
             hasServerGround = correctingServerGround = false;
             precedingServerDirection = confirmedServerDirection = 0;
             walkDistance = 0f;

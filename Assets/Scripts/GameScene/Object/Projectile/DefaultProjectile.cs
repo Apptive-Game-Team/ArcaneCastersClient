@@ -38,6 +38,12 @@ namespace GameScene.Object.Projectile
 
         private static Vector3 VisualStart(ProjectileDto projectile, Vector3 destination, PresentationWorld world)
         {
+            var launcher = ProjectileSpawner.FindTowerbackLauncher(projectile, world);
+            if (launcher != null && launcher.TryLaunchProjectile(destination, out Vector3 muzzle))
+            {
+                return muzzle;
+            }
+
             if (projectile.type == "WaterShot" && projectile.start is ReferenceProjectileTarget reference)
             {
                 ServedObject source = PresentationWorld.Find(reference.id, world);
