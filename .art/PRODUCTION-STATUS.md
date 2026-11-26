@@ -48,6 +48,7 @@
 | `RockRemnant.png` | `game-assets/rock-remnant.webp` | 사망 후 이동 방해 잔해 |
 | `EarthCall.png` | 클라이언트 PR #181 검수 | 돌 골렘 재사용 이미지를 돌무더기 각성 마법 전용 아트로 교체. `MasterStyleKey.png`·`RockGolem.png`·`ArcaneImpact.png` 고정 앵커를 사용한 2.5D cut-paper 효과다. v2는 내용 비율이 1.01이라 기존 0.89보다 넓어 반려했고, v3는 생성물 0.867·최종 내용 207x238로 원본 212x238과 2.4% 이내다. 최종 256x244 RGBA, Bottom Center, 바닥 여백 0px, 네 모서리 alpha 0, 투명 60.8%, 불투명 픽셀의 magenta 잔색 0, 64px 실루엣 검수 완료 |
 | `TitanRemnant.png` | 클라이언트 이슈 #593 재작업 검수 | 거신의 잔해 본체 |
+| `TitanRemnantSignal01–04.png` | 클라이언트 이슈 #706 | 253×215 RGBA, PPU 100, 하단 중앙 피벗. 돌주먹을 소환할 때 가슴 돌판이 벌어졌다가 0.52초 동안 대기로 돌아간다. |
 | `TitanFist.png` | 클라이언트 이슈 #593 재작업 검수 | 주변 적 위치에서 솟구치는 거대한 돌주먹 |
 | `LightningTadpole.png` | `concept-art/lightning-tadpole.webp` | 차원 유랑종 폭풍편 방향 적용 |
 | `MagmaSpirit.png` | `concept-art/magma-spirit-idle.webp` | 기본 자세 |
