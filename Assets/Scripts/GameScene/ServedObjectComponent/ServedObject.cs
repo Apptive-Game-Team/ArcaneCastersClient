@@ -18,6 +18,7 @@ namespace GameScene.ServedObjectComponent
 
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Transform _actualTransform = null;
+        [SerializeField] private bool _keepUprightOnSpawn;
         /// <summary>
         /// Where aura and status effects are parented. Leave empty and they sit on the
         /// object itself, which is what every mob wants. The player points it at the staff
@@ -47,6 +48,7 @@ namespace GameScene.ServedObjectComponent
         [SerializeField] private float _effectScaleMax = 1.8f;
         public int id;
         internal string PrefabType { get; set; }
+        internal bool KeepUprightOnSpawn => _keepUprightOnSpawn;
         internal bool IsDespawning { get; private set; }
         private PresentationWorld _presentationWorld;
         public PresentationWorld PresentationWorld

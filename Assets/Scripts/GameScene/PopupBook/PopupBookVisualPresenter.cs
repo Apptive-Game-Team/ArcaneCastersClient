@@ -66,25 +66,30 @@ namespace GameScene.PopupBook
             return presenter;
         }
 
-        public void PlaySpawnPresentation(bool spawnDust)
+        public void PlaySpawnPresentation(bool spawnDust, bool foldUp = true)
         {
-            if (spawnPresentationPivot == null)
+            if (spawnPresentationPivot == null || (!foldUp && !spawnDust))
             {
                 return;
             }
 
             StopSpawnPresentation();
-            CaptureAndSetWorldSpaceUiEnabled(false);
-
-            spawnPresentationPivot.localRotation = Quaternion.Euler(SpawnStartAngle, 0f, 0f);
-
             Sequence currentSequence = DOTween.Sequence();
             spawnSequence = currentSequence;
             currentSequence.SetLink(gameObject);
-            currentSequence.Append(
-                spawnPresentationPivot
-                    .DOLocalRotate(Vector3.zero, SpawnDuration, RotateMode.Fast)
-                    .SetEase(Ease.OutBack, 1.25f));
+            if (foldUp)
+            {
+                CaptureAndSetWorldSpaceUiEnabled(false);
+                spawnPresentationPivot.localRotation = Quaternion.Euler(SpawnStartAngle, 0f, 0f);
+                currentSequence.Append(
+                    spawnPresentationPivot
+                        .DOLocalRotate(Vector3.zero, SpawnDuration, RotateMode.Fast)
+                        .SetEase(Ease.OutBack, 1.25f));
+            }
+            else
+            {
+                currentSequence.AppendInterval(SpawnDuration);
+            }
 
             if (spawnDust)
             {
