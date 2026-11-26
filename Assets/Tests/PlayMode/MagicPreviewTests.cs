@@ -4790,11 +4790,18 @@ namespace WordOnline.Tests
                 Assert.That(otherRenderer.sprite, Is.SameAs(idle));
                 Assert.That(otherRenderer.flipX, Is.False);
                 Vector3 rootPosition = actor.transform.position;
+                Assert.That(actor.GetType().GetField("_swingOnAttack", Private).GetValue(actor), Is.False);
+                var actualObject = (Transform)actor.GetType().GetMethod("GetActualTransform").Invoke(actor, null);
+                // 팝업북 소환 피벗의 회전은 공격 중 본체 회전과 별개다.
+                Transform presentationParent = actualObject.parent;
+                Quaternion bodyFacing = Quaternion.Inverse(presentationParent.rotation) * renderer.transform.rotation;
                 float started = Time.time;
                 var observed = new System.Collections.Generic.List<Sprite>();
                 while (Time.time < started + 0.45f)
                 {
                     if (!observed.Contains(renderer.sprite)) observed.Add(renderer.sprite);
+                    Quaternion facing = Quaternion.Inverse(presentationParent.rotation) * renderer.transform.rotation;
+                    Assert.That(Quaternion.Angle(facing, bodyFacing), Is.LessThan(.1f));
                     if (Time.time < started + 0.39f) Assert.That(renderer.sprite, Is.Not.SameAs(raised));
                     yield return null;
                 }

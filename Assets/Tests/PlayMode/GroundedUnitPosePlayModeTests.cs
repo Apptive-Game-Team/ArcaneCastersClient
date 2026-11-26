@@ -221,7 +221,22 @@ namespace WordOnline.Tests
                 {
                     Assert.That(inheritedSwap.GetType().BaseType.GetField("swapSprite", Private).GetValue(inheritedSwap), Is.Null);
                 }
+                Assert.That(unit.GetComponent("WaddleMotionController"), Is.Null);
+                Assert.That(unit.GetComponent("HoppingMotionController"), Is.Null);
+                Assert.That(unit.GetComponent("CrawlMotionController"), Is.Null);
+                Assert.That(unit.GetType().GetField("_swingOnAttack", Private).GetValue(unit), Is.False);
                 var renderer = (SpriteRenderer)presenter.GetType().GetField("targetRenderer", Private).GetValue(presenter);
+                Transform body = renderer.transform;
+                Vector3 bodyOffset = unit.transform.InverseTransformPoint(body.position);
+                Quaternion bodyFacing = Quaternion.Inverse(unit.transform.rotation) * body.rotation;
+                void AssertStableBody()
+                {
+                    Vector3 offset = unit.transform.InverseTransformPoint(body.position);
+                    Quaternion facing = Quaternion.Inverse(unit.transform.rotation) * body.rotation;
+                    Assert.That(Vector3.Distance(offset, bodyOffset), Is.LessThan(.001f));
+                    Assert.That(Quaternion.Angle(facing, bodyFacing), Is.LessThan(.1f));
+                }
+
                 var walk = (Sprite[])presenter.GetType().GetField("walkFrames", Private).GetValue(presenter);
                 var attack = (Sprite[])presenter.GetType().GetField("attackFrames", Private).GetValue(presenter);
                 Sprite idle = renderer.sprite;
@@ -254,6 +269,7 @@ namespace WordOnline.Tests
                         if (renderer.sprite != seenWalk.LastOrDefault())
                             seenWalk.Add(renderer.sprite);
                     }
+                    AssertStableBody();
                 }
 
                 CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
@@ -298,6 +314,7 @@ namespace WordOnline.Tests
                 {
                     yield return null;
                     Assert.That(renderer.sprite, Is.SameAs(attack[0]));
+                    AssertStableBody();
                     if (hitOnly) Assert.That(renderer.flipX, Is.EqualTo(direction > 0));
                 }
                 int secondPoseSample = Mathf.CeilToInt(secondsPerAttackPose * RenderRate) + 2;
@@ -305,6 +322,7 @@ namespace WordOnline.Tests
                 {
                     yield return null;
                 }
+                AssertStableBody();
                 Assert.That(renderer.sprite, Is.SameAs(attack[1]));
                 playHit?.Invoke();
                 update.Invoke(unit, new[] { frame });

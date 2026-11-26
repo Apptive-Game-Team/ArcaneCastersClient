@@ -65,8 +65,9 @@ namespace WordOnline.Tests
                     BindingFlags.Instance | BindingFlags.NonPublic).GetValue(presenter);
                 Sprite reference = Resources.Load<Sprite>("Game/sprites/" + prefabName);
                 bool playerSpirit = prefabName == WindSpirit;
-                if (playerSpirit)
-                    Assert.That(unit.GetComponent("HoverMotionController"), Is.Null);
+                Assert.That(unit.GetComponent("HoverMotionController"), Is.Null);
+                Assert.That(unit.GetType().GetField("_swingOnAttack", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(unit), Is.False);
                 Assert.That(renderer.flipX, Is.EqualTo(direction < 0));
 
                 object frame = decode.Invoke(null, new object[] { "{\"update\":[{\"id\":42,\"master\":\"" + master + "\"}]}" });
@@ -83,12 +84,15 @@ namespace WordOnline.Tests
                 }
 
                 var observed = new List<Sprite>();
+                Vector3 visualOffset = unit.transform.InverseTransformPoint(renderer.transform.position);
                 for (int render = 0; render < 158; render++)
                 {
                     // 정지 중 간헐적으로 도착하는 위치가 대기 루프를 다시 시작시키지 않아야 한다.
                     if (render % 45 == 0) Send(3f);
                     yield return null;
                     observed.Add(renderer.sprite);
+                    Vector3 offset = unit.transform.InverseTransformPoint(renderer.transform.position);
+                    Assert.That(Vector3.Distance(offset, visualOffset), Is.LessThan(.001f));
                 }
                 AssertPoses(observed, prefabName + "Hover", reference);
                 Assert.That(observed.All(sprite => sprite.name.StartsWith(prefabName + "Hover", StringComparison.Ordinal)), Is.True);
