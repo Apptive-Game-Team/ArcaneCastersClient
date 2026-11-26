@@ -84,6 +84,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(224, 280), idleSprite: "LightningTadpoleIdle");
 
         [UnityTest]
+        public IEnumerator ElectricSlimeMovesOnTheGroundAndRecoilsAtBothTickRates() =>
+            CheckBothTickRates("ElectricSlime", 8, "ElectricSlimeBump01", 4, .8f, .08f,
+                walkSize: new Vector2(128, 111), idleSprite: "ElectricSlimeIdle");
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
@@ -296,6 +301,31 @@ namespace WordOnline.Tests
                 // 20Hz에서는 마지막 보간 0.05초와 이동 유예 0.10초에 렌더 갱신 여유를 더한다.
                 yield return new WaitForSeconds(0.18f);
                 Assert.That(renderer.sprite, Is.SameAs(idle));
+                float walkingHeightTolerance = (float)presenter.GetType().GetField("walkingHeightTolerance", Private).GetValue(presenter);
+                if (walkingHeightTolerance > 0f)
+                {
+                    // 공중에서도 유효한 수평 패킷은 도착하지만 착지 전에는 대기 자세를 쓴다.
+                    for (int packet = 0; packet < 4; packet++)
+                    {
+                        target.x += direction * walkSpeed / tickRate;
+                        position.SetValue(frame, target + .16f * Vector3.up);
+                        update.Invoke(unit, new[] { frame });
+                        yield return new WaitForSeconds(1f / tickRate);
+                        Assert.That(renderer.sprite, Is.SameAs(idle));
+                    }
+                    position.SetValue(frame, target);
+                    update.Invoke(unit, new[] { frame });
+                    yield return new WaitForSeconds(1f / tickRate);
+                    Assert.That(renderer.sprite, Is.SameAs(idle));
+                    for (int packet = 0; packet < 4; packet++)
+                    {
+                        target.x += direction * walkSpeed / tickRate;
+                        position.SetValue(frame, target);
+                        update.Invoke(unit, new[] { frame });
+                        yield return new WaitForSeconds(1f / tickRate);
+                    }
+                    Assert.That(walk.Contains(renderer.sprite), Is.True);
+                }
                 float maximumGroundSpeed = (float)presenter.GetType().GetField("maximumGroundSpeed", Private).GetValue(presenter);
                 if (maximumGroundSpeed > 0f)
                 {
