@@ -174,6 +174,7 @@
 | `RockTurretFire01–04.png` | 클라이언트 이슈 #646 | 169×256 RGBA, PPU 133⅓, 하단 중앙 피벗. 고정 몸체 위에서 빈 슬링 발사·반동·복귀·재장전을 표시한다. 발사 돌은 런타임 `RockShot`으로 그린다. |
 | `TreeGolem.png`, `TreeGolem2.png`, `TreeGolemWalk01–08.png`, `TreeGolemRecover01–03.png` | 클라이언트 이슈 #482·#512 | 240×256 보행 8장과 312×256 펀치 복귀 3장을 추가했다. PPU 85, Bottom Center. 기존 펀치를 공격 이벤트에서 즉시 표시하고 0.2초 안에 복귀한다. XZ 이동 0.9칸마다 보행 한 바퀴를 재생한다. |
 | `DragonTower.png` | `game-assets/dragon-tower.webp` | 웹사이트 동기화 PR #41/#44 로 올라간 뒤 등재를 뒤늦게 기록했다 |
+| `DragonTowerFlame01–04.png` | 클라이언트 이슈 #704 | 161×256 RGBA, PPU 133.333333, 하단 중앙 피벗. 화염탄 발사 때 턱과 입 안의 불빛이 0.48초 동안 네 자세를 거친다. |
 | `FireworkTower.png` | `game-assets/firework-tower.webp` | 위와 같음 |
 | `FireworkShell.png` | `game-assets/firework-shell.webp` | 위와 같음 |
 | `FireworkShellFlight01–04.png` | 클라이언트 이슈 #700 | 160×109 RGBA, PPU 100, 피벗 (96, 0). 비행 진행률에 맞춰 발사·상승·정점·하강 때 포탄 뒤 불티를 바꾼다. |
