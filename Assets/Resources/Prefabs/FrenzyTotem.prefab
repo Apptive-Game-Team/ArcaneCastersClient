@@ -80,12 +80,57 @@ PrefabInstance:
       propertyPath: m_Name
       value: FrenzyTotem
       objectReference: {fileID: 0}
+    - target: {fileID: 1088561502640704175, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+      propertyPath: _keepUprightOnSpawn
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8896401521967180672, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
       propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 9ad75bc01bb1b5640a998e03c903bdc1, type: 3}
-    m_RemovedComponents: []
+      value:
+      objectReference: {fileID: 21300000, guid: 1f1731a512c352b1bea4a04eb0604fff, type: 3}
+    m_RemovedComponents:
+    - {fileID: 1897421295341461536, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4705269614485497549, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6920000000000000004}
   m_SourcePrefab: {fileID: 100100000, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+--- !u!1 &6920000000000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4705269614485497549, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+  m_PrefabInstance: {fileID: 2337136317207998867}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &6920000000000000002 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8896401521967180672, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+  m_PrefabInstance: {fileID: 2337136317207998867}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6920000000000000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1088561502640704175, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+  m_PrefabInstance: {fileID: 2337136317207998867}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6920000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6920000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc9a2eeb9e665ef8b3f792219d7e9d35, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 6920000000000000003}
+  targetRenderer: {fileID: 6920000000000000002}
+  descentFrames:
+  - {fileID: 21300000, guid: 1f1731a512c352b1bea4a04eb0604fff, type: 3}
+  - {fileID: 21300000, guid: c749ee67995f54a8b287f7e9fb928acb, type: 3}
+  - {fileID: 21300000, guid: 5ccdbd6ba2b050379177f0cf4c781f53, type: 3}
+  - {fileID: 21300000, guid: b749179fc0685b3fbb4edaa3e64c7a3c, type: 3}
+  - {fileID: 21300000, guid: 467459991eda517c80dc4417093086ac, type: 3}
+  - {fileID: 21300000, guid: d8f5e89fd05c5dd69005df941a7b6a9c, type: 3}
+  initialHeight: 10
