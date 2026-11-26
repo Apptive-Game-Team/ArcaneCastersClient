@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6763832143512333305}
   - component: {fileID: 6443253169794406633}
   - component: {fileID: 8276844915440447919}
+  - component: {fileID: 722000000000000001}
   m_Layer: 0
   m_Name: SeaSerpentHydroPump
   m_TagString: Untagged
@@ -78,7 +79,7 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 2
+  m_DrawMode: 1
   m_Size: {x: 7, y: 0.79}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -98,4 +99,25 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   beamRenderer: {fileID: 6443253169794406633}
+  beamFrames: {fileID: 722000000000000001}
   thickness: 1.6
+--- !u!114 &722000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8000607740241599679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 6443253169794406633}
+  frames:
+  - {fileID: 21300000, guid: 857bc47aab834cc2a429822d21b3f6a5, type: 3}
+  - {fileID: 21300000, guid: 2c7b9fe113d04286bff2a7fbc802e48e, type: 3}
+  - {fileID: 21300000, guid: 76e7997e99cb41ca9c7624910714ba5a, type: 3}
+  - {fileID: 21300000, guid: 3fd4f94a84c848839fec6ef4781b439e, type: 3}
+  frameInterval: 0
+  loop: 0
