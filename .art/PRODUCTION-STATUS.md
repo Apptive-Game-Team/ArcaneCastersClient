@@ -50,6 +50,7 @@
 | `TitanRemnant.png` | 클라이언트 이슈 #593 재작업 검수 | 거신의 잔해 본체 |
 | `TitanRemnantSignal01–04.png` | 클라이언트 이슈 #706 | 253×215 RGBA, PPU 100, 하단 중앙 피벗. 돌주먹을 소환할 때 가슴 돌판이 벌어졌다가 0.52초 동안 대기로 돌아간다. |
 | `TitanFist.png` | 클라이언트 이슈 #593 재작업 검수 | 주변 적 위치에서 솟구치는 거대한 돌주먹 |
+| `TitanFistRise01–04.png` | 클라이언트 이슈 #708 | 180×247 RGBA, PPU 100, 하단 중앙 피벗. 돌마디부터 손목과 팔이 솟고, 원본 높이를 유지한 뒤 같은 기단으로 가라앉는다. |
 | `LightningTadpole.png` | `concept-art/lightning-tadpole.webp` | 차원 유랑종 폭풍편 방향 적용 |
 | `MagmaSpirit.png` | `concept-art/magma-spirit-idle.webp` | 기본 자세 |
 | `MagmaSpiritSpawn01–04.png`, `MagmaSpiritWalk01–08.png`, `MagmaSpiritCast01–04.png` | 클라이언트 PR (이슈 #638) | 256×253 RGBA, PPU 80, 하단 중앙 피벗. 지면 돌파 4장, 양발 보행 8장, 주먹 소환 자세 4장. |

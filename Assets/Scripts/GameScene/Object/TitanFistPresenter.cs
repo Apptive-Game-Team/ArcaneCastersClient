@@ -10,11 +10,19 @@ namespace GameScene.Object
         private const float RiseDuration = 0.18f;
         private const float HoldDuration = 0.28f;
         private const float LowerDuration = 0.28f;
+        private const float CrackFadeDuration = 0.12f;
+        private const float RiseEnd = TelegraphDuration + RiseDuration;
+        private const float LowerStart = RiseEnd + HoldDuration;
+        private const float LowerEnd = LowerStart + LowerDuration;
+
+        [SerializeField] private Sprite[] riseFrames;
         private readonly List<LineRenderer> cracks = new List<LineRenderer>();
 
         private SpriteRenderer fistRenderer;
         private Transform fistTransform;
         private Vector3 fullScale;
+        private Sprite fullPose;
+        private float spawnedAt;
         private Material crackMaterial;
 
         public static TitanFistPresenter Attach(GameObject target)
@@ -34,15 +42,18 @@ namespace GameScene.Object
 
             fistTransform = fistRenderer.transform;
             fullScale = fistTransform.localScale;
+            fullPose = fistRenderer.sprite;
+            spawnedAt = Time.time;
             fistRenderer.enabled = false;
             CreateGroundCracks();
+            SetCrackAlpha(0f);
         }
 
         private void Start()
         {
             if (enabled)
             {
-                StartCoroutine(Play());
+                StartCoroutine(riseFrames is { Length: > 0 } ? PlayAuthoredPoses() : Play());
             }
         }
 
@@ -55,7 +66,47 @@ namespace GameScene.Object
             yield return new WaitForSeconds(HoldDuration);
             yield return ScaleFist(1f, 0.06f, LowerDuration);
             fistRenderer.enabled = false;
-            yield return FadeCracks(1f, 0f, 0.12f);
+            yield return FadeCracks(1f, 0f, CrackFadeDuration);
+        }
+
+        private IEnumerator PlayAuthoredPoses()
+        {
+            const float end = LowerEnd + CrackFadeDuration;
+            float previousAlpha = -1f;
+
+            for (float elapsed = Time.time - spawnedAt; elapsed < end; elapsed = Time.time - spawnedAt)
+            {
+                float alpha = Mathf.Clamp01(Mathf.Min(elapsed / TelegraphDuration, (end - elapsed) / CrackFadeDuration));
+                if (alpha != previousAlpha)
+                {
+                    SetCrackAlpha(alpha);
+                    previousAlpha = alpha;
+                }
+
+                bool visible = elapsed >= TelegraphDuration && elapsed < LowerEnd;
+                if (visible)
+                {
+                    Sprite pose = PoseAt(elapsed);
+                    if (fistRenderer.sprite != pose) fistRenderer.sprite = pose;
+                }
+
+                if (fistRenderer.enabled != visible) fistRenderer.enabled = visible;
+                yield return null;
+            }
+
+            fistRenderer.enabled = false;
+            SetCrackAlpha(0f);
+        }
+
+        private Sprite PoseAt(float elapsed)
+        {
+            if (elapsed >= RiseEnd && elapsed < LowerStart) return fullPose;
+
+            bool lowering = elapsed >= LowerStart;
+            float progress = lowering ? (elapsed - LowerStart) / LowerDuration : (elapsed - TelegraphDuration) / RiseDuration;
+            int last = riseFrames.Length - 1;
+            int index = Mathf.Min((int)(progress * riseFrames.Length), last);
+            return riseFrames[lowering ? last - index : index];
         }
 
         private IEnumerator ScaleFist(float from, float to, float duration)
