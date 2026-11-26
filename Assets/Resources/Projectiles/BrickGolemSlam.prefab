@@ -55,6 +55,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 66988d894122418a9c4bada8b2ba1b71, type: 3}
   - {fileID: 21300000, guid: 63e27034140541eba7129f2488de051a, type: 3}
   - {fileID: 21300000, guid: 0ef366b54d434eb7b9118d7b24554b19, type: 3}
+  crackFrames:
+  - {fileID: 21300000, guid: 3924a825eb4047c7a1a1ad27683519a7, type: 3}
+  - {fileID: 21300000, guid: c863fbdaa49f4f229b684cc53c2226d0, type: 3}
+  - {fileID: 21300000, guid: 60be627ebd4442f48b752b2ed96d8b19, type: 3}
+  - {fileID: 21300000, guid: 1b0ddb5a7f9945e5a962cee3242bfe5c, type: 3}
   dropHeight: 2.5
   impactFraction: 0.4
   groundLift: 0.03

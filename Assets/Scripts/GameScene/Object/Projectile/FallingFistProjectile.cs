@@ -1,3 +1,4 @@
+using System;
 using GameScene.Dto.Projectile;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ namespace GameScene.Object.Projectile
         [SerializeField] private SpriteRenderer burstRenderer;
         [SerializeField] private SpriteRenderer crackRenderer;
         [SerializeField] private Sprite[] fistFrames;
+        [SerializeField] private Sprite[] crackFrames;
 
         /// <summary>How far above its landing spot the fist starts, along screen-up, in world units.</summary>
         [SerializeField] private float dropHeight = 2.5f;
@@ -38,6 +40,7 @@ namespace GameScene.Object.Projectile
         private Vector3 burstScale;
         private float duration;
         private float elapsed;
+        private bool animateCracks;
 
         public void Init(ProjectileDto projectileDto)
         {
@@ -58,6 +61,7 @@ namespace GameScene.Object.Projectile
                 : 0f;
             burstScale = burstRenderer.transform.localScale;
             duration = Mathf.Max(projectileDto.duration, MinimumDuration);
+            animateCracks = crackFrames is { Length: 4 } && Array.TrueForAll(crackFrames, frame => frame != null);
             ApplyProgress(0f);
         }
 
@@ -100,6 +104,10 @@ namespace GameScene.Object.Projectile
 
             burstRenderer.transform.localScale = burstScale * Mathf.Lerp(0.5f, 1f, Mathf.Sqrt(aftermath));
             SetAlpha(burstRenderer, 1f - aftermath * aftermath);
+            if (animateCracks)
+            {
+                crackRenderer.sprite = crackFrames[Mathf.Min((int)(aftermath * crackFrames.Length), crackFrames.Length - 1)];
+            }
             SetAlpha(crackRenderer, 1f - aftermath * aftermath * aftermath);
         }
 
