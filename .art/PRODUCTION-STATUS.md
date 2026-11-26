@@ -518,3 +518,8 @@ commit 그대로였다.
 
 - 파란 물층이 뒤에서 올라와 오른쪽 물마루를 따라 말리는 여섯 자세를 적용했다. 긴 밑단의 높이와 중심을 맞췄다.
 - `TideCallFlight01.png` · `TideCallFlight02.png` · `TideCallFlight03.png` · `TideCallFlight04.png` · `TideCallFlight05.png` · `TideCallFlight06.png`
+
+## 토네이도 회전 자세
+
+- 청록색 띠의 밝은 면이 둘레를 돌아가는 여덟 자세를 적용했다. 아래쪽 뾰족한 끝의 위치와 위쪽의 트인 고리를 맞췄다.
+- `TornadoStrikeSpin01.png` · `TornadoStrikeSpin02.png` · `TornadoStrikeSpin03.png` · `TornadoStrikeSpin04.png` · `TornadoStrikeSpin05.png` · `TornadoStrikeSpin06.png` · `TornadoStrikeSpin07.png` · `TornadoStrikeSpin08.png`

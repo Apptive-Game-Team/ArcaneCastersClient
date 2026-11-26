@@ -257,7 +257,7 @@ namespace WordOnline.Tests
             }
         }
 
-        private void SaveViewport(string directory, string magic, bool book)
+        private void SaveViewport(string directory, string magic, bool book, Vector3 cameraOffset = default)
         {
             int width = book ? 540 : 400, height = book ? 420 : 220;
             var rect = preview.GetComponent<RectTransform>();
@@ -265,6 +265,20 @@ namespace WordOnline.Tests
             rect.sizeDelta = new Vector2(width, height);
             previewType.GetMethod("SetViewZoom").Invoke(preview, new object[] { book ? 1.35f : 1f });
             Invoke("LateUpdate");
+            if (cameraOffset != Vector3.zero)
+            {
+                var camera = (Camera)Field("previewCamera");
+                Vector3 priorPosition = camera.transform.localPosition;
+                camera.transform.localPosition += cameraOffset;
+                try
+                {
+                    camera.Render();
+                }
+                finally
+                {
+                    camera.transform.localPosition = priorPosition;
+                }
+            }
             var viewport = new RenderTexture(width, height, 0);
             RenderTexture previous = RenderTexture.active;
             Graphics.Blit(preview.GetComponent<RawImage>().texture, viewport);
@@ -3818,6 +3832,124 @@ namespace WordOnline.Tests
                 if (capture) SaveViewport(directory, "second-impact", true);
                 yield return PlayUntil(3.625f);
                 Assert.That(Target(7), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator TornadoStrikeSpinsWithoutWobbleAndKeepsItsRecordedLiftAndHits()
+        {
+            Create();
+            Assert.That(Configure("tornado_strike"), Is.True);
+            var world = (Component)Field("world");
+            Sprite original = Resources.Load<Sprite>("Game/sprites/TornadoStrike");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/TornadoStrikeCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            Vector3 Position(Component obj) => world.transform.InverseTransformPoint(obj.transform.position);
+            void Capture(string name, Component focus, float rise)
+            {
+                if (!capture) return;
+                var camera = (Camera)Field("previewCamera");
+                Vector3 offset = Vector3.right * (Position(focus).x - 5.5f) + camera.transform.up * rise;
+                SaveViewport(directory, name, true, offset);
+            }
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.575f);
+                Assert.That(Target(3), Is.Null);
+                yield return PlayUntil(.622f);
+                Component tornado = Target(3);
+                Component enemy = Target(2);
+                Assert.That(tornado, Is.Not.Null);
+                Assert.That(Vector3.Distance(Position(tornado), new Vector3(7f, 0f, 5f)), Is.LessThan(.08f));
+
+                SpriteRenderer body = ServedObjectRenderer(tornado);
+                Assert.That(body.sprite.rect, Is.EqualTo(original.rect));
+                Assert.That(body.sprite.pivot, Is.EqualTo(original.pivot));
+                Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+                Assert.That(body.color.a, Is.EqualTo(.2f).Within(.001f));
+                Assert.That(body.sortingOrder, Is.EqualTo(12));
+                Assert.That(tornado.GetComponent(Runtime("GameScene.ServedObjectComponent.Motion.StumbleMotionController")), Is.Null);
+                Quaternion initialRotation = tornado.transform.localRotation;
+                float initialScale = tornado.transform.localScale.x;
+                Assert.That(initialScale, Is.InRange(.4f, 2.5f));
+
+                var poses = new System.Collections.Generic.List<string>();
+                IEnumerator ObserveUntil(float moment)
+                {
+                    while ((float)Field("elapsed") < moment)
+                    {
+                        Assert.That(Quaternion.Angle(initialRotation, tornado.transform.localRotation), Is.LessThan(.05f));
+                        string pose = body.sprite.name;
+                        if (poses.LastOrDefault() != pose)
+                        {
+                            poses.Add(pose);
+                            if (poses.Count <= 8) Capture(pose, tornado, 1.7f);
+                        }
+                        yield return null;
+                    }
+                }
+
+                yield return ObserveUntil(.925f);
+                Assert.That(tornado.transform.localScale.x, Is.EqualTo(3f).Within(.02f));
+                yield return ObserveUntil(1.375f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(10000));
+                yield return ObserveUntil(1.417f);
+                Assert.That(body.sprite.name, Is.EqualTo("TornadoStrikeSpin07"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9898));
+                Assert.That(Position(enemy).y, Is.GreaterThan(4.5f));
+                Capture("first-hit", tornado, 2.4f);
+
+                yield return ObserveUntil(1.612f);
+                var expected = Enumerable.Range(1, 8).Select(index => $"TornadoStrikeSpin{index:00}").Append("TornadoStrikeSpin01");
+                CollectionAssert.AreEqual(expected, poses);
+                Assert.That(Position(tornado).x, Is.GreaterThan(8.8f));
+                Assert.That(Position(tornado).y, Is.EqualTo(0f).Within(.03f));
+
+                var strikes = new (float time, int before, int after)[] { (2.2f, 9898, 9796), (3f, 9796, 9694), (3.8f, 9694, 9592) };
+                foreach (var strike in strikes)
+                {
+                    yield return PlayUntil(strike.time - .025f);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(strike.before));
+                    yield return PlayUntil(strike.time + .025f);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(strike.after));
+                }
+
+                yield return PlayUntil(4.125f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9592));
+                yield return PlayUntil(4.177f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9589));
+                Assert.That(Position(enemy).y, Is.InRange(-.03f, .26f));
+
+                yield return PlayUntil(4.575f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9589));
+                yield return PlayUntil(4.625f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9487));
+                yield return PlayUntil(5.375f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9487));
+                yield return PlayUntil(5.425f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9385));
+                Assert.That(Position(enemy).y, Is.GreaterThan(4f));
+                Capture("sixth-hit", tornado, 2.4f);
+
+                yield return PlayUntil(6.13f);
+                Assert.That(tornado.GetType().GetProperty("IsDespawning", Private).GetValue(tornado), Is.True);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9385));
+                Assert.That(Position(enemy).y, Is.GreaterThan(4f));
+                yield return PlayUntil(6.22f);
+                Assert.That(Target(3), Is.Null);
+                yield return PlayUntil(6.75f);
+                Assert.That(Target(2), Is.SameAs(enemy));
+                Assert.That(Position(enemy).y, Is.EqualTo(0f).Within(.03f));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9383));
+                Capture("landed", enemy, 1.3f);
             }
             finally
             {
