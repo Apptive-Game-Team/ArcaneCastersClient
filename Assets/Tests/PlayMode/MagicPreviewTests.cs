@@ -1881,6 +1881,148 @@ namespace WordOnline.Tests
         }
 
 
+        [UnityTest]
+        public IEnumerator MiniRockWalksAndHitsOnTheDamageTickInAllThreeRecordings()
+        {
+            Create();
+            var clips = new[] {
+                (spell: "mini_rock_swarm", scenario: "ground", team: "LeftPlayer", start: .72f, stop: 1.54f, impact: 2.30f, hp: 1000f, count: 2),
+                (spell: "earth_call", scenario: "small", team: "LeftPlayer", start: 1.13f, stop: 1.50f, impact: 2.20f, hp: 1000f, count: 1),
+                (spell: "will_o_wisp", scenario: "control", team: "RightPlayer", start: 1.27f, stop: 1.96f, impact: 2.70f, hp: 10000f, count: 1)
+            };
+            int priorRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/MiniRockCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            try
+            {
+                foreach (var clip in clips)
+                {
+                    Assert.That(Configure(clip.spell), Is.True);
+                    var scenarios = (JArray)Recording(clip.spell)["scenarios"];
+                    var scenario = scenarios.Single(item => (string)item["id"] == clip.scenario);
+                    Scenario(scenarios.IndexOf(scenario));
+                    var frames = scenario["frames"];
+                    int[] ids = frames.SelectMany(f => f["objects"]["create"])
+                        .Where(c => (string)c["type"] == "MiniRock" && (string)c["master"] == clip.team)
+                        .Select(c => (int)c["id"]).ToArray();
+                    Assert.That(ids, Has.Length.EqualTo(clip.count));
+                    var damage = frames.First(f => f["events"].Any(e =>
+                        (string)e["type"] == "hit" && ids.Contains((int)e["actorId"])));
+                    Assert.That((float)damage["time"], Is.EqualTo(clip.impact).Within(.001f));
+                    var hits = damage["events"].Where(e => (string)e["type"] == "hit" &&
+                        ids.Contains((int)e["actorId"])).ToArray();
+                    CollectionAssert.AreEquivalent(ids, hits.Select(e => (int)e["actorId"]));
+                    int victim = hits.Select(e => (int)e["targetId"]).Distinct().Single();
+
+                    yield return PlayUntil(clip.start);
+                    var bodies = ids.Select(id =>
+                    {
+                        Component unit = Target(id);
+                        Assert.That(unit.GetComponent("HoppingMotionController"), Is.Null);
+                        return (SpriteRenderer)unit.GetType().GetField("_spriteRenderer", Private).GetValue(unit);
+                    }).ToArray();
+                    var walks = ids.Select(_ => new System.Collections.Generic.HashSet<string>()).ToArray();
+                    while ((float)Field("elapsed") < clip.stop)
+                    {
+                        for (int i = 0; i < bodies.Length; i++)
+                        {
+                            string pose = bodies[i].sprite.name;
+                            if (pose.StartsWith("MiniRockWalk", StringComparison.Ordinal) &&
+                                walks[i].Add(pose) && capture && clip.count == 2 && i == 0)
+                                SaveViewport(directory, pose, true);
+                        }
+                        yield return null;
+                    }
+                    Assert.That(walks.Select(s => s.Count), Is.All.EqualTo(8), clip.spell);
+                    if (clip.count == 2)
+                        Assert.That(Mathf.Abs(Target(ids[0]).transform.position.z - Target(ids[1]).transform.position.z), Is.GreaterThan(.25f));
+
+                    yield return PlayUntil(clip.impact - .027f);
+                    Assert.That(bodies.Select(b => b.sprite.name), Is.All.EqualTo("MiniRockSwarm"), clip.spell);
+                    Assert.That(CurrentHp(Target(victim)), Is.EqualTo(clip.hp));
+                    for (int pose = 1; pose <= 4; pose++)
+                    {
+                        yield return PlayUntil(clip.impact + .02f + (pose - 1) * .08f);
+                        Assert.That(bodies.Select(b => b.sprite.name), Is.All.EqualTo($"MiniRockPunch{pose:00}"));
+                        Assert.That(CurrentHp(Target(victim)), Is.EqualTo(clip.hp - 100f * clip.count));
+                        if (capture && pose == 1) SaveViewport(directory, clip.spell + "-impact", true);
+                    }
+                    yield return PlayUntil(clip.impact + .36f);
+                    Assert.That(bodies.Select(b => b.sprite.name), Is.All.EqualTo("MiniRockSwarm"));
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = priorRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator MiniRockAttackAndRecoveryStayIndependentAcrossReciprocalHits()
+        {
+            Create();
+            Component world = CreateWorld();
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize")
+                .MakeGenericMethod(Runtime("GameScene.Dto.ObjectsInfo"));
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            MethodInfo find = world.GetType().GetMethod("FindById");
+            Type hitType = Runtime("GameScene.Dto.Event.HitEvent");
+            void Apply(string packet, IList hits = null) =>
+                apply.Invoke(null, new[] { decode.Invoke(null, new object[] { packet }), hits, world });
+            void Hit(int actor, int target)
+            {
+                object hit = Activator.CreateInstance(hitType);
+                hitType.GetField("actorId").SetValue(hit, actor);
+                hitType.GetField("targetId").SetValue(hit, target);
+                var events = (IList)Activator.CreateInstance(typeof(System.Collections.Generic.List<>)
+                    .MakeGenericType(Runtime("GameScene.Dto.Event.GameEvent")));
+                events.Add(hit);
+                Apply("{}", events);
+            }
+            SpriteRenderer ActorBody(int id)
+            {
+                var unit = (Component)find.Invoke(world, new object[] { id });
+                return (SpriteRenderer)unit.GetType().GetField("_spriteRenderer", Private).GetValue(unit);
+            }
+            int oldRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                Apply("{\"create\":[" +
+                    "{\"id\":51,\"type\":\"MiniRock\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":5}}," +
+                    "{\"id\":52,\"type\":\"MiniRock\",\"master\":\"RightPlayer\",\"position\":{\"x\":8.1,\"y\":0,\"z\":5}}]}");
+                SpriteRenderer leftHit = ActorBody(51), rightHit = ActorBody(52);
+                Assert.That(leftHit.flipX, Is.False);
+                Assert.That(rightHit.flipX, Is.True);
+
+                Hit(51,52);
+                Assert.That(leftHit.sprite.name, Is.EqualTo("MiniRockPunch01"));
+                Assert.That(leftHit.flipX, Is.True);
+                Assert.That(rightHit.sprite.name, Is.EqualTo("MiniRockSwarm"));
+
+                yield return new WaitForSeconds(.11f);
+                Assert.That(leftHit.sprite.name, Is.EqualTo("MiniRockPunch02"));
+                Assert.That(leftHit.flipX, Is.True);
+                Hit(52,51);
+                Assert.That(rightHit.sprite.name, Is.EqualTo("MiniRockPunch01"));
+                Assert.That(rightHit.flipX, Is.False);
+                Assert.That(leftHit.sprite.name, Is.EqualTo("MiniRockPunch02"));
+
+                yield return new WaitForSeconds(.23f);
+                Assert.That(leftHit.sprite.name, Is.EqualTo("MiniRockSwarm"));
+                Assert.That(rightHit.sprite.name, Does.StartWith("MiniRockPunch"));
+                yield return new WaitForSeconds(.10f);
+                Assert.That(rightHit.sprite.name, Is.EqualTo("MiniRockSwarm"));
+            }
+            finally
+            {
+                Time.captureFramerate = oldRate;
+            }
+        }
+
+
         private Transform FindProjectile(string type)
         {
             var world = (Component)Field("world");

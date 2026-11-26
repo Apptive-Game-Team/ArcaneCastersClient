@@ -49,6 +49,11 @@ namespace WordOnline.Tests
                 idleSprite: "SeaSerpentHead", walkSize: new Vector2(220, 214));
 
         [UnityTest]
+        public IEnumerator MiniRockWalksAtBothTickRatesAndFacesItsHitDuringRecovery() =>
+            CheckBothTickRates("MiniRock", 8, "MiniRockPunch01", 4, .5f, .08f,
+                walkSize: new Vector2(288, 256), idleSprite: "MiniRockSwarm");
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
@@ -194,6 +199,22 @@ namespace WordOnline.Tests
                     $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
                 Assert.That(renderer.flipX, Is.EqualTo(direction < 0));
                 status.SetValue(frame, "Attack");
+                bool hitOnly = (bool)presenter.GetType().GetField("attackOnHit", Private).GetValue(presenter);
+                Action playHit = null;
+                if (hitOnly)
+                {
+                    update.Invoke(unit, new[] { frame });
+                    Assert.That(renderer.sprite, Is.Not.SameAs(attack[0]));
+                    object defense = Activator.CreateInstance(createdType);
+                    createdType.GetField("id").SetValue(defense, 44);
+                    createdType.GetField("type").SetValue(defense, "ElectricSlime");
+                    createdType.GetField("master").SetValue(defense, "RightPlayer");
+                    createdType.GetField("position").SetValue(defense, target - direction * Vector3.right);
+                    spawner.GetMethod("SpawnShared").Invoke(null, new[] { defense, world, false });
+                    playHit = RecordedHit(world, 42, 44);
+                }
+
+                playHit?.Invoke();
                 if (shotPrefab == null)
                 {
                     update.Invoke(unit, new[] { frame });
@@ -209,6 +230,7 @@ namespace WordOnline.Tests
                 {
                     yield return null;
                     Assert.That(renderer.sprite, Is.SameAs(attack[0]));
+                    if (hitOnly) Assert.That(renderer.flipX, Is.EqualTo(direction > 0));
                 }
                 int secondPoseSample = Mathf.CeilToInt(secondsPerAttackPose * RenderRate) + 2;
                 for (int render = nearFirstPoseEnd; render < secondPoseSample; render++)
@@ -216,6 +238,7 @@ namespace WordOnline.Tests
                     yield return null;
                 }
                 Assert.That(renderer.sprite, Is.SameAs(attack[1]));
+                playHit?.Invoke();
                 update.Invoke(unit, new[] { frame });
                 Assert.That(renderer.sprite, Is.SameAs(attack[0]));
 
@@ -238,6 +261,7 @@ namespace WordOnline.Tests
                 }
                 CollectionAssert.AreEqual(attack, seenAttack);
                 Assert.That(walk.Contains(renderer.sprite), Is.True);
+                if (hitOnly) Assert.That(renderer.flipX, Is.EqualTo(direction < 0));
 
                 yield return new WaitForSeconds(0.14f);
                 Assert.That(renderer.sprite, Is.SameAs(idle));
@@ -263,6 +287,19 @@ namespace WordOnline.Tests
             {
                 Object.Destroy(root);
             }
+        }
+
+        private static Action RecordedHit(Component world, int source, int target)
+        {
+            Type hitType = Runtime("GameScene.Dto.Event.HitEvent");
+            object hit = Activator.CreateInstance(hitType);
+            hitType.GetField("actorId").SetValue(hit, source);
+            hitType.GetField("targetId").SetValue(hit, target);
+            var events = (IList)Activator.CreateInstance(typeof(List<>)
+                .MakeGenericType(Runtime("GameScene.Dto.Event.GameEvent")));
+            events.Add(hit);
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            return () => apply.Invoke(null, new object[] { null, events, world });
         }
 
         private static void ApplyShotFrame(string shotPrefab, Vector3 position, Component world, object update)
