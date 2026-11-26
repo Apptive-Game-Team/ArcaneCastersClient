@@ -291,7 +291,7 @@ namespace WordOnline.Tests
             Sprite reference = Resources.Load<Sprite>("Game/sprites/RockRolling");
 
             yield return PlayUntil(0.61f);
-            SpriteRenderer renderer = RollingRockRenderer(Target(rockId));
+            SpriteRenderer renderer = ServedObjectRenderer(Target(rockId));
             Assert.That(renderer.sprite, Is.SameAs(reference));
             Quaternion localRotation = renderer.transform.localRotation;
             yield return PlayUntil(0.97f);
@@ -351,7 +351,7 @@ namespace WordOnline.Tests
                     $"{{\"create\":[{{\"id\":42,\"type\":\"RockRolling\",\"master\":\"{master}\",\"position\":{{\"x\":{x},\"y\":0,\"z\":{z}}}}}]}}"));
                 MethodInfo find = world.GetType().GetMethod("FindById");
                 var rock = (Component)find.Invoke(world, new object[] { 42 });
-                SpriteRenderer renderer = RollingRockRenderer(rock);
+                SpriteRenderer renderer = ServedObjectRenderer(rock);
                 Assert.That(renderer.flipX, Is.False);
                 Assert.That(RockRollIndex(renderer.sprite), Is.Zero);
 
@@ -423,10 +423,184 @@ namespace WordOnline.Tests
         private static int RockRollIndex(Sprite sprite) => sprite.name == "RockRolling" ? 0 :
             int.Parse(sprite.name.Substring("RockRollingRoll".Length)) - 1;
 
-        private static SpriteRenderer RollingRockRenderer(Component rock)
+        [UnityTest]
+        public IEnumerator ChickenCommandoRecordingPlaysDescentLandingRunAndHits()
         {
-            Assert.That(rock, Is.Not.Null);
-            var actual = (Transform)rock.GetType().GetMethod("GetActualTransform").Invoke(rock, null);
+            Create();
+            const string magic = "chicken_commando";
+            Assert.That(Configure(magic), Is.True);
+            var frames = (JArray)Recording(magic)["scenarios"][0]["frames"];
+            int id = (int)frames.SelectMany(frame => frame["objects"]["create"])
+                .First(created => (string)created["type"] == "ChickenCommando")["id"];
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(0.61f);
+                SpriteRenderer renderer = ServedObjectRenderer(Target(id));
+                var appearances = new System.Collections.Generic.Dictionary<string, float>();
+                var hitTimes = new System.Collections.Generic.List<float>();
+                int captureIndex = 0;
+                float[] captureTimes = { 1.19f, 1.41f, 2.36f, 3.39f };
+                string[] captureNames = { "descent", "land", "run", "hit" };
+                Sprite previous = null;
+                float deadline = Time.realtimeSinceStartup + 15f;
+                while ((float)Field("elapsed") < 4.42f && Time.realtimeSinceStartup < deadline)
+                {
+                    float time = (float)Field("elapsed");
+                    Sprite pose = renderer.sprite;
+                    if (pose != previous && pose.name == "ChickenCommandoAttack01")
+                    {
+                        hitTimes.Add(time);
+                    }
+                    previous = pose;
+                    if (!appearances.ContainsKey(pose.name)) appearances.Add(pose.name, time);
+                    if (captureIndex < captureTimes.Length && time >= captureTimes[captureIndex])
+                    {
+                        if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                        {
+                            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/ChickenCommandoCaptures");
+                            System.IO.Directory.CreateDirectory(directory);
+                            SaveViewport(directory, captureNames[captureIndex], true);
+                        }
+                        captureIndex++;
+                    }
+                    yield return null;
+                }
+
+                Assert.That((float)Field("elapsed"), Is.GreaterThanOrEqualTo(4.42f));
+                Assert.That(appearances["ChickenCommando"], Is.InRange(0.60f, 0.65f));
+                foreach (var series in new[] { ("Descent", 2, 4), ("Land", 1, 4), ("Run", 1, 8), ("Attack", 1, 4) })
+                {
+                    float lastTime = -1f;
+                    for (int i = series.Item2; i <= series.Item3; i++)
+                    {
+                        string poseName = $"ChickenCommando{series.Item1}{i:00}";
+                        Assert.That(appearances.ContainsKey(poseName), Is.True, poseName);
+                        Assert.That(appearances[poseName], Is.GreaterThan(lastTime), poseName);
+                        lastTime = appearances[poseName];
+                    }
+                }
+                Assert.That(appearances["ChickenCommandoLand01"], Is.InRange(1.30f, 1.41f));
+                Assert.That(hitTimes, Has.Count.EqualTo(2));
+                Assert.That(hitTimes[0], Is.EqualTo(3.35f).Within(0.04f));
+                Assert.That(hitTimes[1] - hitTimes[0], Is.EqualTo(0.8f).Within(0.04f));
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ChickenCommandoGroundContactAndCorrectionAt20Hz() => CheckChickenCommandoGroundContact(20, 1);
+
+        [UnityTest]
+        public IEnumerator ChickenCommandoGroundContactAndCorrectionAt60Hz() => CheckChickenCommandoGroundContact(60, -1);
+
+        private IEnumerator CheckChickenCommandoGroundContact(int tickRate, int direction)
+        {
+            Create();
+            Component world = CreateWorld();
+            world.transform.position = new Vector3(45f, 36f, -17f);
+            world.transform.rotation = Quaternion.Euler(0f, 21f, 0f);
+            world.transform.localScale = Vector3.one * 0.4f;
+
+            const int renderRate = 120;
+            Type config = Runtime("GameScene.GameConfig");
+            MethodInfo setRate = config.GetMethod("SetTickRate");
+            int previousTickRate = (int)config.GetProperty("TickRate").GetValue(null);
+            int previousRenderRate = Time.captureFramerate;
+            Type infoType = Runtime("GameScene.Dto.ObjectsInfo");
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize").MakeGenericMethod(infoType);
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            MethodInfo find = world.GetType().GetMethod("FindById");
+            string master = direction > 0 ? "LeftPlayer" : "RightPlayer";
+
+            void Apply(string json) => apply.Invoke(null, new[] { decode.Invoke(null, new object[] { json }), null, world });
+            Component Find(int id) => (Component)find.Invoke(world, new object[] { id });
+            void Send(int id, float x, float y, string status = "Idle") => Apply(FormattableString.Invariant(
+                $"{{\"update\":[{{\"id\":{id},\"master\":\"{master}\",\"status\":\"{status}\",\"position\":{{\"x\":{x},\"y\":{y},\"z\":4}}}}]}}"));
+            SpriteRenderer Spawn(int id, float x, float y)
+            {
+                Apply(FormattableString.Invariant(
+                    $"{{\"create\":[{{\"id\":{id},\"type\":\"ChickenCommando\",\"master\":\"{master}\",\"position\":{{\"x\":{x},\"y\":{y},\"z\":4}}}}]}}"));
+                return ServedObjectRenderer(Find(id));
+            }
+
+            try
+            {
+                Time.captureFramerate = renderRate;
+                setRate.Invoke(null, new object[] { tickRate });
+                int rendersPerTick = renderRate / tickRate;
+                float x = direction > 0 ? 4f : 14f;
+                SpriteRenderer unit = Spawn(41, x, 0f);
+                Sprite idle = Resources.Load<Sprite>("Game/drop/chicken_commando_default");
+                Assert.That(unit.sprite, Is.SameAs(idle));
+                Assert.That(unit.flipX, Is.EqualTo(direction < 0));
+                Assert.That(idle.pivot.y, Is.Zero);
+                Assert.That(idle.bounds.size.y, Is.EqualTo(1.28f).Within(0.001f));
+
+                var run = new System.Collections.Generic.HashSet<string>();
+                for (int tick = 0; tick < tickRate; tick++)
+                {
+                    x += direction * 2f / tickRate;
+                    Send(41, x, 0f);
+                    for (int render = 0; render < rendersPerTick; render++)
+                    {
+                        yield return null;
+                        Assert.That(unit.sprite.pivot, Is.EqualTo(idle.pivot));
+                        Assert.That(unit.sprite.pixelsPerUnit, Is.EqualTo(idle.pixelsPerUnit));
+                        if (unit.sprite.name.StartsWith("ChickenCommandoRun")) run.Add(unit.sprite.name);
+                    }
+                }
+                Assert.That(run, Has.Count.EqualTo(8));
+                x += direction * 3f;
+                Send(41, x, 0f);
+                yield return null;
+                yield return null;
+                Assert.That(unit.sprite, Is.SameAs(idle));
+                Send(41, x, 0.8f);
+                yield return new WaitForSeconds(0.08f);
+                Assert.That(unit.sprite, Is.SameAs(idle));
+                Send(41, x, 0f);
+                yield return new WaitForSeconds(0.08f);
+                Assert.That(unit.sprite, Is.SameAs(idle));
+
+                SpriteRenderer air = Spawn(42, x, 0.25f);
+                Assert.That(air.sprite.name, Is.EqualTo("ChickenCommandoDescent04"));
+                Assert.That(air.sprite.pivot.y, Is.Zero);
+                Assert.That(air.sprite.bounds.size.y, Is.EqualTo(2.06f).Within(0.001f));
+                Send(42, x, 0f, "Attack");
+                var touchdown = new System.Collections.Generic.List<string>();
+                for (int i = 0; i < rendersPerTick + 5; i++)
+                {
+                    yield return null;
+                    touchdown.Add(air.sprite.name);
+                }
+                Assert.That(touchdown, Does.Contain("ChickenCommandoAttack01"));
+                Assert.That(touchdown.Any(pose => pose.StartsWith("ChickenCommandoLand")), Is.False);
+                yield return new WaitForSeconds(0.24f);
+                Assert.That(air.sprite, Is.SameAs(idle));
+
+                SpriteRenderer removed = Spawn(43, x, 0.25f);
+                Send(43, x, 0f, "Attack");
+                Send(43, x, 0f, "Destroyed");
+                Assert.That(removed.sprite.name, Is.EqualTo("ChickenCommandoDescent04"));
+                yield return new WaitForSeconds(0.12f);
+                Assert.That(Find(43) == null, Is.True);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+                setRate.Invoke(null, new object[] { previousTickRate });
+            }
+        }
+
+        private static SpriteRenderer ServedObjectRenderer(Component servedObject)
+        {
+            Assert.That(servedObject, Is.Not.Null);
+            var actual = (Transform)servedObject.GetType().GetMethod("GetActualTransform").Invoke(servedObject, null);
             return actual.GetComponent<SpriteRenderer>();
         }
 

@@ -216,7 +216,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8841690536847902715}
-  - component: {fileID: 6542150130469813617}
   - component: {fileID: 7643070402292094288}
   - component: {fileID: 5127668626658264087}
   - component: {fileID: 6078493527699891375}
@@ -245,20 +244,6 @@ Transform:
   - {fileID: 3664870540858154723}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6542150130469813617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7556005377799559492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e2a43148c7f4579897f771a6e00a51a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 6456819394278174577}
-  _duration: 0.5
 --- !u!114 &7643070402292094288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,6 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 6137335418506685782}
   _actualTransform: {fileID: 0}
+  _swingOnAttack: 0
   _teamIndicatorVerticalOffset: 0.1
   _teamIndicatorScale: 0.3
   _effectScaleReferenceHeight: 1.2
@@ -294,9 +280,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6137335418506685782}
-  elevatedSprite: {fileID: 21300000, guid: b50852ca5a54c4b4799cdfa7fd1ad4d6, type: 3}
   defaultSprite: {fileID: 21300000, guid: 042a1bedeb02142d8942d41d735795f3, type: 3}
-  heightThreshold: 0.5
+  descentFrames:
+  - {fileID: 21300000, guid: b50852ca5a54c4b4799cdfa7fd1ad4d6, type: 3}
+  - {fileID: 21300000, guid: 935c3decfb834279956bd1e26dbe99aa, type: 3}
+  - {fileID: 21300000, guid: aa56030793c04c7c9deaa0e180cdf655, type: 3}
+  - {fileID: 21300000, guid: 0cb466b69a5940318457b7ef2362f505, type: 3}
+  landingFrames:
+  - {fileID: 21300000, guid: da0a27e2e09342dd836f341de0f719bc, type: 3}
+  - {fileID: 21300000, guid: c0e6d195a136438fac818e3d16d54da0, type: 3}
+  - {fileID: 21300000, guid: db3df159e1e54ef5a54b44b6789241af, type: 3}
+  - {fileID: 21300000, guid: 91fbfa49b3d5430fa6c34527d9f02bcc, type: 3}
+  runFrames:
+  - {fileID: 21300000, guid: d503431cdf1546b69764afbf3f9a4d61, type: 3}
+  - {fileID: 21300000, guid: 7494e1f06e154e30979d60983309010e, type: 3}
+  - {fileID: 21300000, guid: c9f9443dfe9143d891abb1414a51453a, type: 3}
+  - {fileID: 21300000, guid: 60779c5913304dbb89fb30d6d2106742, type: 3}
+  - {fileID: 21300000, guid: 954a7585971e4c05b7ba7c690e1a8e35, type: 3}
+  - {fileID: 21300000, guid: 538083bb068f4a2788349c410aba487b, type: 3}
+  - {fileID: 21300000, guid: 662719f35e7f452a9912b830e5c90afd, type: 3}
+  - {fileID: 21300000, guid: 8967767e9d5c4af98291afb0662ed639, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: bc8183f02cfa42fa85c898430b7dbbf1, type: 3}
+  - {fileID: 21300000, guid: ec9d95094b284d3c991eb89ff6d56c3d, type: 3}
+  - {fileID: 21300000, guid: 85a2a413a9184fdbbf7f6961c9e0217f, type: 3}
+  - {fileID: 21300000, guid: ed54d70cbefa4690aec7cdb49b39cd2e, type: 3}
 --- !u!114 &6078493527699891375
 MonoBehaviour:
   m_ObjectHideFlags: 0
