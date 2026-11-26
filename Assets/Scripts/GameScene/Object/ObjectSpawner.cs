@@ -65,7 +65,8 @@ namespace GameScene.Object
                     if (popupBookPresenter != null)
                     {
                         popupBookPresenter.PlaySpawnPresentation(
-                            SpawnPresentationTypeCatalog.IsBuilding(createdObjectDto.type));
+                            SpawnPresentationTypeCatalog.IsBuilding(createdObjectDto.type),
+                            foldUp: !servedObject.KeepUprightOnSpawn);
                     }
                 }
             } catch (DuplicatedException e)
