@@ -178,6 +178,7 @@
 | `FireworkShell.png` | `game-assets/firework-shell.webp` | 위와 같음 |
 | `FireworkShellFlight01–04.png` | 클라이언트 이슈 #700 | 160×109 RGBA, PPU 100, 피벗 (96, 0). 비행 진행률에 맞춰 발사·상승·정점·하강 때 포탄 뒤 불티를 바꾼다. |
 | `FireworkExplosion.png` | `game-assets/firework-explosion.webp` | 위와 같음 |
+| `FireworkBurst01–07.png` | 클라이언트 이슈 #702 | 254×238 RGBA, PPU 100, 하단 중앙 피벗. 착탄 때 다각형 파편과 불씨의 확산을 재생하고 0.80초부터 투명해진다. |
 | `FrenzyTotem.png` | `game-assets/frenzy-totem.webp` | 위와 같음 |
 | `GrassGenerator.png` | `game-assets/grass-generator.webp` | 위와 같음 |
 | `RepairTotem.png` | `game-assets/repair-totem.webp` | 위와 같음 |
