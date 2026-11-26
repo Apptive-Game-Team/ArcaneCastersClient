@@ -3742,6 +3742,101 @@ namespace WordOnline.Tests
             CheckRecordedProjectileFlight("FireShot", "Game/sprites/FireShot", "fire_lord_spirit", "ground", 6.55f, .4f);
 
         [UnityTest]
+        public IEnumerator BombSpriteBombDescentLoopsIndependentlyUntilBothRecordedImpacts()
+        {
+            Create();
+            Assert.That(Configure("bomb_sprite"), Is.True);
+            var world = (Component)Field("world");
+            Sprite original = Resources.Load<Sprite>("Game/sprites/BombSpriteBomb");
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/BombDescentCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            Vector3 Position(Component subject) => world.transform.InverseTransformPoint(subject.transform.position);
+
+            void CheckImpact(Component bomb, int explosionId, float hp)
+            {
+                Component explosion = Target(explosionId);
+                Assert.That(explosion, Is.Not.Null);
+                Assert.That(Vector3.Distance(Position(explosion), new Vector3(6.5f, 0f, 6.4f)), Is.LessThan(.06f));
+                Assert.That(bomb.GetType().GetProperty("IsDespawning", Private).GetValue(bomb), Is.True);
+                Assert.That(Enumerable.Range(2, 3).Select(id => CurrentHp(Target(id))), Is.All.EqualTo(hp));
+                if (capture) SaveViewport(directory, $"impact-{explosionId}", true);
+            }
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(1.475f);
+                Assert.That(Target(6), Is.Null);
+                yield return PlayUntil(1.522f);
+                Component first = Target(6);
+                Assert.That(first, Is.Not.Null);
+                Assert.That(Vector3.Distance(Position(first), new Vector3(4f, 3f, 5f)), Is.LessThan(.09f));
+                SpriteRenderer firstBody = ServedObjectRenderer(first);
+                Assert.That(firstBody.sprite.rect, Is.EqualTo(original.rect));
+                Assert.That(firstBody.sprite.pivot, Is.EqualTo(original.pivot));
+                Assert.That(firstBody.sprite.pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 2.22f)
+                {
+                    string pose = firstBody.sprite.name;
+                    if (poses.LastOrDefault() != pose)
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 6) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 6).Select(i => $"BombSpriteBombDescent{i:00}").Append("BombSpriteBombDescent01");
+                CollectionAssert.AreEqual(expected, poses);
+
+                yield return PlayUntil(2.33f);
+                Component second = Target(7);
+                Assert.That(second, Is.Not.Null);
+                SpriteRenderer secondBody = ServedObjectRenderer(second);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("BombSpriteBombDescent02"));
+                Assert.That(secondBody.sprite.name, Is.EqualTo("BombSpriteBombDescent01"));
+                Assert.That(Position(second).y - Position(first).y, Is.GreaterThan(1f));
+
+                yield return PlayUntil(3.12f);
+                Component third = Target(8);
+                Assert.That(third, Is.Not.Null);
+                SpriteRenderer thirdBody = ServedObjectRenderer(third);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("BombSpriteBombDescent03"));
+                Assert.That(secondBody.sprite.name, Is.EqualTo("BombSpriteBombDescent02"));
+                Assert.That(thirdBody.sprite.name, Is.EqualTo("BombSpriteBombDescent01"));
+                Assert.That(Position(second).y - Position(first).y, Is.GreaterThan(1f));
+                Assert.That(Position(third).y - Position(second).y, Is.GreaterThan(1f));
+                if (capture) SaveViewport(directory, "three-bombs", true);
+
+                yield return PlayUntil(3.573f);
+                Assert.That(Enumerable.Range(2, 3).Select(id => CurrentHp(Target(id))), Is.All.EqualTo(10000f));
+                yield return PlayUntil(3.623f);
+                CheckImpact(first, 9, 9900f);
+                yield return PlayUntil(3.875f);
+                Assert.That(Target(6), Is.Null);
+                Assert.That(Target(9), Is.Not.Null);
+                Assert.That(Target(7), Is.SameAs(second));
+                Assert.That(Target(8), Is.SameAs(third));
+
+                yield return PlayUntil(4.423f);
+                CheckImpact(second, 11, 9800f);
+                Assert.That(Target(8), Is.SameAs(third));
+                yield return PlayUntil(4.675f);
+                Assert.That(Target(7), Is.Null);
+                Assert.That(Target(9), Is.Null);
+                Assert.That(Target(11), Is.Not.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator ElectricTowerGroundChainShowsEveryPose() => CheckElectricTowerChain("ground");
 
         [UnityTest]
