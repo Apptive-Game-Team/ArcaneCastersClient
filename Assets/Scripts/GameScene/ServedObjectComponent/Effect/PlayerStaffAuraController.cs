@@ -7,7 +7,7 @@ namespace GameScene.ServedObjectComponent.Effect
 {
     /// <summary>
     /// 서버 원소 효과의 앵커를 지팡이 끝에 놓고 플레이어가 뒤집히면 좌우를 바꾼다.
-    /// 기본 외형의 자세마다 위치가 지정되어 있으면 자세 컨트롤러가 앵커 위치를 전달한다.
+    /// 외형의 자세마다 위치가 지정되어 있으면 자세 컨트롤러가 앵커 위치를 전달한다.
     /// </summary>
     public sealed class PlayerStaffAuraController : ServedObjectBehaviour
     {

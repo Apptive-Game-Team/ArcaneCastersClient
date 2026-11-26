@@ -260,22 +260,50 @@ MonoBehaviour:
   - NatureIdleAura
   - RockIdleAura
   staffAura: {fileID: 5546332115853614978}
-  aimFrames:
-  - sprite: {fileID: 21300000, guid: efe478f9bd7e4480842d50fa99d8d246, type: 3}
-    tip: {x: -0.359, y: 1.293}
-  - sprite: {fileID: 21300000, guid: 96f519b2095b48ccbedee1dc0cf90a29, type: 3}
-    tip: {x: -0.461, y: 1.528}
-  - sprite: {fileID: 21300000, guid: d409873fd49b4f6bbad362bf719126b3, type: 3}
-    tip: {x: -0.481, y: 1.717}
-  - sprite: {fileID: 21300000, guid: 1ad27bf8bddf40f48bb48ccf93d07305, type: 3}
-    tip: {x: -0.396, y: 1.991}
-  castFrames:
-  - sprite: {fileID: 21300000, guid: 5c77dcebd75b43a9a62a734c339efd09, type: 3}
-    tip: {x: 0.892, y: 0.915}
-  - sprite: {fileID: 21300000, guid: 7f4fc485ae5844a9853f3f49f13cbe0d, type: 3}
-    tip: {x: 0.714, y: 1.044}
-  - sprite: {fileID: 21300000, guid: c451c1c53bac48e38569b4bdcbfc46cb, type: 3}
-    tip: {x: 0.534, y: 1.240}
+  appearanceMotions:
+  - appearanceId: default
+    aimFrames:
+    - sprite: {fileID: 21300000, guid: efe478f9bd7e4480842d50fa99d8d246, type: 3}
+      tip: {x: -0.359, y: 1.293}
+    - sprite: {fileID: 21300000, guid: 96f519b2095b48ccbedee1dc0cf90a29, type: 3}
+      tip: {x: -0.461, y: 1.528}
+    - sprite: {fileID: 21300000, guid: d409873fd49b4f6bbad362bf719126b3, type: 3}
+      tip: {x: -0.481, y: 1.717}
+    - sprite: {fileID: 21300000, guid: 1ad27bf8bddf40f48bb48ccf93d07305, type: 3}
+      tip: {x: -0.396, y: 1.991}
+    castFrames:
+    - sprite: {fileID: 21300000, guid: 5c77dcebd75b43a9a62a734c339efd09, type: 3}
+      tip: {x: 0.892, y: 0.915}
+    - sprite: {fileID: 21300000, guid: 7f4fc485ae5844a9853f3f49f13cbe0d, type: 3}
+      tip: {x: 0.714, y: 1.044}
+    - sprite: {fileID: 21300000, guid: c451c1c53bac48e38569b4bdcbfc46cb, type: 3}
+      tip: {x: 0.534, y: 1.240}
+    castCueFractions:
+    - 0.4
+    - 0.6666667
+  - appearanceId: corrupted_finn
+    aimFrames:
+    - sprite: {fileID: 21300000, guid: 69eca50ed5434f6dbfed1118a0b6a5df, type: 3}
+      tip: {x: -0.426, y: 1.281}
+    - sprite: {fileID: 21300000, guid: f070b54a3edc404caceaa26f89258bfd, type: 3}
+      tip: {x: -0.413, y: 1.435}
+    - sprite: {fileID: 21300000, guid: d7f86a28b699424c9153262ac25def5a, type: 3}
+      tip: {x: -0.411, y: 1.634}
+    - sprite: {fileID: 21300000, guid: a40ac826b6804bdeb745184836e07ef6, type: 3}
+      tip: {x: -0.364, y: 1.705}
+    castFrames:
+    - sprite: {fileID: 21300000, guid: b7fddfa40d6d4bb1adc7ec2e576340ab, type: 3}
+      tip: {x: 1.037, y: 1.194}
+    - sprite: {fileID: 21300000, guid: a1855b521f0e458d83aca4f36c4167f1, type: 3}
+      tip: {x: 0.708, y: 1.181}
+    - sprite: {fileID: 21300000, guid: 475d2bb841854dd1a30754a1b0adb1b1, type: 3}
+      tip: {x: 0.495, y: 1.286}
+    - sprite: {fileID: 21300000, guid: 91b593c530e743188a570706d62f9278, type: 3}
+      tip: {x: -0.144, y: 1.271}
+    castCueFractions:
+    - 0.4
+    - 0.6
+    - 0.8
 --- !u!114 &5546332115853614978
 MonoBehaviour:
   m_ObjectHideFlags: 0
