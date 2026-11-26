@@ -58,6 +58,23 @@ namespace WordOnline.Tests
             Assert.AreEqual(1, ((HitEvent)sync.events[0]).actorId);
         }
 
+        [TestCase("vineWitchCast")]
+        [TestCase("vineWitchFan")]
+        public void FrameAndSnapshotCarryTheWitchAndHerCombatTarget(string eventType)
+        {
+            string events = "{\"events\":[{\"type\":\"" + eventType + "\",\"actorId\":3,\"targetId\":7}]}";
+            FrameInfoDto frame = JsonCodec.Deserialize<FrameInfoDto>(events);
+            SyncFrameInfo sync = JsonCodec.Deserialize<SyncFrameInfo>(events);
+
+            foreach (var gameEvent in new[] { frame.events[0], sync.events[0] })
+            {
+                var cast = (VineWitchCastEvent)gameEvent;
+                Assert.AreEqual(eventType, cast.type);
+                Assert.AreEqual(3, cast.actorId);
+                Assert.AreEqual(7, cast.targetId);
+            }
+        }
+
         /// <summary>
         /// 서버가 새 이벤트 종류를 먼저 배포해도 프레임 전체가 깨지면 안 된다.
         /// </summary>

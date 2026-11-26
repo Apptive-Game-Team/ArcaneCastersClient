@@ -58,7 +58,20 @@ namespace GameScene.ServedObjectComponent.OnAttack
         }
 
         /// <summary>Plays the sequence. Safe to call again while a previous one still runs.</summary>
-        private void Play()
+        private void Play() => Play(frameInterval);
+
+        internal void PlayForDuration(float duration)
+        {
+            if (!isActiveAndEnabled || resolvedRenderer == null || !(duration > 0f) || float.IsInfinity(duration))
+            {
+                return;
+            }
+
+            Play(duration / frames.Length);
+            ApplyFrame(frames[0]);
+        }
+
+        private void Play(float interval)
         {
             if (resolvedRenderer == null)
             {
@@ -73,7 +86,7 @@ namespace GameScene.ServedObjectComponent.OnAttack
             foreach (Sprite frame in frames)
             {
                 playing.AppendCallback(() => ApplyFrame(frame));
-                playing.AppendInterval(frameInterval);
+                playing.AppendInterval(interval);
             }
 
             playing
