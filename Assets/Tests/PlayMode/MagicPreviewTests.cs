@@ -3826,6 +3826,95 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator TideCallCyclesAndKeepsItsRecordedWaterTrailAndKnockback()
+        {
+            Create();
+            Assert.That(Configure("tide_call"), Is.True);
+            var world = (Component)Field("world");
+            Sprite original = Resources.Load<Sprite>("Game/sprites/TideCall");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/TideCallCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            Vector3 Position(Component obj) => world.transform.InverseTransformPoint(obj.transform.position);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.575f);
+                Assert.That(Target(3), Is.Null);
+                Assert.That(Target(4), Is.Null);
+
+                yield return PlayUntil(.622f);
+                Component wave = Target(3);
+                Assert.That(wave, Is.Not.Null);
+                Assert.That(Vector3.Distance(Position(wave), new Vector3(2f, 0f, 5f)), Is.LessThan(.08f));
+                SpriteRenderer body = ServedObjectRenderer(wave);
+                Assert.That(body.sprite.rect, Is.EqualTo(original.rect));
+                Assert.That(body.sprite.pivot, Is.EqualTo(original.pivot));
+                Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+                Assert.That(body.sortingOrder, Is.EqualTo(12));
+                Assert.That(body.sprite.name, Is.EqualTo("TideCallFlight01"));
+                if (capture) SaveViewport(directory, body.sprite.name, true);
+
+                yield return PlayUntil(.722f);
+                Component field = Target(4);
+                Assert.That(field, Is.Not.Null);
+                Assert.That(field.name, Does.StartWith("WaterField"));
+                Vector3 fieldPosition = Position(field);
+                Assert.That(Vector3.Distance(fieldPosition, new Vector3(2.6f, 0f, 5f)), Is.LessThan(.03f));
+                if (capture) SaveViewport(directory, "first-water-field", true);
+
+                Component enemy = Target(2);
+                var poses = new System.Collections.Generic.List<string> { "TideCallFlight01" };
+                while (true)
+                {
+                    string pose = body.sprite.name;
+                    if (poses.Last() != pose)
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 6) SaveViewport(directory, pose, true);
+                    }
+                    if ((float)Field("elapsed") >= 1.335f) break;
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 6).Select(index => $"TideCallFlight{index:00}").Append("TideCallFlight01");
+                CollectionAssert.AreEqual(expected, poses);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(10000));
+                Assert.That(Position(enemy).x, Is.EqualTo(7f).Within(.03f));
+                if (capture) SaveViewport(directory, "before-hit", true);
+
+                yield return PlayUntil(1.37f);
+                Assert.That(Target(3), Is.SameAs(wave));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9900));
+                Assert.That(enemy.GetType().GetMethod("HasEffect").Invoke(enemy, new object[] { "Wet" }), Is.True);
+                if (capture) SaveViewport(directory, "hit", true);
+
+                yield return PlayUntil(1.47f);
+                Assert.That(body.sprite.name, Is.EqualTo("TideCallFlight02"));
+                Assert.That(Position(wave).x, Is.GreaterThan(6.6f));
+                yield return PlayUntil(1.525f);
+                Assert.That(Position(enemy).x, Is.InRange(7.185f, 7.295f));
+                Assert.That(Target(4), Is.SameAs(field));
+                Assert.That(Vector3.Distance(Position(field), fieldPosition), Is.LessThan(.03f));
+                if (capture) SaveViewport(directory, "knockback", true);
+
+                yield return PlayUntil(3.285f);
+                Assert.That(Target(3), Is.SameAs(wave));
+                Assert.That(Position(wave).x, Is.GreaterThan(17.5f));
+                yield return PlayUntil(3.317f);
+                Assert.That(wave.GetType().GetProperty("IsDespawning", Private).GetValue(wave), Is.True);
+                yield return PlayUntil(3.42f);
+                Assert.That(Target(3), Is.Null);
+                Assert.That(Target(4), Is.SameAs(field));
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator WillOWispCyclesAndKeepsItsRecordedControl()
         {
             Create();

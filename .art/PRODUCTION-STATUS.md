@@ -513,3 +513,8 @@ commit 그대로였다.
 
 - 얼굴 없는 연두색 불꽃에 이동 자세 네 장을 적용했다. 네 장의 둥근 바닥 위치를 맞추고 불꽃 끝과 안쪽 밝은 면을 바꿨다.
 - `WillOWispFlight01.png` · `WillOWispFlight02.png` · `WillOWispFlight03.png` · `WillOWispFlight04.png`
+
+## 파도 소환 이동 자세
+
+- 파란 물층이 뒤에서 올라와 오른쪽 물마루를 따라 말리는 여섯 자세를 적용했다. 긴 밑단의 높이와 중심을 맞췄다.
+- `TideCallFlight01.png` · `TideCallFlight02.png` · `TideCallFlight03.png` · `TideCallFlight04.png` · `TideCallFlight05.png` · `TideCallFlight06.png`
