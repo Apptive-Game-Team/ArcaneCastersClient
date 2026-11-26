@@ -49,6 +49,38 @@ namespace WordOnline.Tests
             }
         }
 
+        [Test]
+        public void AdventureFireTadpoleUsesTheCardFramesOnItsOwnBody()
+        {
+            const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
+            GameObject adventure = Resources.Load<GameObject>("Prefabs/PveFireTadpole");
+            GameObject card = Resources.Load<GameObject>("Prefabs/FireTadpole");
+
+            Assert.IsFalse(HasComponentNamed(adventure, "CrawlMotionController"));
+            Assert.IsFalse(HasComponentNamed(adventure, "HoppingMotionController"));
+            Assert.IsFalse(HasComponentNamed(adventure, "AttackSpriteSwapController"));
+            Assert.IsTrue(HasComponentNamed(adventure, "ServedObjectGaugeBar"));
+            Assert.That(adventure.GetComponentsInChildren<Transform>(true).Any(child => child.name == "TTLBar"));
+            MonoBehaviour pose = adventure.GetComponents<MonoBehaviour>()
+                .Single(component => component.GetType().Name == "GroundedUnitPoseController");
+            MonoBehaviour cardPose = card.GetComponents<MonoBehaviour>()
+                .Single(component => component.GetType() == pose.GetType());
+            MonoBehaviour unit = adventure.GetComponents<MonoBehaviour>()
+                .Single(component => component.GetType().Name == "ServedObject");
+            var renderer = (SpriteRenderer)unit.GetType().GetField("_spriteRenderer", fields).GetValue(unit);
+            var type = pose.GetType();
+            Assert.AreSame(renderer, type.GetField("targetRenderer", fields).GetValue(pose));
+            Assert.AreSame(Resources.Load<Sprite>("Game/sprites/FireTadpoleIdle"), renderer.sprite);
+            Assert.IsFalse((bool)unit.GetType().GetField("_swingOnAttack", fields).GetValue(unit));
+            Assert.IsTrue((bool)type.GetField("attackOnHit", fields).GetValue(pose));
+            var walk = (Sprite[])type.GetField("walkFrames", fields).GetValue(pose);
+            var attack = (Sprite[])type.GetField("attackFrames", fields).GetValue(pose);
+            Assert.That(walk.Distinct().Count(), Is.EqualTo(8));
+            Assert.That(attack.Distinct().Count(), Is.EqualTo(4));
+            CollectionAssert.AreEqual((Sprite[])type.GetField("walkFrames", fields).GetValue(cardPose), walk);
+            CollectionAssert.AreEqual((Sprite[])type.GetField("attackFrames", fields).GetValue(cardPose), attack);
+        }
+
         [TestCase("EvilEnt", 8)]
         [TestCase("PveEvilEnt", 0)]
         public void EvilEntVariantsHaveGroundedAttackAndOnlyTheCardWalks(string prefabName, int stepCount)
