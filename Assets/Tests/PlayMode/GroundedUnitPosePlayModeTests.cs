@@ -133,6 +133,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(234, 256), walkSeconds: 4);
 
         [UnityTest]
+        public IEnumerator ElectricSpearmanWalksAndRecoversFromThrustAtBothTickRates() =>
+            CheckBothTickRates("ElectricSpearman", 8, "ElectricSpearmanAttacking", walkSpeed: 1.82f,
+                secondsPerAttackPose: .06f, walkSize: new Vector2(128, 102));
+
+        [UnityTest]
         public IEnumerator RockMageTwinsShareOneMuzzlePerMageAndPerPacket()
         {
             var root = new GameObject("RockMage packet test");
@@ -631,7 +636,7 @@ namespace WordOnline.Tests
 
                 CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
                     $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
-                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit" or "FireSpirit" or "RockMage")
+                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit" or "FireSpirit" or "RockMage" or "ElectricSpearman")
                 {
                     var cycle = walk.Append(walk[0]).ToArray();
                     bool completedCycle = Enumerable.Range(0, Mathf.Max(0, seenWalk.Count - walk.Length))

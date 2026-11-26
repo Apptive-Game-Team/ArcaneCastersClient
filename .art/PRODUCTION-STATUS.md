@@ -352,6 +352,7 @@ commit 그대로였다.
 ## 2026-11-05 전기 창병 추가
 
 - `ElectricSpearman.png`, `ElectricSpearmanAttacking.png`: 사용자 승인 후 적용. 같은 128×102 RGBA 캔버스, PPU 90, Bottom Center. 런타임 프리팹과 카드 아이콘 연결. 기본·찌르기 자세 완료.
+- `ElectricSpearmanWalk01–08.png`, `ElectricSpearmanRecover01–03.png`: 클라이언트 이슈 #644. 같은 128×102 RGBA 캔버스, PPU 90, 하단 중앙 피벗. 양발 보행 8장과 기존 찌르기 뒤 창 회수 3장.
 - `RockGolem.prefab`: 기존 그림을 유지하고 본체·그림자를 60%로 축소.
 
 ## 성장 UI 골드 아이콘 — 2026-10-29
