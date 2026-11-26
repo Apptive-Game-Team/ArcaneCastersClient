@@ -120,16 +120,70 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 1.96
       objectReference: {fileID: 0}
+    - target: {fileID: 1060800969627125256, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1060800969627125256, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      propertyPath: _keepUprightOnSpawn
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 066761f3391d24129b2f503ae95ccffd, type: 3}
-    - target: {fileID: 8788216132779933461, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 590b9db164e804ba7a5bc5604d7a2e4b, type: 3}
-    m_RemovedComponents: []
+      value:
+      objectReference: {fileID: 21300000, guid: 8d1ffb55e1bc53d98781357d880da239, type: 3}
+    m_RemovedComponents:
+    - {fileID: 5502000000000000020, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6860000000000000004}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+--- !u!1 &6860000000000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6860000000000000002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1060800969627125256, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &6860000000000000003 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6860000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6860000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 6860000000000000002}
+  targetRenderer: {fileID: 6860000000000000003}
+  walkFrames: []
+  attackFrames:
+  - {fileID: 21300000, guid: 83acce58c77e536f89f435ae7d5fcaed, type: 3}
+  - {fileID: 21300000, guid: 5d0f84e98d555caf886a0147739d2379, type: 3}
+  - {fileID: 21300000, guid: debd6d34c2aa55d195b5ee95ca384396, type: 3}
+  - {fileID: 21300000, guid: fe605bedc8c25e6290231468bb13d13c, type: 3}
+  projectileAttackFrames: []
+  spawnFrames:
+  - {fileID: 21300000, guid: bc858630179852d4b683fd34003386cc, type: 3}
+  - {fileID: 21300000, guid: 4cbcfb5555aa5cdf91f4866726a958e0, type: 3}
+  - {fileID: 21300000, guid: fdfe8ab059575264a90662b208fd9ac6, type: 3}
+  - {fileID: 21300000, guid: 19bd92d763a45b00a261543cca15c226, type: 3}
+  - {fileID: 21300000, guid: 3d06c43d4a4d5b989a75c98a3047b99a, type: 3}
+  - {fileID: 21300000, guid: 8d1ffb55e1bc53d98781357d880da239, type: 3}
+  attackDuration: 0.4
+  spawnDuration: 0.66
+  attackOnHit: 0
