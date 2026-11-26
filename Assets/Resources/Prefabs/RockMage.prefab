@@ -104,9 +104,60 @@ PrefabInstance:
       propertyPath: m_Name
       value: rock_mage
       objectReference: {fileID: 0}
+    - target: {fileID: 7140850829614563192, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 1018091211532011722, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 846426420000000002}
   m_SourcePrefab: {fileID: 100100000, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+--- !u!1 &846426420000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 1892629790145436607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &846426420000000003 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3630220617462090093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 1892629790145436607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &846426420000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846426420000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 846426420000000003}
+  walkFrames:
+  - {fileID: 21300000, guid: f0df4c39984356018ed54d41e6a0ba91, type: 3}
+  - {fileID: 21300000, guid: af4135f1475b5166bea541f0cc316608, type: 3}
+  - {fileID: 21300000, guid: 69b16113e20c56649464c0a250b009e3, type: 3}
+  - {fileID: 21300000, guid: 67a085cae7b653e5a670105eb27add00, type: 3}
+  - {fileID: 21300000, guid: f1cdc2a46020573b8406d5259a9d7983, type: 3}
+  - {fileID: 21300000, guid: 049c6c99c02858e693d2f938431a46bd, type: 3}
+  - {fileID: 21300000, guid: b68482561b485171b30c311307a71652, type: 3}
+  - {fileID: 21300000, guid: 74b595a707c359d2850d1822c6cf4235, type: 3}
+  projectileAttackFrames:
+  - {fileID: 21300000, guid: 1dda2937d1e45a4f9f2da8aa8502767f, type: 3}
+  - {fileID: 21300000, guid: aa7b1095abf554349298865953b68e85, type: 3}
+  - {fileID: 21300000, guid: 3618db80fd5e50f99c920b27cd82c1f3, type: 3}
+  - {fileID: 21300000, guid: 1ad24a14767858dbb9b0ac527c9f5c0e, type: 3}
+  projectileMuzzle: {x: 0.4647, y: 0.9418}
+  walkCycleDistance: 0.96
+  attackDuration: 0.5
+  maximumGroundSpeed: 1
+  walkingHeightTolerance: 0.08
