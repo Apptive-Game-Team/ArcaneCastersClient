@@ -76,14 +76,13 @@ Transform 스케일 변형은 적용하지 않는다.
 
 검증할 때 두 PNG를 같은 PPU로 겹쳐 발점, 골반, 머리 중심을 대조한다.
 `RockGolem`과 `RockGolem2`는 256x244, PPU 100, Bottom Center로 교정했다.
-`TreeGolem`과 `TreeGolem2`는 PPU가 서로 달라 재작업 전에 교정이 필요하다.
-`TreeGolem`은 240x256에 PPU 100, `TreeGolem2`는 256x215에 PPU 80이다.
+`TreeGolem`과 `TreeGolem2`는 240×256 / 312×256, PPU 85, Bottom Center다.
+이슈 #482에서 펀치 자세의 발 간격을 75px로 조정했다. 기본 자세는 77px이며 두 자세의 지면 접점 차이는 1px 이하다.
 
 `EvilEnt`와 `EvilEnt2`는 224x256, PPU 100, Bottom Center로 일치한다. 두 프레임을
 프레임마다 따로 자르지 않고 하나의 공유 크롭 박스와 하나의 공유 배율로 함께
 내보냈기 때문에, 지면 접점 픽셀이 사후 대조가 아니라 제작 방식으로 이미 동일하다.
-`TreeGolem` 쌍이 어긋난 원인이 프레임별 개별 크롭·개별 배율이므로, 새 공격
-프레임은 이 방식으로 만든다. 캔버스 크기가 같아지는 것은 결과이지 목표가 아니다.
+`TreeGolem2`는 기존 펀치 캔버스와 주먹의 최대 가로 위치를 유지했다. 기본 자세의 양발을 기준으로 펀치 그림을 정렬했다.
 
 `WaterSlime`과 `WaterSlimeAttackSpit`은 320x224, PPU 200, Bottom Center로
 일치한다. 두 프레임은 하나의 공유 소스 픽셀 배율과 하단 기준선을 사용하며,
