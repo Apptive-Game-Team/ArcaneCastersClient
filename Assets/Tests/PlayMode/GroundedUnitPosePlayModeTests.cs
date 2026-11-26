@@ -163,13 +163,13 @@ namespace WordOnline.Tests
                     RockShot(42, 44), RockShot(42, 44)) + "]}");
                 var rocks = Shots();
                 Assert.That(rocks, Has.Length.EqualTo(4));
-                Vector3 rightStart = AssertMageMuzzle(first, rocks.Take(2).ToArray(), false);
-                Vector3 otherStart = AssertMageMuzzle(second, rocks.Skip(2).ToArray(), true);
+                Vector3 rightStart = AssertRockMuzzle(first, rocks.Take(2).ToArray(), false);
+                Vector3 otherStart = AssertRockMuzzle(second, rocks.Skip(2).ToArray(), true);
 
                 ApplyObjects(world, "{\"projectile\":[" + RockShot(41, 999) + "," + RockShot(41, 44) + "]}");
                 var secondPacket = Shots().Skip(4).ToArray();
                 Assert.That(secondPacket, Has.Length.EqualTo(2));
-                Vector3 leftStart = AssertMageMuzzle(first, secondPacket, true);
+                Vector3 leftStart = AssertRockMuzzle(first, secondPacket, true);
                 Assert.That(leftStart.x, Is.LessThan(rightStart.x));
                 Assert.That(Body(second).flipX, Is.True);
 
@@ -219,7 +219,7 @@ namespace WordOnline.Tests
                 var find = container.GetType().GetMethod("FindById");
                 var mage = (Component)find.Invoke(container, new object[] { 62 });
                 Assert.That(find.Invoke(container, new object[] { 61 }), Is.Null);
-                AssertMageMuzzle(mage, rocks, false);
+                AssertRockMuzzle(mage, rocks, false);
             }
             finally
             {
@@ -230,12 +230,108 @@ namespace WordOnline.Tests
             yield return null;
         }
 
-        private static Vector3 AssertMageMuzzle(Component mage, Transform[] rocks, bool flipped)
+        [UnityTest]
+        public IEnumerator RockTurretFiresFromTheSlingAndReloads()
         {
-            SpriteRenderer body = Body(mage);
-            Assert.That(body.sprite.name, Is.EqualTo("RockMageCast01"));
+            var root = new GameObject("RockTurret fire test");
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = RenderRate;
+            try
+            {
+                var world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                var find = world.GetType().GetMethod("FindById");
+                ApplyObjects(world, @"{""create"":[
+                    {""id"":71,""type"":""RockTurret"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":5}},
+                    {""id"":72,""type"":""ElectricSlime"",""master"":""RightPlayer"",""position"":{""x"":7,""z"":5}},
+                    {""id"":73,""type"":""ElectricSlime"",""master"":""RightPlayer"",""position"":{""x"":2,""z"":5}}]}");
+                var turret = (Component)find.Invoke(world, new object[] { 71 });
+                SpriteRenderer body = Body(turret);
+                Sprite idle = body.sprite;
+                Assert.That(idle.name, Is.EqualTo("RockTurret"));
+                Assert.That(turret.GetComponent("AttackSpriteSwapController"), Is.Null);
+                Assert.That(turret.GetType().GetField("_swingOnAttack", Private).GetValue(turret), Is.False);
+                ApplyObjects(world, "{\"update\":[{\"id\":71,\"status\":\"Attack\",\"position\":{\"x\":4,\"z\":5}}]}");
+                Assert.That(body.sprite, Is.SameAs(idle));
+                ApplyObjects(world, "{\"projectile\":[" + RockShot(71, 999, 0.2f) + "]}");
+                Assert.That(body.sprite, Is.SameAs(idle));
+                Assert.That(body.flipX, Is.False);
+                yield return null;
+
+                ApplyObjects(world, "{\"projectile\":[" + RockShot(71, 72, 0.2f) +
+                    "],\"update\":[{\"id\":71,\"status\":\"Attack\",\"position\":{\"x\":4.1,\"z\":5}}]}");
+                Transform[] shots = world.GetComponentsInChildren<Transform>()
+                    .Where(entry => entry.name == "RockShot(Clone)").ToArray();
+                Assert.That(shots, Has.Length.EqualTo(1));
+                Vector3 before = AssertRockMuzzle(turret, shots, false, "RockTurretFire01");
+                var seen = new List<Sprite>();
+                for (int i = 0; i < 42; i++)
+                {
+                    if (body.sprite != idle && body.sprite != seen.LastOrDefault())
+                        seen.Add(body.sprite);
+                    if (i == 10) Assert.That(shots[0].position.x, Is.GreaterThan(before.x));
+                    yield return null;
+                }
+
+                CollectionAssert.AreEqual(Enumerable.Range(1, 4).Select(number => $"RockTurretFire{number:00}"), seen.Select(sprite => sprite.name));
+                AssertFrames(seen.ToArray(), 4, idle, new Vector2(169, 256));
+                Assert.That(body.sprite, Is.SameAs(idle));
+                var previous = new HashSet<Transform>(world.GetComponentsInChildren<Transform>());
+                ApplyObjects(world, "{\"projectile\":[" + RockShot(71, 73, 0.2f) + "]}");
+                Transform[] leftShots = world.GetComponentsInChildren<Transform>()
+                    .Where(entry => entry.name == "RockShot(Clone)" && !previous.Contains(entry)).ToArray();
+                Assert.That(leftShots, Has.Length.EqualTo(1));
+                AssertRockMuzzle(turret, leftShots, true, "RockTurretFire01");
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+                Object.Destroy(root);
+            }
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator RockTurretSnapshotRegistersTheLauncherBeforeTheRockShot()
+        {
+            var root = new GameObject("RockTurret snapshot test");
+            var container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            Transform[] rocks = Array.Empty<Transform>();
+            try
+            {
+                root.AddComponent(Runtime("GameScene.Object.ObjectSpawner"));
+                root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+                var syncer = root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+                Type snapshots = Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType();
+                object snapshot = Decode(snapshots, @"[
+                    {""id"":81,""prefab"":""RockTurret"",""master"":""LeftPlayer"",""x"":4,""z"":5,""status"":""Attack""},
+                    {""id"":82,""prefab"":""ElectricSlime"",""master"":""RightPlayer"",""x"":7,""z"":5}]");
+                Type objects = Runtime("GameScene.Dto.ObjectsInfo");
+                object envelope = Decode(objects, "{\"projectile\":[" + RockShot(81, 82, 0.2f) + "]}");
+                object pending = Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnBeforeSnapshotUpdates")
+                    .Invoke(null, new[] { objects.GetField("projectile").GetValue(envelope), snapshot });
+                Assert.That(((IList)pending).Count, Is.EqualTo(1));
+                syncer.GetType().GetMethod("Sync").Invoke(syncer, new[] { snapshot, pending });
+                rocks = Object.FindObjectsByType<Transform>(FindObjectsSortMode.None)
+                    .Where(entry => entry.name == "RockShot(Clone)").ToArray();
+                Assert.That(rocks, Has.Length.EqualTo(1));
+                var turret = (Component)container.GetType().GetMethod("FindById").Invoke(container, new object[] { 81 });
+                AssertRockMuzzle(turret, rocks, false, "RockTurretFire01");
+            }
+            finally
+            {
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                foreach (Transform shot in rocks) Object.Destroy(shot.gameObject);
+                Object.Destroy(root);
+            }
+            yield return null;
+        }
+
+        private static Vector3 AssertRockMuzzle(Component caster, Transform[] rocks, bool flipped, string firstFrame = "RockMageCast01")
+        {
+            SpriteRenderer body = Body(caster);
+            Assert.That(body.sprite.name, Is.EqualTo(firstFrame));
             Assert.That(body.flipX, Is.EqualTo(flipped));
-            var pose = mage.GetComponent("GroundedUnitPoseController");
+            var pose = caster.GetComponent("GroundedUnitPoseController");
             var local = (Vector2)pose.GetType().GetField("projectileMuzzle", Private).GetValue(pose);
             Vector3 expected = body.transform.TransformPoint(new Vector3(flipped ? -local.x : local.x, local.y, 0f));
             foreach (Transform rock in rocks)
@@ -243,8 +339,8 @@ namespace WordOnline.Tests
             return expected;
         }
 
-        private static string RockShot(int source, int target) =>
-            $"{{\"type\":\"RockShot\",\"duration\":0.5,\"start\":{{\"targetType\":\"reference\",\"id\":{source}}}," +
+        private static string RockShot(int source, int target, float duration = 0.5f) =>
+            FormattableString.Invariant($"{{\"type\":\"RockShot\",\"duration\":{duration},\"start\":{{\"targetType\":\"reference\",\"id\":{source}}},") +
             $"\"end\":{{\"targetType\":\"reference\",\"id\":{target}}}}}";
 
         [UnityTest]

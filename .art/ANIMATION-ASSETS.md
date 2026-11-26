@@ -69,7 +69,7 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `AquaArcher.png`, `AquaArcherWalk01.png`–`AquaArcherWalk08.png` | 물결 궁수 · 활을 든 대기와 양발 보행 | 실제 지면 이동 0.88칸마다 여덟 자세를 재생한다. 기준 속도 1칸/초에서 0.88초 |
 | `AquaArcherAttack.png`, `AquaArcherRecover01.png`–`AquaArcherRecover02.png` | 물결 궁수 · 시위를 놓은 뒤 손을 내려 다음 화살을 거는 자세 | `WaterShot` 생성과 같은 서버 프레임의 `OnAttack`에 시작한다. 0.08초씩 세 자세를 표시한다 |
 | `RockTurret.png` | 인간제 투석 포탑 · 장전 자세 | `RockTurret.prefab` 기본 SpriteRenderer |
-| `RockTurretAttacking.png` | 인간제 투석 포탑 · 발사 직후 자세 | `AttackSpriteSwapController.swapSprite`, 공격 이벤트에서 0.1초 표시 |
+| `RockTurretFire01.png`–`RockTurretFire04.png` | 인간제 투석 포탑 · 빈 슬링 발사, 반동, 복귀와 재장전 | 참조형 `RockShot`이 빈 슬링 중심에서 출발할 때 첫 자세를 표시한다. 네 장을 0.075초씩 재생한다 |
 | `WaterSlime.png` | 물 슬라임 · 한 개체 기본 자세 | `WaterSlime.prefab` 기본 SpriteRenderer |
 | `WaterSlimeCrawl01.png`–`WaterSlimeCrawl08.png` | 물 슬라임 · 지면 이동 | 실제 이동 0.96칸마다 여덟 자세를 재생한다 |
 | `WaterSlimeSpit01.png`–`WaterSlimeSpit04.png` | 물 슬라임 · 물 뱉기와 복귀 | 네 자세를 0.08초씩 재생한다. 참조형 `WaterShot`이 시작되면 첫 자세와 방향을 맞춘다 |
