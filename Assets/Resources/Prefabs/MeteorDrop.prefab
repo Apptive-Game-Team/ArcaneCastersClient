@@ -75,6 +75,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4705269614485497549, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7263950596706113183}
+    - targetCorrespondingSourceObject: {fileID: 4705269614485497549, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 724000000000000001}
   m_SourcePrefab: {fileID: 100100000, guid: 073eb5ab4f8444db8954d00ca99f9392, type: 3}
 --- !u!114 &3419487700863449916 stripped
 MonoBehaviour:
@@ -117,3 +120,23 @@ MonoBehaviour:
   endScaleMultiplier: 0.2
   initialPoolSize: 8
   isSpawned: 1
+--- !u!114 &724000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999531506464986974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc9a2eeb9e665ef8b3f792219d7e9d35, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 3419487700863449916}
+  targetRenderer: {fileID: 6564404468497111571}
+  descentFrames:
+  - {fileID: 21300000, guid: 9e619980bead4e108389c4a567ed6e1c, type: 3}
+  - {fileID: 21300000, guid: e31886f057e143ac93706afb073ee604, type: 3}
+  - {fileID: 21300000, guid: 18a30ebb87194f30b6a86d73ed021427, type: 3}
+  - {fileID: 21300000, guid: 68b36b9518e44a6ea4afc0bd49bd99fd, type: 3}
+  initialHeight: 10
