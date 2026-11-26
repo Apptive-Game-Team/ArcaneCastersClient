@@ -3742,6 +3742,71 @@ namespace WordOnline.Tests
             CheckRecordedProjectileFlight("FireShot", "Game/sprites/FireShot", "fire_lord_spirit", "ground", 6.55f, .4f);
 
         [UnityTest]
+        public IEnumerator BoulderStrikeCyclesFlightPosesAndKeepsTheRecordedKnockback()
+        {
+            Create();
+            Assert.That(Configure("boulder_strike"), Is.True);
+            var world = (Component)Field("world");
+            Sprite original = Resources.Load<Sprite>("Game/sprites/BoulderStrike");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/BoulderStrikeCaptures");
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            Vector3 Position(Component subject) => world.transform.InverseTransformPoint(subject.transform.position);
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.575f);
+                Assert.That(Target(3), Is.Null);
+                yield return PlayUntil(.622f);
+                Component shot = Target(3);
+                Assert.That(shot, Is.Not.Null);
+                Assert.That(Vector3.Distance(Position(shot), new Vector3(2f, 0f, 5f)), Is.LessThan(.13f));
+                SpriteRenderer renderer = ServedObjectRenderer(shot);
+                Assert.That(renderer.sprite.rect, Is.EqualTo(original.rect));
+                Assert.That(renderer.sprite.pivot, Is.EqualTo(original.pivot));
+                Assert.That(renderer.sprite.pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+                Assert.That(renderer.flipX, Is.False);
+
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 1.312f)
+                {
+                    string pose = renderer.sprite.name;
+                    if (poses.LastOrDefault() != pose)
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 6) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 6).Select(i => $"BoulderStrikeFlight{i:00}").Append("BoulderStrikeFlight01");
+                CollectionAssert.AreEqual(expected, poses);
+
+                Component target = Target(2);
+                Assert.That(CurrentHp(target), Is.EqualTo(10000));
+                Assert.That(Position(target).x, Is.EqualTo(7f).Within(.02f));
+                if (capture) SaveViewport(directory, "before-hit", true);
+                yield return PlayUntil(1.372f);
+                Assert.That(CurrentHp(target), Is.EqualTo(9900));
+                Assert.That(shot.GetType().GetProperty("IsDespawning", Private).GetValue(shot), Is.True);
+                // 표시 위치는 1.30초와 1.35초 스냅샷을 보간한다.
+                Assert.That(Position(shot).x, Is.InRange(6.19f, 6.51f));
+                if (capture) SaveViewport(directory, "hit", true);
+
+                yield return PlayUntil(1.724f);
+                Assert.That(Target(3), Is.Null);
+                Assert.That(Position(target).x, Is.InRange(7.47f, 7.56f));
+                Assert.That(CurrentHp(target), Is.EqualTo(9900));
+                if (capture) SaveViewport(directory, "knockback", true);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator BombSpriteBombDescentLoopsIndependentlyUntilBothRecordedImpacts()
         {
             Create();

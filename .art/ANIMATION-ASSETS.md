@@ -581,3 +581,7 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 ## 폭탄 정령의 투하 폭탄
 
 `BombSpriteBombDescent01–06`은 같은 검은 껍질에서 도화선 불꽃이 눌렸다 펴지고 작아지는 하강 자세다. 231×256 RGBA, 400 PPU, 하단 중앙 피벗을 쓴다. `BombSpriteBomb`은 생성 후 0.11초씩 반복한다. 지상에 닿으면 서버가 별도 `BombSpriteExplosion`을 생성한다.
+
+## 바위 강타의 비행
+
+`BoulderStrikeFlight01–06`은 바위 앞끝과 중심을 맞추고 둥근 바람 자국 셋의 두께가 뒤에서 앞으로 이어지는 자세다. 256×146 RGBA, 100 PPU, 하단 중앙 피벗을 쓴다. `BoulderStrike` 전투 프리팹에서 0.11초씩 반복한다. 기존 바위 강타 그림은 기본 스프라이트로 쓴다.
