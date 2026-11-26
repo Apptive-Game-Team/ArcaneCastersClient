@@ -4,10 +4,8 @@ using UnityEngine;
 namespace GameScene.Object.Projectile
 {
     /// <summary>
-    /// A decal laid flat on the ground at the projection's end point that grows and pulses until
-    /// the projection's duration runs out. The server sends it before a delayed area hit, with the
-    /// same point as start and end, so the decal marks where the hit will land for exactly as long
-    /// as the player has to step out.
+    /// 서버가 보내는 projection의 도착점에 경고를 표시한다. 스프라이트, 크기, 투명도는
+    /// 실제 projection의 지속 시간에 맞춰 진행한다.
     ///
     /// The root lies flat like RiverWater (rotated 90 degrees about X) instead of facing the camera,
     /// so a top-down circle sprite reads as a circle on the floor at any camera tilt.
@@ -18,6 +16,7 @@ namespace GameScene.Object.Projectile
         private static readonly Quaternion FlatOnGround = Quaternion.Euler(90f, 0f, 0f);
 
         [SerializeField] private SpriteRenderer decalRenderer;
+        [SerializeField] private Sprite[] warningFrames;
         [SerializeField] private float startScale = 0.55f;
         [SerializeField] private float endScale = 1f;
         [SerializeField] private int pulseCount = 3;
@@ -54,6 +53,16 @@ namespace GameScene.Object.Projectile
 
         private void ApplyProgress(float progress)
         {
+            if (warningFrames != null && warningFrames.Length > 0)
+            {
+                int index = Mathf.Min((int)(progress * warningFrames.Length), warningFrames.Length - 1);
+                Sprite frame = warningFrames[index];
+                if (decalRenderer.sprite != frame)
+                {
+                    decalRenderer.sprite = frame;
+                }
+            }
+
             float easedGrowth = 1f - (1f - progress) * (1f - progress);
             decalRenderer.transform.localScale = decalScale * Mathf.Lerp(startScale, endScale, easedGrowth);
 

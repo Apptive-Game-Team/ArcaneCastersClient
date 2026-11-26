@@ -46,6 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   decalRenderer: {fileID: 7100000000000004013}
+  warningFrames:
+  - {fileID: 21300000, guid: 6700310aad554b8a852b2661b1bd35ab, type: 3}
+  - {fileID: 21300000, guid: b3ebabfabfeb45ba98d8db9c10d9495e, type: 3}
+  - {fileID: 21300000, guid: b1df0837b290424b8f643001299b3f63, type: 3}
+  - {fileID: 21300000, guid: fe6baa3b5c3c4f619179e1ea78fdf070, type: 3}
   startScale: 0.55
   endScale: 1
   pulseCount: 3
@@ -124,7 +129,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 1b0ddb5a7f9945e5a962cee3242bfe5c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6700310aad554b8a852b2661b1bd35ab, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
