@@ -4067,6 +4067,141 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator ThunderSpiritReleasesAtTheRecordedGroundHits()
+        {
+            Create();
+            const string magic = "thunder_spirit";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var ground = scenarios.Single(s => (string)s["id"] == "ground");
+            Scenario(scenarios.IndexOf(ground));
+            var (start, duration, targetId) = FirstProjectile(ground, "ElectricShot");
+            Assert.That(start, Is.EqualTo(1.50f).Within(.001f));
+            Assert.That(duration, Is.EqualTo(.5f).Within(.001f));
+            Assert.That(targetId, Is.EqualTo(2));
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(start - .028f);
+                Component spirit = Target(3);
+                Component enemy = Target(targetId);
+                SpriteRenderer body = ServedObjectRenderer(spirit);
+                Vector3 position = body.transform.localPosition;
+                Quaternion rotation = body.transform.localRotation;
+                Vector3 scale = body.transform.localScale;
+                void AssertSteadyBody()
+                {
+                    Assert.That(body.transform.localPosition, Is.EqualTo(position));
+                    Assert.That(Quaternion.Angle(body.transform.localRotation, rotation), Is.LessThan(.1f));
+                    Assert.That(body.transform.localScale, Is.EqualTo(scale));
+                }
+
+                Assert.That(body.sprite.name, Is.EqualTo("ThunderSpiritHover06"));
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(10000));
+                Transform bolt;
+                do
+                {
+                    yield return null;
+                    bolt = FindProjectile("ElectricShot");
+                } while (bolt == null && (float)Field("elapsed") < start + .046f);
+                Assert.That(bolt, Is.Not.Null);
+                Vector3 origin = spirit.transform.position;
+                float oneFrameOfFlight = Vector3.Distance(origin, enemy.transform.position) / (duration * 120);
+                Assert.That(Vector3.Distance(bolt.position, origin), Is.LessThan(oneFrameOfFlight + .002f));
+                Assert.That(body.sprite.name, Is.EqualTo("ThunderSpiritRelease01"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9900));
+                AssertSteadyBody();
+
+                for (int pose = 2; pose <= 4; pose++)
+                {
+                    yield return PlayUntil(start + .025f + .08f * (pose - 1));
+                    Assert.That(body.sprite.name, Is.EqualTo($"ThunderSpiritRelease{pose:00}"));
+                    AssertSteadyBody();
+                }
+                yield return PlayUntil(start + .368f);
+                Assert.That(body.sprite.name, Is.EqualTo("ThunderSpiritHover01"));
+                Assert.That(FindProjectile("ElectricShot"), Is.SameAs(bolt));
+                yield return PlayUntil(start + duration + .04f);
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+                yield return PlayUntil(2.323f);
+                Assert.That(FindProjectile("ElectricShot"), Is.Not.Null);
+                Assert.That(body.sprite.name, Is.EqualTo("ThunderSpiritRelease01"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9800));
+                AssertSteadyBody();
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ThunderSpiritFallsAndHandsOffItsLastPoseAndElectricEnergy()
+        {
+            Create();
+            const string magic = "thunder_spirit";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var death = scenarios.Single(s => (string)s["id"] == "death_energy");
+            Scenario(scenarios.IndexOf(death));
+            var (start, duration, receiverId) = FirstProjectile(death, "ElectricAbsorb");
+            Assert.That(start, Is.EqualTo(2.45f).Within(.001f));
+            Assert.That(duration, Is.EqualTo(.35f).Within(.001f));
+            Assert.That(receiverId, Is.EqualTo(3));
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(1.173f);
+                Component world = (Component)Field("world");
+                Component spirit = Target(2);
+                Component receiver = Target(receiverId);
+                SpriteRenderer body = ServedObjectRenderer(spirit);
+                string fadeName = spirit.name + "DeathFade";
+                MethodInfo hasEffect = receiver.GetType().GetMethod("HasEffect");
+                float SpiritHeight() => world.transform.InverseTransformPoint(spirit.transform.position).y;
+
+                Assert.That(SpiritHeight(), Is.EqualTo(3f).Within(.02f));
+                Assert.That(hasEffect.Invoke(receiver, new object[] { "Overcharge" }), Is.False);
+                yield return PlayUntil(1.823f);
+                Assert.That(SpiritHeight(), Is.InRange(.8f, 2.5f));
+                Assert.That(body.sprite.name, Does.StartWith("ThunderSpiritHover"));
+                yield return PlayUntil(start - .016f);
+                Assert.That(SpiritHeight(), Is.InRange(-.01f, .07f));
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+
+                yield return PlayUntil(start + .018f);
+                var despawning = spirit.GetType().GetProperty("IsDespawning", Private);
+                Assert.That((bool)despawning.GetValue(spirit), Is.True);
+                Sprite lastPose = body.sprite;
+                Assert.That(lastPose.name, Does.StartWith("ThunderSpiritHover"));
+                Transform bolt = FindProjectile("ElectricShot");
+                Assert.That(bolt, Is.Not.Null);
+                Vector3 origin = world.transform.TransformPoint(new Vector3(5f, 0f, 5f));
+                Assert.That(Vector3.Distance(bolt.position, origin), Is.LessThan(.06f));
+                Assert.That(hasEffect.Invoke(receiver, new object[] { "Overcharge" }), Is.True);
+
+                yield return PlayUntil(start + .12f);
+                Assert.That(Target(2), Is.Null);
+                Assert.That(Target(receiverId), Is.SameAs(receiver));
+                var fade = world.GetComponentsInChildren<SpriteRenderer>().Single(sprite => sprite.name == fadeName);
+                Assert.That(fade.sprite, Is.SameAs(lastPose));
+                Assert.That(FindProjectile("ElectricShot"), Is.SameAs(bolt));
+                yield return PlayUntil(start + duration + .065f);
+                Assert.That(FindProjectile("ElectricShot"), Is.Null);
+                Assert.That(Target(receiverId), Is.SameAs(receiver));
+                Assert.That(hasEffect.Invoke(receiver, new object[] { "Overcharge" }), Is.True);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+
+        [UnityTest]
         public IEnumerator BubbleSpiritReleasesBeforeTheThreeAirTargetsTakeSplashDamage()
         {
             Create();
@@ -4161,6 +4296,10 @@ namespace WordOnline.Tests
         [UnityTest]
         public IEnumerator BubbleSpiritHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
             CheckAerialHoverLoop("BubbleSpirit", new Vector2(250f, 256f), 200f);
+
+        [UnityTest]
+        public IEnumerator ThunderSpiritHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
+            CheckAerialHoverLoop("ThunderSpirit", new Vector2(256f, 226f), 200f);
 
         private IEnumerator CheckAerialHoverLoop(string prefabName, Vector2 spriteSize, float pixelsPerUnit)
         {
