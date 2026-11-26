@@ -112,8 +112,56 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: d22fb05cf21c43d1a61674fce38b6786, type: 3}
+    - target: {fileID: 1060800969627125256, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      propertyPath: _keepUprightOnSpawn
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6880000000000000004}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+--- !u!1 &6880000000000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 1535532434005402646}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6880000000000000002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1060800969627125256, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 1535532434005402646}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &6880000000000000003 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 1535532434005402646}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6880000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6880000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 6880000000000000002}
+  targetRenderer: {fileID: 6880000000000000003}
+  walkFrames: []
+  attackFrames: []
+  projectileAttackFrames: []
+  spawnFrames:
+  - {fileID: 21300000, guid: 78357640de3355ea87ae3c96ff478978, type: 3}
+  - {fileID: 21300000, guid: 972d17e11f0c557aa0fa820c2baff90d, type: 3}
+  - {fileID: 21300000, guid: 0043f1b746aa5be6bd414fd1328d0082, type: 3}
+  - {fileID: 21300000, guid: 1ec3e38a6d475cb4a9800cd5ae9d91cd, type: 3}
+  - {fileID: 21300000, guid: 5326e7233e745d99b8b4314e408aa21e, type: 3}
+  - {fileID: 21300000, guid: d22fb05cf21c43d1a61674fce38b6786, type: 3}
+  spawnDuration: 0.66
+  attackOnHit: 0
