@@ -750,6 +750,144 @@ namespace WordOnline.Tests
             yield return null;
         }
 
+        [UnityTest]
+        public IEnumerator VineWitchCastsOnlyForHerOwnIdAndStaysGroundedInBothDirections()
+        {
+            var root = new GameObject("VineWitch replay test");
+            int oldRenderRate = Time.captureFramerate;
+            Time.captureFramerate = RenderRate;
+            try
+            {
+                var world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                var find = world.GetType().GetMethod("FindById");
+                var apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+                Type objectsType = Runtime("GameScene.Dto.ObjectsInfo");
+                Type eventsType = typeof(List<>).MakeGenericType(Runtime("GameScene.Dto.Event.GameEvent"));
+                void Apply(string objects, string events = "[]") => apply.Invoke(null, new[]
+                {
+                    Decode(objectsType, objects),
+                    Decode(eventsType, events),
+                    world
+                });
+
+                Apply(@"{""create"":[
+                    {""id"":61,""type"":""PveVineWitch"",""master"":""LeftPlayer"",""position"":{""x"":3,""z"":5}},
+                    {""id"":62,""type"":""PveVineWitch"",""master"":""RightPlayer"",""position"":{""x"":9,""z"":5}},
+                    {""id"":63,""type"":""LeafSlime"",""master"":""LeftPlayer"",""position"":{""x"":6,""z"":5}}]}");
+                var left = (Component)find.Invoke(world, new object[] { 61 });
+                var right = (Component)find.Invoke(world, new object[] { 62 });
+                var leftBody = Body(left);
+                var rightBody = Body(right);
+                var idle = leftBody.sprite;
+                var leftPosition = leftBody.transform.position;
+                var rightPosition = rightBody.transform.position;
+                Assert.That(left.GetComponent("HoppingMotionController"), Is.Null);
+                Assert.That(right.GetComponent("HoppingMotionController"), Is.Null);
+                var other = (Component)find.Invoke(world, new object[] { 63 });
+                var otherSprite = Body(other).sprite;
+                Apply("{}", @"[{""type"":""vineWitchCast"",""actorId"":999,""targetId"":63},
+                    {""type"":""vineWitchFan"",""actorId"":63,""targetId"":62}]");
+                Assert.That(Body(other).sprite, Is.SameAs(otherSprite));
+                Assert.That(leftBody.sprite, Is.SameAs(idle));
+                Assert.That(rightBody.sprite, Is.SameAs(idle));
+
+                Apply("{}", @"[{""type"":""vineWitchCast"",""actorId"":61,""targetId"":63},
+                    {""type"":""vineWitchFan"",""actorId"":62,""targetId"":63}]");
+                Assert.That(leftBody.sprite.name, Is.EqualTo("pve_vine_witch_cast_01"));
+                Assert.That(rightBody.sprite, Is.SameAs(leftBody.sprite));
+                Assert.That(leftBody.flipX, Is.False);
+                Assert.That(rightBody.flipX, Is.True);
+
+                var leftFrames = new List<Sprite> { leftBody.sprite };
+                var rightFrames = new List<Sprite> { rightBody.sprite };
+                float start = Time.time;
+                float leftRestored = 0f, rightRestored = 0f;
+                while (Time.time - start < .56f)
+                {
+                    yield return null;
+                    Assert.That(Vector3.Distance(leftBody.transform.position, leftPosition), Is.LessThan(.001f));
+                    Assert.That(Vector3.Distance(rightBody.transform.position, rightPosition), Is.LessThan(.001f));
+                    if (leftBody.sprite != leftFrames.Last()) leftFrames.Add(leftBody.sprite);
+                    if (rightBody.sprite != rightFrames.Last()) rightFrames.Add(rightBody.sprite);
+                    if (leftRestored == 0f && leftBody.sprite == idle) leftRestored = Time.time - start;
+                    if (rightRestored == 0f && rightBody.sprite == idle) rightRestored = Time.time - start;
+                }
+                var expected = Enumerable.Range(1, 5).Select(i => $"pve_vine_witch_cast_{i:00}")
+                    .Append(idle.name).ToArray();
+                CollectionAssert.AreEqual(expected, leftFrames.Select(sprite => sprite.name).ToArray());
+                CollectionAssert.AreEqual(expected, rightFrames.Select(sprite => sprite.name).ToArray());
+                Assert.That(leftRestored, Is.EqualTo(.50f).Within(2f / RenderRate));
+                Assert.That(rightRestored, Is.EqualTo(.40f).Within(2f / RenderRate));
+
+                Apply("{}", @"[{""type"":""vineWitchFan"",""actorId"":62,""targetId"":63}]");
+                Assert.That(rightBody.sprite.name, Is.EqualTo("pve_vine_witch_cast_01"));
+                Apply(@"{""update"":[{""id"":62,""status"":""Destroyed"",""master"":""RightPlayer"",
+                    ""position"":{""x"":9,""z"":5}}]}",
+                    @"[{""type"":""vineWitchCast"",""actorId"":62,""targetId"":63}]");
+                yield return new WaitForSeconds(.56f);
+                Assert.That(find.Invoke(world, new object[] { 62 }), Is.Null);
+                Assert.That(leftBody.sprite, Is.SameAs(idle));
+            }
+            finally
+            {
+                Time.captureFramerate = oldRenderRate;
+                Object.Destroy(root);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator VineWitchReceivesBothCastsAfterSnapshotObjectsAppear()
+        {
+            var root = new GameObject("VineWitch sync test");
+            var container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            var config = Runtime("GameScene.GameConfig");
+            int oldRate = (int)config.GetProperty("TickRate").GetValue(null);
+            try
+            {
+                root.AddComponent(Runtime("GameScene.Object.ObjectSpawner"));
+                root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+                root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+                root.AddComponent(Runtime("GameScene.GameSceneUIController"));
+                var timer = root.AddComponent(Runtime("GameScene.UI.TimerController"));
+                var timerText = new GameObject("Timer", typeof(RectTransform));
+                timerText.transform.SetParent(root.transform, false);
+                timer.GetType().GetField("timerText", Private)
+                    .SetValue(timer, timerText.AddComponent(Runtime("TMPro.TextMeshProUGUI")));
+                var handler = Activator.CreateInstance(Runtime("GameScene.Handler.SyncFrameHandler"));
+                var apply = handler.GetType().GetMethod("Handler");
+                var find = container.GetType().GetMethod("FindById");
+                Type syncType = Runtime("GameScene.Dto.SyncFrameInfo");
+                const string objects = @"{""id"":61,""prefab"":""PveVineWitch"",""master"":""LeftPlayer"",""x"":3,""z"":5},
+                    {""id"":62,""prefab"":""PveVineWitch"",""master"":""RightPlayer"",""x"":9,""z"":5},
+                    {""id"":63,""prefab"":""LeafSlime"",""master"":""LeftPlayer"",""x"":6,""z"":5}";
+                void Sync(string events) => apply.Invoke(handler, new[] {
+                    Decode(syncType,
+                        "{\"tickRate\":20,\"snapshotResponseDto\":{\"myCards\":[],\"objects\":[" +
+                        objects + "]},\"events\":" + events + "}")
+                });
+
+                Sync(@"[{""type"":""vineWitchCast"",""actorId"":61,""targetId"":63}]");
+                var left = Body((Component)find.Invoke(container, new object[] { 61 }));
+                var right = Body((Component)find.Invoke(container, new object[] { 62 }));
+                var idle = right.sprite;
+                Assert.That(left.sprite.name, Is.EqualTo("pve_vine_witch_cast_01"));
+                yield return new WaitForSeconds(.54f);
+                Assert.That(left.sprite, Is.SameAs(idle));
+
+                Sync(@"[{""type"":""vineWitchFan"",""actorId"":62,""targetId"":63}]");
+                Assert.That(right.sprite.name, Is.EqualTo("pve_vine_witch_cast_01"));
+                Assert.That(left.sprite, Is.SameAs(idle));
+                yield return new WaitForSeconds(.44f);
+                Assert.That(right.sprite, Is.SameAs(idle));
+            }
+            finally
+            {
+                config.GetMethod("SetTickRate").Invoke(null, new object[] { oldRate });
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                Object.Destroy(root);
+            }
+        }
+
         private static SpriteRenderer Body(Component owner) =>
             (SpriteRenderer)owner.GetType().GetField("_spriteRenderer", Private).GetValue(owner);
 

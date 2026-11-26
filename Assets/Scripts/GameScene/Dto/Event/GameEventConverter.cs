@@ -10,7 +10,9 @@ namespace GameScene.Dto.Event
         {
             { "hit", typeof(HitEvent) },
             { "shock", typeof(ShockEvent) },
-            { "summonAttack", typeof(SummonAttackEvent) }
+            { "summonAttack", typeof(SummonAttackEvent) },
+            { VineWitchCastEvent.CastType, typeof(VineWitchCastEvent) },
+            { VineWitchCastEvent.FanType, typeof(VineWitchCastEvent) }
         };
 
         public GameEventConverter() : base("type", Subtypes)

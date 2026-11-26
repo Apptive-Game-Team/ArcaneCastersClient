@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GameScene.Dto;
 using GameScene.Dto.Event;
@@ -5,6 +6,7 @@ using GameScene.Object;
 using GameScene.ServedObjectComponent;
 using GameScene.ServedObjectComponent.Effect;
 using GameScene.ServedObjectComponent.Motion;
+using GameScene.ServedObjectComponent.OnAttack;
 using GameScene.ServedObjectComponent.Sound;
 using Global;
 using UnityEngine;
@@ -46,7 +48,7 @@ namespace GameScene.Handler
             }
         }
 
-        internal void PlaySummonAttacks(List<GameEvent> events, PresentationWorld world = null)
+        internal void PlayAuthoredAttacks(List<GameEvent> events, PresentationWorld world = null)
         {
             if (events == null)
             {
@@ -55,19 +57,46 @@ namespace GameScene.Handler
 
             foreach (GameEvent gameEvent in events)
             {
-                if (!(gameEvent is SummonAttackEvent summon))
+                switch (gameEvent)
                 {
-                    continue;
-                }
-
-                ServedObject actor = PresentationWorld.Find(summon.actorId, world);
-                ServedObject fist = PresentationWorld.Find(summon.targetId, world);
-                if (actor != null && !actor.IsDespawning && actor.PrefabType == "MagmaSpirit" &&
-                    fist != null && fist.PrefabType == "MagmaFist" && actor.GetMaster() == fist.GetMaster())
-                {
-                    actor.PlayAttackPresentation();
+                    case SummonAttackEvent summon:
+                        PlaySummonAttack(summon, world);
+                        break;
+                    case VineWitchCastEvent cast:
+                        PlayVineWitchCast(cast, world);
+                        break;
                 }
             }
+        }
+
+        private static void PlaySummonAttack(SummonAttackEvent summon, PresentationWorld world)
+        {
+            ServedObject actor = PresentationWorld.Find(summon.actorId, world);
+            ServedObject fist = PresentationWorld.Find(summon.targetId, world);
+            if (actor != null && !actor.IsDespawning && actor.PrefabType == "MagmaSpirit" &&
+                fist != null && fist.PrefabType == "MagmaFist" && actor.GetMaster() == fist.GetMaster())
+            {
+                actor.PlayAttackPresentation();
+            }
+        }
+
+        private static void PlayVineWitchCast(VineWitchCastEvent cast, PresentationWorld world)
+        {
+            ServedObject actor = PresentationWorld.Find(cast.actorId, world);
+            if (actor == null || actor.IsDespawning || actor.PrefabType != "PveVineWitch" ||
+                !actor.TryGetComponent(out AttackFrameSequenceController pose) || !pose.isActiveAndEnabled)
+            {
+                return;
+            }
+
+            ServedObject target = PresentationWorld.Find(cast.targetId, world);
+            if (target != null)
+            {
+                actor.FaceTowards(target.transform.position);
+            }
+
+            bool isFan = string.Equals(cast.type, VineWitchCastEvent.FanType, StringComparison.OrdinalIgnoreCase);
+            pose.PlayForDuration(isFan ? 0.4f : 0.5f);
         }
 
         private static void HandleHit(HitEvent hit, PresentationWorld world)

@@ -43,6 +43,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PveVineWitch
       objectReference: {fileID: 0}
+    - target: {fileID: 7140850829614563192, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: _keepUprightOnSpawn
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1123237681839364873, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.2649999
@@ -148,16 +152,51 @@ PrefabInstance:
       value: 1.55
       objectReference: {fileID: 0}
     m_RemovedComponents:
+    - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     - {fileID: 1018091211532011722, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3293512053745346964, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4594077023697873609}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7580000000000000003}
   m_SourcePrefab: {fileID: 100100000, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
 --- !u!4 &4032726107970449963 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3293512053745346964, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
   m_PrefabInstance: {fileID: 1892629790145436607}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7580000000000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 1892629790145436607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7580000000000000002 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3630220617462090093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 1892629790145436607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7580000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7580000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ece687ee31c148e8b4fcddffeb3f10a6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 7580000000000000002}
+  frames:
+  - {fileID: 21300000, guid: 39767a6af98b5e8c9a63aa747972d54d, type: 3}
+  - {fileID: 21300000, guid: 0dedeb2a185f57f691130e55198d3f3d, type: 3}
+  - {fileID: 21300000, guid: 54b500fac98e521cb4a744d1c09c2d49, type: 3}
+  - {fileID: 21300000, guid: 925e506deaec560790bd379a1c47d397, type: 3}
+  - {fileID: 21300000, guid: 6607ccef528a599eb9bfe79ef414cb84, type: 3}
+  frameInterval: 0.1
