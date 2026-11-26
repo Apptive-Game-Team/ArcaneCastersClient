@@ -87,9 +87,32 @@ namespace WordOnline.Tests
             finally { Object.DestroyImmediate(instance); }
         }
 
-        [TestCase("ArcaneInfantry", "ArcaneInfantryAttacking")]
-        [TestCase("ArcaneInfantry", "ArcaneInfantryWalkLeft")]
-        [TestCase("ArcaneInfantry", "ArcaneInfantryWalkRight")]
+        [Test]
+        public void InfantryUsesEightWalkAndFourAttackSpritesWithItsOriginalPivot()
+        {
+            GameObject prefab = Resources.Load<GameObject>("Prefabs/ArcaneInfantry");
+            MonoBehaviour presenter = prefab.GetComponents<MonoBehaviour>()
+                .Single(component => component.GetType().Name == "GroundedUnitPoseController");
+            var renderer = (SpriteRenderer)Get(presenter, "targetRenderer");
+            Sprite idle = Resources.Load<Sprite>("Game/sprites/ArcaneInfantry");
+            Assert.AreSame(idle, renderer.sprite);
+            var walk = (Sprite[])Get(presenter, "walkFrames");
+            var attack = (Sprite[])Get(presenter, "attackFrames");
+            Assert.That(walk, Has.Length.EqualTo(8));
+            Assert.That(attack, Has.Length.EqualTo(4));
+            Assert.AreEqual("ArcaneInfantryWalkLeft", walk[0].name);
+            Assert.AreEqual("ArcaneInfantryWalkRight", walk[4].name);
+            Assert.AreEqual("ArcaneInfantryAttacking", attack[0].name);
+            foreach (Sprite frame in walk.Concat(attack))
+            {
+                Assert.NotNull(frame);
+                Assert.AreEqual(idle.rect.size, frame.rect.size);
+                Assert.AreEqual(idle.pixelsPerUnit, frame.pixelsPerUnit);
+                Assert.AreEqual(idle.pivot, frame.pivot);
+            }
+            Assert.AreEqual(0, idle.pivot.y);
+        }
+
         [TestCase("CraterCarrier", "CraterCarrierDeployed")]
         [TestCase("CraterCarrier", "CraterCarrierRecovering")]
         public void PoseImportsKeepTheSameCanvasScaleAndFootPivot(string idle, string other)

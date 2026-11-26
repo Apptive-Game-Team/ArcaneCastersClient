@@ -138,6 +138,11 @@ namespace WordOnline.Tests
                 secondsPerAttackPose: .06f, walkSize: new Vector2(128, 102));
 
         [UnityTest]
+        public IEnumerator ArcaneInfantryWalksAndRecoversFromBladeStrikeAtBothTickRates() =>
+            CheckBothTickRates("ArcaneInfantry", 8, "ArcaneInfantryAttacking", walkSpeed: 1.4f,
+                secondsPerAttackPose: .06f, walkSize: new Vector2(128, 81));
+
+        [UnityTest]
         public IEnumerator ElectricSpearmanKeepsOppositeHitFacingThroughRecovery()
         {
             var root = new GameObject("ElectricSpearman opposite hit test");
@@ -791,7 +796,7 @@ namespace WordOnline.Tests
 
                 CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
                     $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
-                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit" or "FireSpirit" or "RockMage" or "ElectricSpearman")
+                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit" or "FireSpirit" or "RockMage" or "ElectricSpearman" or "ArcaneInfantry")
                 {
                     var cycle = walk.Append(walk[0]).ToArray();
                     bool completedCycle = Enumerable.Range(0, Mathf.Max(0, seenWalk.Count - walk.Length))

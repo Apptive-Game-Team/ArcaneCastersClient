@@ -28,6 +28,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.11
       objectReference: {fileID: 0}
+    - target: {fileID: 7140850829614563192, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
@@ -57,14 +61,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 7425863993475081389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3acb9a4e728b4762aa1ad4016e69b56a, type: 3}
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   servedObject: {fileID: 0}
   targetRenderer: {fileID: 6729670833582672236}
-  idleSprite: {fileID: 21300000, guid: 6ef5b05d68544ec0a99e0789f52fed9f, type: 3}
-  walkLeftSprite: {fileID: 21300000, guid: 6491fe14039e42659dc5ea2ea7017dc4, type: 3}
-  walkRightSprite: {fileID: 21300000, guid: c96734ea096b41f0b9fd57f1b94467d8, type: 3}
-  attackSprite: {fileID: 21300000, guid: ea46a1d301194c4580c316c3dd547091, type: 3}
-  stepDuration: 0.16
-  attackDuration: 0.16
+  walkFrames:
+  - {fileID: 21300000, guid: 6491fe14039e42659dc5ea2ea7017dc4, type: 3}
+  - {fileID: 21300000, guid: ae50fe37bec0570aa984580d79b1f52e, type: 3}
+  - {fileID: 21300000, guid: 84d0e41145d85e9194e291b17a32adfb, type: 3}
+  - {fileID: 21300000, guid: 5f76bc6a6fea5bccb4edbda963f5f4b0, type: 3}
+  - {fileID: 21300000, guid: c96734ea096b41f0b9fd57f1b94467d8, type: 3}
+  - {fileID: 21300000, guid: 147d047b1fe957b5860cf835e074b6f2, type: 3}
+  - {fileID: 21300000, guid: d37e7c62e54152799ad44a7bab599442, type: 3}
+  - {fileID: 21300000, guid: 6bc881ca39bc5aeb8b90f968a04a0a03, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: ea46a1d301194c4580c316c3dd547091, type: 3}
+  - {fileID: 21300000, guid: 7d502ce967b7562fb207895a0a188eef, type: 3}
+  - {fileID: 21300000, guid: 491ddf0f73805ddeb15178f22a5e4989, type: 3}
+  - {fileID: 21300000, guid: f9be4a59f7c45366a2b261dcc58efed6, type: 3}
+  walkCycleDistance: 1.12
+  attackDuration: 0.24
+  attackOnHit: 0
+  lockFacingOnStatusAttack: 1
+  maximumGroundSpeed: 1.4
+  walkingHeightTolerance: 0.08
