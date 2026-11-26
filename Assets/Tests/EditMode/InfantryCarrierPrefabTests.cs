@@ -83,6 +83,32 @@ namespace WordOnline.Tests
         }
 
         [Test]
+        public void BeanLoopsOnItsServedObjectRenderer()
+        {
+            var bean = Resources.Load<GameObject>("Prefabs/Bean");
+            var components = bean.GetComponents<MonoBehaviour>();
+            var animation = components.Single(component => component.GetType().Name == "SpriteFrameAnimator");
+            var owner = components.Single(component => component.GetType().Name == "ServedObject");
+            var renderer = (SpriteRenderer)Get(animation, "spriteRenderer");
+            Assert.AreSame(Get(owner, "_spriteRenderer"), renderer);
+            Assert.That((float)Get(animation, "frameInterval"), Is.EqualTo(.10f).Within(.001f));
+            Assert.IsTrue((bool)Get(animation, "loop"));
+            Assert.That(components.Any(component => component.GetType().Name == "OnDestroySpawner"));
+
+            var original = Resources.Load<Sprite>("Game/sprites/Bean");
+            var frames = (Sprite[])Get(animation, "frames");
+            Assert.That(frames, Has.Length.EqualTo(6));
+            Assert.AreSame(frames[0], renderer.sprite);
+            for (int i = 0; i < frames.Length; i++)
+            {
+                Assert.That(frames[i].name, Is.EqualTo($"BeanFlight{i + 1:00}"));
+                Assert.That(frames[i].rect.size, Is.EqualTo(original.rect.size));
+                Assert.That(frames[i].pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+                Assert.That(frames[i].pivot, Is.EqualTo(original.pivot));
+            }
+        }
+
+        [Test]
         public void NetworkStatusesDriveBoundCarrierIncludingReconnectAndDamageRecovery()
         {
             GameObject source = Resources.Load<GameObject>("Prefabs/CraterCarrier");
