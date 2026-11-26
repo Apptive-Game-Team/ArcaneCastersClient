@@ -9,6 +9,8 @@ namespace WordOnline.Tests
     {
         [TestCase("Vine", "VineToss", "VineGrowth", .05f)]
         [TestCase("GiantVine", "GiantVine", "GiantVineGrowth", .08f)]
+        [TestCase("VineColony", "VineColony", "VineColonyGrowth", .09f)]
+        [TestCase("PveVineColony", "VineColony", "VineColonyGrowth", .09f)]
         public void VineGrowsOnceOnItsExistingBodyAndCollider(
             string prefabName, string originalSpriteName, string growthPrefix, float interval)
         {
@@ -40,8 +42,11 @@ namespace WordOnline.Tests
 
             var collider = renderer.GetComponent<BoxCollider2D>();
             var inherited = Resources.Load<GameObject>("Prefabs/Abstract/AbstractBuild").GetComponentInChildren<BoxCollider2D>();
-            Assert.AreEqual(inherited.offset, collider.offset);
-            Assert.AreEqual(inherited.size, collider.size);
+            bool adventure = prefabName == "PveVineColony";
+            var expectedOffset = adventure ? new Vector2(-.008792281f, .83823025f) : inherited.offset;
+            Assert.AreEqual(expectedOffset, collider.offset);
+            var expectedSize = adventure ? new Vector2(1.9865005f, 1.804919f) : inherited.size;
+            Assert.AreEqual(expectedSize, collider.size);
             Assert.AreEqual(Vector3.one, renderer.transform.localScale);
         }
     }
