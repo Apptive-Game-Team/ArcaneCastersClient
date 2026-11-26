@@ -80,8 +80,45 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 1.44
       objectReference: {fileID: 0}
+    - target: {fileID: 6170484188252552760, guid: 028e07145d38fe040b3dfbc548dae77a, type: 3}
+      propertyPath: flightFrames
+      value:
+      objectReference: {fileID: 7160000000000000003}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 468314681180972983, guid: 028e07145d38fe040b3dfbc548dae77a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7160000000000000003}
   m_SourcePrefab: {fileID: 100100000, guid: 028e07145d38fe040b3dfbc548dae77a, type: 3}
+--- !u!1 &7160000000000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 468314681180972983, guid: 028e07145d38fe040b3dfbc548dae77a, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000006001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7160000000000000002 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5982256350504164619, guid: 028e07145d38fe040b3dfbc548dae77a, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000006001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7160000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7160000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 7160000000000000002}
+  frames:
+  - {fileID: 21300000, guid: 36cbf5ac9542440b88041d46a1417422, type: 3}
+  - {fileID: 21300000, guid: 3b2e459484a343ed8fafd9e8b96e23d0, type: 3}
+  - {fileID: 21300000, guid: 3f70e5c696d54d02b34fd304f7ecefb6, type: 3}
+  - {fileID: 21300000, guid: cccbcb1321924906b9c6d51514584a2f, type: 3}
+  frameInterval: 0
+  loop: 0
