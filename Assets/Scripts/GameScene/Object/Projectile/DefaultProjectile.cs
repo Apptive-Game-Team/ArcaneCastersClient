@@ -38,7 +38,7 @@ namespace GameScene.Object.Projectile
 
         private static Vector3 VisualStart(ProjectileDto projectile, Vector3 destination, PresentationWorld world)
         {
-            var launcher = ProjectileSpawner.FindTowerbackLauncher(projectile, world);
+            var launcher = ProjectileSpawner.FindReferencedLauncher(projectile, world);
             if (launcher != null && launcher.TryLaunchProjectile(destination, out Vector3 muzzle))
             {
                 return muzzle;

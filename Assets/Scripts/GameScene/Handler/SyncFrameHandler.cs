@@ -84,11 +84,12 @@ namespace GameScene.Handler
                 WDebug.Log("[SyncFrameHandler] 카드 추가 중 오류 발생");
             }
  
-            var deferred = ProjectileSpawner.SpawnBeforeObjectUpdates(syncFrameInfo.projectileDtos);
+            var snapshotObjects = syncFrameInfo.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>();
+            var deferred = ProjectileSpawner.SpawnBeforeSnapshotUpdates(syncFrameInfo.projectileDtos, snapshotObjects);
 
             // 동기화가 사라진 오브젝트를 지우기 전에 이벤트를 먼저 처리한다.
             gameEventHandler.Handler(syncFrameInfo.events);
-            ObjectSyncer.Instance.Sync(syncFrameInfo.snapshotResponseDto.objects ?? Array.Empty<SnapshotObjectDto>(), deferred);
+            ObjectSyncer.Instance.Sync(snapshotObjects, deferred);
             
             TimerController.Instance.UpdateTimer(syncFrameInfo.remainingTime);
         }

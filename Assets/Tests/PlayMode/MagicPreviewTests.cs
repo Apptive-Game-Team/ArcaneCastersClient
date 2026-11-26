@@ -659,6 +659,107 @@ namespace WordOnline.Tests
             yield return null;
         }
 
+        [UnityTest]
+        public IEnumerator WaterSlimeLaunchesFromItsMirroredMouth()
+        {
+            Create();
+            Component world = CreateWorld();
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize")
+                .MakeGenericMethod(Runtime("GameScene.Dto.ObjectsInfo"));
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            MethodInfo find = world.GetType().GetMethod("FindById");
+            void Apply(string json) => apply.Invoke(null, new[] { decode.Invoke(null, new object[] { json }), null, world });
+            Component Actor(int id) => (Component)find.Invoke(world, new object[] { id });
+            Transform LastWaterShot() => world.transform.Find("PresentationContent").Cast<Transform>()
+                .Last(child => child.name == "WaterShot(Clone)");
+            string Shot(int actor, int target) =>
+                $"\"projectile\":[{{\"type\":\"WaterShot\",\"duration\":0.5,\"start\":{{\"targetType\":\"reference\",\"id\":{actor}}}," +
+                $"\"end\":{{\"targetType\":\"reference\",\"id\":{target}}}}}]";
+
+            Apply("{\"create\":[" +
+                "{\"id\":21,\"type\":\"WaterSlime\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":5}}," +
+                "{\"id\":22,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":5,\"y\":0,\"z\":5}}," +
+                "{\"id\":23,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":13,\"y\":0,\"z\":5}}," +
+                "{\"id\":24,\"type\":\"BubbleGenerator\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":4}}]}");
+            var body = ServedObjectRenderer(Actor(21));
+            Assert.That(body.sprite.name, Is.EqualTo("WaterSlime"));
+            const string attack = "\"update\":[{\"id\":21,\"position\":{\"x\":9.05,\"y\":0,\"z\":5},\"status\":\"Attack\"}]";
+            Apply("{" + Shot(21, 22) + "," + attack + "}");
+            AssertWaterSlimeMouth(body, LastWaterShot(), true);
+            yield return null;
+
+            Apply("{" + Shot(21, 23) + "}");
+            AssertWaterSlimeMouth(body, LastWaterShot(), false);
+            Apply("{" + Shot(24, 23) + "}");
+            Assert.That(Vector3.Distance(Actor(24).transform.position, LastWaterShot().position), Is.LessThan(.005f));
+
+            Apply("{\"projectile\":[{\"type\":\"WaterShot\",\"duration\":0.5," +
+                "\"start\":{\"targetType\":\"position\",\"x\":7,\"y\":0.3,\"z\":5}," +
+                "\"end\":{\"targetType\":\"position\",\"x\":8,\"y\":0.3,\"z\":5}}]}");
+            Vector3 positionStart = world.transform.TransformPoint(new Vector3(7f, .3f, 5f));
+            Assert.That(Vector3.Distance(positionStart, LastWaterShot().position), Is.LessThan(.005f));
+        }
+
+        [UnityTest]
+        public IEnumerator WaterSlimeSnapshotRegistersBothObjectsBeforeLaunching()
+        {
+            root = new GameObject("WaterSlime snapshot fixture");
+            Component container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            root.AddComponent(Runtime("GameScene.Object.ObjectSpawner"));
+            root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+            Component syncer = root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+            MethodInfo find = container.GetType().GetMethod("FindById");
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize");
+            Type objectsType = Runtime("GameScene.Dto.ObjectsInfo");
+            Type snapshotArray = Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType();
+            Transform shot = null;
+            try
+            {
+                object launch = decode.MakeGenericMethod(objectsType).Invoke(null, new object[] {
+                    "{\"projectile\":[{\"type\":\"WaterShot\",\"duration\":0.5," +
+                    "\"start\":{\"targetType\":\"reference\",\"id\":31},\"end\":{\"targetType\":\"reference\",\"id\":32}}]}"
+                });
+                object snapshot = decode.MakeGenericMethod(snapshotArray).Invoke(null, new object[] {
+                    "[{\"id\":31,\"prefab\":\"WaterSlime\",\"master\":\"LeftPlayer\",\"x\":9,\"y\":0,\"z\":5,\"status\":\"Attack\"}," +
+                    "{\"id\":32,\"prefab\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"x\":13,\"y\":0,\"z\":5,\"status\":\"Idle\"}]"
+                });
+                object deferred = Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnBeforeSnapshotUpdates")
+                    .Invoke(null, new[] { objectsType.GetField("projectile").GetValue(launch), snapshot });
+                Assert.That((IList)deferred, Has.Count.EqualTo(1));
+                Assert.That(find.Invoke(container, new object[] { 31 }), Is.Null);
+                Assert.That(find.Invoke(container, new object[] { 32 }), Is.Null);
+                Assert.That(GameObject.Find("WaterShot(Clone)"), Is.Null);
+
+                syncer.GetType().GetMethod("Sync").Invoke(syncer, new[] { snapshot, deferred });
+                var body = ServedObjectRenderer((Component)find.Invoke(container, new object[] { 31 }));
+                Assert.That(find.Invoke(container, new object[] { 32 }), Is.Not.Null);
+                var instance = GameObject.Find("WaterShot(Clone)");
+                Assert.That(instance, Is.Not.Null);
+                shot = instance.transform;
+                AssertWaterSlimeMouth(body, shot, false);
+                yield return null;
+                Assert.That(shot != null, Is.True);
+            }
+            finally
+            {
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                if (shot != null) UnityEngine.Object.Destroy(shot.gameObject);
+            }
+        }
+
+        private static void AssertWaterSlimeMouth(SpriteRenderer body, Transform shot, bool mirrored)
+        {
+            Assert.That(body.sprite.name, Is.EqualTo("WaterSlimeSpit01"));
+            Assert.That(body.flipX, Is.EqualTo(mirrored));
+            Assert.That(body.sprite.pivot, Is.EqualTo(new Vector2(160f, 0f)));
+            const float mouthPixelX = 169.5f;
+            const float mouthPixelY = 164.5f;
+            float localX = (mouthPixelX - body.sprite.pivot.x) / body.sprite.pixelsPerUnit;
+            float localY = (body.sprite.rect.height - mouthPixelY - body.sprite.pivot.y) / body.sprite.pixelsPerUnit;
+            Vector3 mouth = body.transform.TransformPoint(new Vector3(mirrored ? -localX : localX, localY, 0f));
+            Assert.That(Vector3.Distance(mouth, shot.position), Is.LessThan(.005f));
+        }
+
         private static int AquaArcherId(JToken scenario) =>
             (int)scenario["frames"].SelectMany(frame => frame["objects"]["create"])
                 .First(unit => (string)unit["type"] == "AquaArcher")["id"];
@@ -3488,6 +3589,131 @@ namespace WordOnline.Tests
                 Assert.That(body.sprite.name, Is.EqualTo($"{prefabName}Bump01"));
                 Assert.That(CurrentHp(enemy), Is.EqualTo(8100));
                 if (capture) SaveViewport(directory, "independent-hits", true);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator WaterSlimeSwarmCrawlsAndLaunchesOnItsOwnTicks()
+        {
+            Create();
+            const string magic = "water_slime_swarm";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var ground = scenarios.Single(s => (string)s["id"] == "ground");
+            Scenario(scenarios.IndexOf(ground));
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WaterSlimeCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            var world = (Component)Field("world");
+
+            void AssertWaterField(Component field, float ttl)
+            {
+                Assert.That(Target(6), Is.SameAs(field));
+                Assert.That(field.name, Does.StartWith("WaterField"));
+                Vector3 local = world.transform.InverseTransformPoint(field.transform.position);
+                Assert.That(Vector3.Distance(local, new Vector3(5.000978f, 0f, 5f)), Is.LessThan(.008f));
+                Assert.That(TimeToLive(field), Is.EqualTo(ttl).Within(.001f));
+            }
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.624f);
+                var body = ServedObjectRenderer(Target(4));
+                var other = ServedObjectRenderer(Target(3));
+                var third = ServedObjectRenderer(Target(5));
+                var enemy = Target(2);
+                Assert.That(body.sprite.name, Is.EqualTo("WaterSlime"));
+                Assert.That(Target(4).GetComponent("CrawlMotionController"), Is.Null);
+                Assert.That(Target(6), Is.Null);
+
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 1.223f)
+                {
+                    string pose = body.sprite.name;
+                    if (pose.StartsWith("WaterSlimeCrawl", StringComparison.Ordinal) && pose != poses.LastOrDefault())
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 8) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 8).Select(i => $"WaterSlimeCrawl{i:00}").Append("WaterSlimeCrawl01");
+                CollectionAssert.AreEqual(expected, poses.Take(9));
+                var firstField = Target(6);
+                Assert.That(firstField, Is.Not.Null);
+                AssertWaterField(firstField, 3f);
+                if (capture) SaveViewport(directory, "first-water-field", true);
+
+                yield return PlayUntil(2.223f);
+                Assert.That(body.sprite.name, Is.EqualTo("WaterSlime"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(1000));
+                yield return PlayUntil(2.274f);
+                Assert.That(body.sprite.name, Is.EqualTo("WaterSlimeSpit01"));
+                Assert.That(other.sprite.name, Is.EqualTo("WaterSlime"));
+                Assert.That(third.sprite.name, Is.EqualTo("WaterSlime"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(900));
+                AssertWaterField(firstField, 1.95f);
+                var content = world.transform.Find("PresentationContent");
+                Assert.That(content.Cast<Transform>().Count(child => child.name == "WaterShot(Clone)"), Is.EqualTo(1));
+                if (capture) SaveViewport(directory, "first-launch", true);
+
+                yield return PlayUntil(2.324f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(700));
+                AssertWaterField(firstField, 1.90f);
+                Assert.That(content.Cast<Transform>().Count(child => child.name == "WaterShot(Clone)"), Is.EqualTo(3));
+                for (int index = 1; index < 4; index++)
+                {
+                    yield return PlayUntil(2.354f + .08f * (index - 1));
+                    Assert.That(body.sprite.name, Is.EqualTo($"WaterSlimeSpit{index + 1:00}"));
+                    Assert.That(other.sprite.name, Is.EqualTo($"WaterSlimeSpit{index:00}"));
+                    Assert.That(third.sprite.name, Is.EqualTo($"WaterSlimeSpit{index:00}"));
+                    if (capture && index == 1) SaveViewport(directory, "independent-launches", true);
+                }
+
+                yield return PlayUntil(2.624f);
+                Assert.That(body.sprite.name, Is.EqualTo("WaterSlime"));
+                yield return PlayUntil(3.074f);
+                Assert.That(body.sprite.name, Is.EqualTo("WaterSlimeSpit01"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(600));
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator PveWaterSlimeNestUsesTheSameWaterSlimeShotPose()
+        {
+            Create();
+            const string magic = "pve_water_slime_nest";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "ground")));
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(11.524f);
+                var body = ServedObjectRenderer(Target(4));
+                var enemy = Target(2);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(10000));
+                Assert.That(body.sprite.name, Is.EqualTo("WaterSlime"));
+                yield return PlayUntil(11.574f);
+                Assert.That(body.sprite.name, Is.EqualTo("WaterSlimeSpit01"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9900));
+                if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                {
+                    string directory = System.IO.Path.Combine(Application.dataPath, "../Library/WaterSlimeCaptures");
+                    System.IO.Directory.CreateDirectory(directory);
+                    SaveViewport(directory, "nest-launch", true);
+                }
             }
             finally
             {

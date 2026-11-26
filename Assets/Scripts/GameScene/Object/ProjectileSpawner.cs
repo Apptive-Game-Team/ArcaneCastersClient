@@ -76,20 +76,33 @@ namespace GameScene.Object
             }
         }
 
-        internal static GroundedUnitPoseController FindTowerbackLauncher(ProjectileDto dto, PresentationWorld world)
+        internal static GroundedUnitPoseController FindReferencedLauncher(ProjectileDto dto, PresentationWorld world)
         {
-            if (dto?.type != "RockShot" || !(dto.start is ReferenceProjectileTarget reference))
+            string prefab = dto?.type switch
+            {
+                "RockShot" => "Towerback",
+                "WaterShot" => "WaterSlime",
+                _ => null
+            };
+            if (prefab == null || dto.start is not ReferenceProjectileTarget reference)
             {
                 return null;
             }
 
             ServedObject source = PresentationWorld.Find(reference.id, world);
-            return source != null && source.PrefabType == "Towerback"
+            return source != null && source.PrefabType == prefab
                 ? source.GetComponent<GroundedUnitPoseController>()
                 : null;
         }
 
-        public static List<ProjectileDto> SpawnBeforeObjectUpdates(IEnumerable<ProjectileDto> projectiles, PresentationWorld world = null)
+        public static List<ProjectileDto> SpawnBeforeObjectUpdates(IEnumerable<ProjectileDto> projectiles, PresentationWorld world = null) =>
+            SpawnBeforeUpdates(projectiles, world, null);
+
+        public static List<ProjectileDto> SpawnBeforeSnapshotUpdates(IEnumerable<ProjectileDto> projectiles,
+            SnapshotObjectDto[] snapshotObjects) => SpawnBeforeUpdates(projectiles, null, snapshotObjects);
+
+        private static List<ProjectileDto> SpawnBeforeUpdates(IEnumerable<ProjectileDto> projectiles,
+            PresentationWorld world, SnapshotObjectDto[] snapshotObjects)
         {
             if (projectiles == null)
             {
@@ -101,7 +114,8 @@ namespace GameScene.Object
             {
                 // 이번 틱의 공격과 위치를 반영한 뒤 포구와 입에서 발사한다.
                 if (projectile.type == SeaSerpentBeamType && projectile.start is PositionProjectileTarget ||
-                    FindTowerbackLauncher(projectile, world) != null)
+                    FindReferencedLauncher(projectile, world) != null ||
+                    IsSnapshotWaterSlimeShot(projectile, snapshotObjects))
                 {
                     deferred ??= new List<ProjectileDto>();
                     deferred.Add(projectile);
@@ -113,6 +127,13 @@ namespace GameScene.Object
             }
 
             return deferred;
+        }
+
+        private static bool IsSnapshotWaterSlimeShot(ProjectileDto projectile, SnapshotObjectDto[] snapshotObjects)
+        {
+            return snapshotObjects != null && projectile.type == "WaterShot" &&
+                projectile.start is ReferenceProjectileTarget reference &&
+                System.Array.Exists(snapshotObjects, source => source.id == reference.id && source.prefab == "WaterSlime");
         }
 
         internal static void SpawnDeferred(List<ProjectileDto> projectiles, PresentationWorld world = null,
