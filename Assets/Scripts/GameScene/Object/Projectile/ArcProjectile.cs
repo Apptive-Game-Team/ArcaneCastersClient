@@ -16,6 +16,8 @@ namespace GameScene.Object.Projectile
     {
         [SerializeField] private Transform actualObject;
         [SerializeField] private float arcHeight = 2.5f;
+        [SerializeField] private SpriteRenderer flightSpriteRenderer;
+        [SerializeField] private Sprite[] flightFrames;
 
         public void Init(ProjectileDto projectileDto)
         {
@@ -46,12 +48,20 @@ namespace GameScene.Object.Projectile
         private void AnimateArc(float duration)
         {
             float baseLocalY = actualObject.localPosition.y;
+            bool hasFlightFrames = flightSpriteRenderer != null && flightFrames != null && flightFrames.Length > 0;
+            if (hasFlightFrames) flightSpriteRenderer.sprite = flightFrames[0];
 
             DOTween.To(() => 0f, progress =>
                 {
                     Vector3 localPosition = actualObject.localPosition;
                     localPosition.y = baseLocalY + 4f * arcHeight * progress * (1f - progress);
                     actualObject.localPosition = localPosition;
+
+                    if (hasFlightFrames)
+                    {
+                        int frame = Mathf.Min((int)(progress * flightFrames.Length), flightFrames.Length - 1);
+                        flightSpriteRenderer.sprite = flightFrames[frame];
+                    }
                 }, 1f, duration)
                 .SetEase(Ease.Linear)
                 .SetLink(gameObject);
