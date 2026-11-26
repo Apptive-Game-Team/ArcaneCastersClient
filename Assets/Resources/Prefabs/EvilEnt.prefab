@@ -72,10 +72,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 16b61e2530e9497190fae00d4b6a2f7c, type: 3}
-    - target: {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
-      propertyPath: swapSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 084af93ea6064f80b3518e4bc0a4c788, type: 3}
+    - target: {fileID: 7140850829614563192, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4479202527324724850, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
       propertyPath: m_Size.x
       value: 2.24
@@ -96,8 +96,52 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.oldSize.y
       value: 2.56
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4217503714343169093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+    - {fileID: 5502000000000000012, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8040500000000005523}
   m_SourcePrefab: {fileID: 100100000, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+--- !u!1 &8040500000000005521 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 578785568479126700, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000000901}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8040500000000005522 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3630220617462090093, guid: 550ed1f13bef81345a06de40fca34e72, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000000901}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8040500000000005523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8040500000000005521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8040500000000005522}
+  walkFrames:
+  - {fileID: 21300000, guid: 9f9044c6208e4a82ad07505559f21160, type: 3}
+  - {fileID: 21300000, guid: 525eedbbd667485e9eefcb94e9d3ab0a, type: 3}
+  - {fileID: 21300000, guid: 746cf301c66a46ad8b87fe08129957e3, type: 3}
+  - {fileID: 21300000, guid: 818a4cc0e700432e842302f2ef037c35, type: 3}
+  - {fileID: 21300000, guid: e9781c995ae04a3e8d23e697bab41f4b, type: 3}
+  - {fileID: 21300000, guid: aa357181bba04f2f9607780fd4e732f3, type: 3}
+  - {fileID: 21300000, guid: 537871f66af046c99a3f2b23c26a9241, type: 3}
+  - {fileID: 21300000, guid: 5d4b70d2eec9468d8c449dc15bc3fe9f, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: 084af93ea6064f80b3518e4bc0a4c788, type: 3}
+  - {fileID: 21300000, guid: 1139073e8a87460a984bea0f7c8c3814, type: 3}
+  - {fileID: 21300000, guid: 357b0099d69c4b32a6a15a0c8d26f7c9, type: 3}
+  walkCycleDistance: 1.8
+  attackDuration: 0.24

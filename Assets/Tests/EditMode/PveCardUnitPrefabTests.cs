@@ -38,18 +38,21 @@ namespace WordOnline.Tests
                 "The card unit prefab must keep its waddle.");
         }
 
-        [Test]
-        public void PveEvilEntDoesNotHopButThePvpUnitDoes()
+        [TestCase("EvilEnt", 8)]
+        [TestCase("PveEvilEnt", 0)]
+        public void EvilEntVariantsHaveGroundedAttackAndOnlyTheCardWalks(string prefabName, int stepCount)
         {
-            GameObject pve = Resources.Load<GameObject>("Prefabs/PveEvilEnt");
-            GameObject pvp = Resources.Load<GameObject>("Prefabs/EvilEnt");
-
-            Assert.IsNotNull(pve);
-            Assert.IsNotNull(pvp);
-            Assert.IsFalse(HasComponentNamed(pve, "HoppingMotionController"),
-                "A stationary boss must not hop in place.");
-            Assert.IsTrue(HasComponentNamed(pvp, "HoppingMotionController"),
-                "The PVP unit prefab must keep its hop.");
+            const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
+            GameObject prefab = Resources.Load<GameObject>("Prefabs/" + prefabName);
+            Assert.IsNotNull(prefab);
+            Assert.IsFalse(HasComponentNamed(prefab, "HoppingMotionController"));
+            Assert.IsFalse(HasComponentNamed(prefab, "AttackSpriteSwapController"));
+            MonoBehaviour[] components = prefab.GetComponents<MonoBehaviour>();
+            MonoBehaviour presentation = components.Single(component => component.GetType().Name == "GroundedUnitPoseController");
+            MonoBehaviour unit = components.Single(component => component.GetType().Name == "ServedObject");
+            Assert.IsFalse((bool)unit.GetType().GetField("_swingOnAttack", fields).GetValue(unit));
+            Assert.That((Sprite[])presentation.GetType().GetField("walkFrames", fields).GetValue(presentation), Has.Length.EqualTo(stepCount));
+            Assert.That((Sprite[])presentation.GetType().GetField("attackFrames", fields).GetValue(presentation), Has.Length.EqualTo(3));
         }
 
         [Test]

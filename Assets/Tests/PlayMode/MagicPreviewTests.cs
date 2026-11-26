@@ -605,6 +605,70 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator EvilEntBodyKeepsItsArmAttachedWhenLaunchingAndAfterRecovery()
+        {
+            Create();
+            const string magic = "evil_ent";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                foreach (var attack in new[]
+                {
+                    (scenario: "pull", type: "EvilEntGrabArm", later: .53f),
+                    (scenario: "heavy_punch", type: "EvilEntPunchArm", later: .41f)
+                })
+                {
+                    int index = scenarios.IndexOf(scenarios.First(s => (string)s["id"] == attack.scenario));
+                    Scenario(index);
+                    var shot = FirstProjectile(scenarios[index], attack.type);
+                    int casterId = (int)scenarios[index]["frames"].SelectMany(frame => frame["objects"]["create"])
+                        .First(unit => (string)unit["type"] == "EvilEnt")["id"];
+                    yield return PlayUntil(shot.start + .12f);
+                    Component caster = Target(casterId);
+                    Assert.That(caster, Is.Not.Null);
+                    var body = (SpriteRenderer)caster.GetType().GetField("_spriteRenderer", Private).GetValue(caster);
+                    Assert.That(body.sprite.name, Is.EqualTo("EvilEntBrace02"));
+                    AssertEvilEntArmMount(attack.type, body);
+                    if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                    {
+                        string directory = System.IO.Path.Combine(Application.dataPath, "../Library/EvilEntBodyCaptures");
+                        System.IO.Directory.CreateDirectory(directory);
+                        SaveViewport(directory, attack.scenario + "-launch", true);
+                    }
+
+                    yield return PlayUntil(shot.start + attack.later);
+                    Assert.That(body.sprite.name, Is.EqualTo("EvilEnt"));
+                    AssertEvilEntArmMount(attack.type, body);
+                    if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                    {
+                        string directory = System.IO.Path.Combine(Application.dataPath, "../Library/EvilEntBodyCaptures");
+                        SaveViewport(directory, attack.scenario + "-contact", true);
+                    }
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        private void AssertEvilEntArmMount(string type, SpriteRenderer body)
+        {
+            var projectile = FindProjectile(type);
+            Assert.That(projectile, Is.Not.Null);
+            Assert.That(projectile.Find("Tip").GetComponent<SpriteRenderer>().enabled, Is.True);
+            Assert.That(Quaternion.Angle(body.transform.localRotation, Quaternion.identity), Is.LessThan(.01f));
+            var camera = (Camera)Field("previewCamera");
+            // 두 상태의 몸통 그림은 피벗에서 1.55칸 위에 팔 시작점을 둔다.
+            Vector3 mount = body.transform.TransformPoint(new Vector3(0f, 1.55f, 0f));
+            float gap = Vector2.Distance(camera.WorldToViewportPoint(mount), camera.WorldToViewportPoint(projectile.position));
+            Assert.That(gap, Is.LessThan(.02f));
+        }
+
+        [UnityTest]
         public IEnumerator EvilEntPunchRecordingPlaysAllVisibleTipsAtNativeTiming()
         {
             Create();
