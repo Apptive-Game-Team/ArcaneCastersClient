@@ -424,6 +424,117 @@ namespace WordOnline.Tests
             int.Parse(sprite.name.Substring("RockRollingRoll".Length)) - 1;
 
         [UnityTest]
+        public IEnumerator AquaArcherRecordedWalkAndWaterShotUseTheirOwnPoses()
+        {
+            Create();
+            Assert.That(Configure("rallying_totem"), Is.True);
+            var rally = Recording("rallying_totem")["scenarios"][0];
+            int walkerId = AquaArcherId(rally);
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                string directory = System.IO.Path.Combine(Application.dataPath, "../Library/AquaArcherCaptures");
+                bool canCapture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+                if (canCapture) System.IO.Directory.CreateDirectory(directory);
+                yield return PlayUntil(.85f);
+                Component walker = Target(walkerId);
+                var walk = (SpriteRenderer)walker.GetType().GetField("_spriteRenderer", Private).GetValue(walker);
+                var seen = new System.Collections.Generic.HashSet<string>();
+                while ((float)Field("elapsed") < 1.85f)
+                {
+                    seen.Add(walk.sprite.name);
+                    yield return null;
+                }
+                Assert.That(seen.Count(name => name.StartsWith("AquaArcherWalk", StringComparison.Ordinal)), Is.EqualTo(8));
+                if (canCapture) SaveViewport(directory, "walk", true);
+                yield return PlayUntil(2.05f);
+                Assert.That(walk.sprite.name, Is.EqualTo("AquaArcher"));
+
+                Assert.That(Configure("aqua_archer"), Is.True);
+                var matches = (JArray)Recording("aqua_archer")["scenarios"];
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    string scenarioName = (string)matches[i]["id"];
+                    int id = AquaArcherId(matches[i]);
+                    var shot = FirstProjectile(matches[i], "WaterShot");
+                    Scenario(i);
+                    yield return PlayUntil(shot.start - .035f);
+                    Component archer = Target(id);
+                    Assert.That(archer, Is.Not.Null);
+                    var body = (SpriteRenderer)archer.GetType().GetField("_spriteRenderer", Private).GetValue(archer);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcher"));
+                    Assert.That(FindProjectile("WaterShot"), Is.Null);
+                    yield return PlayUntil(shot.start + .012f);
+                    Transform arrow = FindProjectile("WaterShot");
+                    Assert.That(arrow, Is.Not.Null);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcherAttack"));
+                    var camera = (Camera)Field("previewCamera");
+                    float x = body.flipX ? -.37f : .37f;
+                    Vector3 grip = body.transform.TransformPoint(new Vector3(x, .565f, 0f));
+                    float launchGap = Vector2.Distance(camera.WorldToViewportPoint(grip),
+                        camera.WorldToViewportPoint(arrow.position));
+                    Assert.That(launchGap, Is.LessThan(.018f), $"{scenarioName}: 활에서 출발한 직후의 물화살 화면 거리");
+                    if (canCapture) SaveViewport(directory, scenarioName + "-release", true);
+                    yield return PlayUntil(shot.start + .11f);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcherRecover01"));
+                    yield return PlayUntil(shot.start + .19f);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcherRecover02"));
+                    if (canCapture) SaveViewport(directory, scenarioName + "-recover", true);
+                    yield return PlayUntil(shot.start + .29f);
+                    Assert.That(body.sprite.name, Is.EqualTo("AquaArcher"));
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator AquaArcherLaunchesFromItsMirroredBowWhileCloudDragonKeepsItsOrigin()
+        {
+            Create();
+            Component world = CreateWorld();
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize")
+                .MakeGenericMethod(Runtime("GameScene.Dto.ObjectsInfo"));
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            MethodInfo find = world.GetType().GetMethod("FindById");
+            void Apply(string json) =>
+                apply.Invoke(null, new[] { decode.Invoke(null, new object[] { json }), null, world });
+            Component Actor(int id) => (Component)find.Invoke(world, new object[] { id });
+            Transform LastWaterShot() => world.transform.Find("PresentationContent").Cast<Transform>()
+                .Last(child => child.name == "WaterShot(Clone)");
+
+            Apply("{\"create\":[" +
+                "{\"id\":21,\"type\":\"AquaArcher\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":0,\"z\":5}}," +
+                "{\"id\":22,\"type\":\"ElectricSlime\",\"master\":\"RightPlayer\",\"position\":{\"x\":5,\"y\":0,\"z\":5}}," +
+                "{\"id\":23,\"type\":\"CloudDragon\",\"master\":\"LeftPlayer\",\"position\":{\"x\":9,\"y\":1,\"z\":4}}]}");
+            Component archer = Actor(21);
+            var body = (SpriteRenderer)archer.GetType().GetField("_spriteRenderer", Private).GetValue(archer);
+            Assert.That(body.flipX, Is.False);
+            Apply("{\"projectile\":[{\"type\":\"WaterShot\",\"duration\":0.5," +
+                "\"start\":{\"targetType\":\"reference\",\"id\":21},\"end\":{\"targetType\":\"reference\",\"id\":22}}]," +
+                "\"update\":[{\"id\":21,\"position\":{\"x\":9,\"y\":0,\"z\":5},\"status\":\"Attack\"}]}");
+            Transform archerShot = LastWaterShot();
+            Assert.That(body.flipX, Is.True);
+            Assert.That(body.sprite.name, Is.EqualTo("AquaArcherAttack"));
+            Vector3 bow = body.transform.TransformPoint(new Vector3(-.37f, .565f, 0f));
+            Assert.That(Vector3.Distance(bow, archerShot.position), Is.LessThan(.005f));
+
+            Apply("{\"projectile\":[{\"type\":\"WaterShot\",\"duration\":0.5," +
+                "\"start\":{\"targetType\":\"reference\",\"id\":23},\"end\":{\"targetType\":\"reference\",\"id\":22}}]}");
+            Transform dragonShot = LastWaterShot();
+            Vector3 dragonStart = Actor(23).transform.position;
+            Assert.That(Vector3.Distance(dragonStart, dragonShot.position), Is.LessThan(.005f));
+            yield return null;
+        }
+
+        private static int AquaArcherId(JToken scenario) =>
+            (int)scenario["frames"].SelectMany(frame => frame["objects"]["create"])
+                .First(unit => (string)unit["type"] == "AquaArcher")["id"];
+
+        [UnityTest]
         public IEnumerator StormStagRecordingUsesFourLegGaitAndOnlyBracesOnContact()
         {
             Create();
