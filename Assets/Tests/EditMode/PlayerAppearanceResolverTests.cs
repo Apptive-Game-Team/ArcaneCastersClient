@@ -23,6 +23,7 @@ namespace WordOnline.Tests
         [TestCase("golem", new[] { "attacking", "cast-recoil", "cast-recover", "cast-arc", "cast-lower" }, new[] { 0.4f, 0.56666666f, 0.73333335f, 0.8666667f })]
         [TestCase("grass", new[] { "attacking", "cast-recoil", "cast-recover", "cast-arc", "cast-lower" }, new[] { 0.4f, 0.56666666f, 0.73333335f, 0.8666667f })]
         [TestCase("storm", new[] { "attacking", "cast-recoil", "cast-recover", "cast-arc", "cast-lower" }, new[] { 0.4f, 0.56666666f, 0.73333335f, 0.8666667f })]
+        [TestCase("summoner", new[] { "attacking", "cast-recoil", "cast-recover", "cast-arc", "cast-lower" }, new[] { 0.4f, 0.56666666f, 0.73333335f, 0.8666667f })]
         public void StaffMotionUsesRegisteredSpritesAndAnchors(string appearance, string[] castNames, float[] castCues)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPrefab);

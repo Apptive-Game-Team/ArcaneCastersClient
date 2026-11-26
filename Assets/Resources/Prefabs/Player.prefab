@@ -405,6 +405,32 @@ MonoBehaviour:
     - 0.56666666
     - 0.73333335
     - 0.8666667
+  - appearanceId: summoner
+    aimFrames:
+    - sprite: {fileID: 21300000, guid: eb0a9054f91e4cb3bc6080d4120aa1e8, type: 3}
+      tip: {x: -0.428, y: 1.33}
+    - sprite: {fileID: 21300000, guid: 099d8f7db0cd4d2c958c3c2049aa5613, type: 3}
+      tip: {x: -0.461, y: 1.384}
+    - sprite: {fileID: 21300000, guid: e04ffa753d0c47989e59f3315d166ee3, type: 3}
+      tip: {x: -0.464, y: 1.45}
+    - sprite: {fileID: 21300000, guid: 3e70c4048a33463d886230ef1923f439, type: 3}
+      tip: {x: -0.481, y: 1.518}
+    castFrames:
+    - sprite: {fileID: 21300000, guid: 4d32edbded414a398f598b8d21c6620b, type: 3}
+      tip: {x: 0.657, y: 0.924}
+    - sprite: {fileID: 21300000, guid: d897a6ab2d734a5fbfd0e3ae0a8b84af, type: 3}
+      tip: {x: 0.435, y: 0.875}
+    - sprite: {fileID: 21300000, guid: 3540b517887f4718a303c777e4d41d1d, type: 3}
+      tip: {x: 0.481, y: 1.177}
+    - sprite: {fileID: 21300000, guid: 8a7be11bd4a2433a9a353d01d7b0c01e, type: 3}
+      tip: {x: 0.035, y: 1.773}
+    - sprite: {fileID: 21300000, guid: e1fcc0b40b2147cca25f433e8ed7c966, type: 3}
+      tip: {x: -0.427, y: 1.333}
+    castCueFractions:
+    - 0.4
+    - 0.56666666
+    - 0.73333335
+    - 0.8666667
 --- !u!114 &5546332115853614978
 MonoBehaviour:
   m_ObjectHideFlags: 0
