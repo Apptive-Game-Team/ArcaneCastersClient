@@ -692,7 +692,7 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
-        public IEnumerator EvilEntGrabAndFireFistKeepTheirExistingTipSprites()
+        public IEnumerator EvilEntGrabHoldsVictimThroughLongAndMinimumPulls()
         {
             Create();
             const string magic = "evil_ent";
@@ -700,20 +700,89 @@ namespace WordOnline.Tests
             var scenarios = (JArray)Recording(magic)["scenarios"];
             int index = scenarios.IndexOf(scenarios.First(s => (string)s["id"] == "pull"));
             Scenario(index);
-            foreach (var variant in new[]
+            var shots = scenarios[index]["frames"].SelectMany(frame => frame["objects"]["projectile"]
+                    .Where(projectile => (string)projectile["type"] == "EvilEntGrabArm")
+                    .Select(projectile => (start: (float)frame["time"], duration: (float)projectile["duration"])))
+                .Take(2).ToArray();
+            Assert.That(shots.Length, Is.EqualTo(2));
+            Assert.That(shots[1].duration * .78f, Is.EqualTo(.8f).Within(.001f));
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
             {
-                (type: "EvilEntGrabArm", sprite: "evil_ent_grab_claw"),
-                (type: "EvilEntFireFist", sprite: "evil_ent_burn_fist"),
-            })
-            {
-                var shot = FirstProjectile(scenarios[index], variant.type);
-                yield return PlayUntil(shot.start + shot.duration * .6f);
-                Transform projectile = FindProjectile(variant.type);
-                Assert.That(projectile, Is.Not.Null, variant.type);
-                var tip = projectile.Find("Tip").GetComponent<SpriteRenderer>();
-                Assert.That(tip.enabled, Is.True, variant.type);
-                Assert.That(tip.sprite, Is.SameAs(Resources.Load<Sprite>("Game/shoot/" + variant.sprite)));
+                for (int shotIndex = 0; shotIndex < shots.Length; shotIndex++)
+                {
+                    var shot = shots[shotIndex];
+                    yield return PlayUntil(shot.start + .04f);
+                    Transform projectile = FindProjectile("EvilEntGrabArm");
+                    Assert.That(projectile, Is.Not.Null);
+                    var arm = projectile.Find("Arm").GetComponent<SpriteRenderer>();
+                    var tip = projectile.Find("Tip").GetComponent<SpriteRenderer>();
+                    var firstSeen = new System.Collections.Generic.Dictionary<string, float>();
+                    float contactLength = 0f, shortestGrip = float.PositiveInfinity;
+                    float[] captureAt = { .10f, .235f, .49f, .91f };
+                    int capture = 0;
+                    float deadline = Time.realtimeSinceStartup + 15f;
+                    while (projectile != null && Time.realtimeSinceStartup < deadline)
+                    {
+                        float age = (float)Field("elapsed") - shot.start;
+                        Sprite pose = tip.sprite;
+                        if (tip.enabled)
+                        {
+                            if (!firstSeen.ContainsKey(pose.name)) firstSeen.Add(pose.name, age);
+                            Assert.That(pose.rect.size, Is.EqualTo(new Vector2(120, 80)));
+                            Assert.That(pose.pivot, Is.EqualTo(new Vector2(0, 40)));
+                            Assert.That(tip.transform.localPosition.x, Is.EqualTo(arm.size.x).Within(.001f));
+                            if (pose.name == "evil_ent_grab_claw_02") contactLength = Mathf.Max(contactLength, arm.size.x);
+                            if (pose.name == "evil_ent_grab_claw_03") shortestGrip = Mathf.Min(shortestGrip, arm.size.x);
+                        }
+                        if (shotIndex == 0 && capture < captureAt.Length && age >= shot.duration * captureAt[capture])
+                        {
+                            if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                            {
+                                string directory = System.IO.Path.Combine(Application.dataPath, "../Library/EvilEntGrabCaptures");
+                                System.IO.Directory.CreateDirectory(directory);
+                                SaveViewport(directory, $"grab-{capture + 1:00}", true);
+                            }
+                            capture++;
+                        }
+                        yield return null;
+                    }
+
+                    Assert.That(projectile == null, Is.True);
+                    string[] expected = { "evil_ent_grab_claw", "evil_ent_grab_claw_02", "evil_ent_grab_claw_03", "evil_ent_grab_claw_04" };
+                    CollectionAssert.AreEqual(expected.Take(shotIndex == 0 ? 4 : 3),
+                        firstSeen.OrderBy(pair => pair.Value).Select(pair => pair.Key));
+                    Assert.That(firstSeen["evil_ent_grab_claw_02"], Is.EqualTo(shot.duration * .22f).Within(.04f));
+                    if (shotIndex == 0)
+                    {
+                        Assert.That(shortestGrip, Is.LessThan(contactLength * .8f));
+                        Assert.That(firstSeen["evil_ent_grab_claw_04"], Is.GreaterThan(.8f + shot.duration * .22f));
+                    }
+                }
             }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator EvilEntFireFistKeepsItsExistingTipSprite()
+        {
+            Create();
+            const string magic = "evil_ent";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int index = scenarios.IndexOf(scenarios.First(s => (string)s["id"] == "pull"));
+            Scenario(index);
+            var shot = FirstProjectile(scenarios[index], "EvilEntFireFist");
+            yield return PlayUntil(shot.start + shot.duration * .6f);
+            Transform projectile = FindProjectile("EvilEntFireFist");
+            Assert.That(projectile, Is.Not.Null);
+            var tip = projectile.Find("Tip").GetComponent<SpriteRenderer>();
+            Assert.That(tip.enabled, Is.True);
+            Assert.That(tip.sprite, Is.SameAs(Resources.Load<Sprite>("Game/shoot/evil_ent_burn_fist")));
         }
 
         [UnityTest]
