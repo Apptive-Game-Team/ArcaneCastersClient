@@ -9,9 +9,11 @@ namespace GameScene.ServedObjectComponent.Motion
         [SerializeField] private Sprite[] walkFrames;
         [SerializeField] private Sprite[] attackFrames;
         [SerializeField] private Sprite[] projectileAttackFrames;
+        [SerializeField] private Sprite[] spawnFrames;
         [SerializeField] private Vector2 projectileMuzzle;
         [SerializeField] private float walkCycleDistance = 0.54f;
         [SerializeField] private float attackDuration = 0.2f;
+        [SerializeField, Min(0f)] private float spawnDuration = 0.28f;
         [SerializeField] private bool attackOnHit;
         [SerializeField] private float maximumGroundSpeed;
         [SerializeField, Min(0f)] private float walkingHeightTolerance;
@@ -31,6 +33,7 @@ namespace GameScene.ServedObjectComponent.Motion
         private float walkDistance;
         private float movingUntil = float.NegativeInfinity;
         private float attackStarted = float.NegativeInfinity;
+        private float spawnStarted = float.NegativeInfinity;
         private Sprite[] activeAttackFrames;
         private Vector2 lastServerGround;
         private bool hasServerGround;
@@ -55,6 +58,11 @@ namespace GameScene.ServedObjectComponent.Motion
                 Owner.OnAttack += HandleAttack;
             }
 
+            if (spawnFrames is { Length: > 0 } && spawnDuration > 0f)
+            {
+                Owner.OnSpawned += StartSpawn;
+            }
+
             if (maximumGroundSpeed > 0f)
             {
                 Owner.OnServerPositionUpdated += HandleServerGround;
@@ -66,6 +74,7 @@ namespace GameScene.ServedObjectComponent.Motion
             if (Owner != null)
             {
                 Owner.OnAttack -= HandleAttack;
+                Owner.OnSpawned -= StartSpawn;
                 Owner.OnServerPositionUpdated -= HandleServerGround;
             }
 
@@ -108,15 +117,28 @@ namespace GameScene.ServedObjectComponent.Motion
         }
 
         private bool CanPlayAttack(Sprite[] frames) =>
-            isActiveAndEnabled && resolvedRenderer != null && frames != null && frames.Length > 0 && attackDuration > 0f;
+            isActiveAndEnabled && resolvedRenderer != null && Owner != null && !Owner.IsDespawning &&
+            frames is { Length: > 0 } && attackDuration > 0f;
 
         private void StartAttack(Sprite[] frames, bool lockFacing)
         {
+            spawnStarted = float.NegativeInfinity;
             activeAttackFrames = frames;
             attackStarted = Time.time;
             impactFlip = resolvedRenderer.flipX;
             lockAttackFacing = lockFacing;
             resolvedRenderer.sprite = frames[0];
+        }
+
+        private void StartSpawn()
+        {
+            if (!isActiveAndEnabled || Owner.IsDespawning)
+            {
+                return;
+            }
+
+            spawnStarted = Time.time;
+            resolvedRenderer.sprite = spawnFrames[0];
         }
 
         private void HandleServerGround(Vector3 position)
@@ -163,14 +185,16 @@ namespace GameScene.ServedObjectComponent.Motion
 
         private void LateUpdate()
         {
-            if (resolvedRenderer == null || Owner == null)
+            if (resolvedRenderer == null || Owner == null || Owner.IsDespawning)
             {
                 return;
             }
 
             float now = Time.time;
             float attackElapsed = now - attackStarted;
+            float spawnElapsed = now - spawnStarted;
             bool attacking = attackElapsed < attackDuration;
+            bool spawning = spawnElapsed < spawnDuration;
             if (attacking && lockAttackFacing)
             {
                 resolvedRenderer.flipX = impactFlip;
@@ -180,13 +204,18 @@ namespace GameScene.ServedObjectComponent.Motion
                 resolvedRenderer.flipX = confirmedServerDirection < 0;
             }
 
-            UpdateWalk(now, attacking);
+            UpdateWalk(now, attacking || spawning);
 
             Sprite pose = idleSprite;
             if (attacking)
             {
                 int frame = Mathf.Min(activeAttackFrames.Length - 1, (int)(attackElapsed * activeAttackFrames.Length / attackDuration));
                 pose = activeAttackFrames[frame];
+            }
+            else if (spawning)
+            {
+                int frame = Mathf.Min(spawnFrames.Length - 1, (int)(spawnElapsed * spawnFrames.Length / spawnDuration));
+                pose = spawnFrames[frame];
             }
             else if (now < movingUntil && walkFrames != null && walkFrames.Length > 0 && walkCycleDistance > 0f)
             {
@@ -200,7 +229,7 @@ namespace GameScene.ServedObjectComponent.Motion
             }
         }
 
-        private void UpdateWalk(float now, bool attacking)
+        private void UpdateWalk(float now, bool playingAction)
         {
             Vector2 groundPosition = GroundPosition();
             bool flipped = resolvedRenderer.flipX;
@@ -231,7 +260,7 @@ namespace GameScene.ServedObjectComponent.Motion
             if (distance >= MinimumGroundStep)
             {
                 movingUntil = now + Mathf.Max(MinimumMovementGrace, 2f * GameConfig.FrameDuration);
-                if (continuing && !attacking && walkCycleDistance > 0f)
+                if (continuing && !playingAction && walkCycleDistance > 0f)
                 {
                     walkDistance = Mathf.Repeat(walkDistance + distance, walkCycleDistance);
                 }
@@ -256,7 +285,7 @@ namespace GameScene.ServedObjectComponent.Motion
             hasServerGround = correctingServerGround = waitingForGround = false;
             precedingServerDirection = confirmedServerDirection = 0;
             walkDistance = 0f;
-            movingUntil = attackStarted = float.NegativeInfinity;
+            movingUntil = attackStarted = spawnStarted = float.NegativeInfinity;
             if (resolvedRenderer != null && idleSprite != null)
             {
                 resolvedRenderer.sprite = idleSprite;

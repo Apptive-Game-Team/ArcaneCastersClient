@@ -21,8 +21,9 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `ChickenCommando.png`, `ChickenCommandoDescent02.png`–`ChickenCommandoDescent04.png`, `ChickenCommandoLand01.png`–`ChickenCommandoLand04.png` | 치킨 특공대 · 낙하산 하강과 착지 | 보간된 고도가 내려가면 낙하산을 놓는 자세까지 고른다. 최초 지면 접촉 뒤 착지 네 장을 0.22초간 표시한다 |
 | `chicken_commando_default.png`, `ChickenCommandoRun01.png`–`ChickenCommandoRun08.png`, `ChickenCommandoAttack01.png`–`ChickenCommandoAttack04.png` | 치킨 특공대 · 대기, 양발 달리기, 지팡이 타격과 복귀 | 실제 지면 이동 1.28칸마다 달리기 한 바퀴. 공격 이벤트에서 타격과 복귀를 0.2초간 표시한다 |
 | `MagmaSpirit.png` | 용암 갑각 악마 · 선 기본 자세 | `MagmaSpirit.prefab` 기본 SpriteRenderer |
-| `MagmaSpiritAttacking.png` | 용암 갑각 악마 · 내려찍기 자세 | `OnAttackSpriteSwapper.onAttackSprite` |
-| `MagmaSpiritSpawn.png` | 용암 갑각 악마 · 지면 돌파 소환 자세 | 생성 시 0.28초 표시 |
+| `MagmaSpiritSpawn01–04.png` | 용암 갑각 악마 · 지면을 뚫고 일어나는 소환 4장 | `GroundedUnitPoseController.spawnFrames`에서 0.28초 동안 재생 |
+| `MagmaSpiritWalk01–08.png` | 용암 갑각 악마 · 양발을 번갈아 딛는 걷기 8장 | `GroundedUnitPoseController.walkFrames`에서 지면 이동 0.64칸마다 반복 |
+| `MagmaSpiritCast01–04.png` | 용암 갑각 악마 · 주먹으로 지면을 누르고 몸을 펴는 발동 4장 | `summonAttack`을 받은 소환자에서 0.20초 동안 재생 |
 | `MagmaExplosion.png` | 마그마 폭발 · 기본/초기 갑각 자세 | `MagmaExplosion.prefab` 기본 SpriteRenderer |
 | `MagmaExplosionStrike1.png`–`MagmaExplosionStrike4.png` | 마그마 폭발 · 균열 시작 → 개방 → 피크 → 냉각 | `SpriteFrameAnimator`, 0.1초 간격, 비반복 |
 | `RockGolem.png` | 이끼바위 골렘 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |

@@ -119,6 +119,137 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(180, 256));
 
         [UnityTest]
+        public IEnumerator MagmaSpiritWalksAndRecoversAtBothTickRates() =>
+            CheckBothTickRates("MagmaSpirit", 8, "MagmaSpiritCast01", walkSize: new Vector2(256, 253));
+
+        [UnityTest]
+        public IEnumerator MagmaSpiritEmergesAndOnlyTheSummonerChangesPoseInAReplay()
+        {
+            var root = new GameObject("MagmaSpirit replay test");
+            int oldRenderRate = Time.captureFramerate;
+            Time.captureFramerate = RenderRate;
+            try
+            {
+                var world = root.AddComponent(Runtime("GameScene.Object.PresentationWorld"));
+                var find = world.GetType().GetMethod("FindById");
+                var apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+                Type objectsType = Runtime("GameScene.Dto.ObjectsInfo");
+                Type eventsType = typeof(List<>).MakeGenericType(Runtime("GameScene.Dto.Event.GameEvent"));
+                void Apply(string objects, string events = "[]") => apply.Invoke(null, new[]
+                {
+                    Decode(objectsType, objects),
+                    Decode(eventsType, events),
+                    world
+                });
+
+                Apply(@"{""create"":[
+                    {""id"":51,""type"":""MagmaSpirit"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":5}},
+                    {""id"":52,""type"":""MagmaSpirit"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":6}}]}");
+                var first = (Component)find.Invoke(world, new object[] { 51 });
+                var second = (Component)find.Invoke(world, new object[] { 52 });
+                var firstBody = Body(first);
+                var secondBody = Body(second);
+                Assert.That(first.GetComponent("SpawnSpriteSwapController"), Is.Null);
+                Assert.That(first.GetComponent("AttackSpriteSwapController"), Is.Null);
+                Assert.That(first.GetComponentsInChildren<SpriteRenderer>().Any(sprite => sprite.name == "FireIdleAura"), Is.True);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("MagmaSpiritSpawn01"));
+
+                var pose = first.GetComponent("GroundedUnitPoseController");
+                var frames = (Sprite[])pose.GetType().GetField("spawnFrames", Private).GetValue(pose);
+                AssertFrames(frames, 4, Resources.Load<Sprite>("Game/sprites/MagmaSpirit"));
+                var seen = new List<Sprite>();
+                for (int frame = 0; frame < 37; frame++)
+                {
+                    if (frames.Contains(firstBody.sprite) && !seen.Contains(firstBody.sprite)) seen.Add(firstBody.sprite);
+                    yield return null;
+                }
+                CollectionAssert.AreEqual(frames, seen);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("MagmaSpirit"));
+                Assert.That(secondBody.sprite, Is.SameAs(firstBody.sprite));
+
+                Apply(@"{""create"":[{""id"":53,""type"":""MagmaFist"",""master"":""LeftPlayer"",""position"":{""x"":7,""z"":5}}],
+                    ""update"":[{""id"":51,""status"":""Damaged"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":5}}]}",
+                    @"[{""type"":""summonAttack"",""actorId"":51,""targetId"":53},
+                       {""type"":""summonAttack"",""actorId"":52,""targetId"":999}]");
+                Assert.That(firstBody.sprite.name, Is.EqualTo("MagmaSpiritCast01"));
+                Assert.That(secondBody.sprite.name, Is.EqualTo("MagmaSpirit"));
+
+                Apply(@"{""create"":[
+                    {""id"":54,""type"":""MagmaSpirit"",""master"":""LeftPlayer"",""position"":{""x"":4,""z"":7}},
+                    {""id"":55,""type"":""MagmaFist"",""master"":""LeftPlayer"",""position"":{""x"":7,""z"":7}}]}",
+                    @"[{""type"":""summonAttack"",""actorId"":54,""targetId"":55}]");
+                var appearingBody = Body((Component)find.Invoke(world, new object[] { 54 }));
+                Assert.That(appearingBody.sprite.name, Is.EqualTo("MagmaSpiritCast01"));
+                yield return new WaitForSeconds(.235f);
+                Assert.That(appearingBody.sprite.name, Is.EqualTo("MagmaSpirit"));
+            }
+            finally
+            {
+                Time.captureFramerate = oldRenderRate;
+                Object.Destroy(root);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator MagmaSpiritReceivesItsSummonWhenTheFistFirstAppearsInASync()
+        {
+            var root = new GameObject("MagmaSpirit sync test");
+            var container = root.AddComponent(Runtime("GameScene.Object.ObjectContainer"));
+            var config = Runtime("GameScene.GameConfig");
+            int oldRate = (int)config.GetProperty("TickRate").GetValue(null);
+            try
+            {
+                root.AddComponent(Runtime("GameScene.Object.ObjectSpawner"));
+                root.AddComponent(Runtime("GameScene.Object.ObjectUpdater"));
+                root.AddComponent(Runtime("GameScene.Object.ObjectSyncer"));
+                root.AddComponent(Runtime("GameScene.GameSceneUIController"));
+                var timer = root.AddComponent(Runtime("GameScene.UI.TimerController"));
+                var timerText = new GameObject("Timer", typeof(RectTransform));
+                timerText.transform.SetParent(root.transform, false);
+                timer.GetType().GetField("timerText", Private)
+                    .SetValue(timer, timerText.AddComponent(Runtime("TMPro.TextMeshProUGUI")));
+                var handler = Activator.CreateInstance(Runtime("GameScene.Handler.SyncFrameHandler"));
+                var apply = handler.GetType().GetMethod("Handler");
+                var find = container.GetType().GetMethod("FindById");
+                Type syncType = Runtime("GameScene.Dto.SyncFrameInfo");
+                const string first = @"{""id"":51,""prefab"":""MagmaSpirit"",""master"":""LeftPlayer"",""x"":4,""z"":5}";
+                const string second = @"{""id"":52,""prefab"":""MagmaSpirit"",""master"":""LeftPlayer"",""x"":4,""z"":6}";
+                const string fist = @"{""id"":53,""prefab"":""MagmaFist"",""master"":""LeftPlayer"",""x"":7,""z"":5}";
+                void Sync(string objects, string events = "[]") => apply.Invoke(handler, new[] {
+                    Decode(syncType,
+                        "{\"tickRate\":20,\"snapshotResponseDto\":{\"myCards\":[],\"objects\":[" + objects +
+                        "]},\"events\":" + events + "}")
+                });
+
+                Sync(first + "," + second);
+                var firstBody = Body((Component)find.Invoke(container, new object[] { 51 }));
+                var secondBody = Body((Component)find.Invoke(container, new object[] { 52 }));
+                Assert.That(firstBody.sprite.name, Is.EqualTo("MagmaSpirit"));
+                Assert.That(secondBody.sprite, Is.SameAs(firstBody.sprite));
+                Assert.That(find.Invoke(container, new object[] { 53 }), Is.Null);
+
+                Sync(first + "," + second + "," + fist, @"[{""type"":""summonAttack"",""actorId"":52,""targetId"":53}]");
+                Assert.That(find.Invoke(container, new object[] { 53 }), Is.Not.Null);
+                Assert.That(firstBody.sprite.name, Is.EqualTo("MagmaSpirit"));
+                Assert.That(secondBody.sprite.name, Is.EqualTo("MagmaSpiritCast01"));
+            }
+            finally
+            {
+                config.GetMethod("SetTickRate").Invoke(null, new object[] { oldRate });
+                container.GetType().GetMethod("Clear").Invoke(container, null);
+                Object.Destroy(root);
+            }
+            yield return null;
+        }
+
+        private static SpriteRenderer Body(Component owner) =>
+            (SpriteRenderer)owner.GetType().GetField("_spriteRenderer", Private).GetValue(owner);
+
+        private static object Decode(Type type, string json) =>
+            Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize").MakeGenericMethod(type)
+                .Invoke(null, new object[] { json });
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
@@ -279,7 +410,7 @@ namespace WordOnline.Tests
 
                 CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
                     $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
-                if (prefabName is "FireSlime" or "VineSpirit")
+                if (prefabName is "FireSlime" or "VineSpirit" or "MagmaSpirit")
                 {
                     var cycle = walk.Append(walk[0]).ToArray();
                     bool completedCycle = Enumerable.Range(0, Mathf.Max(0, seenWalk.Count - walk.Length))
