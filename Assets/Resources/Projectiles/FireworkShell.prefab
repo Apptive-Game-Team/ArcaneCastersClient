@@ -75,6 +75,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2629006942901466498, guid: 028e07145d38fe040b3dfbc548dae77a, type: 3}
   m_PrefabInstance: {fileID: 2564270690463313399}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &6751845577759801652 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5982256350504164619, guid: 028e07145d38fe040b3dfbc548dae77a, type: 3}
+  m_PrefabInstance: {fileID: 2564270690463313399}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8134756293028471560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,3 +94,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actualObject: {fileID: 7587812022452533542}
   arcHeight: 2.5
+  flightSpriteRenderer: {fileID: 6751845577759801652}
+  flightFrames:
+  - {fileID: 21300000, guid: 57a7afbd9e014912811a373b1479e86a, type: 3}
+  - {fileID: 21300000, guid: 149dcb022ba046a9b95b061454515692, type: 3}
+  - {fileID: 21300000, guid: 9c148b67a398439f84c51ee5ba46f626, type: 3}
+  - {fileID: 21300000, guid: 6260c0f22ab44e529d655b861ae28470, type: 3}

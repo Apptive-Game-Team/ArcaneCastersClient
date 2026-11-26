@@ -176,6 +176,7 @@
 | `DragonTower.png` | `game-assets/dragon-tower.webp` | 웹사이트 동기화 PR #41/#44 로 올라간 뒤 등재를 뒤늦게 기록했다 |
 | `FireworkTower.png` | `game-assets/firework-tower.webp` | 위와 같음 |
 | `FireworkShell.png` | `game-assets/firework-shell.webp` | 위와 같음 |
+| `FireworkShellFlight01–04.png` | 클라이언트 이슈 #700 | 160×109 RGBA, PPU 100, 피벗 (96, 0). 비행 진행률에 맞춰 발사·상승·정점·하강 때 포탄 뒤 불티를 바꾼다. |
 | `FireworkExplosion.png` | `game-assets/firework-explosion.webp` | 위와 같음 |
 | `FrenzyTotem.png` | `game-assets/frenzy-totem.webp` | 위와 같음 |
 | `GrassGenerator.png` | `game-assets/grass-generator.webp` | 위와 같음 |
