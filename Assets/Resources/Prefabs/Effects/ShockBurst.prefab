@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8600000000000002}
   - component: {fileID: 8600000000000003}
   - component: {fileID: 8600000000000004}
+  - component: {fileID: 8600000000000005}
   m_Layer: 0
   m_Name: ShockBurst
   m_TagString: Untagged
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 13
-  m_Sprite: {fileID: 21300000, guid: b3d1f8e0c13a406fb47e047a2101b198, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e29a8e6d90bf57d1b693e4db5e996173, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -94,10 +95,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 8600000000000001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05e3f05c7a654a28baf829adc9c2b4f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
   m_Name:
   m_EditorClassIdentifier:
   spriteRenderer: {fileID: 8600000000000003}
-  startScaleRatio: 0.45
-  growDuration: 0.1
-  fadeDuration: 0.16
+  frames:
+  - {fileID: 21300000, guid: e29a8e6d90bf57d1b693e4db5e996173, type: 3}
+  - {fileID: 21300000, guid: dc817b5495c7523ab06f84767407291d, type: 3}
+  - {fileID: 21300000, guid: bbe2ef84cd5d5b73979964d719f94061, type: 3}
+  - {fileID: 21300000, guid: 71441539ed3554c5a1e70e81508f2bb1, type: 3}
+  - {fileID: 21300000, guid: 8df7b6a82a925c46806cdb2ed5b1193d, type: 3}
+  - {fileID: 21300000, guid: 28eccc0047325c59a74950943ba44dfa, type: 3}
+  frameInterval: 0.04
+  loop: 0
+--- !u!114 &8600000000000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8600000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1349b3543ee43437dac29159991f8a8b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  lifetime: 0.26
