@@ -2918,9 +2918,9 @@ namespace WordOnline.Tests
                 Assert.That((bool)first.GetType().GetProperty("IsDespawning", Private).GetValue(first), Is.True);
                 Component newest = Target(14);
                 Assert.That(newest, Is.Not.Null);
-                Assert.That(TadpoleTtl(first), Is.EqualTo(0f).Within(.001f));
-                Assert.That(TadpoleTtl(second), Is.EqualTo(1.6f).Within(.001f));
-                Assert.That(TadpoleTtl(newest), Is.EqualTo(8f).Within(.001f));
+                Assert.That(TimeToLive(first), Is.EqualTo(0f).Within(.001f));
+                Assert.That(TimeToLive(second), Is.EqualTo(1.6f).Within(.001f));
+                Assert.That(TimeToLive(newest), Is.EqualTo(8f).Within(.001f));
                 if (capture) SaveViewport(directory, "old-and-new", true);
 
                 yield return PlayUntil(8.762f);
@@ -2988,7 +2988,7 @@ namespace WordOnline.Tests
                 yield return PlayUntil(1.465f);
                 Component first = Target(5);
                 var firstBody = ServedObjectRenderer(first);
-                Assert.That(TadpoleTtl(first), Is.EqualTo(8f).Within(.001f));
+                Assert.That(TimeToLive(first), Is.EqualTo(8f).Within(.001f));
                 Assert.That(firstBody.sprite.name, Is.EqualTo("LightningTadpoleIdle"));
                 Assert.That(first.GetComponent("CrawlMotionController"), Is.Null);
                 Assert.That(first.GetComponentsInChildren<Transform>(true).Any(child => child.name == "TTLBar"), Is.True);
@@ -3048,8 +3048,8 @@ namespace WordOnline.Tests
                 yield return PlayUntil(8.972f);
                 Assert.That(Target(5), Is.SameAs(first));
                 Assert.That(Target(7), Is.SameAs(second));
-                Assert.That(TadpoleTtl(first), Is.EqualTo(.5f).Within(.001f));
-                Assert.That(TadpoleTtl(second), Is.EqualTo(2.1f).Within(.001f));
+                Assert.That(TimeToLive(first), Is.EqualTo(.5f).Within(.001f));
+                Assert.That(TimeToLive(second), Is.EqualTo(2.1f).Within(.001f));
             }
             finally
             {
@@ -3174,9 +3174,129 @@ namespace WordOnline.Tests
             }
         }
 
-        private static float TadpoleTtl(Component tadpole)
+        [UnityTest]
+        public IEnumerator FireSlimeMovesAndStrikesWithoutMovingItsFireTrail()
         {
-            var gauges = (IList)tadpole.GetType().GetField("gauges").GetValue(tadpole);
+            Create();
+            const string magic = "fire_slime_nest";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            var ground = scenarios.Single(s => (string)s["id"] == "ground");
+            Scenario(scenarios.IndexOf(ground));
+            CollectionAssert.AreEqual(new[] { 2 }, ground["fixtureTargetIds"].Select(id => (int)id));
+            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/FireSlimeCaptures");
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+            var world = (Component)Field("world");
+
+            SpriteRenderer SlimeBody(int id)
+            {
+                var slime = Target(id);
+                Assert.That(slime, Is.Not.Null);
+                Assert.That(slime.name, Does.StartWith("FireSlime"));
+                Assert.That(slime.GetType().GetMethod("GetMaster").Invoke(slime, null), Is.EqualTo("LeftPlayer"));
+                Assert.That(slime.GetComponent("CrawlMotionController"), Is.Null);
+                return ServedObjectRenderer(slime);
+            }
+
+            Vector3 LocalPosition(Component subject) => world.transform.InverseTransformPoint(subject.transform.position);
+            Component FieldAt(int id, float x)
+            {
+                var field = Target(id);
+                Assert.That(field, Is.Not.Null);
+                Assert.That(field.name, Does.StartWith("FireField"));
+                Assert.That(Vector3.Distance(LocalPosition(field), new Vector3(x, 0f, 5f)), Is.LessThan(.008f));
+                return field;
+            }
+
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(2.724f);
+                var slime = Target(4);
+                var body = SlimeBody(4);
+                var source = Resources.Load<Sprite>("Game/spawn/fire_slime");
+                Assert.That(body.sprite.name, Is.EqualTo("FireSlimeIdle"));
+                Assert.That(body.sprite.rect.size, Is.EqualTo(source.rect.size));
+                Assert.That(body.sprite.pivot, Is.EqualTo(source.pivot));
+                Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(source.pixelsPerUnit));
+                var poses = new System.Collections.Generic.List<string>();
+                while ((float)Field("elapsed") < 3.33f)
+                {
+                    string pose = body.sprite.name;
+                    if (pose.StartsWith("FireSlimeCrawl", StringComparison.Ordinal) && pose != poses.LastOrDefault())
+                    {
+                        poses.Add(pose);
+                        if (capture && poses.Count <= 8) SaveViewport(directory, pose, true);
+                    }
+                    yield return null;
+                }
+                var expected = Enumerable.Range(1, 8).Select(i => $"FireSlimeCrawl{i:00}").Append("FireSlimeCrawl01");
+                CollectionAssert.AreEqual(expected, poses.Take(9));
+
+                Assert.That(Target(5), Is.Null);
+                yield return PlayUntil(3.373f);
+                var firstField = FieldAt(5, 5.10f);
+                Assert.That(TimeToLive(firstField), Is.EqualTo(8f).Within(.001f));
+                Assert.That(LocalPosition(slime).x, Is.GreaterThanOrEqualTo(5.09f));
+                if (capture) SaveViewport(directory, "first-fire-field", true);
+
+                yield return PlayUntil(3.876f);
+                Assert.That(Target(6), Is.Null);
+                yield return PlayUntil(3.923f);
+                var secondField = FieldAt(6, 6.20f);
+                Assert.That(TimeToLive(secondField), Is.EqualTo(8f).Within(.001f));
+                Assert.That(FieldAt(5, 5.10f), Is.SameAs(firstField));
+                Assert.That(TimeToLive(firstField), Is.EqualTo(7.45f).Within(.001f));
+                if (capture) SaveViewport(directory, "two-ground-fields", true);
+
+                yield return PlayUntil(4.723f);
+                var enemy = Target(2);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(10000));
+                for (int i = 0; i < 4; i++)
+                {
+                    yield return PlayUntil(4.775f + .08f * i);
+                    string pose = $"FireSlimeBump{i + 1:00}";
+                    Assert.That(body.sprite.name, Is.EqualTo(pose));
+                    Assert.That(body.flipX, Is.False);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(9900));
+                    if (capture) SaveViewport(directory, pose, true);
+                }
+
+                var second = SlimeBody(7);
+                yield return PlayUntil(6.821f);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9700));
+                yield return PlayUntil(6.875f);
+                Assert.That(second.sprite.name, Is.EqualTo("FireSlimeBump01"));
+                Assert.That(body.sprite.name, Does.Not.StartWith("FireSlimeBump"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9600));
+
+                yield return PlayUntil(11.076f);
+                var later = SlimeBody(13);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(8300));
+                yield return PlayUntil(11.124f);
+                Assert.That(later.sprite.name, Is.EqualTo("FireSlimeBump01"));
+                Assert.That(body.sprite.name, Does.Not.StartWith("FireSlimeBump"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(8200));
+                yield return PlayUntil(11.208f);
+                Assert.That(later.sprite.name, Is.EqualTo("FireSlimeBump02"));
+                Assert.That(body.sprite.name, Is.EqualTo("FireSlimeBump01"));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(8100));
+                if (capture) SaveViewport(directory, "independent-hits", true);
+                yield return PlayUntil(11.515f);
+                Assert.That(Target(5), Is.Null);
+                Assert.That(FieldAt(6, 6.20f), Is.SameAs(secondField));
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        private static float TimeToLive(Component subject)
+        {
+            var gauges = (IList)subject.GetType().GetField("gauges").GetValue(subject);
             object ttl = gauges.Cast<object>()
                 .Single(gauge => (string)gauge.GetType().GetField("category").GetValue(gauge) == "TTL");
             return (float)ttl.GetType().GetField("value").GetValue(ttl);

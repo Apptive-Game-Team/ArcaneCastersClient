@@ -23,7 +23,7 @@ PrefabInstance:
     - target: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4c357a7fbcd7a44f7b909edbaca387b5, type: 3}
+      objectReference: {fileID: 21300000, guid: 7340d0539a6f4c07835c04573a285647, type: 3}
     - target: {fileID: 6456819394278174577, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
@@ -43,6 +43,10 @@ PrefabInstance:
     - target: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_Name
       value: FireSlime
+      objectReference: {fileID: 0}
+    - target: {fileID: 7643070402292094288, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8841690536847902715, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       propertyPath: m_LocalPosition.x
@@ -85,17 +89,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
+    - {fileID: 5501000000000000012, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     - {fileID: 6542150130469813617, guid: 6028185801a9445fa9435ec49e794354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4684667972734256309}
+      addedObject: {fileID: 8320586000000000587}
   m_SourcePrefab: {fileID: 100100000, guid: 6028185801a9445fa9435ec49e794354, type: 3}
---- !u!4 &1753495551214140852 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6456819394278174577, guid: 6028185801a9445fa9435ec49e794354, type: 3}
+--- !u!212 &8320586000000000586 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6137335418506685782, guid: 6028185801a9445fa9435ec49e794354, type: 3}
   m_PrefabInstance: {fileID: 4741887910458233541}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2959642540811881345 stripped
@@ -103,7 +108,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7556005377799559492, guid: 6028185801a9445fa9435ec49e794354, type: 3}
   m_PrefabInstance: {fileID: 4741887910458233541}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4684667972734256309
+--- !u!114 &8320586000000000587
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,7 +117,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 2959642540811881345}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42101c1db2194fc0a1a4f2ad54b57413, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedTransform: {fileID: 1753495551214140852}
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 0}
+  targetRenderer: {fileID: 8320586000000000586}
+  walkFrames:
+  - {fileID: 21300000, guid: bc61e41490ad44869ccc9a5ac11e0a0e, type: 3}
+  - {fileID: 21300000, guid: c5cd7470ff364c6dae7ec26cc7263bb7, type: 3}
+  - {fileID: 21300000, guid: 6b97b0673e6a40a493019747f6b4f94a, type: 3}
+  - {fileID: 21300000, guid: c87b1137a7b1496b8470ab5e4e789fff, type: 3}
+  - {fileID: 21300000, guid: 343941ca9d9c477a9f3e90d134561f97, type: 3}
+  - {fileID: 21300000, guid: 634b158ff304423ebf002436925f18f1, type: 3}
+  - {fileID: 21300000, guid: 5ec546cf8b4f46b5aaeeb15399b69d3f, type: 3}
+  - {fileID: 21300000, guid: 9669096a499c455f984f0b1a5c9268a2, type: 3}
+  attackFrames:
+  - {fileID: 21300000, guid: e4bb398e4d48474b8f881cd1a2531414, type: 3}
+  - {fileID: 21300000, guid: 3a030df96a94454ea3efab0fb794327e, type: 3}
+  - {fileID: 21300000, guid: fea0b4463f464f5eaf8ed174d3031eb0, type: 3}
+  - {fileID: 21300000, guid: d236b5b0b2fa462480fb8698e0cdc174, type: 3}
+  projectileAttackFrames: []
+  projectileMuzzle: {x: 0, y: 0}
+  walkCycleDistance: 0.88
+  attackDuration: 0.32
+  attackOnHit: 1
+  maximumGroundSpeed: 2.8
+  walkingHeightTolerance: 0.03
