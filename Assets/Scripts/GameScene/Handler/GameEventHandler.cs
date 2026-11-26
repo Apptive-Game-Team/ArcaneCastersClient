@@ -63,6 +63,7 @@ namespace GameScene.Handler
             {
                 actor.FaceTowards(target.transform.position);
                 actor.GetComponent<GroundedUnitPoseController>()?.PlayHitPose();
+                actor.GetComponent<ThunderBirdFlightPresenter>()?.PlayHitPose();
                 HitKnockback.Play(target, actor.transform.position);
             }
 

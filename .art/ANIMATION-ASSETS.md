@@ -509,3 +509,9 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 `StoneGargoyleFly1`은 날개 올림, `StoneGargoyleFly2`는 수평, `StoneGargoyleFly3`은 날개 내림이다. `StoneGargoyle.prefab`의 `SpriteFrameAnimator`가 `1, 2, 3, 2`를 0.16초 간격으로 반복한다. 경계의 1을 공유하므로 화면에서는 `1 → 2 → 3 → 2 → 1 → 2…`로 왕복한다.
 
 세 파일은 192x165, PPU 100, Bottom Center이며 몸통 배율·눈 가로 기준·발톱 하단을 공유한다. `spriteMeshType: 0`인 Full Rect를 유지해 날개 자세마다 표시 경계가 바뀌지 않게 한다. 기존 정적 `StoneGargoyle.png`는 마법 아이콘으로 유지한다.
+
+## 천둥 새 비행
+
+`ThunderBirdFlap01–08`은 0.115초 간격으로 반복한다. 가까운 날개가 먼저 각도를 바꾸면 반대쪽 날개가 조금 늦게 따라온다. `ThunderBirdDive01–04`는 하강 시작 고도에서 0.4 월드 단위씩 내려갈 때 바뀐다. `ThunderBirdStrike01–04`는 피해 이벤트에서 시작해 0.08초 간격으로 부리 타격과 회수를 보여준다. `ThunderBirdClimb01–04`는 상승 중 0.125초 간격으로 반복한다. `ThunderBirdFall01–04`는 사망 시작 고도부터 지면까지 내려온 거리에 맞춰 날개를 접는다.
+
+24장은 368×280 RGBA, Full Rect, 200 PPU다. 공통 피벗은 이미지 하단에서 45px 위의 중앙 `(184, 45)`다. 머리와 몸통이 날갯짓 중에 크게 흔들리지 않도록 위치를 맞췄다. 전투 개체는 `ThunderBirdFlightPresenter`가 표시하고 마법 아이콘은 `ThunderBirdSwarm.png`를 사용한다.
