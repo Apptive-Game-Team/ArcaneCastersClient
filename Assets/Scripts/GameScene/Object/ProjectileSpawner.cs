@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using GameScene.Dto;
 using GameScene.Dto.Projectile;
 using GameScene.Object.Projectile;
@@ -18,7 +19,8 @@ namespace GameScene.Object
         private const string SeaSerpentBeamType = "SeaSerpentHydroPump";
         private const string FireSpiritSprayType = "SprayedFlame";
         private const string RockShotType = "RockShot";
-        private const float BeamSourcePositionTolerance = 0.001f;
+        private const string FireworkShellType = "FireworkShell";
+        private const float ProjectileSourcePositionTolerance = 0.001f;
 
         public void Spawn(ProjectileDto dto)
         {
@@ -154,6 +156,8 @@ namespace GameScene.Object
             {
                 // 이번 틱의 공격과 위치를 반영한 뒤 포구와 입에서 발사한다.
                 if (projectile.type == SeaSerpentBeamType && projectile.start is PositionProjectileTarget ||
+                    projectile.type == FireworkShellType && projectile.start is PositionProjectileTarget &&
+                    projectile.end is PositionProjectileTarget ||
                     HasFireSpiritSpraySource(projectile) ||
                     FindReferencedLauncher(projectile, world) != null ||
                     FindAuthoredRockShotSource(projectile, world) != null ||
@@ -209,6 +213,13 @@ namespace GameScene.Object
                 {
                     SpawnPresented(projectile, world, GetRockTurretMuzzle(projectile, source, world, snapshotObjects));
                     continue;
+                }
+
+                if (projectile.type == FireworkShellType && projectile.start is PositionProjectileTarget origin &&
+                    projectile.end is PositionProjectileTarget destination)
+                {
+                    FindFireworkTowerLauncher(origin, destination, world, updates, snapshotObjects)
+                        ?.PlayProjectilePose(ProjectileUtil.GetPosition(destination, world));
                 }
 
                 var launcher = FindSeaSerpentLauncher(projectile, updates, world);
@@ -305,6 +316,56 @@ namespace GameScene.Object
         private static bool IsInSnapshot(int id, SnapshotObjectDto[] snapshotObjects) =>
             snapshotObjects == null || System.Array.Exists(snapshotObjects, entry => entry.id == id);
 
+        private static GroundedUnitPoseController FindFireworkTowerLauncher(
+            PositionProjectileTarget origin, PositionProjectileTarget destination, PresentationWorld world,
+            IEnumerable<UpdatedObjectDto> updates, SnapshotObjectDto[] snapshotObjects)
+        {
+            if (origin.x == destination.x)
+            {
+                return null;
+            }
+
+            IEnumerable<(int id, float x, float z, string master)> positions = snapshotObjects != null
+                ? snapshotObjects.Select(item => (item.id, item.x, item.z, item.master))
+                : updates?.Select(item => (item.id, item.position.x, item.position.z, item.master));
+            if (positions == null)
+            {
+                return null;
+            }
+
+            string master = destination.x > origin.x ? "LeftPlayer" : "RightPlayer";
+            ServedObject matched = null;
+            foreach (var position in positions)
+            {
+                if (Mathf.Abs(position.x - origin.x) > ProjectileSourcePositionTolerance ||
+                    Mathf.Abs(position.z - origin.z) > ProjectileSourcePositionTolerance)
+                {
+                    continue;
+                }
+
+                ServedObject source = PresentationWorld.Find(position.id, world);
+                if (source == null || source.PrefabType != "FireworkTower")
+                {
+                    continue;
+                }
+
+                string sourceMaster = string.IsNullOrEmpty(position.master) ? source.GetMaster() : position.master;
+                if (sourceMaster != master)
+                {
+                    continue;
+                }
+
+                // 발사원이 하나로 확인된 경우에만 본체의 자세를 바꾼다.
+                if (matched != null && matched != source)
+                {
+                    return null;
+                }
+
+                matched = source;
+            }
+
+            return matched != null && !matched.IsDespawning ? matched.GetComponent<GroundedUnitPoseController>() : null;
+        }
         private static GroundedUnitPoseController FindSeaSerpentLauncher(ProjectileDto projectile,
             IEnumerable<UpdatedObjectDto> updates, PresentationWorld world)
         {
@@ -319,8 +380,8 @@ namespace GameScene.Object
             foreach (UpdatedObjectDto update in updates)
             {
                 if (update.status != "Attack" ||
-                    Mathf.Abs(update.position.x - groundOrigin.x) > BeamSourcePositionTolerance ||
-                    Mathf.Abs(update.position.z - groundOrigin.z) > BeamSourcePositionTolerance)
+                    Mathf.Abs(update.position.x - groundOrigin.x) > ProjectileSourcePositionTolerance ||
+                    Mathf.Abs(update.position.z - groundOrigin.z) > ProjectileSourcePositionTolerance)
                 {
                     continue;
                 }

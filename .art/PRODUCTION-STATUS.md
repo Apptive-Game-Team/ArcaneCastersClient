@@ -188,6 +188,7 @@
 | `DragonTower.png` | `game-assets/dragon-tower.webp` | 웹사이트 동기화 PR #41/#44 로 올라간 뒤 등재를 뒤늦게 기록했다 |
 | `DragonTowerFlame01–04.png` | 클라이언트 이슈 #704 | 161×256 RGBA, PPU 133.333333, 하단 중앙 피벗. 화염탄 발사 때 턱과 입 안의 불빛이 0.48초 동안 네 자세를 거친다. |
 | `FireworkTower.png` | `game-assets/firework-tower.webp` | 위와 같음 |
+| `FireworkTowerMuzzle01–04.png` | 클라이언트 이슈 #734 | 포탄이 떠날 때 포구 안 불꽃이 피었다가 꺼지는 네 자세. 바위 받침과 전체 알파 채널은 원본을 사용한다. |
 | `FireworkShell.png` | `game-assets/firework-shell.webp` | 위와 같음 |
 | `FireworkShellFlight01–04.png` | 클라이언트 이슈 #700 | 160×109 RGBA, PPU 100, 피벗 (96, 0). 비행 진행률에 맞춰 발사·상승·정점·하강 때 포탄 뒤 불티를 바꾼다. |
 | `FireworkExplosion.png` | `game-assets/firework-explosion.webp` | 위와 같음 |

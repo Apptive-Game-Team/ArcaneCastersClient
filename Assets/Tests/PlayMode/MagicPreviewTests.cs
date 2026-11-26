@@ -104,6 +104,60 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator FireworkLaunchSelectsOnlyOneTowerFromTheSnapshot()
+        {
+            Create();
+            var fixture = CreateWorld();
+            var spawn = Runtime("GameScene.Object.ObjectSpawner").GetMethod("SpawnShared");
+            var createdType = Runtime("GameScene.Dto.CreatedObjectDto");
+            var towers = new Component[4];
+            for (int i = 0; i < towers.Length; i++)
+            {
+                string master = i == 1 ? "RightPlayer" : "LeftPlayer";
+                int x = i == 3 ? 4 : 5;
+                var created = new JObject
+                {
+                    ["id"] = 42 + i,
+                    ["master"] = master,
+                    ["type"] = "FireworkTower",
+                    ["position"] = new JObject { ["x"] = x, ["y"] = 0, ["z"] = 5 }
+                };
+                towers[i] = (Component)spawn.Invoke(null, new[] { created.ToObject(createdType), fixture, (object)false });
+            }
+            yield return null;
+
+            var projectileType = Runtime("GameScene.Dto.Projectile.ProjectileDto");
+            var snapshotType = Runtime("GameScene.Dto.SnapshotObjectDto").MakeArrayType();
+            var deferred = Runtime("GameScene.Object.ProjectileSpawner").GetMethod("SpawnDeferred",
+                BindingFlags.Static | BindingFlags.NonPublic);
+            var shot = new JObject
+            {
+                ["type"] = "FireworkShell",
+                ["start"] = new JObject { ["targetType"] = "position", ["x"] = 5, ["y"] = 0, ["z"] = 5 },
+                ["end"] = new JObject { ["targetType"] = "position", ["x"] = 8, ["y"] = 0, ["z"] = 5 },
+                ["duration"] = .5f
+            };
+            object projectiles = new JArray(shot).ToObject(typeof(System.Collections.Generic.List<>).MakeGenericType(projectileType));
+            var snapshots = new JArray
+            {
+                new JObject { ["id"] = 42, ["master"] = "LeftPlayer", ["x"] = 5, ["z"] = 5 },
+                new JObject { ["id"] = 43, ["master"] = "RightPlayer", ["x"] = 5, ["z"] = 5 },
+                new JObject { ["id"] = 44, ["x"] = 5, ["z"] = 5 },
+                new JObject { ["id"] = 45, ["master"] = "LeftPlayer", ["x"] = 4, ["z"] = 5 }
+            };
+
+            deferred.Invoke(null, new[] { projectiles, fixture, null, snapshots.ToObject(snapshotType) });
+            foreach (var tower in towers) Assert.AreEqual("FireworkTower", ServedObjectRenderer(tower).sprite.name);
+
+            snapshots.RemoveAt(2);
+            snapshots[0]["master"] = "RightPlayer";
+            snapshots[1]["master"] = "LeftPlayer";
+            deferred.Invoke(null, new[] { projectiles, fixture, null, snapshots.ToObject(snapshotType) });
+            Assert.AreEqual("FireworkTowerMuzzle01", ServedObjectRenderer(towers[1]).sprite.name);
+            foreach (var tower in towers.Where((tower, index) => index != 1))
+                Assert.AreEqual("FireworkTower", ServedObjectRenderer(tower).sprite.name);
+        }
+        [UnityTest]
         public IEnumerator BookZoomUsesNativePerspectiveWithoutChangingViewport()
         {
             Create();
