@@ -69,6 +69,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(304, 240), idleSprite: "SeedSpiritSwarm");
 
         [UnityTest]
+        public IEnumerator ZapMouseRunsAndRecoversAtBothTickRates() =>
+            CheckBothTickRates("ZapMouse", 8, "ZapMouseSpikeHit01", 4, 1.2f, .08f,
+                walkSize: new Vector2(304, 184));
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
@@ -278,7 +283,8 @@ namespace WordOnline.Tests
                 Assert.That(walk.Contains(renderer.sprite), Is.True);
                 if (hitOnly) Assert.That(renderer.flipX, Is.EqualTo(direction < 0));
 
-                yield return new WaitForSeconds(0.14f);
+                // 20Hz에서는 마지막 보간 0.05초와 이동 유예 0.10초에 렌더 갱신 여유를 더한다.
+                yield return new WaitForSeconds(0.18f);
                 Assert.That(renderer.sprite, Is.SameAs(idle));
                 float maximumGroundSpeed = (float)presenter.GetType().GetField("maximumGroundSpeed", Private).GetValue(presenter);
                 if (maximumGroundSpeed > 0f)

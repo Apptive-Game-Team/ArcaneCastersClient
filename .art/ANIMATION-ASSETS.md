@@ -41,6 +41,8 @@ Unity 런타임에서 하나의 소환수 외형을 구성하는 기본 프레�
 | `EmberSpiritSwipe01.png`–`EmberSpiritSwipe04.png` | 불씨 정령 · 앞발 타격과 회수 | 개체별 `HitEvent`에서 표적 쪽으로 앞발을 내민다. 네 자세가 0.08초씩 이어진다 |
 | `SeedSpiritSwarm.png`, `SeedSpiritStep01.png`–`SeedSpiritStep08.png` | 씨앗 정령 · 대기와 밑동 보행 | 밑동 잎이 지면을 번갈아 밀고 위쪽 새싹과 흰 꽃이 뒤따른다. 이동 0.72칸마다 여덟 자세를 재생한다 |
 | `SeedSpiritLeafHit01.png`–`SeedSpiritLeafHit04.png` | 씨앗 정령 · 앞 잎 타격과 회수 | 개체별 `HitEvent`에서 몸을 낮추고 앞 잎을 뻗는다. 네 자세를 각각 0.08초간 표시한다 |
+| `ZapMouse.png`, `ZapMouseRun01.png`–`ZapMouseRun08.png` | 찌릿쥐 · 대기와 네 발 질주 | 지면 이동 1.2칸마다 대각선 앞발과 뒷발이 체중을 넘기는 여덟 자세를 재생한다 |
+| `ZapMouseSpikeHit01.png`–`ZapMouseSpikeHit04.png` | 찌릿쥐 · 가시 타격과 회수 | 피해를 준 틱에 표적 방향으로 머리와 앞쪽 가시를 낮추며 네 자세를 0.08초씩 재생한다 |
 | `TreeGolem.png` | 고목 수호자 · 기본 자세 | `GroundedUnitPoseController` 대기 자세 |
 | `TreeGolemWalk01.png`–`TreeGolemWalk08.png` | 고목 수호자 · 양발의 접촉, 체중 이동, 지나가기, 다음 착지 | 실제 XZ 이동 0.9칸마다 한 바퀴. 기준 속도 0.5칸/초에서 1.8초 |
 | `TreeGolem2.png`, `TreeGolemRecover01.png`–`TreeGolemRecover03.png` | 고목 수호자 · 펀치 타격과 복귀 | 공격 이벤트에서 타격 프레임을 즉시 표시하고 0.05초 간격으로 복귀. 총 0.2초 |
