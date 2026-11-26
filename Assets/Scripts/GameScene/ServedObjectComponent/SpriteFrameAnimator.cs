@@ -11,15 +11,37 @@ namespace GameScene.ServedObjectComponent
 
         private int frameIndex;
         private float elapsed;
+        private float playbackStarted;
+        private float playbackDuration;
 
         private void Awake()
         {
             ApplyFrame(0);
         }
 
+        internal void PlayOnce(float duration)
+        {
+            playbackStarted = Time.time;
+            playbackDuration = duration;
+            ApplyFrame(0);
+        }
+
         private void Update()
         {
-            if (frames == null || frames.Length <= 1 || frameInterval <= 0f)
+            if (frames == null || frames.Length <= 1)
+            {
+                return;
+            }
+
+            if (playbackDuration > 0f)
+            {
+                float progress = Mathf.Clamp01((Time.time - playbackStarted) / playbackDuration);
+                int nextIndex = Mathf.Min((int)(progress * frames.Length), frames.Length - 1);
+                if (frameIndex != nextIndex) ApplyFrame(nextIndex);
+                return;
+            }
+
+            if (frameInterval <= 0f)
             {
                 return;
             }

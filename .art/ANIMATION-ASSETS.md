@@ -561,3 +561,7 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 ## 바람 슬라임의 지면 이동과 타격
 
 `WindSlimeIdle`은 바닥에 닿은 낮고 둥근 청록색 몸통과 짧은 바람 끝을 담는다. `WindSlimeCrawl01–08`은 둥근 두께가 뒤에서 앞으로 이어지고 꼭대기 끝이 뒤따른다. 이동 1칸마다 반복한다. `WindSlimeBump01–04`는 피해 틱부터 0.08초씩 눌림과 복귀를 표시한다. 원본과 같은 128×65 RGBA, 100 PPU, 하단 중앙 피벗을 쓴다.
+
+## 공용 물 투사체 비행
+
+`WaterShotFlight01–04`는 고정된 코끝과 이어지는 물결 꼬리를 가진 비행 자세다. 각 파일은 원본과 같은 192×61 RGBA, 100 PPU, 하단 중앙 피벗으로 등록한다. `Projectiles/WaterShot`은 투사체 수명에 맞춰 한 바퀴, 직접 시전의 `Prefabs/WaterShot`은 0.10초씩 반복한다.

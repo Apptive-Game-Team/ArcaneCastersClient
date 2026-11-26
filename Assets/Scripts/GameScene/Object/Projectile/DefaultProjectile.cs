@@ -9,6 +9,7 @@ namespace GameScene.Object.Projectile
     {
 
         [SerializeField] private Transform actualObject;
+        [SerializeField] private SpriteFrameAnimator flightFrames;
         
         public void Init(ProjectileDto projectileDto)
         {
@@ -17,6 +18,7 @@ namespace GameScene.Object.Projectile
             Vector3 start = VisualStart(projectileDto, destination, world);
             actualObject.rotation = ProjectileUtil.GetRotation(start, destination, world);
             transform.position = start;
+            flightFrames?.PlayOnce(projectileDto.duration);
             
             switch (projectileDto.end)
             {
