@@ -137,6 +137,7 @@
 | `ShockOverload.png` | 클라이언트 PR (이슈 #694) | 256x193 RGBA, 원본 크기 유지. 전격 과부하, 원래도 금색이었으나 촘촘한 뭉게구름형 텍스처에서 다면체 갈래 다발로 다시 그렸다. 트림 후 원본 비율(가로세로 1.96)과 목표 비율(1.33)의 차이로 가로 방향 압축이 더 크게 들어갔으나 눈으로 본 실루엣은 자연스럽다. enclosed_pixels=11145는 갈래 사이 트인 틈으로 확인, 불투명 픽셀 magenta 잔색 0px. 네 모서리 alpha 0, 64px 실루엣 검수 완료 |
 | `FireShot.png` | 클라이언트 PR (이슈 #694) | 256x88 RGBA, 원본 크기 유지. 화염탄 투사체, Hellfire 재 갑각 + 갈라진 틈으로 비치는 용암광으로 이동. 원본과 같은 방향(넓은 톱니머리 우측, 가는 꼬리 좌측)으로 고정. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과(바닥여백 0→0) |
 | `MeteorShower.png` | 클라이언트 PR (이슈 #694) | 207x256 RGBA, 원본 크기 유지. 지옥불 군단 유성, 갈라진 재 갑각 사이로 비치는 비대칭 용암 균열. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과(바닥여백 13→0, 하락 방향이라 미해당) |
+| `MeteorDropHeat01–04.png` | 클라이언트 이슈 #724 | 원본 실루엣에서 용암 틈이 넓어지는 자세 네 장. 낙하 개체의 서버 높이로 자세를 선택하고 기존 잔상에 같은 자세를 남긴다. |
 | `RazorGale.png` | 클라이언트 PR (이슈 #694) | 256x207 RGBA, 원본 크기 유지. 칼바람 회오리, 두세 겹 겹친 다면체 곡선 리본이 감아 도는 소용돌이. 리본 사이 트인 틈으로 enclosed_pixels=16368가 나왔으나 불투명 픽셀 magenta 잔색은 0px. magenta 키 제거, 네 모서리 alpha 0, `shrink.py`/`bottom.py` 검수 통과 |
 | `razor_gale_frame_0.png`–`razor_gale_frame_3.png` | 클라이언트 이슈 #496 | 192×155 RGBA, PPU 100, Bottom Center. 공통 하단에 맞춘 민트색 회전 4프레임을 기존 0.12초 간격으로 반복한다 |
 | `SandStorm.png` | 클라이언트 PR (이슈 #694) | 159x256 RGBA, 원본 크기 유지. 모래 폭풍, Wind 진영 소속이지만 모래라는 재질 때문에 따뜻한 황토색(`#D8B978`~`#6E4E22`)을 그대로 유지 — 바위 골렘의 이끼 낀 황갈과는 톤을 다르게 잡아 구분된다. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
