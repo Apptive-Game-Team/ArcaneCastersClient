@@ -3742,6 +3742,116 @@ namespace WordOnline.Tests
             CheckRecordedProjectileFlight("FireShot", "Game/sprites/FireShot", "fire_lord_spirit", "ground", 6.55f, .4f);
 
         [UnityTest]
+        public IEnumerator GroundTidalWarheadCyclesAndKeepsItsRecordedImpact()
+        {
+            Create();
+            Assert.That(Configure("tidal_warhead"), Is.True);
+            var world = (Component)Field("world");
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return ObserveTidalWarheadFlight("GroundTidalWarhead");
+                Component shot = Target(3);
+                Component enemy = Target(2);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(10000));
+                Assert.That(Target(4), Is.Null);
+                yield return PlayUntil(1.375f);
+                Component explosion = Target(4);
+                Assert.That(explosion, Is.Not.Null);
+                Vector3 impact = world.transform.InverseTransformPoint(explosion.transform.position);
+                Assert.That(Vector3.Distance(impact, new Vector3(6.5f, 0f, 5f)), Is.LessThan(.08f));
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9950));
+                Assert.That(shot.GetType().GetProperty("IsDespawning", Private).GetValue(shot), Is.True);
+                if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                    SaveViewport(TidalWarheadCaptureDirectory(), "ground-impact", true);
+                yield return PlayUntil(1.62f);
+                Assert.That(Target(3), Is.Null);
+                Assert.That(Target(4), Is.SameAs(explosion));
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator AirTidalWarheadPlaysItsOwnPosesFromClientPackets()
+        {
+            Create();
+            // 공중형의 프리팹과 고도 표시에 쓰는 합성 패킷이다.
+            var recording = new TextAsset(@"{""version"":1,""magic"":""tidal_warhead"",""frameDuration"":0.05,""duration"":2,""frames"":[
+                {""time"":0.0,""objects"":{""create"":[{""id"":1,""type"":""Player"",""master"":""LeftPlayer"",""position"":{""x"":2,""y"":0,""z"":5}}]}},
+                {""time"":0.60,""objects"":{""create"":[{""id"":3,""type"":""TidalWarhead"",""master"":""LeftPlayer"",""position"":{""x"":2,""y"":0,""z"":5}}]}},
+                {""time"":0.75,""objects"":{""update"":[{""id"":3,""position"":{""x"":2.9,""y"":0.45,""z"":5}}]}},
+                {""time"":0.90,""objects"":{""update"":[{""id"":3,""position"":{""x"":3.8,""y"":0.80,""z"":5}}]}},
+                {""time"":1.05,""objects"":{""update"":[{""id"":3,""position"":{""x"":4.7,""y"":1.20,""z"":5}}]}},
+                {""time"":1.20,""objects"":{""update"":[{""id"":3,""position"":{""x"":5.6,""y"":1.70,""z"":5}}]}},
+                {""time"":1.35,""objects"":{""update"":[{""id"":3,""position"":{""x"":6.5,""y"":2.20,""z"":5},""status"":""Destroyed""}]}}
+            ]}");
+            int prior = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                object clip = ((Array)Field("clips")).Cast<object>()
+                    .Single(entry => (string)entry.GetType().GetField("magicId").GetValue(entry) == "tidal_warhead");
+                clip.GetType().GetField("recordingAsset").SetValue(clip, recording);
+                Assert.That(Configure("tidal_warhead"), Is.True);
+                yield return ObserveTidalWarheadFlight("TidalWarhead");
+                Component shot = Target(3);
+                var world = (Component)Field("world");
+                Vector3 pose = world.transform.InverseTransformPoint(shot.transform.position);
+                Assert.That(pose.y, Is.InRange(1.6f, 1.8f));
+                Assert.That(pose.x, Is.InRange(5.5f, 5.7f));
+                if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                    SaveViewport(TidalWarheadCaptureDirectory(), "air-packet-climb", true);
+                yield return PlayUntil(1.375f);
+                Assert.That(shot.GetType().GetProperty("IsDespawning", Private).GetValue(shot), Is.True);
+                yield return PlayUntil(1.62f);
+                Assert.That(Target(3), Is.Null);
+            }
+            finally
+            {
+                Time.captureFramerate = prior;
+                UnityEngine.Object.Destroy(recording);
+            }
+        }
+
+        private static string TidalWarheadCaptureDirectory() =>
+            System.IO.Path.Combine(Application.dataPath, "../Library/TidalWarheadCaptures");
+
+        private IEnumerator ObserveTidalWarheadFlight(string prefabName)
+        {
+            yield return PlayUntil(.575f);
+            Assert.That(Target(3), Is.Null);
+            yield return PlayUntil(.622f);
+            Component shot = Target(3);
+            Assert.That(shot, Is.Not.Null);
+            Sprite original = Resources.Load<Sprite>($"Game/sprites/{prefabName}");
+            SpriteRenderer body = ServedObjectRenderer(shot);
+            Assert.That(body.sprite.rect, Is.EqualTo(original.rect));
+            Assert.That(body.sprite.pivot, Is.EqualTo(original.pivot));
+            Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(original.pixelsPerUnit));
+            bool capture = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+            string directory = TidalWarheadCaptureDirectory();
+            if (capture) System.IO.Directory.CreateDirectory(directory);
+
+            var poses = new System.Collections.Generic.List<string>();
+            while ((float)Field("elapsed") < 1.312f)
+            {
+                string pose = body.sprite.name;
+                if (poses.LastOrDefault() != pose)
+                {
+                    poses.Add(pose);
+                    if (capture && poses.Count <= 6) SaveViewport(directory, pose, true);
+                }
+                yield return null;
+            }
+            var expected = Enumerable.Range(1, 6).Select(index => $"{prefabName}Flight{index:00}").Append($"{prefabName}Flight01");
+            CollectionAssert.AreEqual(expected, poses);
+        }
+
+        [UnityTest]
         public IEnumerator BoulderStrikeCyclesFlightPosesAndKeepsTheRecordedKnockback()
         {
             Create();
