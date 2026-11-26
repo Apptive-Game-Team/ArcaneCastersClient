@@ -141,6 +141,7 @@
 | `Overgrowth.png` | 클라이언트 PR (이슈 #694) | 256x245 RGBA, 원본 크기 유지. 세계수의 과생장, 잎 다면체와 짧은 덩굴 마디가 뒤섞여 둥근 덩어리를 이루고 가장자리로 잎·덩굴손이 삐져나온다. 부드러운 뭉게구름형 원본에서 다면체로 교체. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
 | `RainCloud.png` | 클라이언트 PR (이슈 #694) | 127x256 RGBA, 원본 크기 유지. 비 구름 설치물, 상단의 작은 뭉게구름 + 빗줄기 리본 + 하단의 옅은 지면 타원으로 원본 구도 유지, 페인트 질감 구름에서 다면체로 교체. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
 | `BubbleSpirit.png` | 클라이언트 PR (이슈 #694) | 250x256 RGBA. 물 슬라임 계열, 눈 오른쪽 +35% |
+| `BubbleSpiritHover01–06.png`, `BubbleSpiritRelease01–04.png` | 클라이언트 PR (이슈 #630) | 250×256 RGBA, PPU 200, 하단 중앙 피벗. 물결과 뒤 물방울의 대기 6장과 거품 발사·복귀 4장. |
 | `SeedSpiritSwarm.png` | 클라이언트 PR (이슈 #694) | 256x224 RGBA. 세계수 풀 정령, 씨앗 몸통에 잎과 꽃 |
 | `ThunderSpirit.png` | 클라이언트 PR (이슈 #694) | 256x226 RGBA. 세계수 전기 정령, 금색 팔레트, 눈 오른쪽 +25% |
 | `VineSpirit.png` | 클라이언트 PR (이슈 #694) | 180x256 RGBA. 세계수 풀 정령, 덩굴 꼬투리 |

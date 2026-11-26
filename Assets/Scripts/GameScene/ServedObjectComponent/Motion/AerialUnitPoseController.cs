@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameScene.ServedObjectComponent.Motion
 {
-    public sealed class CloudDragonPoseController : ServedObjectBehaviour
+    public sealed class AerialUnitPoseController : ServedObjectBehaviour
     {
         [SerializeField] private SpriteRenderer targetRenderer;
         [SerializeField] private Sprite[] hoverFrames = Array.Empty<Sprite>();
