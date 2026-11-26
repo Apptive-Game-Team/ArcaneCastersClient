@@ -665,3 +665,7 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 ## 덩굴 군락의 둥지 성장
 
 `VineColonyGrowth01–06`은 뿌리를 바닥에 두고 여럿의 덩굴이 위로 뻗어 둥지를 엮는 여섯 자세다. 256×220 RGBA, 133.333333 PPU, 하단 중앙 피벗이다. `VineColony`와 `PveVineColony`에서 0.09초 간격으로 재생하고 0.45초부터 마지막 둥지 모습을 유지한다.
+
+## 바람 폭발의 확산
+
+`WindBurst01–06`은 한 점의 바람이 여러 갈래로 열리고 얇은 끝부터 흩어지는 공용 자세다. 192×144 RGBA, 100 PPU, 하단 중앙 피벗이다. `WindExplode`는 0.037초 슬롯에서 첫 네 자세를 2·4·5·3슬롯씩 유지해 밀치는 동안 퍼진다. `BombSpriteExplosion`은 착탄부터 0.09초당 한 자세씩 진행한다.
