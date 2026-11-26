@@ -556,7 +556,7 @@ Unity 는 `alignment` 가 9 (Custom) 일 때만 `spritePivot` 을 쓰므로, 런
 
 `FireTadpoleIdle`은 지상 대기와 소환 통로의 자세다. `FireTadpoleWalk01–08`은 대각선의 두 발이 짚고 반대쪽 두 발이 앞으로 오가는 보행이다. 지면 이동 1.12칸마다 한 바퀴를 돈다. `FireTadpoleStomp01–04`는 피해 틱의 접촉 자세부터 0.08초씩 표시한다.
 
-13장은 288×152 RGBA, 200 PPU, 하단 중앙 피벗이다. `FireTadpole.prefab`의 `GroundedUnitPoseController`는 소환 통로에서 지면에 닿은 뒤의 이동 거리로 보행을 재생한다. 모험의 `PveFireTadpole`은 정적 `FireTadpole.png`를 사용한다.
+13장은 288×152 RGBA, 200 PPU, 하단 중앙 피벗이다. `FireTadpole.prefab`의 `GroundedUnitPoseController`는 소환 통로에서 지면에 닿은 뒤의 이동 거리로 보행을 재생한다. 차원문 모험의 `PveFireTadpole`도 같은 자세를 쓴다. 이동 거리 1.12칸마다 보행을 한 바퀴 재생하고, 명중에서 네 공격 자세를 재생한다.
 
 ## 폭풍편 걷기와 전격 타격
 
