@@ -1,18 +1,13 @@
 using DG.Tweening;
+using GameScene.ServedObjectComponent.OnAttack;
 using UnityEngine;
 using Sequence = DG.Tweening.Sequence;
 
 namespace GameScene.ServedObjectComponent.Effect
 {
     /// <summary>
-    /// Moves the staff tip anchor through the body's attack frame swap.
-    /// <para>
-    /// The player's element auras are the ordinary server-driven effects: selecting a fire card
-    /// puts <c>FireIdleAura</c> in the object's effect list, and several selected elements stack.
-    /// <see cref="ServedObject"/> parents them to this anchor instead of the body, so they gather
-    /// at the staff tip. The tip moves when the attack frame swaps in, and the body sprite carries
-    /// no transform of its own to move them, so the anchor is moved here for the same duration.
-    /// </para>
+    /// 서버 원소 효과의 앵커를 지팡이 끝에 놓고 플레이어가 뒤집히면 좌우를 바꾼다.
+    /// 기본 외형의 자세마다 위치가 지정되어 있으면 자세 컨트롤러가 앵커 위치를 전달한다.
     /// </summary>
     public sealed class PlayerStaffAuraController : ServedObjectBehaviour
     {
@@ -23,18 +18,24 @@ namespace GameScene.ServedObjectComponent.Effect
         [SerializeField] private float attackDuration = 0.18f;
 
         private Sequence sequence;
+        private PlayerStaffPoseController poseController;
         private Vector3 currentLocalPosition;
         private bool lastFlipX;
 
+        internal bool IsConfigured => auraAnchor != null && bodyRenderer != null;
+
         protected override void OnBound()
         {
-            if (auraAnchor == null || bodyRenderer == null || Owner == null)
+            if (!IsConfigured || Owner == null)
             {
                 return;
             }
 
-            lastFlipX = bodyRenderer.flipX;
-            ApplyPosition(idleLocalPosition);
+            poseController = GetComponent<PlayerStaffPoseController>();
+            if (poseController == null || !poseController.DrivesStaffAura)
+            {
+                ApplyPosition(idleLocalPosition);
+            }
             Owner.OnAttack += Play;
         }
 
@@ -53,6 +54,14 @@ namespace GameScene.ServedObjectComponent.Effect
             StopAndRestore();
         }
 
+        private void OnEnable()
+        {
+            if (Owner != null && IsConfigured)
+            {
+                ApplyPosition(currentLocalPosition);
+            }
+        }
+
         private void Update()
         {
             if (bodyRenderer == null || bodyRenderer.flipX == lastFlipX)
@@ -66,7 +75,7 @@ namespace GameScene.ServedObjectComponent.Effect
 
         private void Play()
         {
-            if (auraAnchor == null || bodyRenderer == null)
+            if (!IsConfigured || !isActiveAndEnabled || (poseController != null && poseController.DrivesStaffAura))
             {
                 return;
             }
@@ -99,7 +108,16 @@ namespace GameScene.ServedObjectComponent.Effect
         private void StopAndRestore()
         {
             StopSequence();
-            RestoreIdle();
+            if (poseController == null || !poseController.DrivesStaffAura)
+            {
+                RestoreIdle();
+            }
+        }
+
+        internal void SetPosePosition(Vector2 tip)
+        {
+            StopSequence();
+            ApplyPosition(new Vector3(tip.x, tip.y, idleLocalPosition.z));
         }
 
         private void StopSequence()
@@ -126,7 +144,8 @@ namespace GameScene.ServedObjectComponent.Effect
             }
 
             Vector3 mirroredPosition = localPosition;
-            if (bodyRenderer != null && bodyRenderer.flipX)
+            lastFlipX = bodyRenderer != null && bodyRenderer.flipX;
+            if (lastFlipX)
             {
                 mirroredPosition.x *= -1;
             }
