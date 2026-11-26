@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6360361640997556663}
   - component: {fileID: 5838226653793143268}
   - component: {fileID: 890728588231249542}
+  - component: {fileID: 8320624000000000603}
   m_Layer: 0
   m_Name: ChainLightning
   m_TagString: Untagged
@@ -143,3 +144,25 @@ MonoBehaviour:
   startScaleMultiplier: 0.15
   duration: 0.28
   ease: 27
+--- !u!114 &8320624000000000603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468314681180972983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bad4e5d3bd4983b18aa5a58643f383, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  spriteRenderer: {fileID: 2555408739639926963}
+  frames:
+  - {fileID: 21300000, guid: 154c4c66c3905ba7aca75d9b0ca42efa, type: 3}
+  - {fileID: 21300000, guid: a8d3c1a9ef125280b6aa6763c50bfe72, type: 3}
+  - {fileID: 21300000, guid: 27097fdd53a3505c87f85709edabcf20, type: 3}
+  - {fileID: 21300000, guid: f62188af129c5be6b0d06c1d02e91507, type: 3}
+  - {fileID: 21300000, guid: 3bac0f81bf105dbd8cf0f19f71ca0e2e, type: 3}
+  - {fileID: 21300000, guid: 731aa0a2bf9659d9be248c994d8d5150, type: 3}
+  frameInterval: 0.11
+  loop: 1
