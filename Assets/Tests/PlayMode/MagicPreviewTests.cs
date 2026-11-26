@@ -605,6 +605,158 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator EvilEntPunchRecordingPlaysAllVisibleTipsAtNativeTiming()
+        {
+            Create();
+            const string magic = "evil_ent";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int index = scenarios.IndexOf(scenarios.First(s => (string)s["id"] == "heavy_punch"));
+            Scenario(index);
+            var shot = FirstProjectile(scenarios[index], "EvilEntPunchArm");
+            float hitStart = shot.start + shot.duration * 0.55f;
+            int previousRenderRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(shot.start + 0.03f);
+                Transform projectile = FindProjectile("EvilEntPunchArm");
+                Assert.That(projectile, Is.Not.Null);
+                var arm = projectile.Find("Arm").GetComponent<SpriteRenderer>();
+                var tip = projectile.Find("Tip").GetComponent<SpriteRenderer>();
+                var camera = (Camera)Field("previewCamera");
+                Component victim = Target(shot.targetId);
+                MethodInfo getAimPoint = victim.GetType().GetMethod("GetEdgeWorldPositionTowards");
+                Sprite reference = tip.sprite;
+                Assert.That(arm.drawMode, Is.EqualTo(SpriteDrawMode.Tiled));
+                Assert.That(arm.sprite.rect.size, Is.EqualTo(new Vector2(64, 96)));
+                Assert.That(reference.rect.size, Is.EqualTo(new Vector2(120, 80)));
+                Assert.That(reference.pivot, Is.EqualTo(new Vector2(0, 40)));
+                Assert.That(reference.pixelsPerUnit, Is.EqualTo(100f));
+
+                var appeared = new System.Collections.Generic.Dictionary<string, float>();
+                float peak = 0f, impactLength = 0f, retractedLength = 0f;
+                float impactGap = float.PositiveInfinity;
+                float[] capturesAt = { .34f, .52f, .57f, .74f, .93f };
+                int captureIndex = 0;
+                float deadline = Time.realtimeSinceStartup + 15f;
+                while (projectile != null && Time.realtimeSinceStartup < deadline)
+                {
+                    float time = (float)Field("elapsed");
+                    if (tip.enabled)
+                    {
+                        if (!appeared.ContainsKey(tip.sprite.name))
+                            appeared.Add(tip.sprite.name, time);
+                        Assert.That(tip.sprite.pivot, Is.EqualTo(reference.pivot));
+                        Assert.That(tip.sprite.rect, Is.EqualTo(reference.rect));
+                        Assert.That(tip.transform.localPosition.x, Is.EqualTo(arm.size.x).Within(0.001f));
+                        peak = Mathf.Max(peak, arm.size.x);
+                        if (tip.sprite.name == "evil_ent_arm_fist_03" && arm.size.x > impactLength)
+                        {
+                            impactLength = arm.size.x;
+                            Vector3 target = (Vector3)getAimPoint.Invoke(victim, new object[] { projectile.position, 0f });
+                            Vector3 knuckles = tip.transform.TransformPoint(new Vector3(1.05f, 0f, 0f));
+                            impactGap = Vector2.Distance(camera.WorldToViewportPoint(target), camera.WorldToViewportPoint(knuckles));
+                        }
+                        if (time >= shot.start + shot.duration * .9f)
+                            retractedLength = arm.size.x;
+                    }
+
+                    if (captureIndex < capturesAt.Length && time >= shot.start + shot.duration * capturesAt[captureIndex])
+                    {
+                        if (SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null)
+                        {
+                            string directory = System.IO.Path.Combine(Application.dataPath, "../Library/EvilEntPunchCaptures");
+                            System.IO.Directory.CreateDirectory(directory);
+                            SaveViewport(directory, $"punch-{captureIndex + 1:00}", true);
+                        }
+                        captureIndex++;
+                    }
+                    yield return null;
+                }
+
+                CollectionAssert.AreEqual(new[]
+                {
+                    "evil_ent_arm_fist", "evil_ent_arm_fist_02", "evil_ent_arm_fist_03", "evil_ent_arm_fist_04"
+                }, appeared.OrderBy(pair => pair.Value).Select(pair => pair.Key));
+                Assert.That(appeared["evil_ent_arm_fist_03"], Is.EqualTo(hitStart).Within(.035f));
+                Assert.That(impactLength, Is.GreaterThanOrEqualTo(peak * .95f));
+                Assert.That(impactGap, Is.LessThan(.04f));
+                Assert.That(retractedLength, Is.GreaterThan(0f).And.LessThan(peak * .9f));
+                Assert.That(projectile == null, Is.True);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRenderRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator EvilEntGrabAndFireFistKeepTheirExistingTipSprites()
+        {
+            Create();
+            const string magic = "evil_ent";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int index = scenarios.IndexOf(scenarios.First(s => (string)s["id"] == "pull"));
+            Scenario(index);
+            foreach (var variant in new[]
+            {
+                (type: "EvilEntGrabArm", sprite: "evil_ent_grab_claw"),
+                (type: "EvilEntFireFist", sprite: "evil_ent_burn_fist"),
+            })
+            {
+                var shot = FirstProjectile(scenarios[index], variant.type);
+                yield return PlayUntil(shot.start + shot.duration * .6f);
+                Transform projectile = FindProjectile(variant.type);
+                Assert.That(projectile, Is.Not.Null, variant.type);
+                var tip = projectile.Find("Tip").GetComponent<SpriteRenderer>();
+                Assert.That(tip.enabled, Is.True, variant.type);
+                Assert.That(tip.sprite, Is.SameAs(Resources.Load<Sprite>("Game/shoot/" + variant.sprite)));
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator EvilEntPunchKeepsVisibleReachAtCloseRange()
+        {
+            Create();
+            Component world = CreateWorld();
+            var camera = (Camera)world.GetType().GetProperty("Camera").GetValue(world);
+            Vector3 start = new Vector3(2f, 0f, 4f);
+            Vector3 end = start + camera.transform.up * .95f + camera.transform.right * .35f;
+            Type infoType = Runtime("GameScene.Dto.ObjectsInfo");
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize").MakeGenericMethod(infoType);
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            object frame = decode.Invoke(null, new object[] { FormattableString.Invariant(
+                $"{{\"projectile\":[{{\"type\":\"EvilEntPunchArm\",\"duration\":1,\"start\":{{\"targetType\":\"position\",\"x\":{start.x},\"y\":{start.y},\"z\":{start.z}}},\"end\":{{\"targetType\":\"position\",\"x\":{end.x},\"y\":{end.y},\"z\":{end.z}}}}}]}}") });
+            apply.Invoke(null, new[] { frame, null, world });
+            Transform projectile = world.transform.Find("PresentationContent/EvilEntPunchArm(Clone)");
+            Assert.That(projectile, Is.Not.Null);
+            yield return new WaitForSeconds(.56f);
+            var arm = projectile.Find("Arm").GetComponent<SpriteRenderer>();
+            var tip = projectile.Find("Tip").GetComponent<SpriteRenderer>();
+            Assert.That(arm.size.x, Is.InRange(.07f, .10f));
+            Assert.That(tip.enabled, Is.True);
+        }
+
+        private Transform FindProjectile(string type)
+        {
+            var world = (Component)Field("world");
+            return world.transform.Find($"PresentationContent/{type}(Clone)");
+        }
+
+        private static (float start, float duration, int targetId) FirstProjectile(JToken scenario, string type)
+        {
+            foreach (JToken frame in scenario["frames"])
+            {
+                JToken shot = frame["objects"]["projectile"].FirstOrDefault(p => (string)p["type"] == type);
+                if (shot != null)
+                    return ((float)frame["time"], (float)shot["duration"], (int)shot["end"]["id"]);
+            }
+            throw new InvalidOperationException(type);
+        }
+
+        [UnityTest]
         public IEnumerator NativeProjectilesAnimateAndCaptureBothViewports()
         {
             Create();
