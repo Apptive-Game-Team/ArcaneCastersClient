@@ -17,6 +17,7 @@ namespace WordOnline.Tests
             var components = vine.GetComponentsInChildren<MonoBehaviour>(true);
             Assert.IsFalse(components.Any(component => component.GetType().Name == "SpawnPopInEffect"));
             var owner = components.Single(component => component.GetType().Name == "ServedObject");
+            Assert.IsTrue((bool)owner.GetType().GetField("_keepUprightOnSpawn", fields).GetValue(owner));
             var animation = components.Single(component => component.GetType().Name == "SpriteFrameAnimator");
             var renderer = (SpriteRenderer)owner.GetType().GetField("_spriteRenderer", fields).GetValue(owner);
             var type = animation.GetType();
