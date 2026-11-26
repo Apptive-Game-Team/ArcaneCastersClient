@@ -4067,6 +4067,95 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator FireChildSpiritRisesAndReleasesOnBothRecordedTargets()
+        {
+            Create();
+            const string magic = "fire_lord_spirit";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            Sprite lordSprite = Resources.Load<Sprite>("Game/sprites/FireLordSpirit");
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                foreach (string id in new[] { "ground", "air" })
+                {
+                    var recording = scenarios.Single(s => (string)s["id"] == id);
+                    Scenario(scenarios.IndexOf(recording));
+                    var firstShot = FirstProjectile(recording, "FireShot");
+                    Assert.That(firstShot.start, Is.EqualTo(6.55f).Within(.001f), id);
+                    Assert.That(firstShot.duration, Is.EqualTo(.4f).Within(.001f), id);
+                    Assert.That(firstShot.targetId, Is.EqualTo(2), id);
+
+                    yield return PlayUntil(5.574f);
+                    Component lord = Target(3);
+                    var lordBody = (SpriteRenderer)lord.GetType().GetField("_spriteRenderer", Private).GetValue(lord);
+                    Assert.That(lordBody.sprite, Is.SameAs(lordSprite), id);
+                    Assert.That(Target(4), Is.Null, id);
+                    yield return PlayUntil(5.618f);
+                    Component world = (Component)Field("world");
+                    Component child = Target(4);
+                    Component enemy = Target(firstShot.targetId);
+                    SpriteRenderer body = AerialPoseRenderer(child);
+                    Vector3 LocalChildPosition() => world.transform.InverseTransformPoint(child.transform.position);
+                    Assert.That(LocalChildPosition().x, Is.EqualTo(3.65f).Within(.03f), id);
+                    Assert.That(LocalChildPosition().y, Is.InRange(2.79f, 2.91f), id);
+                    Assert.That(body.sprite.name, Is.EqualTo("FireChildSpiritHover01"), id);
+                    yield return PlayUntil(6.034f);
+                    Assert.That(LocalChildPosition().y, Is.EqualTo(3f).Within(.025f), id);
+
+                    Vector3 bodyPosition = body.transform.localPosition;
+                    Quaternion bodyRotation = body.transform.localRotation;
+                    Vector3 bodyScale = body.transform.localScale;
+                    int targetHp = 10000;
+                    foreach (float start in new[] { firstShot.start, 7.35f })
+                    {
+                        yield return PlayUntil(start - .028f);
+                        Assert.That(FindProjectile("FireShot"), Is.Null, id);
+                        Assert.That(CurrentHp(enemy), Is.EqualTo(targetHp), id);
+                        Assert.That(body.sprite.name, Does.StartWith("FireChildSpiritHover"), id);
+
+                        Transform shot;
+                        do
+                        {
+                            yield return null;
+                            shot = FindProjectile("FireShot");
+                        } while (shot == null && (float)Field("elapsed") < start + .046f);
+                        Assert.That(shot, Is.Not.Null, id);
+                        Vector3 origin = child.transform.position;
+                        float oneFrameOfFlight = Vector3.Distance(origin, enemy.transform.position) /
+                            (firstShot.duration * 120);
+                        Assert.That(Vector3.Distance(shot.position, origin), Is.LessThan(oneFrameOfFlight + .002f), id);
+                        targetHp -= 100;
+                        Assert.That(CurrentHp(enemy), Is.EqualTo(targetHp), id);
+                        Assert.That(body.sprite.name, Is.EqualTo("FireChildSpiritRelease01"), id);
+
+                        for (int pose = 2; pose <= 4; pose++)
+                        {
+                            yield return PlayUntil(start + .025f + .08f * (pose - 1));
+                            Assert.That(body.sprite.name, Is.EqualTo($"FireChildSpiritRelease{pose:00}"), id);
+                            Assert.That(body.transform.localPosition, Is.EqualTo(bodyPosition), id);
+                            Assert.That(Quaternion.Angle(body.transform.localRotation, bodyRotation), Is.LessThan(.1f), id);
+                            Assert.That(body.transform.localScale, Is.EqualTo(bodyScale), id);
+                        }
+
+                        yield return PlayUntil(start + .365f);
+                        Assert.That(body.sprite.name, Is.EqualTo("FireChildSpiritHover01"), id);
+                        Assert.That(FindProjectile("FireShot"), Is.SameAs(shot), id);
+                        yield return PlayUntil(start + firstShot.duration + .055f);
+                        Assert.That(FindProjectile("FireShot"), Is.Null, id);
+                        Assert.That(lordBody.sprite, Is.SameAs(lordSprite), id);
+                    }
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+
+        [UnityTest]
         public IEnumerator ThunderSpiritReleasesAtTheRecordedGroundHits()
         {
             Create();
@@ -4301,6 +4390,21 @@ namespace WordOnline.Tests
         public IEnumerator ThunderSpiritHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
             CheckAerialHoverLoop("ThunderSpirit", new Vector2(256f, 226f), 200f);
 
+        [UnityTest]
+        public IEnumerator FireChildSpiritHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot() =>
+            CheckAerialHoverLoop("FireChildSpirit", new Vector2(228f, 256f), 200f);
+
+        private static SpriteRenderer AerialPoseRenderer(Component actor)
+        {
+            Assert.That(actor, Is.Not.Null);
+            Component controller = actor.GetComponent("AerialUnitPoseController");
+            Assert.That(controller, Is.Not.Null);
+            var renderer = (SpriteRenderer)controller.GetType().GetField("targetRenderer", Private).GetValue(controller);
+            Assert.That(renderer, Is.Not.Null);
+            Assert.That(renderer, Is.SameAs(actor.GetType().GetField("_spriteRenderer", Private).GetValue(actor)));
+            return renderer;
+        }
+
         private IEnumerator CheckAerialHoverLoop(string prefabName, Vector2 spriteSize, float pixelsPerUnit)
         {
             Create();
@@ -4316,7 +4420,8 @@ namespace WordOnline.Tests
             {
                 apply.Invoke(null, new[] { decode.Invoke(null, new object[] { create }), null, world });
                 var actor = (Component)world.GetType().GetMethod("FindById").Invoke(world, new object[] { 42 });
-                SpriteRenderer body = ServedObjectRenderer(actor);
+                SpriteRenderer body = AerialPoseRenderer(actor);
+                Assert.That(actor.GetComponent("HoppingMotionController"), Is.Null);
                 Assert.That(actor.GetComponent("HoverMotionController"), Is.Null);
                 Assert.That(actor.GetComponent("AttackSpriteSwapController"), Is.Null);
                 var poses = new System.Collections.Generic.List<string>();
