@@ -114,6 +114,11 @@ namespace WordOnline.Tests
                 walkSize: new Vector2(320, 224));
 
         [UnityTest]
+        public IEnumerator VineSpiritStepsWithBothRootsAtBothTickRates() =>
+            CheckBothTickRates("VineSpirit", 8, "VineSpiritRelease01", 4, .5f, .08f,
+                walkSize: new Vector2(180, 256));
+
+        [UnityTest]
         public IEnumerator PveEvilEntBracesAndReturnsToItsSharedIdleWithoutMoving()
         {
             var root = new GameObject("PveEvilEnt test");
@@ -274,7 +279,7 @@ namespace WordOnline.Tests
 
                 CollectionAssert.IsSubsetOf(walk.Distinct().ToArray(), seenWalk,
                     $"{tickRate}Hz 보행이 모든 고유 자세를 지나야 한다.");
-                if (prefabName == "FireSlime")
+                if (prefabName is "FireSlime" or "VineSpirit")
                 {
                     var cycle = walk.Append(walk[0]).ToArray();
                     bool completedCycle = Enumerable.Range(0, Mathf.Max(0, seenWalk.Count - walk.Length))

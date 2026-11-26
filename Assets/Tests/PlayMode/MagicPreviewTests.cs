@@ -3925,6 +3925,69 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator VineSpiritsReleaseIndependentlyAgainstGroundAndAir()
+        {
+            Create();
+            const string magic = "vine_spirit";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+
+            SpriteRenderer VineBody(int id)
+            {
+                Component spirit = Target(id);
+                Assert.That(spirit, Is.Not.Null);
+                var renderer = (SpriteRenderer)spirit.GetType().GetField("_spriteRenderer", Private).GetValue(spirit);
+                Assert.That(renderer, Is.Not.Null);
+                return renderer;
+            }
+
+            try
+            {
+                foreach (string scenario in new[] { "ground", "air" })
+                {
+                    Scenario(scenarios.IndexOf(scenarios.Single(item => (string)item["id"] == scenario)));
+                    yield return PlayUntil(1.48f);
+                    Component enemy = Target(2);
+                    SpriteRenderer first = VineBody(4);
+                    SpriteRenderer second = VineBody(3);
+                    Assert.That(first.sprite.name, Is.EqualTo("VineSpirit"), scenario);
+                    Assert.That(second.sprite.name, Is.EqualTo("VineSpirit"), scenario);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(10000), scenario);
+
+                    yield return PlayUntil(1.522f);
+                    Assert.That(first.sprite.name, Is.EqualTo("VineSpiritRelease01"), scenario);
+                    Assert.That(second.sprite.name, Is.EqualTo("VineSpirit"), scenario);
+                    Assert.That(FindProjectile("NatureShot"), Is.Not.Null, scenario);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(9900), scenario);
+                    Assert.That(enemy.GetType().GetMethod("HasEffect").Invoke(enemy, new object[] { "Snared" }),
+                        Is.True, scenario);
+
+                    yield return PlayUntil(1.572f);
+                    Assert.That(second.sprite.name, Is.EqualTo("VineSpiritRelease01"), scenario);
+                    Assert.That(CurrentHp(enemy), Is.EqualTo(9800), scenario);
+                    yield return PlayUntil(1.612f);
+                    Assert.That(first.sprite.name, Is.EqualTo("VineSpiritRelease02"), scenario);
+                    Assert.That(second.sprite.name, Is.EqualTo("VineSpiritRelease01"), scenario);
+
+                    yield return PlayUntil(1.925f);
+                    Assert.That(first.sprite.name, Is.EqualTo("VineSpirit"), scenario);
+                    Assert.That(second.sprite.name, Is.EqualTo("VineSpirit"), scenario);
+                    yield return PlayUntil(2.322f);
+                    Assert.That(first.sprite.name, Is.EqualTo("VineSpiritRelease01"), scenario);
+                    Assert.That(second.sprite.name, Is.EqualTo("VineSpirit"), scenario);
+                    yield return PlayUntil(2.372f);
+                    Assert.That(second.sprite.name, Is.EqualTo("VineSpiritRelease01"), scenario);
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator CloudDragonReleasesAgainOnTheSecondRecordedAttack()
         {
             Create();
