@@ -558,12 +558,7 @@ namespace WordOnline.Tests
                     Vector3 expectedGround = new Vector3(localPosition.x, 0.02f, localPosition.z);
                     Assert.That(Vector3.Distance(localRing, expectedGround), Is.LessThan(0.005f));
                     Assert.That(Vector3.Angle(ring.forward, -world.transform.up), Is.LessThan(0.05f));
-                    Vector2 halfSize = sprite.rect.size / (2f * sprite.pixelsPerUnit);
-                    float xRadius = world.transform.InverseTransformVector(ring.TransformVector(Vector3.right * halfSize.x)).magnitude;
-                    float zRadius = world.transform.InverseTransformVector(ring.TransformVector(Vector3.up * halfSize.y)).magnitude;
-                    Assert.That(xRadius, Is.EqualTo(radius).Within(0.001f));
-                    Assert.That(zRadius, Is.EqualTo(radius).Within(0.001f));
-                    Assert.That(renderer.color.a, Is.EqualTo(0.5f).Within(0.001f));
+                    AssertAuraRadius(renderer, world, radius);
                 }
                 CollectionAssert.AreEqual(Enumerable.Range(1, 8).Append(1)
                     .Select(index => $"RallyZoneEmber{index:00}"), observed);
@@ -571,6 +566,107 @@ namespace WordOnline.Tests
             finally
             {
                 Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator RepairTotemLeavesUseRecordedEffectRangeAndLoop()
+        {
+            Create();
+            int previousRate = Time.captureFramerate;
+            var cameraField = previewType.GetField("previewCamera", Private);
+            Camera camera = null;
+            try
+            {
+                Time.captureFramerate = 100;
+                Assert.That(Configure("repair_totem"), Is.True);
+                camera = (Camera)cameraField.GetValue(preview);
+                bool canRender = SystemInfo.graphicsDeviceType != UnityEngine.Rendering.GraphicsDeviceType.Null;
+                if (!canRender) cameraField.SetValue(preview, null);
+
+                yield return PlayUntil(0.7f);
+                var world = (Component)Field("world");
+                Component totem = Target(4);
+                var renderer = totem.GetComponentsInChildren<SpriteRenderer>().Single(item => item.name == "RepairAura");
+                Vector3 localPosition = world.transform.InverseTransformPoint(totem.transform.position);
+                Assert.That(renderer.sortingOrder, Is.EqualTo(6));
+                if (canRender)
+                    Assert.That(CountVisibleAuraPixels(camera, (RenderTexture)Field("texture"), renderer), Is.GreaterThan(500));
+
+                var observed = new System.Collections.Generic.List<string>();
+                for (int frame = 0; frame < 172; frame++)
+                {
+                    string art = renderer.sprite.name;
+                    if (observed.Count == 0 || observed[observed.Count - 1] != art) observed.Add(art);
+
+                    Vector3 ground = new Vector3(localPosition.x, 0.02f, localPosition.z);
+                    Vector3 actual = world.transform.InverseTransformPoint(renderer.transform.position);
+                    Assert.That(Vector3.Distance(actual, ground), Is.LessThan(0.005f));
+                    Assert.That(Vector3.Angle(renderer.transform.forward, -world.transform.up), Is.LessThan(0.05f));
+                    // 녹화의 수리 범위는 3칸이고 토템의 충돌 반지름은 0.4칸이다.
+                    AssertAuraRadius(renderer, world, 3f, 0.72f);
+                    yield return null;
+                }
+                var expected = new[] { "RepairAura" }.Concat(Enumerable.Range(2, 5)
+                    .Select(index => $"RepairAuraLight{index:00}")).Append("RepairAura");
+                CollectionAssert.AreEqual(expected, observed);
+
+                Component noParameters = CreateWorld();
+                var dtoType = Runtime("GameScene.Dto.CreatedObjectDto");
+                object dto = Activator.CreateInstance(dtoType);
+                dtoType.GetField("id").SetValue(dto, 4);
+                dtoType.GetField("type").SetValue(dto, "RepairTotem");
+                dtoType.GetField("master").SetValue(dto, "LeftPlayer");
+                var defaultTotem = (Component)Runtime("GameScene.Object.ObjectSpawner").GetMethod("SpawnShared")
+                    .Invoke(null, new[] { dto, noParameters, false });
+                var defaultRing = defaultTotem.GetComponentsInChildren<SpriteRenderer>().Single(item => item.name == "RepairAura");
+                AssertAuraRadius(defaultRing, noParameters, 4f, 0.72f);
+            }
+            finally
+            {
+                cameraField.SetValue(preview, camera);
+                preview.gameObject.SetActive(false);
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        private static void AssertAuraRadius(SpriteRenderer renderer, Component world, float radius, float opacity = 0.5f)
+        {
+            Sprite sprite = renderer.sprite;
+            Transform ring = renderer.transform;
+            Vector2 halfSize = sprite.rect.size / (2f * sprite.pixelsPerUnit);
+            float xRadius = world.transform.InverseTransformVector(ring.TransformVector(Vector3.right * halfSize.x)).magnitude;
+            float zRadius = world.transform.InverseTransformVector(ring.TransformVector(Vector3.up * halfSize.y)).magnitude;
+            Assert.That(xRadius, Is.EqualTo(radius).Within(0.001f));
+            Assert.That(zRadius, Is.EqualTo(radius).Within(0.001f));
+            Assert.That(renderer.color.a, Is.EqualTo(opacity).Within(0.001f));
+        }
+
+        private static int CountVisibleAuraPixels(Camera camera, RenderTexture target, SpriteRenderer aura)
+        {
+            RenderTexture previous = RenderTexture.active;
+            bool wasEnabled = aura.enabled;
+            var pixels = new Texture2D(target.width, target.height, TextureFormat.RGB24, false);
+            try
+            {
+                Color32[] Read()
+                {
+                    camera.Render();
+                    RenderTexture.active = target;
+                    pixels.ReadPixels(new Rect(0f, 0f, target.width, target.height), 0, 0);
+                    return pixels.GetPixels32();
+                }
+                Color32[] visible = Read();
+                aura.enabled = false;
+                Color32[] hidden = Read();
+                return visible.Where((rgb, i) => Math.Abs(rgb.r - hidden[i].r) + Math.Abs(rgb.g - hidden[i].g) +
+                    Math.Abs(rgb.b - hidden[i].b) > 42).Count();
+            }
+            finally
+            {
+                aura.enabled = wasEnabled;
+                RenderTexture.active = previous;
+                UnityEngine.Object.Destroy(pixels);
             }
         }
 
