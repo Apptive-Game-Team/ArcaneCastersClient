@@ -392,32 +392,15 @@ PPU·pivot·앵커 좌표를 같이 출력한다.
 
 ## Cloud Dragon 프레임
 
-| 실제 파일 | 의미 이름 | 프리팹 연결 |
+| 실제 파일 | 의미 | 프리팹 연결 |
 |---|---|---|
-| `CloudDragon.png` | 운룡 · 기본 자세 · 입에 물 없음 | `CloudDragon.prefab` 기본 SpriteRenderer |
-| `CloudDragonAttacking.png` | 운룡 · 물 분사 공격 자세 | `AttackSpriteSwapController.swapSprite` |
+| `CloudDragon.png` | 기본 그림 | `CloudDragon.prefab` 기본 SpriteRenderer |
+| `CloudDragonHover01–06.png` | 날개를 펴고 접는 공중 대기 | `CloudDragonPoseController.hoverFrames` |
+| `CloudDragonRelease01–04.png` | 턱 방출과 반동·회수 | `CloudDragonPoseController.releaseFrames` |
 
-두 프레임은 PPU 116.363636, Bottom Center 피벗, 몸통 배율·바닥선을 공유한다.
-`CloudDragon.png`는 `256x182`다. `CloudDragonAttacking.png`는 `540x182`로, 몸통은
-`CloudDragon.png`와 캔버스 폭이 다르지만 `AttackSpriteSwapController`가 Sprite만
-바꾸고 Transform은 건드리지 않으므로, 몸통은 두 캔버스의 가로 중심(각각 폭의
-50%, Bottom Center 피벗 기준)에서 같은 오프셋에 오도록 배치했다 — 캔버스 폭이
-다르면 중심 자체가 다른 픽셀 위치를 가리키므로, 몸통을 두 프레임에서 같은
-픽셀 오프셋에 두면 오히려 world 위치가 어긋난다. 폭이 늘어난 만큼은 전부
-물줄기 몫이고, 몸통 크기·바닥선·세로 위치는 `CloudDragon.png`와 동일하다.
-공격 이벤트가 발생하면 `CloudDragonAttacking.png`를 0.1초간 표시한 뒤 기본
-자세로 복원한다. 구형 물 아우라 `cloud.png`는 두 본체 프레임과 계속 분리해서
-렌더링한다.
+열 자세는 256×182 RGBA, PPU 116.363636, Bottom Center 피벗을 공유한다. 대기는 0.17초씩 반복하고 발사·회수는 0.08초씩 재생한다. 1.50초 물 발사 뒤 1.60초 연쇄 번개처럼 재생 도중 다음 Attack이 오면 해당 틱에 01을 표시한다. 발사 그림에서는 입과 날개가 움직이고, 몸 바깥의 물과 번개는 각각 `WaterShot`과 `ChainLightning`이 그린다. 기존 540×182 `CloudDragonAttacking.png`는 이전 물 분사 그림이다.
 
-`check-frame-pair.py`의 가로 차이 값은 이 쌍에서 크게 나온다(약 0.96 unit,
-한도 0.05) — 이 스크립트는 캔버스 하단 10% 띠의 가로 중심을 "발" 위치로 보는데,
-그 띠 안에 굵은 물줄기가 넓게 걸쳐 있어 중심이 물 쪽으로 크게 쏠린다. 실제
-몸통 정렬은 정상이다: 두 프레임을 각자의 pivot(각 캔버스 폭의 50%) 기준으로
-겹쳐 보면 날개·뿔·꼬리·등뼈 돌기가 픽셀 단위로 일치한다(세로 차이는 0.000으로
-그대로 통과). 이 스크립트는 좁고 완전히 대칭인 프레임 쌍을 가정하고 만들어져
-있어, 캔버스 폭이 다른 프레임에서 굵은 투사체가 바닥 근처를 지나가면 이렇게
-false positive를 낸다 — 숫자만 보지 말고 pivot 기준으로 겹친 그림을 반드시
-확인한다.
+운룡 변형에서 상속 Hover와 공통 공격 회전을 끈다. 몸통 렌더러의 부모는 유지하고 구형 물 아우라 `cloud.png`는 같은 자식 렌더러에 둔다. 정렬은 두 시퀀스에서 눈의 중심과 캔버스의 고정 피벗을 대조한다. 날개 끝이나 턱처럼 움직이는 외곽선으로 캔버스를 잘라 정렬하면 고정된 구름 몸통까지 떨려 보인다.
 
 ## 번개 강타 프레임
 

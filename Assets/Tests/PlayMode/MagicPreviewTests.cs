@@ -3925,6 +3925,166 @@ namespace WordOnline.Tests
         }
 
         [UnityTest]
+        public IEnumerator CloudDragonReleasesAgainOnTheSecondRecordedAttack()
+        {
+            Create();
+            const string magic = "cloud_dragon";
+            Assert.That(Configure(magic), Is.True);
+            var scenarios = (JArray)Recording(magic)["scenarios"];
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                foreach (string scenario in new[] { "ground", "air" })
+                {
+                    Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == scenario)));
+                    yield return PlayUntil(.622f);
+                    Component dragon = Target(5);
+                    Component world = (Component)Field("world");
+                    SpriteRenderer body = ServedObjectRenderer(dragon);
+                    Vector3 bodyPosition = body.transform.localPosition;
+                    Quaternion bodyRotation = body.transform.localRotation;
+                    var idle = new System.Collections.Generic.List<string>();
+
+                    void CheckSteadyBody()
+                    {
+                        Assert.That(Vector3.Distance(world.transform.InverseTransformPoint(dragon.transform.position),
+                            new Vector3(4f, 3f, 5f)), Is.LessThan(.003f), scenario);
+                        Assert.That(Vector3.Distance(body.transform.localPosition, bodyPosition), Is.LessThan(.001f), scenario);
+                        Assert.That(Quaternion.Angle(body.transform.localRotation, bodyRotation), Is.LessThan(.01f), scenario);
+                    }
+
+                    while ((float)Field("elapsed") < 1.486f)
+                    {
+                        CheckSteadyBody();
+                        if (idle.Count == 0 || idle[idle.Count - 1] != body.sprite.name)
+                        {
+                            idle.Add(body.sprite.name);
+                        }
+                        yield return null;
+                    }
+
+                    CollectionAssert.AreEqual(Enumerable.Range(1, 6).Select(i => $"CloudDragonHover{i:00}"), idle, scenario);
+                    yield return PlayUntil(1.522f);
+                    Assert.That(FindProjectile("WaterShot"), Is.Not.Null, scenario);
+                    Assert.That(body.sprite.name, Is.EqualTo("CloudDragonRelease01"), scenario);
+                    CheckSteadyBody();
+
+                    bool sawFirstRecovery = false;
+                    while (Target(6) == null && (float)Field("elapsed") < 1.64f)
+                    {
+                        sawFirstRecovery |= body.sprite.name == "CloudDragonRelease02";
+                        yield return null;
+                    }
+                    Assert.That(sawFirstRecovery, Is.True, scenario);
+                    yield return PlayUntil(1.622f);
+                    Assert.That(Target(6), Is.Not.Null, scenario);
+                    Assert.That(body.sprite.name, Is.EqualTo("CloudDragonRelease01"), scenario);
+                    for (int pose = 2; pose <= 4; pose++)
+                    {
+                        yield return PlayUntil(1.622f + .08f * (pose - 1));
+                        Assert.That(body.sprite.name, Is.EqualTo($"CloudDragonRelease{pose:00}"), scenario);
+                        CheckSteadyBody();
+                    }
+
+                    yield return PlayUntil(1.948f);
+                    Assert.That(body.sprite.name, Is.EqualTo("CloudDragonHover01"), scenario);
+                    yield return PlayUntil(2.322f);
+                    Assert.That(body.sprite.name, Is.EqualTo("CloudDragonRelease01"), scenario);
+                    yield return PlayUntil(2.622f);
+                    Assert.That(body.sprite.name, Is.EqualTo("CloudDragonRelease01"), scenario);
+                    Assert.That(Target(7), Is.Not.Null, scenario);
+                    CheckSteadyBody();
+                }
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CloudDragonHoverLoopsOnItsMirroredSpriteAndKeepsItsPivot()
+        {
+            Create();
+            Component world = CreateWorld();
+            MethodInfo decode = Runtime("Global.Serialization.JsonCodec").GetMethod("Deserialize")
+                .MakeGenericMethod(Runtime("GameScene.Dto.ObjectsInfo"));
+            MethodInfo apply = Runtime("GameScene.Object.PresentationFramePlayer").GetMethod("Apply");
+            const string create = "{\"create\":[{\"id\":42,\"type\":\"CloudDragon\",\"master\":\"RightPlayer\"," +
+                "\"position\":{\"x\":4,\"y\":3,\"z\":5}}]}";
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                apply.Invoke(null, new[] { decode.Invoke(null, new object[] { create }), null, world });
+                var actor = (Component)world.GetType().GetMethod("FindById").Invoke(world, new object[] { 42 });
+                SpriteRenderer body = ServedObjectRenderer(actor);
+                Assert.That(actor.GetComponent("HoverMotionController"), Is.Null);
+                Assert.That(actor.GetComponent("AttackSpriteSwapController"), Is.Null);
+                var poses = new System.Collections.Generic.List<string>();
+                float until = Time.time + 1.10f;
+                while (Time.time < until)
+                {
+                    Assert.That(body.flipX, Is.True);
+                    Assert.That(body.sprite.rect.size, Is.EqualTo(new Vector2(256f, 182f)));
+                    Assert.That(body.sprite.pivot, Is.EqualTo(new Vector2(128f, 0f)));
+                    Assert.That(body.sprite.pixelsPerUnit, Is.EqualTo(116.363636f).Within(.001f));
+                    if (poses.Count == 0 || poses[poses.Count - 1] != body.sprite.name)
+                    {
+                        poses.Add(body.sprite.name);
+                    }
+                    yield return null;
+                }
+
+                CollectionAssert.AreEqual(Enumerable.Range(1, 6).Select(i => $"CloudDragonHover{i:00}")
+                    .Append("CloudDragonHover01"), poses);
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CloudDragonKeepsItsSeparateAuraAndRecordedWetShock()
+        {
+            Create();
+            Assert.That(Configure("cloud_dragon"), Is.True);
+            var scenarios = (JArray)Recording("cloud_dragon")["scenarios"];
+            Scenario(scenarios.IndexOf(scenarios.Single(s => (string)s["id"] == "aura")));
+            int previousRate = Time.captureFramerate;
+            Time.captureFramerate = 120;
+            try
+            {
+                yield return PlayUntil(.64f);
+                Component dragon = Target(3);
+                var aura = dragon.GetComponentsInChildren<SpriteRenderer>().Single(r => r.name == "cloud");
+                Assert.That(aura.sprite.name, Is.EqualTo("cloud"));
+                Assert.That(aura.transform.localPosition, Is.EqualTo(new Vector3(0f, .68f, 0f)));
+                Assert.That(aura.transform.localScale, Is.EqualTo(Vector3.one));
+                Assert.That(aura.color.a, Is.EqualTo(.08627451f).Within(.001f));
+                Assert.That(aura.sortingOrder, Is.EqualTo(20));
+
+                Component enemy = Target(2);
+                MethodInfo hasEffect = enemy.GetType().GetMethod("HasEffect");
+                yield return PlayUntil(1.673f);
+                Assert.That(hasEffect.Invoke(enemy, new object[] { "Wet" }), Is.True);
+                Assert.That(hasEffect.Invoke(enemy, new object[] { "Shock" }), Is.False);
+                yield return PlayUntil(1.723f);
+                Assert.That(hasEffect.Invoke(enemy, new object[] { "Wet" }), Is.True);
+                Assert.That(hasEffect.Invoke(enemy, new object[] { "Shock" }), Is.True);
+                Assert.That(CurrentHp(enemy), Is.EqualTo(9800));
+                Assert.That(aura.sprite.name, Is.EqualTo("cloud"));
+                Assert.That(aura.transform.localPosition, Is.EqualTo(new Vector3(0f, .68f, 0f)));
+            }
+            finally
+            {
+                Time.captureFramerate = previousRate;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator CloudDragonChainLightningStartsEachAirShotIndependently()
         {
             Create();
