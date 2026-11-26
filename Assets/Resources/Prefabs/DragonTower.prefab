@@ -100,16 +100,59 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 2.41
       objectReference: {fileID: 0}
+    - target: {fileID: 1060800969627125256, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      propertyPath: _swingOnAttack
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
       propertyPath: m_Sprite
       value:
       objectReference: {fileID: 21300000, guid: bc6d45d7e05b4867bfce2261fd0220aa, type: 3}
-    - target: {fileID: 8788216132779933461, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
-      propertyPath: m_Sprite
-      value:
-      objectReference: {fileID: 21300000, guid: bc6d45d7e05b4867bfce2261fd0220aa, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5502000000000000020, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7040000000000000004}
   m_SourcePrefab: {fileID: 100100000, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+--- !u!1 &7040000000000000001 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8347068386141385781, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7040000000000000002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1060800969627125256, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7040000000000000003 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8690925198442129744, guid: 6412a5c23ab1bc14c8478110cea2b4af, type: 3}
+  m_PrefabInstance: {fileID: 3434044365886374736}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7040000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7040000000000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335ac4a62a45446795fc4d9bf4f8792b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  servedObject: {fileID: 7040000000000000002}
+  targetRenderer: {fileID: 7040000000000000003}
+  walkFrames: []
+  attackFrames:
+  - {fileID: 21300000, guid: 68e89b2d41f852558ee98fbf71bb5a0b, type: 3}
+  - {fileID: 21300000, guid: 646a0e515eb552b5bf5bcc1beca233ee, type: 3}
+  - {fileID: 21300000, guid: b6cdd7dfa2b058cebe32a5ce7a2a6149, type: 3}
+  - {fileID: 21300000, guid: f0a14afcfd1658e5b484d867b1c09340, type: 3}
+  projectileAttackFrames: []
+  spawnFrames: []
+  attackDuration: 0.48
+  attackOnHit: 0
