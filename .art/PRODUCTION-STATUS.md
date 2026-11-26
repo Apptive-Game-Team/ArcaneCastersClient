@@ -128,6 +128,7 @@
 | `FireShot.png` | 클라이언트 PR (이슈 #694) | 256x88 RGBA, 원본 크기 유지. 화염탄 투사체, Hellfire 재 갑각 + 갈라진 틈으로 비치는 용암광으로 이동. 원본과 같은 방향(넓은 톱니머리 우측, 가는 꼬리 좌측)으로 고정. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과(바닥여백 0→0) |
 | `MeteorShower.png` | 클라이언트 PR (이슈 #694) | 207x256 RGBA, 원본 크기 유지. 지옥불 군단 유성, 갈라진 재 갑각 사이로 비치는 비대칭 용암 균열. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과(바닥여백 13→0, 하락 방향이라 미해당) |
 | `RazorGale.png` | 클라이언트 PR (이슈 #694) | 256x207 RGBA, 원본 크기 유지. 칼바람 회오리, 두세 겹 겹친 다면체 곡선 리본이 감아 도는 소용돌이. 리본 사이 트인 틈으로 enclosed_pixels=16368가 나왔으나 불투명 픽셀 magenta 잔색은 0px. magenta 키 제거, 네 모서리 alpha 0, `shrink.py`/`bottom.py` 검수 통과 |
+| `razor_gale_frame_0.png`–`razor_gale_frame_3.png` | 클라이언트 이슈 #496 | 192×155 RGBA, PPU 100, Bottom Center. 공통 하단에 맞춘 민트색 회전 4프레임을 기존 0.12초 간격으로 반복한다 |
 | `SandStorm.png` | 클라이언트 PR (이슈 #694) | 159x256 RGBA, 원본 크기 유지. 모래 폭풍, Wind 진영 소속이지만 모래라는 재질 때문에 따뜻한 황토색(`#D8B978`~`#6E4E22`)을 그대로 유지 — 바위 골렘의 이끼 낀 황갈과는 톤을 다르게 잡아 구분된다. magenta 키 제거, 네 모서리 alpha 0, magenta 잔색 0px, `shrink.py`/`bottom.py` 검수 통과 |
 | `SandStormFrame01.png`–`SandStormFrame04.png` | 클라이언트 이슈 #492 | 159×256 RGBA, 기존 PPU와 Bottom Center. 지면 끝을 같은 위치에 두고 내부 모래 띠를 0.22초 간격으로 반복한다. 기존 흔들림·불투명도 적용. Unity 플레이 검수 대기 |
 | `TornadoStrike.png` | 클라이언트 PR (이슈 #694) | 224x256 RGBA, 원본 크기 유지. 회오리 정령, 위가 넓고 아래로 갈수록 좁아지는 깔때기. enclosed_pixels=26453는 리본 사이 트인 중심부, 불투명 픽셀 magenta 잔색 0px. magenta 키 제거, 네 모서리 alpha 0, `shrink.py`/`bottom.py` 검수 통과 |
